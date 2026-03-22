@@ -1,1 +1,44 @@
+@config "../tailwind.config.js";
+
+:root {
+  /* 🔵 Primary */
+  --color-primary: #3B82F6;
+  --color-primary-dark: #2563EB;
+  --color-primary-light: #60A5FA;
+
+  /* 🟢 Success */
+  --color-success: #22C55E;
+  --color-success-dark: #16A34A;
+  --color-success-light: #4ADE80;
+
+  /* 🟡 Warning */
+  --color-warning: #F59E0B;
+  --color-warning-light: #FBBF24;
+
+  /* 🔴 Danger */
+  --color-danger: #EF4444;
+
+  /* ⚫ Text */
+  --color-text: #0F172A;
+  --color-text-secondary: #1E293B;
+  --color-text-muted: #64748B;
+  --color-placeholder: #94A3B8;
+
+  /* ⚪ Background */
+  --color-bg: #F8FAFC;
+  --color-card: #FFFFFF;
+  --color-border: #E2E8F0;
+
+  /* 🎨 Extra */
+  --color-cyan: #06B6D4;
+  --color-purple: #8B5CF6;
+  --color-pink: #EC4899;
+
+  /* 🌈 Gradients */
+  --gradient-primary: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  --gradient-success: linear-gradient(135deg, #22C55E, #16A34A);
+}
+
+
+
 @import 'tailwindcss'
