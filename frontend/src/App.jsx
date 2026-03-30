@@ -1,14 +1,26 @@
-import React from "react";
-import Loader from "./components/common/Loader";
+import { useState } from "react";
+import Modal from "./components/common/Modal";
 const App = () => {
-  return (
-    <div className="h-screen flex justify-center items-center gap-4">
-      <Loader />
-      <Loader size="medium" color="black"/>
-      <Loader size="extraMedium" />
-      <Loader size="big" />
+  const [open, setOpen] = useState(false);
 
-      <Loader />
+  return (
+    <div className="h-screen flex bg-red">
+      <div className="relative">
+        <h1>hello bcchoo loredm</h1>
+        <button onClick={() => setOpen(true)}>Open Modal</button>
+
+        <Modal
+          isOpen={open}
+          onClose={() => setOpen(false)}
+          title="Cancel Booking"
+          onConfirm={() => {
+            console.log("Confirmed");
+            setOpen(false);
+          }}
+        >
+          Are you sure you want to cancel this booking?
+        </Modal>
+      </div>
     </div>
   );
 };
