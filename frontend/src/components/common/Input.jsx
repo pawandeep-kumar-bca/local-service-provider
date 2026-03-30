@@ -1,0 +1,60 @@
+import React, { useState } from "react";
+import { IoEyeOff ,IoEyeOutline} from "react-icons/io5";
+const Input = ({
+  label,
+  id,
+  type = "text",
+  error,
+  required = false,
+  fullWidth = true,
+  ...props
+}) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPassword = type === "password";
+
+  return (
+    <div className={`${fullWidth ? "w-full" : "w-auto"} mb-4`}>
+      
+      {/* Label */}
+      {label && (
+        <label
+          htmlFor={id}
+          className="block mb-2 font-medium text-sm"
+        >
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
+      )}
+
+      {/* Input Wrapper */}
+      <div className="relative">
+        <input
+          id={id}
+          name={id}
+          type={isPassword && showPassword ? "text" : type}
+          className={`w-full border px-3 py-2 rounded-md text-sm font-medium
+          focus:ring focus:ring-blue-500 focus:outline-none`}
+          {...props}
+        />
+
+        {/* Show/Hide Password */}
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-lg text-gray-500"
+          >
+            {showPassword ? <IoEyeOff/>:<IoEyeOutline/> }
+          </button>
+        )}
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-red-500 text-xs font-medium mt-1">{error}</p>
+      )}
+    </div>
+  );
+};
+
+export default Input;
