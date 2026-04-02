@@ -45,7 +45,7 @@ const Input = ({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-lg text-gray-500"
+            className="absolute right-2 top-4  text-lg text-gray-500"
           >
             {showPassword ? <IoEyeOff/>:<IoEyeOutline/> }
           </button>
