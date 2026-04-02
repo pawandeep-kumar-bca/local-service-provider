@@ -5,8 +5,10 @@ const Input = ({
   id,
   type = "text",
   error,
+  className="",
   required = false,
   fullWidth = true,
+  placeholder='',
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,9 +33,10 @@ const Input = ({
         <input
           id={id}
           name={id}
+          placeholder={placeholder}
           type={isPassword && showPassword ? "text" : type}
           className={`w-full text-lg border px-3 py-2 rounded-md
-          focus:ring focus:ring-blue-500 focus:outline-none`}
+          focus:ring focus:ring-blue-500 focus:outline-none ${className}`}
           {...props}
         />
 
