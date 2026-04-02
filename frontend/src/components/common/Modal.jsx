@@ -7,6 +7,7 @@ const Modal = ({
   children,
   onConfirm,
 }) => {
+    
   if (!isOpen) return null;
 
   return (

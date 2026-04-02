@@ -22,12 +22,17 @@ export default {
         bg: "#F8FAFC",
         card: "#FFFFFF",
         border: "#E2E8F0",
+        divider: "#94A3B8",
       },
 
       backgroundImage: {
         "gradient-primary": "linear-gradient(135deg, #3B82F6, #1D4ED8)",
         "gradient-success": "linear-gradient(135deg, #22C55E, #16A34A)",
       },
+      fontFamily: {
+        ubuntu: ["Ubuntu", "sans-serif"],
+        roboto:["Roboto","sans-serif"]
+      }
     },
   },
   plugins: [],
