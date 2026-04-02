@@ -29,7 +29,7 @@ const LoginPage = () => {
         </form>
 
         <div className="w-full h-[2px] bg-border rounded-full mt-6 mb-2"></div>
-        <h4 className="text-center text-sm font-semibold cursor-pointer text-primary">
+        <h4 className="text-center text-sm font-bold cursor-pointer text-primary">
           Back To Login
         </h4>
       </div>

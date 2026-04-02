@@ -1,4 +1,4 @@
-import RegisterPage from './pages/auth/ResetPasswordPage'
+import RegisterPage from './pages/auth/VerifyEmailPage'
 
 
 const App = () => {

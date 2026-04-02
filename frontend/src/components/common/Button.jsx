@@ -16,7 +16,7 @@ const Button = ({
       "bg-white text-black border border-border hover:shadow-md hover:bg-[#f0f1f4]",
     blue: "bg-[#2563EB] text-white hover:bg-[#3B82F6] ",
     danger: "bg-[#EF4444] text-white hover:bg-[#DC2626]",
-    pending: "bg-[#FBBF24] text-black hover:bg-[#F59E0B]",
+    pending: "bg-[#FBBF24] text-white hover:bg-[#F59E0B]",
   };
 
   const width = fullWidth ? "w-full" : "w-auto";
