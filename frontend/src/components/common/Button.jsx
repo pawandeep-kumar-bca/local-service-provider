@@ -32,4 +32,4 @@ const Button = ({
   );
 };
 
-export default Button;
+export default Button;//create: add welcome page UI

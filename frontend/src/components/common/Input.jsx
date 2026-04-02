@@ -20,7 +20,7 @@ const Input = ({
       {label && (
         <label
           htmlFor={id}
-          className="block mb-2 font-medium text-sm"
+          className="block mb-2 font-medium text-lg"
         >
           {label} {required && <span className="text-red-500">*</span>}
         </label>
@@ -32,7 +32,7 @@ const Input = ({
           id={id}
           name={id}
           type={isPassword && showPassword ? "text" : type}
-          className={`w-full border px-3 py-2 rounded-md text-sm font-medium
+          className={`w-full text-lg border px-3 py-2 rounded-md
           focus:ring focus:ring-blue-500 focus:outline-none`}
           {...props}
         />
