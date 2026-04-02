@@ -1,10 +1,10 @@
-import LoginPage from "./pages/auth/LoginPage"
+import RegisterPage from './pages/auth/RegisterPage'
 
 
 const App = () => {
   return (
    <div>
-   <LoginPage/>
+   <RegisterPage/>
    </div>
   )
 }
