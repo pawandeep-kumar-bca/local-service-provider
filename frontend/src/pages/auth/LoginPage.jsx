@@ -3,11 +3,11 @@ import Button from "../../components/common/Button";
 import { FcGoogle } from "react-icons/fc";
 const LoginPage = () => {
   return (
-    <div className="w-full min-h-screen">
-      <h1 className="bg-gradient-to-br text-center from-blue-400 via-blue-600 to-blue-800 text-2xl text-white font-medium pb-16 pt-10 rounded-b-3xl shadow-lg">
+    <div className="w-full md:flex h-full">
+      <h1 className="bg-gradient-to-br text-center from-blue-400 via-blue-600 to-blue-800 text-2xl text-white font-medium pb-16 pt-10 rounded-b-3xl shadow-lg md:hidden">
         Login
       </h1>
-      <div className=" rounded-t-3xl -mt-11 bg-card  px-6 py-8">
+      <div className=" rounded-t-3xl md:rounded-xl -mt-11 md:mt-0  bg-card  px-6 py-8 max-w-md w-full mx-auto">
         <form>
           <Input label="Email" id="email" type="text" />
           <Input label="Password" id="password" type="password" />

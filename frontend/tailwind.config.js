@@ -32,6 +32,7 @@ export default {
       fontFamily: {
         ubuntu: ["Ubuntu", "sans-serif"],
         roboto:["Roboto","sans-serif"]
+        
       }
     },
   },
