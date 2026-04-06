@@ -1,11 +1,13 @@
-import RegisterPage from './pages/auth/CombinedPage'
-
+import ProviderCard from "./components/provider/ProviderCard"
 
 const App = () => {
   return (
-   <div>
-   <RegisterPage/>
-   </div>
+    <div className="m-3 ">
+      <ProviderCard/>
+      <ProviderCard/>
+      <ProviderCard/>
+      <ProviderCard/>
+    </div>
   )
 }
 
