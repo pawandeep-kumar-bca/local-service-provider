@@ -1,14 +1,11 @@
-import ProviderCard from "./components/provider/ProviderCard"
+import MenuSideBar from "./components/common/MenuSideBar";
 
 const App = () => {
   return (
-    <div className="m-3 ">
-      <ProviderCard/>
-      <ProviderCard/>
-      <ProviderCard/>
-      <ProviderCard/>
+    <div>
+      <MenuSideBar role="provider" />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
