@@ -15,7 +15,12 @@ const MenuSideBar = ({ role }) => {
           ? adminMenu
           : publicMenu;
   return <div className="w-full md:w-[20%] h-screen bg-red-100 flex flex-col items-center pt-20 md:pt-2">
-    <img src="/assets/logo.png" alt="logo" className="w-[7rem] hidden md:flex "/>
+    <img
+    src="/assets/logo.png"
+    alt="logo"
+    className="w-[3rem] hidden md:block"
+  />
+
     <div className="w-full h-[1px] bg-muted md:flex hidden"></div>
     {menu.map((item,idx)=>(
         <div key={idx} className="w-full flex items-center  gap-3 md:px-4">
