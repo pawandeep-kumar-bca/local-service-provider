@@ -1,10 +1,10 @@
-import ProviderDashboard from "./pages/provider/ProviderDashboard";
+import Notification from "./components/common/Notification";
 
 
 const App = () => {
   return (
-   <ProviderDashboard/>
-    
+   
+    <Notification/>
   );
 };
 
