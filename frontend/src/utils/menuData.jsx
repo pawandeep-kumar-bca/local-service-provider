@@ -110,6 +110,11 @@ export  const adminMenu = [
         icon:<FaListCheck />,
         path:'/bookings',
 
+    },
+    {
+      name: "Categories",
+      icon: <BiCategory />,
+      path: "/categories",
     },{
         name:'Payments',
         icon:<FaChartSimple />,

@@ -1,10 +1,11 @@
-import ManageProvidersPage from "./pages/provider/ManageProvidersPage";
+import CategoriesPage from "./pages/provider/CategoriesPage";
+
 
 
 const App = () => {
   return (
    
-  <ManageProvidersPage/>
+  <CategoriesPage/>
   );
 };
 
