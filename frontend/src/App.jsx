@@ -1,10 +1,10 @@
-import Notification from "./components/common/Notification";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 
 
 const App = () => {
   return (
    
-    <Notification/>
+  <AdminDashboardPage/>
   );
 };
 
