@@ -4,7 +4,7 @@ import {
   providerMenu,
   adminMenu,
   publicMenu,
-} from "../data/menuData";
+} from "../../utils/menuData";
 const MenuSideBar = ({ role }) => {
   const menu =
     role === "user"

@@ -1,4 +1,4 @@
-import Button from "../common/Button";
+import Button from "../../components/common/Button";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";

@@ -1,8 +1,9 @@
-import UserDashboard from "./pages/user/UserDashboard";
+import ProviderDashboard from "./pages/provider/ProviderDashboard";
+
 
 const App = () => {
   return (
-    <UserDashboard/>
+   <ProviderDashboard/>
     
   );
 };

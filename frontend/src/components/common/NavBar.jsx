@@ -17,8 +17,11 @@ const NavBar = () => {
     <>
       <div className="w-full shadow-[0_0_15px_rgba(0,0,0,0.45)] px-3 h-[5.3rem] flex items-center justify-between  overflow-hidden ">
         {/* LOGO */}
-        <img src="/assets/logo.png" alt="logo" className="w-[3rem] md:hidden" />
-
+          <img
+            src="/assets/profile.png"
+            alt="profile"
+            className="w-12 md:hidden rounded-full object-cover cursor-pointer"
+          />
         {/* SEARCH */}
         <div className="flex items-center gap-2 border border-muted rounded-lg py-1 md:py-2 px-2 flex-1  mx-4 ">
           <IoSearch className="text-xl" />
@@ -57,6 +60,7 @@ const NavBar = () => {
         </div>
       </div>
       {openMenuBar && <MenuSideBar />}
+      
     </>
   );
 };

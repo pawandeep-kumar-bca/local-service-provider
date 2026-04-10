@@ -1,6 +1,9 @@
-import { BiBookAdd } from "react-icons/bi";
-import { FaCheckCircle, FaStar } from "react-icons/fa";
+
+import { FaCheckCircle, FaStar, FaWallet } from "react-icons/fa";
 import Navbar from '../../components/common/NavBar'
+import ProviderCard from '../provider/ProviderCard'
+import { Link } from "react-router-dom";
+import Cards from "../../components/common/Cards";
 const UserDashboard = () => {
   return (
     <>
@@ -21,29 +24,23 @@ const UserDashboard = () => {
         </div>
         <img src="/assets/man.png" alt="image" className="w-[15%] hidden md:block "/>
       </div>
-     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-8 mb-6">
-        <div className="shadow-[0_0_15px_rgba(0,0,0,0.45)] p-5 rounded-lg  flex items-start gap-3">
-        <BiBookAdd className="text-3xl text-danger"/>
-        <div className="flex flex-col items-center"><h1 className="text-2xl font-bold">4</h1>
-        <h2 className="text-sm font-bold">Total Booking</h2></div>
-     </div>
-        <div className="shadow-[0_0_15px_rgba(0,0,0,0.45)] p-5 rounded-lg flex items-start gap-6 ">
-         <FaCheckCircle className="text-2xl text-success" />
-        <div className="flex w-[50%] flex-col items-center"><h1 className="text-2xl font-bold">4</h1>
-        <h2 className="text-sm font-bold">Active</h2></div>
-     </div>
-      <div className="shadow-[0_0_15px_rgba(0,0,0,0.45)] p-5 rounded-lg flex items-start gap-4">
-        <FaCheckCircle className="text-2xl text-primary" />
-        <div className="flex w-[50%] flex-col items-center"><h1 className="text-2xl font-bold">4</h1>
-        <h2 className="text-sm font-bold">Completed</h2></div>
-     </div>
-        <div className="shadow-[0_0_15px_rgba(0,0,0,0.45)] p-5 rounded-lg flex items-start gap-4">
-        <FaStar className="text-2xl text-warning" />
-        <div className="flex w-[50%] flex-col items-center"><h1 className="text-2xl font-bold">4</h1>
-        <h2 className="text-sm font-bold">Reviewed</h2></div>
-     </div>
-       
-     </div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
+
+      <Cards icon={<FaWallet className="text-success text-2xl"/>} value={3}>Total Earning</Cards>
+      <Cards icon={<FaCheckCircle className="text-primary text-2xl"/>} value={3}>Completed</Cards>
+      <Cards icon={<FaCheckCircle className="text-divider text-2xl"/>} value={3}>Active</Cards>
+      <Cards icon={<FaStar className="text-warning text-2xl"/>} value={3}>Reviewed</Cards>
+      </div>
+    </div>
+   
+    <div className="px-3">
+        <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Providers</h1>
+            <Link to='/providers' className="text-primary">View All</Link>
+        </div>
+        <div className="grid grid-col-3 md:grid-cols-4">
+            <ProviderCard/>
+        </div>
     </div>
     </>
   );
