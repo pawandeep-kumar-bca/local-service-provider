@@ -1,9 +1,8 @@
-import MenuSideBar from "./components/common/MenuSideBar";
-import NavBar from "./components/common/NavBar";
+import UserDashboard from "./pages/user/UserDashboard";
 
 const App = () => {
   return (
-     <NavBar/>
+    <UserDashboard/>
     
   );
 };
