@@ -1,10 +1,10 @@
-import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+import ManageProvidersPage from "./pages/provider/ManageProvidersPage";
 
 
 const App = () => {
   return (
    
-  <AdminDashboardPage/>
+  <ManageProvidersPage/>
   );
 };
 
