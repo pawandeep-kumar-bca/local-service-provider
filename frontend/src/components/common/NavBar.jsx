@@ -15,7 +15,7 @@ const NavBar = () => {
   };
   return (
     <>
-      <div className="w-full bg-red-100 h-[5.3rem] flex items-center justify-between px-2 md:px-5 overflow-hidden ">
+      <div className="w-full shadow-[0_0_15px_rgba(0,0,0,0.45)] px-3 h-[5.3rem] flex items-center justify-between  overflow-hidden ">
         {/* LOGO */}
         <img src="/assets/logo.png" alt="logo" className="w-[3rem] md:hidden" />
 
