@@ -6,6 +6,7 @@ const AddCategoriesPage = () => {
     <div className="w-full  flex items-center justify-center bg-black/40 h-screen z-90 relative">
       <div className="w-[30%]  bg-bg p-5 rounded-lg shadow_[0,0,30px_rgba(0,0,0,0.30)]">
         <h1 className="text-2xl text-text font-semibold mb-6 text-center">Add Category</h1>
+        <div className="w-full h-[1px] bg-muted"></div>
         <div>
           <Input
             label="Category Name"
