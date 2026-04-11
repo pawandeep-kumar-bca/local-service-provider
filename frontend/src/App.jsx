@@ -1,12 +1,13 @@
+import MyBookingsPage from "./pages/user/MyBookingsPage";
 
-import CategoriesPage from "./pages/provider/CategoriesPage";
+
 
 
 
 const App = () => {
   return (
    
-  <CategoriesPage/>
+  <MyBookingsPage/>
   );
 };
 
