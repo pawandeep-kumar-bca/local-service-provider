@@ -7,9 +7,9 @@ const MyBookingsPage = () => {
   return (
     <div className="flex flex-col md:flex-row w-full gap-3 p-3">
       {/* left side */}
-      <div className="md:w-[50%] shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded p-3">
+      <div className="md:w-[50%] shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded pt-2 px-3">
         <div className="mb-5">
-          <ul className="flex gap-3 text-sm md:text-lg font-semibold">
+          <ul className="flex gap-3 text-sm md:justify-between md:text-lg font-semibold md:p-4">
             <li>Incoming</li>
             <li>Upcoming</li>
             <li>Accepted</li>
@@ -17,12 +17,12 @@ const MyBookingsPage = () => {
             <li>Pending</li>
           </ul>
         </div>
-        <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded ">
-          <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded flex mb-3">
+        <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded md:p-4">
+          <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded flex items-center mb-3">
             <img
               src="/assets/profile.png"
               alt="profile"
-              className="w-[6rem] h-[6rem] rounded-full object-cover 
+              className="w-[5rem] h-[5rem] rounded-full object-cover 
             "
             />
             <div className="flex items-center justify-between w-full p-2">
@@ -44,51 +44,56 @@ const MyBookingsPage = () => {
                   </div>
                 </div>
               </div>
-              <h1 className="text-lg font-bold"> ₹ 250</h1>
+              <h1 className="text-lg font-bold mr-3"> ₹ 250</h1>
             </div>
           </div>
+        
         </div>
       </div>
       {/* right side */}
-      <div className="md:w-[50%] shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded p-3">
+      <div className="md:w-[50%] shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded p-3 pb-8">
         <div>
-          <div>
+          <div className="flex gap-1 items-center">
             <img
               src="/assets/profile.png"
               alt="profile"
-              className="w-[6rem] h-[6rem] rounded-full object-cover 
+              className="w-[5rem] md:w-[4.5rem] md:h-[4.5rem] h-[5rem] rounded-full object-cover 
             "
             />
-            <h2>Ahish sharma</h2>
-            <p>Plumbing Service</p>
+            <div>
+                <h2 className="text-xl font-semibold">Ahish sharma</h2>
+            <p className="text-muted md:text-sm ">Plumbing Service</p>
+            </div>
           </div>
-          <div>
-            <Button><IoMdCall /> Call</Button>
-            <Button><IoIosChatboxes /> Chat</Button>
+          <div className="flex gap-3 ml-3 mt-2">
+            <Button color="white" className="text-success"><IoMdCall className="text-2xl md:text-xl"/> Call</Button>
+            <Button color="white" className="text-primary"><IoIosChatboxes className="text-2xl md:text-xl"/> Chat</Button>
           </div>
         </div>
-        <div>
-            <h1>Booking Info:</h1>
+        <div className="mt-7 md:mt-5">
+            <h1 className="text-xl font-semibold mb-3">Booking Info:</h1>
             <div>
-               <div>
-                 <h3>ID:#1234 </h3>
-                <Button>Incoming</Button>
+               <div className="flex gap-3 items-center">
+                 <h3 className="text-lg">ID:#1234 </h3>
+                <Button color="white" className="text-primary">Incoming</Button>
                </div>
-               <div>
-                <div>
-                     <div>
-                    <FaRegCalendarMinus />
-                    <p>May 20 ,2023 - 11:30 PM</p>
+               <div >
+                <div className="flex items-center justify-between mt-3">
+                     <div className="flex gap-2 items-center">
+                    <FaRegCalendarMinus className="text-2xl text-success md:text-xl"/>
+                    <p className="text-lg font-light md:font-semibold md:text-sm">May 20 ,2023 - 11:30 PM</p>
                   </div>
-                  <h1>₹ 240</h1>
+                  <h1 className="text-2xl md:text-xl font-semibold">₹ 240</h1>
                 </div>
                </div>
             </div>
         </div>
-        <div>
-            <h1>Update Booking Status</h1>
-            <Button>Accept</Button>
-            <Button>Reject</Button>
+        <div className="mt-7 md:mt-5">
+            <h1 className="text-xl font-semibold mb-3">Update Booking Status</h1>
+            <div className="flex gap-5 w-full justify-center" >
+                <Button fullWidth>Accept</Button>
+            <Button color="white" className="text-danger text-center" fullWidth>Reject</Button>
+            </div>
         </div>
       </div>
     </div>
