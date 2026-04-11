@@ -1,3 +1,4 @@
+import AddCategoriesPage from "./pages/provider/AddCategoriesPage";
 import CategoriesPage from "./pages/provider/CategoriesPage";
 
 
@@ -5,7 +6,7 @@ import CategoriesPage from "./pages/provider/CategoriesPage";
 const App = () => {
   return (
    
-  <CategoriesPage/>
+  <AddCategoriesPage/>
   );
 };
 
