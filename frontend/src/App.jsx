@@ -1,12 +1,11 @@
-import ChatPage from "./pages/chats/ChatPage";
-
+import PaymentHistory from "./pages/user/PaymentHistory";
 
 
 
 const App = () => {
   return (
    
-  <ChatPage/>
+  <PaymentHistory/>
   );
 };
 

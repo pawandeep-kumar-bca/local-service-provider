@@ -6,7 +6,7 @@ const Button = ({
   ...props
 }) => {
   const base =
-    "py-2 px-5 flex items-center justify-center gap-2 font-roboto rounded-[4px] cursor-pointer font-bold shadow-md transition-all inset-shadow-xs duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-lg sm:text-sm hover:scale-105 shadow-lg active:scale-95";
+    "py-2 px-4 flex items-center justify-center gap-2 font-roboto rounded-[4px] cursor-pointer font-base shadow-md transition-all inset-shadow-xs duration-200 disabled:opacity-50 disabled:cursor-not-allowed md:text-lg text-xs hover:scale-105 shadow-lg active:scale-95";
 
 
 
