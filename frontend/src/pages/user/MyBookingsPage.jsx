@@ -9,7 +9,7 @@ const MyBookingsPage = () => {
       {/* left side */}
       <div className="md:w-[50%] shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded p-3">
         <div className="mb-5">
-          <ul className="flex gap-3 text-sm font-semibold">
+          <ul className="flex gap-3 text-sm md:text-lg font-semibold">
             <li>Incoming</li>
             <li>Upcoming</li>
             <li>Accepted</li>
@@ -17,34 +17,34 @@ const MyBookingsPage = () => {
             <li>Pending</li>
           </ul>
         </div>
-        <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded">
-          <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded flex items-center">
+        <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded ">
+          <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded flex mb-3">
             <img
               src="/assets/profile.png"
               alt="profile"
               className="w-[6rem] h-[6rem] rounded-full object-cover 
             "
             />
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between w-full p-2">
               <div>
-                <h1>Ashish verma</h1>
-                <div className="flex">
-                 <div>
+                <h1 className="text-lg font-semibold">Ashish verma</h1>
+                <div>
+                 <div className="flex gap-2">
                      <div className="flex items-center gap-1">
-                    <MdOutlinePlumbing />
+                    <MdOutlinePlumbing  className="text-lg"/>
                     <p>Plumbing</p>
                   </div>
                   <div className="flex items-center gap-1">
-                    <MdLocationPin /> Delhi
+                    <MdLocationPin className="text-lg"/> Delhi
                   </div>
                  </div>
-                  <div className="flex items-center gap-1">
-                    <FaRegCalendarMinus />
+                  <div className="flex items-center gap-2">
+                    <FaRegCalendarMinus className="text-lg"/>
                     <p>May 20 ,2023 - 11:30 PM</p>
                   </div>
                 </div>
               </div>
-              <h1>₹ 250</h1>
+              <h1 className="text-lg font-bold"> ₹ 250</h1>
             </div>
           </div>
         </div>
