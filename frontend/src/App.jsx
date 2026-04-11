@@ -1,5 +1,4 @@
-import MyBookingsPage from "./pages/user/MyBookingsPage";
-
+import ChatPage from "./pages/chats/ChatPage";
 
 
 
@@ -7,7 +6,7 @@ import MyBookingsPage from "./pages/user/MyBookingsPage";
 const App = () => {
   return (
    
-  <MyBookingsPage/>
+  <ChatPage/>
   );
 };
 
