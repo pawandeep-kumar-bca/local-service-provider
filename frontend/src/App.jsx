@@ -1,11 +1,11 @@
-import AllReviews from "./pages/user/AllReviews";
+import ReviewForm from "./pages/user/ReviewForm";
 
 
 
 const App = () => {
   return (
    
- <AllReviews/>
+ <ReviewForm/>
   );
 };
 
