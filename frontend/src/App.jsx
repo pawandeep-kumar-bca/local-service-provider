@@ -1,11 +1,11 @@
-import PaymentInfo from "./pages/user/PaymentInfo";
+import AllReviews from "./pages/user/AllReviews";
 
 
 
 const App = () => {
   return (
    
-  <PaymentInfo/>
+ <AllReviews/>
   );
 };
 
