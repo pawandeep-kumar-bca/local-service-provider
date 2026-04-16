@@ -1,6 +1,6 @@
 
 
-import { AiFillChrome, AiFillHome } from "react-icons/ai";
+import { AiFillHome } from "react-icons/ai";
 import { BiCategory } from "react-icons/bi";
 import { FaBookmark, FaUser } from "react-icons/fa";
 import { FaChartSimple, FaListCheck } from "react-icons/fa6";
@@ -14,7 +14,7 @@ import { TbHelpCircleFilled, TbSettings } from "react-icons/tb";
 export const publicMenu = [
     {
       name: "Home",
-      icon: <AiFillChrome />,
+      icon: <AiFillHome />,
       path: "/",
     },
     {

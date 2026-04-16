@@ -1,40 +1,41 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   userMenu,
   providerMenu,
   adminMenu,
   publicMenu,
 } from "../../utils/menuData";
+
 const MenuSideBar = ({ role }) => {
   const menu =
     role === "user"
       ? userMenu
       : role === "provider"
-        ? providerMenu
-        : role === "admin"
-          ? adminMenu
-          : publicMenu;
+      ? providerMenu
+      : role === "admin"
+      ? adminMenu
+      : publicMenu;
 
   return (
-    <div className="w-full md:w-[20%] h-screen bg-green-100 flex flex-col items-center absolute pt-20 top-0  md:pt-2">
-      <img
-        src="/assets/logo.png"
-        alt="logo"
-        className="w-[3rem] hidden md:block"
-      />
-
-      <div className="w-full h-[1px] bg-muted md:flex hidden"></div>
+    <div className="w-full h-full bg-bg flex  flex-col border-t border-r border-muted pt-10 px-4 gap-1 md:gap-2">
+      
       {menu.map((item, idx) => (
-        <div key={idx} className="w-full flex items-center justify-center gap-5 md:px-4">
-          <div className="hidden md:flex text-2xl ">{item.icon}</div>
-          <Link
-            to={item.path}
-            className="text-xl font-semibold mb-2 md:text-lg"
-          >
-            {item.name}
-          </Link>
-        </div>
+        <NavLink
+          key={idx}
+          to={item.path}
+          className={({ isActive }) =>
+            `flex md:justify-start justify-center  gap-3 p-2 rounded-lg transition ${
+              isActive
+                ? "text-primary w-full  font-bold bg-blue-100"
+                : "text-text hover:bg-gray-200"
+            }`
+          }
+        >
+          <div className="text-xl hidden md:flex">{item.icon}</div>
+          <h2 className="text-lg md:text-sm font-semibold">{item.name}</h2>
+        </NavLink>
       ))}
+
     </div>
   );
 };

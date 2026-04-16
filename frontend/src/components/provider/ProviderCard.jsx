@@ -7,7 +7,7 @@ import { MdOutlineCurrencyRupee } from "react-icons/md";
 
 const ProviderCard = () => {
   return (
-    <div className="w-full shadow-[0_0_15px_rgba(0,0,0,0.45)] p-5 rounded-lg mt-6">
+    <div className="w-full  bg-bg shadow-[0_0_15px_rgba(0,0,0,0.45)] p-5 rounded-lg mt-1">
       <div className="flex w-full gap-3 items-center">
         <img
           src="/assets/profile.png"

@@ -6,61 +6,81 @@ import { useState } from "react";
 const NavBar = () => {
   const [openMenuBar, setOpenMenuBar] = useState(false);
 
-  const menuBar = () => {
-    if (!openMenuBar) {
-      setOpenMenuBar(true);
-    } else {
-      setOpenMenuBar(false);
-    }
-  };
   return (
     <>
-      <div className="w-full shadow-[0_0_15px_rgba(0,0,0,0.45)] px-3 h-[5.3rem] flex items-center justify-between  overflow-hidden ">
-        
+      <div className="w-full bg-bg h-[5.3rem] flex items-center">
+
+        {/* LEFT (same as sidebar width) */}
+        <div className="hidden h-full md:flex w-64 items-center justify-center border-r border-muted">
           <img
-            src="/assets/profile.png"
-            alt="profile"
-            className="w-12 md:hidden rounded-full object-cover cursor-pointer"
-          />
-        {/* SEARCH */}
-        <div className="flex items-center gap-2 border border-muted rounded-lg py-1 md:py-2 px-2 flex-1  mx-4 ">
-          <IoSearch className="text-xl" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="text-sm w-full outline-none "
+            src="/assets/logo.png"
+            alt="logo"
+            className="w-[3rem]"
           />
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="flex items-center gap-3">
-          <div className="relative cursor-pointer">
-            <IoMdNotifications className="text-xl md:text-2xl" />
-            <div className="absolute -top-2 -right-2 bg-gray-500 text-white rounded-full px-1 text-[10px]">
-              0
-            </div>
-          </div>
+        <div className="flex flex-1 items-center justify-between px-4">
 
+          {/* Mobile Profile */}
           <img
             src="/assets/profile.png"
             alt="profile"
-            className="hidden md:flex md:w-14 md:h-14 rounded-full object-cover cursor-pointer"
+            className="w-10 md:hidden rounded-full"
           />
-          {openMenuBar ? (
-            <IoMdClose
-              className="text-4xl z-10 mr-4 mt-4 cursor-pointer md:hidden"
-              onClick={menuBar}
+
+          {/* Search */}
+          <div className="flex items-center gap-2 border border-muted rounded-lg py-1 px-2 flex-1 md:ml-7 md:mr-4 mx-4">
+            <IoSearch className="text-xl" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="text-lg w-full outline-none"
             />
-          ) : (
-            <IoMenu
-              className="text-3xl cursor-pointer md:hidden"
-              onClick={menuBar}
+          </div>
+
+          {/* Right Icons */}
+          <div className="flex items-center gap-3">
+
+            <div className="relative cursor-pointer">
+              <IoMdNotifications className="text-xl md:text-2xl" />
+              <div className="absolute -top-2 -right-2 bg-gray-500 text-white rounded-full px-1 text-[10px]">
+                0
+              </div>
+            </div>
+
+            <img
+              src="/assets/profile.png"
+              alt="profile"
+              className="hidden md:flex w-12 h-12 rounded-full"
             />
-          )}
+
+            {/* Hamburger */}
+            {openMenuBar ? (
+              <IoMdClose
+                className="text-3xl cursor-pointer z-60 md:hidden"
+                onClick={() => setOpenMenuBar(false)}
+              />
+            ) : (
+              <IoMenu
+                className="text-3xl cursor-pointer md:hidden"
+                onClick={() => setOpenMenuBar(true)}
+              />
+            )}
+          </div>
         </div>
       </div>
-      {openMenuBar && <MenuSideBar />}
-      
+
+      {/* Mobile Sidebar */}
+      {openMenuBar && (
+        <>
+          
+
+          <div className="fixed top-0 flex justify-center left-0 w-[100%] h-full bg-white z-50 shadow-lg md:hidden">
+            <MenuSideBar role="provider" />
+          </div>
+        </>
+      )}
     </>
   );
 };
