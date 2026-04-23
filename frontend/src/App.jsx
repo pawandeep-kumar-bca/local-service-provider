@@ -1,15 +1,10 @@
-import StatusBadge from "./components/common/StatusBadge";
-import MainLayout from "./layouts/MainLayout";
 
+import AppRoutes from "./routes/AppRoutes";
+import "./index.css";
 
 
 const App = () => {
-  return (
-   
- <>
- <MainLayout/>
- </>
-  );
+  return <AppRoutes/>
 };
 
 export default App;

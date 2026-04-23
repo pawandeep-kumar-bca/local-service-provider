@@ -10,7 +10,6 @@ import EarningAnalytics from "./EarningAnalytics";
 const ProviderDashboard = () => {
   return (
     <>
-      <NavBar />
       <div className="w-full p-3">
         <div
           className="w-[100%] rounded-2xl 

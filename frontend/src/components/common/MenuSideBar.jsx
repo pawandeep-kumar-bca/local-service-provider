@@ -17,8 +17,15 @@ const MenuSideBar = ({ role }) => {
       : publicMenu;
 
   return (
-    <div className="w-full h-full bg-bg flex  flex-col border-t border-r border-muted pt-10 px-4 gap-1 md:gap-2">
+    <div className="w-full h-full bg-bg flex  flex-col md:pt-3 pt-15 px-4 gap-1 md:gap-2">
       
+          <div className="hidden md:flex  items-center justify-center mb-5">
+          <img
+            src="/assets/logo.png"
+            alt="logo"
+            className="w-[3rem]"
+          />
+        </div>
       {menu.map((item, idx) => (
         <NavLink
           key={idx}

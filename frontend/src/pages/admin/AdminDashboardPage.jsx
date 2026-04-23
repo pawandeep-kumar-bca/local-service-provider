@@ -11,7 +11,6 @@ import BookingChart from "../../utils/lineChart";
 const ProviderDashboard = () => {
   return (
     <>
-      <NavBar />
       <div className="w-full h-full p-3">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
           <Cards

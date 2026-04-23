@@ -32,102 +32,102 @@ export  const userMenu = [
     {
       name: "Home",
       icon: <AiFillHome />,
-      path: "/",
+      path: "/user",
     },
     {
       name: "My Bookings",
       icon: <FaListCheck />,
-      path: "/my-bookings",
+      path: "/user/my-bookings",
     },
     {
       name: "Saved Providers",
       icon: <FaBookmark />,
-      path: "/saved-providers",
+      path: "/user/saved-providers",
     },
     {
       name: "Payment History",
       icon: <MdPayments />,
-      path: "/payment-history",
+      path: "/user/payment-history",
     },
     {
       name: "Reviews",
       icon: <MdReviews />,
-      path: "/reviews",
+      path: "/user/reviews",
     },
     {
       name: "Support",
       icon: <TbHelpCircleFilled />,
-      path: "/support",
+      path: "/user/support",
     },
     {
       name: "Profile Settings",
       icon: <TbSettings />,
-      path: "/profile-settings",
+      path: "/user/profile-settings",
     }
   ];
 export  const providerMenu = [
     {
       name: "Home",
       icon: <AiFillHome />,
-      path: "/",
+      path: "/provider",
     },
     {
       name: "Bookings",
       icon: <FaListCheck />,
-      path: "/bookings",
+      path: "/provider/bookings",
     },{
         name:'Earnings',
         icon:<LuChartNoAxesCombined />,
-        path:'/earnings'
+        path:'/provider/earnings'
     },{
         name:'Services',
         icon:<GrServices />,
-        path:'/services'
+        path:'/provider/services'
     },
     {
         name:'Documents',
         icon:<IoDocumentSharp />,
-        path:'/documents'
+        path:'/provider/documents'
     },{
       name: "Settings",
       icon: <TbSettings />,
-      path: "/settings",
+      path: "/provider/settings",
     }
   ]
 export  const adminMenu = [
     {
         name:'Dashboard',
         icon:<RiDashboardHorizontalFill />,
-        path:'/dashboard'
+        path:'/admin/dashboard'
     },
     {
         name:'Users',
         icon:<FaUser />,
-        path:'/users'
+        path:'/admin/users'
     },
     {
         name:'Bookings',
         icon:<FaListCheck />,
-        path:'/bookings',
+        path:'/admin/bookings',
 
     },
     {
       name: "Categories",
       icon: <BiCategory />,
-      path: "/categories",
+      path: "/admin/categories",
     },{
         name:'Payments',
         icon:<FaChartSimple />,
-        path:'/payments'
+        path:'/admin/payments'
     },
     {
         name:'Reports',
         icon:<MdReport />,
-        path:'/reports'
+        path:'/admin/reports'
     },{
       name: "Settings",
       icon: <TbSettings />,
-      path: "/settings",
+      path: "/admin/settings",
     }
 
   ]

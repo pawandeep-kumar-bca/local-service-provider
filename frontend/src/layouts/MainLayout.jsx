@@ -1,33 +1,28 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/common/NavBar";
 import MenuSideBar from "../components/common/MenuSideBar";
-import ProviderCard from "../components/provider/ProviderCard";
-import ChatPage from "../pages/chats/ChatPage";
+import UserHeroLayout from "./UserHeroLayout";
 
 const MainLayout = () => {
   return (
-    <div className="h-screen flex flex-col bg-muted/20">
-      
-      {/* Navbar */}
-      <Navbar />
+    <div className="p-3">
+      {/* Sidebar */}
+      <div className="w-64 hidden md:flex fixed left-0 top-0 bottom-0">
+        <MenuSideBar role="admin"/>
+      </div>
 
-      {/* Sidebar + Content */}
-      <div className="flex flex-1 overflow-hidden">
-        
-        {/* Sidebar (Desktop only) */}
-        <div className="hidden md:block w-64">
-          <MenuSideBar role="provider" />
+      {/* Right Side */}
+      <div className="md:ml-64 flex flex-col">
+        {/* Navbar */}
+        <div className="fixed top-0 md:left-64 right-0 z-50">
+          <Navbar />
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 p-2 md:p-4 overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 wrap">
-           
-            
-          </div>
+        {/* Content */}
+        <div className="pt-20">
+          {/* 🔥 Yaha route ka content render hoga */}
+          <Outlet />
         </div>
-
       </div>
     </div>
   );

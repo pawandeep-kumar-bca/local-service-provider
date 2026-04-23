@@ -11,13 +11,7 @@ const NavBar = () => {
       <div className="w-full bg-bg h-[5.3rem] flex items-center">
 
         {/* LEFT (same as sidebar width) */}
-        <div className="hidden h-full md:flex w-64 items-center justify-center border-r border-muted">
-          <img
-            src="/assets/logo.png"
-            alt="logo"
-            className="w-[3rem]"
-          />
-        </div>
+        
 
         {/* RIGHT SIDE */}
         <div className="flex flex-1 items-center justify-between px-4">
