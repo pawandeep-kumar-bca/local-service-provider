@@ -18,56 +18,63 @@ async function registerUser(req, res) {
       fullname,
       email,
       password,
-      emailVerifyToken,
+      emailVerificationToken: emailVerifyToken,
       emailVerificationExpires: Date.now() + 10 * 60 * 1000,
       role: "user",
     });
 
-    // ✅ send email
     await sendEmail(
       user.email,
       "Verify Your Email Address",
       `
-  <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-    
-    <h2 style="color: #4CAF50;">Email Verification</h2>
+  <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+    <tr>
+      <td align="center">
+        
+        <table width="500" cellpadding="0" cellspacing="0" style="background-color: #ffffff; padding: 20px; border-radius: 8px;">
+          
+          <tr>
+            <td align="center">
+              <h2 style="color: #4CAF50;">Email Verification</h2>
+            </td>
+          </tr>
 
-    <p>Hello ${user.name || "User"},</p>
+          <tr>
+            <td>
+              <p>Hello ${user.fullname || "User"},</p>
+              <p>Thank you for signing up! Please verify your email address.</p>
+            </td>
+          </tr>
 
-    <p>Thank you for signing up! Please verify your email address to activate your account.</p>
+          <tr>
+            <td align="center" style="padding: 20px;">
+              <a href="http://localhost:3000/api/v1/auth/verify-email/${emailVerifyToken}"
+                style="background-color: #4CAF50; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                Verify Email
+              </a>
+            </td>
+          </tr>
 
-    <div style="margin: 20px 0;">
-      <a href="http://localhost:3000/api/v1/auth/verify-email/${emailVerifyToken}" 
-         style="background-color: #4CAF50; color: #fff; padding: 12px 20px; 
-                text-decoration: none; border-radius: 5px; display: inline-block;">
-         Verify Email
-      </a>
-    </div>
+          <tr>
+            <td>
+              <p>If you did not create this account, ignore this email.</p>
+              <p>This link will expire in <strong>10 minutes</strong>.</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>Welcome aboard 🎉</p>
+              <p>Regards,<br/><strong>Local Service Provider</strong></p>
+            </td>
+          </tr>
 
-    <p>If you did not create this account, you can safely ignore this email.</p>
+        </table>
 
-    <p>This verification link will expire in <strong>10 minutes</strong>.</p>
-
-    <hr />
-
-    <p style="font-size: 12px; color: #777;">
-      If you're having trouble clicking the button, copy and paste the link below into your browser:
-    </p>
-
-    <p style="word-break: break-all; font-size: 12px;">
-      http://localhost:3000/api/v1/auth/verify-email/${emailVerifyToken}
-    </p>
-
-    <br/>
-
-    <p>Welcome aboard! 🎉</p>
-
-    <p>Regards,<br/><strong>Local Service Provider</strong></p>
-
-  </div>
+      </td>
+    </tr>
+  </table>
   `,
     );
-
     return res.status(201).json({
       message: "User registered successfully. Please verify your email.",
       user: {

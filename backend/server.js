@@ -5,7 +5,6 @@ const { Server } = require("socket.io");
 
 const app = require("./src/app");
 const connectDB = require("./src/config/db");
-
 const chatSocket = require("./src/sockets/chat.socket");
 const notificationSocket = require("./src/sockets/notification.socket");
 
