@@ -1,6 +1,6 @@
 // hooks/useAuth.js
 import { useMutation } from "@tanstack/react-query";
-import { registerUser } from "../services/authService";
+import { loginUser, registerUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
@@ -9,7 +9,6 @@ export const useAuth = () => {
   const registerMutation = useMutation({
     mutationFn: registerUser,
     onSuccess: () => {
-
       // redirect
       navigate("/login");
     },
@@ -17,6 +16,14 @@ export const useAuth = () => {
       console.log("Register Error:", error);
     },
   });
-
-  return { registerMutation };
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: () => {
+      navigate("/user");
+    },
+    onError: (error) => {
+      console.log("Login Error:", error);
+    },
+  });
+  return { registerMutation, loginMutation };
 };
