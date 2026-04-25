@@ -75,6 +75,7 @@ async function registerUser(req, res) {
   </table>
   `,
     );
+     
     return res.status(201).json({
       message: "User registered successfully. Please verify your email.",
       user: {
@@ -131,10 +132,10 @@ async function loginUser(req, res) {
     user.refreshToken = hashedToken;
     await user.save();
 
-    res.cookie("refreshToken", hashedToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
