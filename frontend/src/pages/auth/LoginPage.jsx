@@ -1,6 +1,7 @@
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 const LoginPage = () => {
   return (
     <div className="w-full md:flex h-full">
@@ -32,12 +33,12 @@ const LoginPage = () => {
         >
           <FcGoogle size={20} /> Continue with Google
         </Button>
-        <div className="w-full h-[2px] bg-border rounded-full mt-6 mb-2"></div>
-        <h4 className="text-center text-sm">
+        <div className="w-full h-[2px] md:hidden flex bg-border rounded-full mt-6 mb-2"></div>
+        <h4 className="text-center md:hidden flex text-sm">
           Don't have an account?{" "}
-          <span className="font-semibold cursor-pointer text-primary">
+          <Link to='/register' className="font-semibold cursor-pointer text-primary">
             Register
-          </span>{" "}
+          </Link>{" "}
         </h4>
       </div>
     </div>

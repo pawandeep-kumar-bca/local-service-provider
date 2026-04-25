@@ -26,14 +26,15 @@ import AddCategories from "../pages/admin/AddCategories";
 import AllPayments from "../pages/admin/AllPayments";
 import AllReports from "../pages/admin/AllReports";
 import Setting from "../pages/admin/Setting";
-
+import AuthLayout from "../layouts/AuthLayout";
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/login" element={<AuthLayout />} />
+      <Route path="/register" element={<AuthLayout />} />
 
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
- 
         {/* User */}
         <Route path="/user" element={<UserDashboard />} />
         <Route path="/user/my-bookings" element={<MyBookingsPage />} />
@@ -49,7 +50,10 @@ const AppRoutes = () => {
         <Route path="/provider/earnings" element={<EarningAnalyticPage />} />
         <Route path="/provider/services" element={<ServicesPage />} />
         <Route path="/provider/documents" element={<UploadDocuments />} />
-        <Route path="/provider/settings" element={<ProviderProfileSettings />} />
+        <Route
+          path="/provider/settings"
+          element={<ProviderProfileSettings />}
+        />
 
         {/* Admin */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -59,9 +63,7 @@ const AppRoutes = () => {
         <Route path="/admin/payments" element={<AllPayments />} />
         <Route path="/admin/reports" element={<AllReports />} />
         <Route path="/admin/settings" element={<Setting />} />
-
       </Route>
-
     </Routes>
   );
 };
