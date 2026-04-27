@@ -7,42 +7,42 @@ import {
 } from "../../utils/menuData";
 
 const MenuSideBar = ({ role }) => {
-  const menu =
-    role === "user"
-      ? userMenu
-      : role === "provider"
-      ? providerMenu
-      : role === "admin"
-      ? adminMenu
-      : publicMenu;
+  const roleMenuMap = {
+    user: userMenu,
+    provider: providerMenu,
+    admin: adminMenu,
+  };
+
+  const menu = roleMenuMap[role] || publicMenu;
+
+  if (!role) return null; // 🔥 important
 
   return (
-    <div className="w-full h-full bg-bg flex  flex-col md:pt-3 pt-15 px-4 gap-1 md:gap-2">
-      
-          <div className="hidden md:flex  items-center justify-center mb-5">
-          <img
-            src="/assets/logo.png"
-            alt="logo"
-            className="w-[3rem]"
-          />
-        </div>
+    <div className="w-full h-full bg-bg flex flex-col md:pt-3 pt-15 px-4 gap-2">
+
+      <div className="hidden md:flex items-center justify-center mb-5">
+        <img src="/assets/logo.png" alt="logo" className="w-[3rem]" />
+      </div>
+
       {menu.map((item, idx) => (
         <NavLink
           key={idx}
           to={item.path}
+          end
           className={({ isActive }) =>
-            `flex md:justify-start justify-center  gap-3 p-2 rounded-lg transition ${
+            `flex items-center gap-3 p-2 rounded-lg transition ${
               isActive
-                ? "text-primary w-full  font-bold bg-blue-100"
+                ? "text-primary font-bold bg-blue-100"
                 : "text-text hover:bg-gray-200"
             }`
           }
         >
-          <div className="text-xl hidden md:flex">{item.icon}</div>
-          <h2 className="text-lg md:text-sm font-semibold">{item.name}</h2>
+          <div className="text-xl">{item.icon}</div>
+          <h2 className="text-sm font-semibold hidden md:block">
+            {item.name}
+          </h2>
         </NavLink>
       ))}
-
     </div>
   );
 };

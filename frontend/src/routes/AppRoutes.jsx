@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
-
+import PrivateRoute from "./PrivateRoute";
+import RoleRoute from "./RoleRoute";
 // User
 import UserDashboard from "../pages/user/UserDashboard";
 import MyBookingsPage from "../pages/user/MyBookingsPage";
@@ -36,6 +37,8 @@ const AppRoutes = () => {
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
         {/* User */}
+        <Route element={<PrivateRoute/>}>
+        <Route element={<RoleRoute allowedRoles={["user"]} />}>
         <Route path="/user" element={<UserDashboard />} />
         <Route path="/user/my-bookings" element={<MyBookingsPage />} />
         <Route path="/user/saved-providers" element={<SavedProviders />} />
@@ -43,8 +46,9 @@ const AppRoutes = () => {
         <Route path="/user/reviews" element={<AllReviews />} />
         <Route path="/user/support" element={<Support />} />
         <Route path="/user/profile-settings" element={<ProfileSettings />} />
-
+</Route>
         {/* Provider */}
+         <Route element={<RoleRoute allowedRoles={["provider"]} />}>
         <Route path="/provider" element={<ProviderDashboard />} />
         <Route path="/provider/bookings" element={<AllBookings />} />
         <Route path="/provider/earnings" element={<EarningAnalyticPage />} />
@@ -54,8 +58,9 @@ const AppRoutes = () => {
           path="/provider/settings"
           element={<ProviderProfileSettings />}
         />
-
+</Route>
         {/* Admin */}
+        <Route element={<RoleRoute allowedRoles={["admin"]} />}>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<AllUsersList />} />
         <Route path="/admin/bookings" element={<AllBookingsList />} />
@@ -63,6 +68,8 @@ const AppRoutes = () => {
         <Route path="/admin/payments" element={<AllPayments />} />
         <Route path="/admin/reports" element={<AllReports />} />
         <Route path="/admin/settings" element={<Setting />} />
+      </Route>
+      </Route>
       </Route>
     </Routes>
   );
