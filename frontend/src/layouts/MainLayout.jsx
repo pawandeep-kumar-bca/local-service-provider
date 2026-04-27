@@ -17,7 +17,7 @@ const MainLayout = () => {
       {/* Right Side */}
       <div className="md:ml-64 flex flex-col">
         {/* Navbar */}
-        <div className="fixed top-0 md:left-64 right-0 z-50">
+        <div className="fixed top-0 md:left-64 left-0 right-0 z-50">
           <Navbar />
         </div>
 

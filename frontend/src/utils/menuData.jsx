@@ -15,7 +15,7 @@ export const publicMenu = [
     {
       name: "Home",
       icon: <AiFillHome />,
-      path: "/",
+      path: "/home",
     },
     {
       name: "Categories",

@@ -6,7 +6,7 @@ import {
   publicMenu,
 } from "../../utils/menuData";
 
-const MenuSideBar = ({ role }) => {
+const MenuSideBar = ({ role ,onItemClick}) => {
   const roleMenuMap = {
     user: userMenu,
     provider: providerMenu,
@@ -15,7 +15,7 @@ const MenuSideBar = ({ role }) => {
 
   const menu = roleMenuMap[role] || publicMenu;
 
-  if (!role) return null; // 🔥 important
+  
 
   return (
     <div className="w-full h-full bg-bg flex flex-col md:pt-3 pt-15 px-4 gap-2">
@@ -29,16 +29,17 @@ const MenuSideBar = ({ role }) => {
           key={idx}
           to={item.path}
           end
+          onClick={onItemClick}
           className={({ isActive }) =>
-            `flex items-center gap-3 p-2 rounded-lg transition ${
+            `flex items-center md:justify-start justify-center gap-3 p-2 rounded-lg transition ${
               isActive
                 ? "text-primary font-bold bg-blue-100"
                 : "text-text hover:bg-gray-200"
             }`
           }
         >
-          <div className="text-xl">{item.icon}</div>
-          <h2 className="text-sm font-semibold hidden md:block">
+          <div className="text-xl hidden md:block">{item.icon}</div>
+          <h2 className="text-sm font-semibold  block">
             {item.name}
           </h2>
         </NavLink>

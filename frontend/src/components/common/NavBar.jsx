@@ -2,20 +2,18 @@ import { IoMdClose, IoMdNotifications } from "react-icons/io";
 import { IoMenu, IoSearch } from "react-icons/io5";
 import MenuSideBar from "./MenuSideBar";
 import { useState } from "react";
-
+import { useSelector } from "react-redux";
 const NavBar = () => {
   const [openMenuBar, setOpenMenuBar] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
+  const role = user?.role;
   return (
     <>
       <div className="w-full bg-bg h-[5.3rem] flex items-center">
-
         {/* LEFT (same as sidebar width) */}
-        
-
+ 
         {/* RIGHT SIDE */}
         <div className="flex flex-1 items-center justify-between px-4">
-
           {/* Mobile Profile */}
           <img
             src="/assets/profile.png"
@@ -35,7 +33,6 @@ const NavBar = () => {
 
           {/* Right Icons */}
           <div className="flex items-center gap-3">
-
             <div className="relative cursor-pointer">
               <IoMdNotifications className="text-xl md:text-2xl" />
               <div className="absolute -top-2 -right-2 bg-gray-500 text-white rounded-full px-1 text-[10px]">
@@ -68,10 +65,11 @@ const NavBar = () => {
       {/* Mobile Sidebar */}
       {openMenuBar && (
         <>
-          
-
           <div className="fixed top-0 flex justify-center left-0 w-[100%] h-full bg-white z-50 shadow-lg md:hidden">
-            <MenuSideBar role="provider" />
+            <MenuSideBar
+              role={role}
+              onItemClick={() => setOpenMenuBar(false)}
+            />
           </div>
         </>
       )}
