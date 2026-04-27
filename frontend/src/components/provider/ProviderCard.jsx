@@ -7,7 +7,7 @@ import { MdOutlineCurrencyRupee } from "react-icons/md";
 
 const ProviderCard = () => {
   return (
-    <div className="w-full  bg-bg shadow-[0_0_15px_rgba(0,0,0,0.45)] p-5 rounded-lg mt-1">
+    <div className="w-full bg-bg shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] p-5 rounded-lg mt-1">
       <div className="flex w-full gap-3 items-center">
         <img
           src="/assets/profile.png"
@@ -48,8 +48,8 @@ const ProviderCard = () => {
           </h3>
         </div>
         <div className="w-full h-[1px] bg-muted my-3"></div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
+        <div className="flex items-center justify-between mt-1">
+          <div className="flex items-center gap-1 ">
             <FaLocationDot className="text-base text-muted"/>
             <h3 className="font-semibold text-text">500m away</h3>
           </div>

@@ -1,100 +1,30 @@
-import { FaRegCalendarMinus } from "react-icons/fa";
-import { IoIosChatboxes, IoMdCall } from "react-icons/io";
-import { MdLocationPin, MdOutlinePlumbing } from "react-icons/md";
-import Button from '../../components/common/Button'
+import { NavLink } from "react-router-dom";
+import BookingProvider from "./BookingProvider";
 
 const MyBookingsPage = () => {
   return (
-    <div className="flex flex-col md:flex-row w-full gap-3 p-3">
-      {/* left side */}
-      <div className="md:w-[50%] shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded pt-2 px-3">
-        <div className="mb-5">
-          <ul className="flex gap-3 text-sm md:justify-between md:text-lg font-semibold md:p-4">
-            <li>Incoming</li>
-            <li>Upcoming</li>
-            <li>Accepted</li>
-            <li>Completed</li>
-            <li>Pending</li>
+    <div>
+      <h1 className="mb-4 text-xl font-semibold ">My Bookings</h1>
+
+      <div className="relative">
+       <div className="mb-5 overflow-hidden sticky top-21 bg-white z-40 pb-5 md:pb-0 pt-3 md:pt-0">
+          <ul className="flex gap-3 text-lg md:text-lg font-semibold md:p-4 overflow-x-auto">
+            <NavLink to="/user/my-bookings" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>All</NavLink>
+            <NavLink to="/my-booking/upcomming" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Upcoming</NavLink>
+            <NavLink to="/my-booking/active" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Active</NavLink>
+            <NavLink to="/my-booking/completed" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Completed</NavLink>
+            <NavLink to="/my-booking/canceled" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Canceled</NavLink>
           </ul>
         </div>
-        <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded md:p-4">
-          <div className="shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded flex items-center mb-3">
-            <img
-              src="/assets/profile.png"
-              alt="profile"
-              className="w-[5rem] h-[5rem] rounded-full object-cover 
-            "
-            />
-            <div className="flex items-center justify-between w-full p-2">
-              <div>
-                <h1 className="text-lg font-semibold">Ashish verma</h1>
-                <div>
-                 <div className="flex gap-2">
-                     <div className="flex items-center gap-1">
-                    <MdOutlinePlumbing  className="text-lg"/>
-                    <p>Plumbing</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <MdLocationPin className="text-lg"/> Delhi
-                  </div>
-                 </div>
-                  <div className="flex items-center gap-2">
-                    <FaRegCalendarMinus className="text-lg"/>
-                    <p>May 20 ,2023 - 11:30 PM</p>
-                  </div>
-                </div>
-              </div>
-              <h1 className="text-lg font-bold mr-3"> ₹ 250</h1>
-            </div>
-          </div>
-        
-        </div>
-      </div>
-      {/* right side */}
-      <div className="md:w-[50%] shadow-[0_0_30px_rgba(0,0,0,0.38)] rounded p-3 pb-8">
-        <div>
-          <div className="flex gap-1 items-center">
-            <img
-              src="/assets/profile.png"
-              alt="profile"
-              className="w-[5rem] md:w-[4.5rem] md:h-[4.5rem] h-[5rem] rounded-full object-cover 
-            "
-            />
-            <div>
-                <h2 className="text-xl font-semibold">Ahish sharma</h2>
-            <p className="text-muted md:text-sm ">Plumbing Service</p>
-            </div>
-          </div>
-          <div className="flex gap-3 ml-3 mt-2">
-            <Button color="white" className="text-success"><IoMdCall className="text-2xl md:text-xl"/> Call</Button>
-            <Button color="white" className="text-primary"><IoIosChatboxes className="text-2xl md:text-xl"/> Chat</Button>
-          </div>
-        </div>
-        <div className="mt-7 md:mt-5">
-            <h1 className="text-xl font-semibold mb-3">Booking Info:</h1>
-            <div>
-               <div className="flex gap-3 items-center">
-                 <h3 className="text-lg">ID:#1234 </h3>
-                <Button color="white" className="text-primary">Incoming</Button>
-               </div>
-               <div >
-                <div className="flex items-center justify-between mt-3">
-                     <div className="flex gap-2 items-center">
-                    <FaRegCalendarMinus className="text-2xl text-success md:text-xl"/>
-                    <p className="text-lg font-light md:font-semibold md:text-sm">May 20 ,2023 - 11:30 PM</p>
-                  </div>
-                  <h1 className="text-2xl md:text-xl font-semibold">₹ 240</h1>
-                </div>
-               </div>
-            </div>
-        </div>
-        <div className="mt-7 md:mt-5">
-            <h1 className="text-xl font-semibold mb-3">Update Booking Status</h1>
-            <div className="flex gap-5 w-full justify-center" >
-                <Button fullWidth>Accept</Button>
-            <Button color="white" className="text-danger text-center" fullWidth>Reject</Button>
-            </div>
-        </div>
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <BookingProvider/>
+        <BookingProvider/>
+        <BookingProvider/>
+        <BookingProvider/>
+        <BookingProvider/>
+        <BookingProvider/>
+       </div>
+       
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ const MainLayout = () => {
  const {user} = useSelector((state)=>state.auth)
  const role = user?.role;
   return (
-    <div className="p-3">
+    <div className="md:p-3 px-2 py-5">
       {/* Sidebar */}
       <div className="w-64 hidden md:flex fixed left-0 top-0 bottom-0">
         <MenuSideBar role={role}/>

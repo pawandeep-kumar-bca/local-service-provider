@@ -10,7 +10,7 @@ const UserDashboard = () => {
         <div
           className="w-[100%] p-6 rounded-2xl 
   bg-[#3B82F6]
-  shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex justify-between items-start mt-3"
+  shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] flex justify-between items-start mt-3"
         >
           <div>
             <h1 className="text-bg font-bold text-2xl pb-1">Hi, shivam </h1>
@@ -50,13 +50,11 @@ const UserDashboard = () => {
         <div className="px-3">
           <div className="flex justify-between items-center pb-5">
             <h1 className="text-2xl font-bold">Providers</h1>
-            <Link to="/providers" className="text-primary">
+            <Link to="/providers" className="text-primary font-semibold">
               View All
             </Link>
           </div>
-          <div className="grid grid-col-3 gap-2 md:grid-cols-4">
-            <ProviderCard />
-            <ProviderCard />
+          <div className="grid grid-col-1 gap-2 md:grid-cols-3">
             <ProviderCard />
             <ProviderCard />
             <ProviderCard />
