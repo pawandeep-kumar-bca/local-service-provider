@@ -33,7 +33,7 @@ export  const userMenu = [
       name: "Home",
       icon: <AiFillHome />,
       path: "/user",
-    },
+    }, 
     {
       name: "My Bookings",
       icon: <FaListCheck />,

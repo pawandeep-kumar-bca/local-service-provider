@@ -28,6 +28,9 @@ import AllPayments from "../pages/admin/AllPayments";
 import AllReports from "../pages/admin/AllReports";
 import Setting from "../pages/admin/Setting";
 import AuthLayout from "../layouts/AuthLayout";
+import Home from "../pages/public/Home";
+import Categories from "../pages/public/Categories";
+import Profile from "../pages/public/Profile";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -36,40 +39,49 @@ const AppRoutes = () => {
 
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
+        <Route path="/home" element={<Home/>}/>
+        <Route path="/categories" element={<Categories/>}/>
+        <Route path="/profile" element={<Profile/>}/>
+        <Route element={<PrivateRoute />}>
         {/* User */}
-        <Route element={<PrivateRoute/>}>
-        <Route element={<RoleRoute allowedRoles={["user"]} />}>
-        <Route path="/user" element={<UserDashboard />} />
-        <Route path="/user/my-bookings" element={<MyBookingsPage />} />
-        <Route path="/user/saved-providers" element={<SavedProviders />} />
-        <Route path="/user/payment-history" element={<PaymentHistory />} />
-        <Route path="/user/reviews" element={<AllReviews />} />
-        <Route path="/user/support" element={<Support />} />
-        <Route path="/user/profile-settings" element={<ProfileSettings />} />
-</Route>
-        {/* Provider */}
-         <Route element={<RoleRoute allowedRoles={["provider"]} />}>
-        <Route path="/provider" element={<ProviderDashboard />} />
-        <Route path="/provider/bookings" element={<AllBookings />} />
-        <Route path="/provider/earnings" element={<EarningAnalyticPage />} />
-        <Route path="/provider/services" element={<ServicesPage />} />
-        <Route path="/provider/documents" element={<UploadDocuments />} />
-        <Route
-          path="/provider/settings"
-          element={<ProviderProfileSettings />}
-        />
-</Route>
-        {/* Admin */}
-        <Route element={<RoleRoute allowedRoles={["admin"]} />}>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<AllUsersList />} />
-        <Route path="/admin/bookings" element={<AllBookingsList />} />
-        <Route path="/admin/categories" element={<AddCategories />} />
-        <Route path="/admin/payments" element={<AllPayments />} />
-        <Route path="/admin/reports" element={<AllReports />} />
-        <Route path="/admin/settings" element={<Setting />} />
-      </Route>
-      </Route>
+          <Route element={<RoleRoute allowedRoles={["user"]} />}>
+            <Route path="/user" element={<UserDashboard />} />
+            <Route path="/user/my-bookings" element={<MyBookingsPage />} />
+            <Route path="/user/saved-providers" element={<SavedProviders />} />
+            <Route path="/user/payment-history" element={<PaymentHistory />} />
+            <Route path="/user/reviews" element={<AllReviews />} />
+            <Route path="/user/support" element={<Support />} />
+            <Route
+              path="/user/profile-settings"
+              element={<ProfileSettings />}
+            />
+          </Route>
+          {/* Provider */}
+          <Route element={<RoleRoute allowedRoles={["provider"]} />}>
+            <Route path="/provider" element={<ProviderDashboard />} />
+            <Route path="/provider/bookings" element={<AllBookings />} />
+            <Route
+              path="/provider/earnings"
+              element={<EarningAnalyticPage />}
+            />
+            <Route path="/provider/services" element={<ServicesPage />} />
+            <Route path="/provider/documents" element={<UploadDocuments />} />
+            <Route
+              path="/provider/settings"
+              element={<ProviderProfileSettings />}
+            />
+          </Route>
+          {/* Admin */}
+          <Route element={<RoleRoute allowedRoles={["admin"]} />}>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<AllUsersList />} />
+            <Route path="/admin/bookings" element={<AllBookingsList />} />
+            <Route path="/admin/categories" element={<AddCategories />} />
+            <Route path="/admin/payments" element={<AllPayments />} />
+            <Route path="/admin/reports" element={<AllReports />} />
+            <Route path="/admin/settings" element={<Setting />} />
+          </Route>
+        </Route>
       </Route>
     </Routes>
   );
