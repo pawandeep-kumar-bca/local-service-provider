@@ -6,6 +6,7 @@ import {
   publicMenu,
 } from "../../utils/menuData";
 
+
 const MenuSideBar = ({ role ,onItemClick}) => {
   const roleMenuMap = {
     user: userMenu,
@@ -44,6 +45,7 @@ const MenuSideBar = ({ role ,onItemClick}) => {
           </h2>
         </NavLink>
       ))}
+    
     </div>
   );
 };

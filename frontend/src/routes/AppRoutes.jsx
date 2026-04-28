@@ -31,6 +31,8 @@ import AuthLayout from "../layouts/AuthLayout";
 import Home from "../pages/public/Home";
 import Categories from "../pages/public/Categories";
 import Profile from "../pages/public/Profile";
+import ChangePassword from "../pages/user/ChangePassword";
+import UserSetting from "../pages/user/UserSetting";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -39,11 +41,11 @@ const AppRoutes = () => {
 
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
-        <Route path="/home" element={<Home/>}/>
-        <Route path="/categories" element={<Categories/>}/>
-        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/home" element={<Home />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/profile" element={<Profile />} />
         <Route element={<PrivateRoute />}>
-        {/* User */}
+          {/* User */}
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
             <Route path="/user" element={<UserDashboard />} />
             <Route path="/user/my-bookings" element={<MyBookingsPage />} />
@@ -51,10 +53,16 @@ const AppRoutes = () => {
             <Route path="/user/payment-history" element={<PaymentHistory />} />
             <Route path="/user/reviews" element={<AllReviews />} />
             <Route path="/user/support" element={<Support />} />
-            <Route
-              path="/user/profile-settings"
-              element={<ProfileSettings />}
-            />
+            <Route path="/user/profile-settings" element={<ProfileSettings />}>
+               {/* ✅ DEFAULT PAGE */}
+  <Route index element={<UserSetting />} />
+
+  {/* OPTIONAL (agar /setting bhi chahiye) */}
+  <Route path="setting" element={<UserSetting />} />
+
+  {/* ✅ Change password */}
+  <Route path="change-password" element={<ChangePassword />} />
+            </Route>
           </Route>
           {/* Provider */}
           <Route element={<RoleRoute allowedRoles={["provider"]} />}>

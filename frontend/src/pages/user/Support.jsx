@@ -6,7 +6,7 @@ const Support = () => {
     <div>
       <h1 className="text-2xl text-center mb-3 font-semibold text-muted">How can we help you?</h1>
       <div className="w-full h-[1px] bg-muted mb-6"></div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:p-4">
         <HelpCard
           icon="faqs"
           title="FAQs"
