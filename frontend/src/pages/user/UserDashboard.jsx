@@ -1,12 +1,17 @@
 import { FaCheckCircle, FaStar, FaWallet } from "react-icons/fa";
 import Navbar from "../../components/common/NavBar";
 import ProviderCard from "../../components/provider/ProviderCard";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import Cards from "../../components/common/Cards";
 const UserDashboard = () => {
+  const location = useLocation();
+
+const isAllProviders = location.pathname.includes("all-providers");
+
   return (
     <>
       <div className="w-full h-full">
+      {!isAllProviders &&  (<>
         <div
           className="w-[100%] p-6 rounded-2xl 
   bg-[#3B82F6]
@@ -50,7 +55,7 @@ const UserDashboard = () => {
         <div className="px-3">
           <div className="flex justify-between items-center pb-5">
             <h1 className="text-2xl font-bold">Providers</h1>
-            <Link to="/providers" className="text-primary font-semibold">
+            <Link to="all-providers" className="text-primary font-semibold">
               View All
             </Link>
           </div>
@@ -62,7 +67,10 @@ const UserDashboard = () => {
             <ProviderCard />
             <ProviderCard />
           </div>
+          
         </div>
+        </>)}
+         <Outlet />
       </div>
     </>
   );

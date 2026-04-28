@@ -33,6 +33,7 @@ import Categories from "../pages/public/Categories";
 import Profile from "../pages/public/Profile";
 import ChangePassword from "../pages/user/ChangePassword";
 import UserSetting from "../pages/user/UserSetting";
+import ViewAllProviders from "../pages/user/ViewAllProviders";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -47,7 +48,9 @@ const AppRoutes = () => {
         <Route element={<PrivateRoute />}>
           {/* User */}
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
-            <Route path="/user" element={<UserDashboard />} />
+            <Route path="/user" element={<UserDashboard />} >
+              <Route path="all-providers" element={<ViewAllProviders/>}/>
+            </Route>
             <Route path="/user/my-bookings" element={<MyBookingsPage />} />
             <Route path="/user/saved-providers" element={<SavedProviders />} />
             <Route path="/user/payment-history" element={<PaymentHistory />} />
