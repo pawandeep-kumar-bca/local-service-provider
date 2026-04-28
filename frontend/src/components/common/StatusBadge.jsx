@@ -1,6 +1,6 @@
 
 const StatusBadge = ({ children, badge = "active" }) => {
-  const base = " py-1 px-3 rounded  text-xs";
+  const base = " py-1 px-3 rounded  text-sm";
   const badges = {
     active: "bg-green-100 text-green-600 border",
     inactive: "bg-gray-100 text-gray-500 border",

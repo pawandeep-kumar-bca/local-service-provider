@@ -40,11 +40,6 @@ export  const userMenu = [
       path: "/user/my-bookings",
     },
     {
-      name: "Saved Providers",
-      icon: <FaBookmark />,
-      path: "/user/saved-providers",
-    },
-    {
       name: "Payment History",
       icon: <MdPayments />,
       path: "/user/payment-history",

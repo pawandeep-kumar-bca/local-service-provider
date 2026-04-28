@@ -1,8 +1,10 @@
 import { IoSearchOutline } from "react-icons/io5";
 import Button from "../../components/common/Button";
 import { NavLink } from "react-router-dom";
-
+import StatusBadge from "../../components/common/StatusBadge";
 const PaymentHistory = () => {
+  const arr = Array.from({ length: 30 }, (_, i) => i + 1);
+
   return (
     <div>
       <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)]">
@@ -22,7 +24,7 @@ const PaymentHistory = () => {
             />
           </div>
         </div>
-        <div className="flex overflow-x-auto no-scrollbar gap-4 md:px-3 px-2 text-lg font-semibold py-4 md:py-5 whitespace-nowrap">
+        <div className="flex sticky top-21 bg-white overflow-x-auto no-scrollbar gap-4 md:px-3 px-2 text-lg font-semibold py-4 md:py-5 whitespace-nowrap whitespace-nowrap">
           <NavLink
             to="/payments/all"
             className={({ isActive }) =>
@@ -90,84 +92,25 @@ const PaymentHistory = () => {
             </ul>
           </div>
           <div>
-            <div>
-              <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted  justify-items-center  items-center md:py-3 py-2">
+            {
+              arr.map((_,i)=>(
+                <div key={i}>
+              <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted  justify-items-center  items-center  py-3">
                 <h2>Aman Gupta</h2>
                 <p>21 May 2024</p>
                 <p className="hidden md:flex">#TXM5030</p>
-                <Button className="hidden md:flex">Completed</Button>
+                <div className="hidden md:flex">
+                  <StatusBadge badge="completed">Completed</StatusBadge>
+                </div>
                 <h3>₹ 200</h3>
                 <Button color="blue">View</Button>
               </div>
-              <div className="w-full h-[1px] bg-muted my-3"></div>
+              <div className="w-full h-[1px] bg-muted"></div>
             </div>
-            <div>
-              <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted  justify-items-center  items-center md:py-3 py-2">
-                <h2>Aman Gupta</h2>
-                <p>21 May 2024</p>
-                <p className="hidden md:flex">#TXM5030</p>
-                <Button className="hidden md:flex">Completed</Button>
-                <h3>₹ 200</h3>
-                <Button color="blue">View</Button>
-              </div>
-              <div className="w-full h-[1px] bg-muted my-3"></div>
-            </div>
-            <div>
-              <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted  justify-items-center  items-center md:py-3 py-2">
-                <h2>Aman Gupta</h2>
-                <p>21 May 2024</p>
-                <p className="hidden md:flex">#TXM5030</p>
-                <Button className="hidden md:flex">Completed</Button>
-                <h3>₹ 200</h3>
-                <Button color="blue">View</Button>
-              </div>
-              <div className="w-full h-[1px] bg-muted my-3"></div>
-            </div>
-            <div>
-              <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted  justify-items-center  items-center md:py-3 py-2">
-                <h2>Aman Gupta</h2>
-                <p>21 May 2024</p>
-                <p className="hidden md:flex">#TXM5030</p>
-                <Button className="hidden md:flex">Completed</Button>
-                <h3>₹ 200</h3>
-                <Button color="blue">View</Button>
-              </div>
-              <div className="w-full h-[1px] bg-muted my-3"></div>
-            </div>
-            <div>
-              <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted  justify-items-center  items-center md:py-3 py-2">
-                <h2>Aman Gupta</h2>
-                <p>21 May 2024</p>
-                <p className="hidden md:flex">#TXM5030</p>
-                <Button className="hidden md:flex">Completed</Button>
-                <h3>₹ 200</h3>
-                <Button color="blue">View</Button>
-              </div>
-              <div className="w-full h-[1px] bg-muted my-3"></div>
-            </div>
+              ))
+            }
+           
           </div>
-        </div>
-        <div>
-          <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted  justify-items-center  items-center md:py-3 py-2">
-            <h2>Aman Gupta</h2>
-            <p>21 May 2024</p>
-            <p className="hidden md:flex">#TXM5030</p>
-            <Button className="hidden md:flex">Completed</Button>
-            <h3>₹ 200</h3>
-            <Button color="blue">View</Button>
-          </div>
-          <div className="w-full h-[1px] bg-muted my-3"></div>
-        </div>
-        <div>
-          <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted  justify-items-center  items-center md:py-3 py-2">
-            <h2>Aman Gupta</h2>
-            <p>21 May 2024</p>
-            <p className="hidden md:flex">#TXM5030</p>
-            <Button className="hidden md:flex">Completed</Button>
-            <h3>₹ 200</h3>
-            <Button color="blue">View</Button>
-          </div>
-          <div className="w-full h-[1px] bg-muted my-3"></div>
         </div>
       </div>
     </div>

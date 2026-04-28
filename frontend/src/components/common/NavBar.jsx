@@ -13,12 +13,12 @@ const NavBar = () => {
         {/* LEFT (same as sidebar width) */}
  
         {/* RIGHT SIDE */}
-        <div className="flex flex-1 items-center justify-between px-4">
+        <div className="flex flex-1 items-center justify-between pr-4 pl-1 md:px-4">
           {/* Mobile Profile */}
           <img
             src="/assets/profile.png"
             alt="profile"
-            className="w-10 md:hidden rounded-full"
+            className="w-[4rem] h-[4rem] cursor-pointer md:hidden rounded-full"
           />
 
           {/* Search */}
@@ -34,7 +34,7 @@ const NavBar = () => {
           {/* Right Icons */}
           <div className="flex items-center gap-3">
             <div className="relative cursor-pointer">
-              <IoMdNotifications className="text-xl md:text-2xl" />
+              <IoMdNotifications className="text-2xl" />
               <div className="absolute -top-2 -right-2 bg-gray-500 text-white rounded-full px-1 text-[10px]">
                 0
               </div>
@@ -43,7 +43,7 @@ const NavBar = () => {
             <img
               src="/assets/profile.png"
               alt="profile"
-              className="hidden md:flex w-12 h-12 rounded-full"
+              className="hidden cursor-pointer md:flex w-12 h-12 rounded-full"
             />
 
             {/* Hamburger */}
