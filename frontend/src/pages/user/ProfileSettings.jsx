@@ -9,16 +9,16 @@ import ChangePassword from "./ChangePassword";
 const ProfileSettings = () => {
   return (
     <div>
-      <div className="flex gap-2">
-        <div className="w-[80%]">
-          <h1>Profile Settings</h1>
-          <p>Manage your personal information and account settings.</p>
-          <div className="flex gap-6 border-b pb-2">
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="md:w-[80%] shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] p-4 rounded">
+          <h1 className="text-xl font-semibold text-text">Profile Settings</h1>
+          <p className="text-muted text-sm font-semibold">Manage your personal information and account settings.</p>
+          <div className="flex gap-6 border-b  mt-4 md:justify-center gap-20 md:text-lg text-sm font-medium">
             <NavLink
               to=""
               end
               className={({ isActive }) =>
-                isActive ? "text-primary font-medium" : "text-muted"
+                isActive ? "text-primary pb-3 border-b" : "text-muted"
               }
             >
               Profile Information
@@ -27,7 +27,7 @@ const ProfileSettings = () => {
             <NavLink
               to="change-password"
               className={({ isActive }) =>
-                isActive ? "text-primary font-medium" : "text-muted"
+                isActive ? "text-primary pb-3 border-b" : "text-muted"
               }
             >
               Change Password
@@ -40,27 +40,31 @@ const ProfileSettings = () => {
           </div>
         </div>
 
-        <div className="w-[20%]">
-          <div className="shadow-[inset_0_0_4px_rgba(0,0,0,0.4)] p-1">
-            <div className="rounded-full bg-primary flex items-center justify-center  w-[3rem] h-[3rem]">
-              <FaChessKing className="text-white text-2xl" />
+        <div className="md:w-[20%]">
+          <div className="shadow-[inset_0_0_4px_rgba(0,0,0,0.4)] p-3 rounded">
+           <div className="flex justify-center mt-3">
+             <div className="rounded-full bg-primary flex items-center justify-center  w-[2rem] h-[2rem] ">
+              <FaChessKing className="text-white text-xl" />
             </div>
-            <div>
-              <h1>Become a Provider</h1>
-              <p>Grow your business and earn more with Us.</p>
-              <Button color="blue">
-                Upgrade Now <HiMiniArrowSmallRight className="text-xl " />
+           </div>
+            <div className="mt-3 text-center">
+              <h1 className="text-sm font-semibold text-muted">Become a Provider</h1>
+              <p className="text-xs font-semibold text-muted ">Grow your business and earn more with Us.</p>
+              <div className="mt-5 mb-3">
+                <Button fullWidth>
+                Upgrade Now <HiMiniArrowSmallRight  size={20}/>
               </Button>
+              </div>
             </div>
           </div>
 
-          <Button color="blue">
-            <FiLogOut />
+          <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] bg-white md:p-2 mt-3 md:mt-5 rounded flex md:gap-3 gap-4 cursor-pointer py-2 px-4">
+            <FiLogOut className="text-4xl text-danger"/>
             <div>
-              <h3>Logout</h3>
-              <p>Grow your business and earn more with Us.</p>
+              <h3 className="text-sm text-danger font-semibold mb-1">Logout</h3>
+              <p className="text-xs font-medium text-muted">Grow your business and earn more with Us.</p>
             </div>
-          </Button>
+          </div>
         </div>
       </div>
     </div>
