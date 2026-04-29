@@ -7,6 +7,7 @@ const StatusBadge = ({ children, badge = "active" }) => {
     pending: "bg-yellow-100 text-yellow-600 border",
     completed: "bg-blue-100 text-blue-600 border",
     failed: "bg-red-100 text-red-600 border",
+    canceled: "bg-red-100 text-red-600 border",
   };
   return <span className={`${base} ${badges[badge] || badges.active}`}>{children}</span>;
 };

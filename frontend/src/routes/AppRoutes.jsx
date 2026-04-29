@@ -34,6 +34,8 @@ import Profile from "../pages/public/Profile";
 import ChangePassword from "../pages/user/ChangePassword";
 import UserSetting from "../pages/user/UserSetting";
 import ViewAllProviders from "../pages/user/ViewAllProviders";
+import PaymentInfo from "../pages/user/PaymentInfo";
+import BookingList from "../pages/user/BookingList";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -48,23 +50,29 @@ const AppRoutes = () => {
         <Route element={<PrivateRoute />}>
           {/* User */}
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
-            <Route path="/user" element={<UserDashboard />} >
-              <Route path="all-providers" element={<ViewAllProviders/>}/>
+            <Route path="/user" element={<UserDashboard />}>
+              <Route path="all-providers" element={<ViewAllProviders />} />
             </Route>
-            <Route path="/user/my-bookings" element={<MyBookingsPage />} />
+            <Route path="/user/my-bookings" element={<MyBookingsPage />} >
+            <Route index element={<BookingList/>}/>
+            <Route path=":status" element={<BookingList/>}/>
+            </Route>
+
             <Route path="/user/saved-providers" element={<SavedProviders />} />
-            <Route path="/user/payment-history" element={<PaymentHistory />} />
+            <Route path="/user/payment-history" element={<PaymentHistory />}>
+              <Route path="payment-info" element={<PaymentInfo />} />
+            </Route>
             <Route path="/user/reviews" element={<AllReviews />} />
             <Route path="/user/support" element={<Support />} />
             <Route path="/user/profile-settings" element={<ProfileSettings />}>
-               {/* ✅ DEFAULT PAGE */}
-  <Route index element={<UserSetting />} />
+              {/* ✅ DEFAULT PAGE */}
+              <Route index element={<UserSetting />} />
 
-  {/* OPTIONAL (agar /setting bhi chahiye) */}
-  <Route path="setting" element={<UserSetting />} />
+              {/* OPTIONAL (agar /setting bhi chahiye) */}
+              <Route path="setting" element={<UserSetting />} />
 
-  {/* ✅ Change password */}
-  <Route path="change-password" element={<ChangePassword />} />
+              {/* ✅ Change password */}
+              <Route path="change-password" element={<ChangePassword />} />
             </Route>
           </Route>
           {/* Provider */}
