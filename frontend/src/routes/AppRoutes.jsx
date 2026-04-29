@@ -54,16 +54,16 @@ const AppRoutes = () => {
             <Route path="/user" element={<UserDashboard />}>
               <Route path="all-providers" element={<ViewAllProviders />} />
             </Route>
-            <Route path="/user/my-bookings" element={<MyBookingsPage />} >
-            <Route index element={<BookingList/>}/>
-            <Route path=":status" element={<BookingList/>}/>
+            <Route path="/user/my-bookings" element={<MyBookingsPage />}>
+              <Route index element={<BookingList />} />
+              <Route path=":status" element={<BookingList />} />
             </Route>
 
             <Route path="/user/saved-providers" element={<SavedProviders />} />
             <Route path="/user/payment-history" element={<PaymentHistory />}>
-              <Route path="payment-info" element={<PaymentInfo />} />
-              <Route index element={<PaymentList/>}/>
-              <Route path=":status" element={<PaymentList/>}/>
+              <Route index element={<PaymentList />} />
+              <Route path=":status" element={<PaymentList />} />
+              <Route path="payment-info/:id" element={<PaymentInfo />} />
             </Route>
             <Route path="/user/reviews" element={<AllReviews />} />
             <Route path="/user/support" element={<Support />} />

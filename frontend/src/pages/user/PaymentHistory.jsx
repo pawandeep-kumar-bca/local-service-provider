@@ -12,7 +12,7 @@ const PaymentHistory = () => {
   return (
     <div>
      
-      <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)]">
+      <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] rounded-lg">
         {!isLocation && (
           <>
             <div className="flex md:flex-row flex-col md:justify-between md:items-center md:px-7 px-2 md:pt-9 py-3 bg-slate-100 border-b">
