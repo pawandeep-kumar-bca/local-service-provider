@@ -36,6 +36,7 @@ import UserSetting from "../pages/user/UserSetting";
 import ViewAllProviders from "../pages/user/ViewAllProviders";
 import PaymentInfo from "../pages/user/PaymentInfo";
 import BookingList from "../pages/user/BookingList";
+import PaymentList from "../pages/user/PaymentList";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -61,6 +62,8 @@ const AppRoutes = () => {
             <Route path="/user/saved-providers" element={<SavedProviders />} />
             <Route path="/user/payment-history" element={<PaymentHistory />}>
               <Route path="payment-info" element={<PaymentInfo />} />
+              <Route index element={<PaymentList/>}/>
+              <Route path=":status" element={<PaymentList/>}/>
             </Route>
             <Route path="/user/reviews" element={<AllReviews />} />
             <Route path="/user/support" element={<Support />} />
