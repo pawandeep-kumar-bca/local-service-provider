@@ -56,14 +56,14 @@ const PaymentHistory = () => {
               </NavLink>
 
               <NavLink
-                to="/user/payment-history/refunds"
+                to="/user/payment-history/refund"
                 className={({ isActive }) =>
                   `border px-4 py-1 rounded shrink-0 ${
                     isActive ? "bg-primary text-white" : "bg-white"
                   }`
                 }
               >
-                Refunds
+                Refund
               </NavLink>
 
               <NavLink

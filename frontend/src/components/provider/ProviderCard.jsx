@@ -4,8 +4,10 @@ import { FaStar } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { MdOutlineCurrencyRupee } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const ProviderCard = () => {
+  const navigate = useNavigate()
   return (
     <div className="w-full bg-bg shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] p-5 rounded-lg mt-1">
       <div className="flex w-full gap-3 items-center">
@@ -54,7 +56,7 @@ const ProviderCard = () => {
             <h3 className="font-semibold text-text">500m away</h3>
           </div>
 
-          <Button color="success">Book Now</Button>
+          <Button color="success" onClick={()=>navigate('/user/provider-details')}>Book Now</Button>
         </div>
       </div>
     </div>

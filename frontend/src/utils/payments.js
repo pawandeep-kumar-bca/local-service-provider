@@ -1,4 +1,4 @@
- export const payments = [
+export const payments = [
   {
     id: 1,
     name: "Aman Gupta",
@@ -29,6 +29,8 @@
     adminCommission: 100,
     providerEarning: 350,
   },
+
+  // 🔥 sirf status change
   {
     id: 3,
     name: "Priya Singh",
@@ -38,12 +40,13 @@
     date: "15 May 2024",
     time: "01:20 PM",
     transactionId: "#TXM5032",
-    status: "failed",
+    status: "refund",
     amount: 300,
     paymentMethod: "UPI",
     adminCommission: 0,
     providerEarning: 0,
   },
+
   {
     id: 4,
     name: "Ankit Verma",
@@ -59,6 +62,8 @@
     adminCommission: 30,
     providerEarning: 120,
   },
+
+  // 🔥 sirf status change
   {
     id: 5,
     name: "Neha Sharma",
@@ -68,12 +73,13 @@
     date: "08 May 2024",
     time: "04:45 PM",
     transactionId: "#TXM5034",
-    status: "pending",
+    status: "refund",
     amount: 600,
     paymentMethod: "UPI",
     adminCommission: 120,
     providerEarning: 480,
   },
+
   {
     id: 6,
     name: "Vikas Yadav",
@@ -89,6 +95,7 @@
     adminCommission: 20,
     providerEarning: 100,
   },
+
   {
     id: 7,
     name: "Sneha Kapoor",
@@ -104,6 +111,8 @@
     adminCommission: 0,
     providerEarning: 0,
   },
+
+  // 🔥 sirf status change
   {
     id: 8,
     name: "Rahul Mehta",
@@ -113,12 +122,13 @@
     date: "01 May 2024",
     time: "08:30 AM",
     transactionId: "#TXM5037",
-    status: "completed",
+    status: "refund",
     amount: 500,
     paymentMethod: "UPI",
     adminCommission: 100,
     providerEarning: 400,
   },
+
   {
     id: 9,
     name: "Pooja Verma",
@@ -134,6 +144,7 @@
     adminCommission: 40,
     providerEarning: 180,
   },
+
   {
     id: 10,
     name: "Karan Malhotra",

@@ -37,6 +37,8 @@ import ViewAllProviders from "../pages/user/ViewAllProviders";
 import PaymentInfo from "../pages/user/PaymentInfo";
 import BookingList from "../pages/user/BookingList";
 import PaymentList from "../pages/user/PaymentList";
+import OurServices from "../pages/user/OurServices";
+import ProviderDetail from "../pages/provider/ProviderDetail";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -53,6 +55,7 @@ const AppRoutes = () => {
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
             <Route path="/user" element={<UserDashboard />}>
               <Route path="all-providers" element={<ViewAllProviders />} />
+              
             </Route>
             <Route path="/user/my-bookings" element={<MyBookingsPage />}>
               <Route index element={<BookingList />} />
@@ -77,6 +80,8 @@ const AppRoutes = () => {
               {/* ✅ Change password */}
               <Route path="change-password" element={<ChangePassword />} />
             </Route>
+            <Route path="/user/our-services" element={<OurServices />} />
+            <Route path="/user/provider-details" element={<ProviderDetail/>}/>
           </Route>
           {/* Provider */}
           <Route element={<RoleRoute allowedRoles={["provider"]} />}>

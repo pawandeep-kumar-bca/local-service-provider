@@ -84,7 +84,7 @@ const PaymentInfo = () => {
                     <h3>{email}</h3>
                   </div>
                 </div>
-                <StatusBadge badge={status}>{status}</StatusBadge>
+                <StatusBadge badge={status} className="font-normal">{status}</StatusBadge>
               </div>
 
               {/* transaction Info */}
@@ -112,7 +112,7 @@ const PaymentInfo = () => {
                     </div>
                     <div className="flex justify-between items-center  font-semibold">
                       <h2>Payment Status</h2>
-                      <StatusBadge badge={status}>{status}</StatusBadge>
+                      <StatusBadge badge={status} className="font-normal">{status}</StatusBadge>
                     </div>
                   </div>
                 </div>

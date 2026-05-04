@@ -7,7 +7,7 @@ import { FaChartSimple, FaListCheck } from "react-icons/fa6";
 import { GrServices } from "react-icons/gr";
 import { IoDocumentSharp } from "react-icons/io5";
 import { LuChartNoAxesCombined } from "react-icons/lu";
-import { MdPayments, MdReport, MdReviews } from "react-icons/md";
+import { MdOutlineMiscellaneousServices, MdPayments, MdReport, MdReviews } from "react-icons/md";
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { TbHelpCircleFilled, TbSettings } from "react-icons/tb";
 
@@ -34,6 +34,11 @@ export  const userMenu = [
       icon: <AiFillHome />,
       path: "/user",
     }, 
+    {
+      name:'Our Services',
+      icon:<MdOutlineMiscellaneousServices />,
+      path:'/user/our-services'
+    },
     {
       name: "My Bookings",
       icon: <FaListCheck />,

@@ -39,7 +39,7 @@ const MenuSideBar = ({ role ,onItemClick}) => {
             }`
           }
         >
-          <div className="text-xl hidden md:block">{item.icon}</div>
+          <div className="text-2xl hidden md:block">{item.icon}</div>
           <h2 className="text-sm font-semibold  block">
             {item.name}
           </h2>

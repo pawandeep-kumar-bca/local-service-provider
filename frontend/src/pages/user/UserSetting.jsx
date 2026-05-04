@@ -43,9 +43,8 @@ const UserSetting = () => {
           <Input label="Role" type="text" value="user" id="role" readOnly className="cursor-not-allowed"/>
           <div className="w-[100%]">
             <h3 className="mb-3  text-text font-semibold text-lg  md:text-sm">Account Status</h3>
-            <StatusBadge>
-              Verified <IoIosCheckmark size={30}/>
-            </StatusBadge>
+            <StatusBadge badge="verified" showIcon/>
+             
           </div>
         </div>
       </div>

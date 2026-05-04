@@ -1,11 +1,11 @@
 import { FaCheckCircle, FaStar, FaWallet } from "react-icons/fa";
 import Navbar from "../../components/common/NavBar";
 import ProviderCard from "../../components/provider/ProviderCard";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation} from "react-router-dom";
 import Cards from "../../components/common/Cards";
 const UserDashboard = () => {
   const location = useLocation();
-
+  
 const isAllProviders = location.pathname.includes("all-providers");
 
   return (
