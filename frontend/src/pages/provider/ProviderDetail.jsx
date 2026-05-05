@@ -6,7 +6,7 @@ import { MdOutlineCurrencyRupee } from "react-icons/md";
 import Button from "../../components/common/Button";
 const ProviderDetail = () => {
   return (
-    <div>
+    <div className="md:w-[50%] md:mx-auto md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-3 md:rounded">
       <div className="flex w-full justify-between flex-col md:flex-row  md:items-center">
         <div className="flex gap-3 items-center">
           <img
@@ -34,40 +34,60 @@ const ProviderDetail = () => {
             </div>
           </div>
         </div>
-        <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] py-2 px-3 rounded flex md:flex-col justify-between items-center gap-6 mt-4">
+        <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] py-2 px-3 rounded flex md:flex-col justify-between items-center md:gap-0 gap-6 mt-4">
           <h3 className="flex items-center text-xl font-bold mb-2">
             <MdOutlineCurrencyRupee /> 250/hr
           </h3>
           <Button fullWidth>Book Now</Button>
         </div>
       </div>
-      <div className="w-full h-[1px] bg-muted my-2"></div>
+      <div className="w-full h-[1px] bg-muted my-5"></div>
       <div>
-        <h1>About Me</h1>
-        <h1>
+        <h1 className="text-xl font-bold text-text mb-2">About Me</h1>
+        <p>
           Hi, I am Aman gupta . I have 5+ years of experience in home services.
           I am professional and reliable.
-        </h1>
+        </p>
       </div>
       <div>
-        <div>
-          <h2>Select Service</h2>
-          <div>
-            <div>
+        <div className="mt-5">
+          <h2 className="text-xl font-bold text-text">Select Service</h2>
+         <div>
+           <div className="flex items-center  justify-between mt-2">
+            <div className="flex items-center gap-2 text-lg font-base text-text">
               <input type="radio" name="Home Cleaning" id="Home_Cleaning" />
               <label htmlFor="Home_Cleaning">Home Cleaning</label>
             </div>
-            <h3 className="flex items-center text-xl font-bold">
+            <h3 className="flex items-center text-sm font-bold">
               <MdOutlineCurrencyRupee /> 250/hr
             </h3>
           </div>
+           <div className="flex items-center  justify-between mt-2">
+            <div className="flex items-center gap-2 text-lg font-base text-text">
+              <input type="radio" name="Home Cleaning" id="Home_Cleaning" />
+              <label htmlFor="Home_Cleaning">Home Cleaning</label>
+            </div>
+            <h3 className="flex items-center text-sm font-bold">
+              <MdOutlineCurrencyRupee /> 250/hr
+            </h3>
+          </div>
+           <div className="flex items-center  justify-between mt-2">
+            <div className="flex items-center gap-2 text-lg font-base text-text">
+              <input type="radio" name="Home Cleaning" id="Home_Cleaning" />
+              <label htmlFor="Home_Cleaning">Home Cleaning</label>
+            </div>
+            <h3 className="flex items-center text-sm font-bold">
+              <MdOutlineCurrencyRupee /> 250/hr
+            </h3>
+          </div>
+         </div>
         </div>
 
 
-        <div>
-          <h3>Reviews <span>(400)</span></h3>
-          <div>
-            4
+        <div className="mt-5">
+          <h2 className="flex items-center gap-1 text-xl font-bold text-text ">Reviews <span>(400)</span></h2>
+          <div className="flex items-center gap-3 my-1">
+            <h4 className="text-2xl font-semibold">4</h4>
             <div className="flex text-yellow-500 gap-1">
                 <FaStar />
                 <FaStar />
@@ -80,9 +100,30 @@ const ProviderDetail = () => {
             </div>
           </div>
           <div>
-            <div>
-              5 <FaStar />
-              <input type="range" />
+            <div className="flex items-center gap-3">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">5 <FaStar /></h3>
+              <div className={`bg-muted w-full h-[5px] rounded`}></div>
+            <p>300</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">4 <FaStar /></h3>
+              <div className={`bg-muted w-full h-[5px] rounded`}></div>
+            <p>300</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">3 <FaStar /></h3>
+              <div className={`bg-muted w-full h-[5px] rounded`}></div>
+            <p>300</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">2 <FaStar /></h3>
+              <div className={`bg-muted w-full h-[5px] rounded`}></div>
+            <p>300</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <h3 className="flex items-center gap-2 text-lg font-semibold">1 <FaStar /></h3>
+              <div className={`bg-muted w-full h-[5px] rounded`}></div>
+            <p>300</p>
             </div>
           </div>
         </div>
