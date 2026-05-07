@@ -21,6 +21,7 @@ const StatusBadge = ({
     failed: "bg-red-100 text-red-600 border",
     cancelled: "bg-red-100 text-red-600 border",
     verified: "bg-green-100 text-green-600 border",
+    uploaded:'bg-green-100 text-green-600 border'
   };
 
   const icons = {

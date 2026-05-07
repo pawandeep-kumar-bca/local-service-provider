@@ -6,7 +6,7 @@ const UploadDocuments = () => {
   return (
     <div>
       <div>
-        <h1 className="text-lg md:text-xl font-semibold text-text">Upload Required Documents</h1>
+        <h1 className="text-xl font-semibold text-text">Upload Required Documents</h1>
         <p className="text-sm font-medium text-text mb-5 mt-1">Please upload clear and valid documents</p>
       </div>
       <div>
