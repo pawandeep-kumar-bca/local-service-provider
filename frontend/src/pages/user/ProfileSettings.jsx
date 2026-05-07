@@ -3,10 +3,11 @@ import Button from "../../components/common/Button";
 import { FaChessKing } from "react-icons/fa";
 import { HiMiniArrowSmallRight } from "react-icons/hi2";
 import { FiLogOut } from "react-icons/fi";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import UserSetting from "./UserSetting";
 import ChangePassword from "./ChangePassword";
 const ProfileSettings = () => {
+  const navigate = useNavigate()
   return (
     <div>
       <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -51,7 +52,7 @@ const ProfileSettings = () => {
               <h1 className="text-sm font-semibold text-muted">Become a Provider</h1>
               <p className="text-xs font-semibold text-muted ">Grow your business and earn more with Us.</p>
               <div className="mt-5 mb-3">
-                <Button fullWidth>
+                <Button fullWidth onClick={()=>navigate('/user/become-provider')}> 
                 Upgrade Now <HiMiniArrowSmallRight  size={20}/>
               </Button>
               </div>

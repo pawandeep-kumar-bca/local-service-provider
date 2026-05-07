@@ -37,7 +37,13 @@ export const useAuth = () => {
       localStorage.setItem("auth", JSON.stringify(authData));
 
       // ✅ redirect
-      navigate("/user");
+      if (data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (data.user.role === "provider") {
+        navigate("/provider");
+      } else {
+        navigate("/user");
+      }
     },
     onError: (error) => {
       console.log("Login Error:", error);

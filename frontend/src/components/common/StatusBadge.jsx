@@ -19,7 +19,7 @@ const StatusBadge = ({
     completed: "bg-blue-100 text-blue-600 border",
     refund: "bg-pink-100 text-pink-600 border",
     failed: "bg-red-100 text-red-600 border",
-    canceled: "bg-red-100 text-red-600 border",
+    cancelled: "bg-red-100 text-red-600 border",
     verified: "bg-green-100 text-green-600 border",
   };
 

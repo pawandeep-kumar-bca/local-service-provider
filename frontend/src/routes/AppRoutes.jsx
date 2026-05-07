@@ -13,7 +13,6 @@ import ProfileSettings from "../pages/user/ProfileSettings";
 
 // Provider
 import ProviderDashboard from "../pages/provider/ProviderDashboard";
-import UploadDocuments from "../pages/provider/UploadDocuments";
 import EarningAnalyticPage from "../pages/provider/EarningAnalytics";
 import ServicesPage from "../pages/provider/ServicesPage";
 import ProviderProfileSettings from "../pages/provider/Settings";
@@ -39,6 +38,11 @@ import BookingList from "../pages/user/BookingList";
 import PaymentList from "../pages/user/PaymentList";
 import OurServices from "../pages/user/OurServices";
 import ProviderDetail from "../pages/provider/ProviderDetail";
+import BecomeProvider from "../pages/BecomeProviderPages/BecomeProvider";
+import BasicInfo from "../pages/BecomeProviderPages/BasicInfo";
+import Review from "../pages/BecomeProviderPages/Review";
+import Submit from "../pages/BecomeProviderPages/Submit";
+import UploadDocuments from "../pages/BecomeProviderPages/UploadDocuments";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -47,7 +51,7 @@ const AppRoutes = () => {
 
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/profile" element={<Profile />} />
         <Route element={<PrivateRoute />}>
@@ -82,6 +86,13 @@ const AppRoutes = () => {
             </Route>
             <Route path="/user/our-services" element={<OurServices />} />
             <Route path="/user/provider-details" element={<ProviderDetail/>}/>
+            <Route path="/user/become-provider" element={<BecomeProvider/>}>
+             <Route path="basic-info" element={<BasicInfo/>}/>
+             <Route path="upload-documents" element={<UploadDocuments/>}/>
+             <Route path="review" element={<Review/>}/>
+             <Route path="submit" element={<Submit/>}/>
+            
+            </Route>
           </Route>
           {/* Provider */}
           <Route element={<RoleRoute allowedRoles={["provider"]} />}>
@@ -92,7 +103,7 @@ const AppRoutes = () => {
               element={<EarningAnalyticPage />}
             />
             <Route path="/provider/services" element={<ServicesPage />} />
-            <Route path="/provider/documents" element={<UploadDocuments />} />
+            
             <Route
               path="/provider/settings"
               element={<ProviderProfileSettings />}
