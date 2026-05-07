@@ -12,7 +12,7 @@ const BecomeProvider = () => {
           Fill your professional details to create your provider profile.
         </p>
       </div>
-      <div className="flex w-full mb-4 mt-5 items-start md:w-[60%] mx-auto">
+      <div className="flex w-full mb-4 mt-5 items-start md:w-[55%] mx-auto">
         <NavLink to="basic-info">
           {({ isActive }) => (
             <div className="flex flex-col items-center">
