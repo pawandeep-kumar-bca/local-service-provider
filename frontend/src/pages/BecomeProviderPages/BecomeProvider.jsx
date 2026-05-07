@@ -1,65 +1,118 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { MdChevronLeft ,MdChevronRight} from "react-icons/md";
-import Button from '../../components/common/Button'
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import Button from "../../components/common/Button";
+
 const BecomeProvider = () => {
   return (
     <div>
       <div>
-        <h1>Become a Provider</h1>
-        <p>Fill your professional details to create your provider profile.</p>
+        <h1 className="text-xl font-semibold  mb-2">Become a Provider</h1>
+        <p className="text-lg font-extralight ">
+          Fill your professional details to create your provider profile.
+        </p>
       </div>
-      <div className="flex w-full items-start">
-        <NavLink
-          to="basic-info"
-          className="flex flex-col items-center w-[50px] shrink-0"
-        >
-          <h3 className="w-8 h-8 rounded-full border flex items-center justify-center">
-            1
-          </h3>
+      <div className="flex w-full mb-4 mt-5 items-start md:w-[60%] mx-auto">
+        <NavLink to="basic-info">
+          {({ isActive }) => (
+            <div className="flex flex-col items-center">
+              <h3
+                className={`w-8 h-8 rounded-full border flex items-center justify-center
+        ${isActive ? "bg-primary text-white border-primary" : ""}
+        `}
+              >
+                1
+              </h3>
 
-          <p className="text-xs mt-1 whitespace-nowrap">Basic Info</p>
+              <p
+                className={`text-xs mt-1 whitespace-nowrap ${isActive ? "text-primary" : ""}`}
+              >
+                Basic Info
+              </p>
+            </div>
+          )}
         </NavLink>
 
         <div className="flex-1 h-[1px] bg-muted mt-4 "></div>
 
-        <NavLink to="upload-documents" className="flex w-[50px] flex-col items-center shrink-0">
-          <h3 className="w-8 h-8 rounded-full border flex items-center justify-center">
-            2
-          </h3>
+        <NavLink to="upload-documents">
+          {({ isActive }) => (
+            <div className="flex flex-col items-center">
+              <h3
+                className={`w-8 h-8 rounded-full border flex items-center justify-center
+        ${isActive ? "bg-primary text-white border-primary" : ""}
+        `}
+              >
+                2
+              </h3>
 
-          <p className="text-xs mt-1 whitespace-nowrap">Documents</p>
+              <p
+                className={`text-xs mt-1 whitespace-nowrap ${isActive ? "text-primary" : ""}`}
+              >
+                Documents
+              </p>
+            </div>
+          )}
         </NavLink>
 
         <div className="flex-1 h-[1px] bg-muted mt-4"></div>
 
-        <NavLink to="review" className="flex w-[50px] flex-col items-center shrink-0">
-          <h3 className="w-8 h-8 rounded-full border flex items-center justify-center">
-            3
-          </h3>
+        <NavLink to="review">
+          {({ isActive }) => (
+            <div className="flex flex-col items-center">
+              <h3
+                className={`w-8 h-8 rounded-full border flex items-center justify-center
+        ${isActive ? "bg-primary text-white border-primary" : ""}
+        `}
+              >
+                3
+              </h3>
 
-          <p className="text-xs mt-1 whitespace-nowrap">Review</p>
+              <p
+                className={`text-xs mt-1 whitespace-nowrap ${isActive ? "text-primary" : ""}`}
+              >
+                Review
+              </p>
+            </div>
+          )}
         </NavLink>
 
         <div className="flex-1 h-[1px] bg-muted mt-4"></div>
 
-        <NavLink to="submit" className="flex flex-col items-center w-[50px] shrink-0">
-          <h3 className="w-8 h-8 rounded-full border flex items-center justify-center">
-            4
-          </h3>
+        <NavLink to="submit">
+          {({ isActive }) => (
+            <div className="flex flex-col items-center">
+              <h3
+                className={`w-8 h-8 rounded-full border flex items-center justify-center
+        ${isActive ? "bg-primary text-white border-primary" : ""}
+        `}
+              >
+                4
+              </h3>
 
-          <p className="text-xs mt-1 whitespace-nowrap">Submit</p>
+              <p
+                className={`text-xs mt-1 whitespace-nowrap ${isActive ? "text-primary" : ""}`}
+              >
+                Submit
+              </p>
+            </div>
+          )}
         </NavLink>
       </div>
 
-      <div className="p-2 ">
+      <div className="p-2 md:w-[80%] mx-auto">
         <Outlet />
       </div>
-      
-         <div className="flex justify-between items-center">
-          <Button color="white"><MdChevronLeft size={25}/> Back</Button>
-          <Button>Next<MdChevronRight  size={25}/></Button>
-         </div>
+
+      <div className="flex justify-between items-center md:w-[80%] mx-auto">
+        <Button color="white">
+          <MdChevronLeft size={25} /> Back
+        </Button>
+        <Button>
+          Next
+          <MdChevronRight size={25} />
+        </Button>
+      </div>
     </div>
   );
 };
