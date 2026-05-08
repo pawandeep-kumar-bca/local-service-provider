@@ -6,14 +6,18 @@ const UploadDocuments = () => {
   return (
     <div>
       <div>
-        <h1 className="text-xl font-semibold text-text">Upload Required Documents</h1>
-        <p className="text-sm font-medium text-text mb-5 mt-1">Please upload clear and valid documents</p>
+        <h1 className="text-xl font-semibold text-text">
+          Upload Required Documents
+        </h1>
+        <p className="text-sm font-medium text-text mb-5 mt-1">
+          Please upload clear and valid documents
+        </p>
       </div>
       <div>
         <div className="flex border mb-4 items-center justify-between rounded-md p-2">
           <div className="flex gap-3 items-center">
             <div className="p-3 bg-blue-100 text-blue-600 rounded-lg shadow-sm">
-              <FaUserCircle size={28}/>
+              <FaUserCircle size={28} />
             </div>
             <div className="flex-1">
               <h1>
@@ -32,8 +36,8 @@ const UploadDocuments = () => {
         </div>
         <div className="flex border mb-4 items-center justify-between rounded-md p-2">
           <div className="flex gap-3 items-center">
-           <div className="p-3 bg-green-100 text-green-600 rounded-lg shadow-sm">
-              <AiFillIdcard size={28}/>
+            <div className="p-3 bg-green-100 text-green-600 rounded-lg shadow-sm">
+              <AiFillIdcard size={28} />
             </div>
             <div className="flex-1">
               <h1>
@@ -53,7 +57,7 @@ const UploadDocuments = () => {
         <div className="flex border mb-4 items-center justify-between rounded-md p-2">
           <div className="flex gap-3 items-center">
             <div className="p-3 bg-yellow-100 text-yellow-600 shadow-sm rounded-lg">
-              <PiCertificateFill size={28}/>
+              <PiCertificateFill size={28} />
             </div>
             <div className="flex-1">
               <h1>

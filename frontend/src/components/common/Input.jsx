@@ -54,7 +54,7 @@ const Input = ({
 
       {/* Error Message */}
       {error && (
-        <p className="text-red-500 text-xs font-medium mt-1">{error}</p>
+        <p className="text-red-500 text-end mr-1 text-xs font-medium mt-1">{error}</p>
       )}
     </div>
   );
