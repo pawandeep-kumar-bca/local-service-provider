@@ -37,13 +37,14 @@ import PaymentInfo from "../pages/user/PaymentInfo";
 import BookingList from "../pages/user/BookingList";
 import PaymentList from "../pages/user/PaymentList";
 import OurServices from "../pages/user/OurServices";
-import ProviderDetail from "../pages/provider/ProviderDetail";
+import ProviderDetail from "../pages/BookingProviders/ProviderDetail";
 import BecomeProvider from "../pages/BecomeProviderPages/BecomeProvider";
 import BasicInfo from "../pages/BecomeProviderPages/BasicInfo";
 import Review from "../pages/BecomeProviderPages/Review";
 import Submit from "../pages/BecomeProviderPages/Submit";
 import UploadDocuments from "../pages/BecomeProviderPages/UploadDocuments";
 import Notification from '../components/common/Notification'
+import BookingDetail from "../pages/BookingProviders/BookingDetail";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -87,6 +88,8 @@ const AppRoutes = () => {
             </Route>
             <Route path="/user/our-services" element={<OurServices />} />
             <Route path="/user/provider-details" element={<ProviderDetail/>}/>
+
+            <Route path="/user/provider-details/booking-details" element={<BookingDetail/>}/>
             <Route path="/user/become-provider" element={<BecomeProvider/>}>
              <Route path="basic-info" element={<BasicInfo/>}/>
              <Route path="upload-documents" element={<UploadDocuments/>}/>
@@ -95,6 +98,9 @@ const AppRoutes = () => {
             </Route>
             <Route path="/user/notification" element={<Notification/>}/>
           </Route>
+
+
+
           {/* Provider */}
           <Route element={<RoleRoute allowedRoles={["provider"]} />}>
             <Route path="/provider" element={<ProviderDashboard />} />

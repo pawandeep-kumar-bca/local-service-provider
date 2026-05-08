@@ -14,13 +14,14 @@ import { FaBolt } from "react-icons/fa";
 import { FaFaucet } from "react-icons/fa6";
 
 import { MdOutlineAcUnit } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const ProviderDetail = () => {
+  const navigate = useNavigate()
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-3 md:rounded">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Provider Booking</h1>
-        <Button color="white">
+        <h1 className="text-2xl font-semibold">Provider Details</h1>
+        <Button color="white" >
           <MdOutlineKeyboardArrowLeft size={24} />
           Back
         </Button>
@@ -95,7 +96,7 @@ const ProviderDetail = () => {
           <h3 className="flex items-center text-xl font-bold mb-3 md:mx-15 ">
             <MdOutlineCurrencyRupee /> 250/hr
           </h3>
-          <Button fullWidth>Book Now</Button>
+          <Button fullWidth onClick={()=>navigate('/user/provider-details/booking-details')}>Book Now</Button>
         </div>
       </div>
 
