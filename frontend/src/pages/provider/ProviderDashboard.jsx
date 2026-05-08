@@ -14,7 +14,7 @@ const ProviderDashboard = () => {
         <div
           className="w-[100%] rounded-2xl 
   bg-[#3B82F6]
-  shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex justify-between items-start mt-3"
+  shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] flex justify-between items-start mt-3"
         >
           <div className="p-5">
             <h1 className="text-bg font-bold text-2xl pb-1">Hi, shivam </h1>

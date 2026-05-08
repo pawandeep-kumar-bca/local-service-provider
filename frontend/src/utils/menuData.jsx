@@ -85,10 +85,6 @@ export  const providerMenu = [
         path:'/provider/services'
     },
     {
-        name:'Documents',
-        icon:<IoDocumentSharp />,
-        path:'/provider/documents'
-    },{
       name: "Settings",
       icon: <TbSettings />,
       path: "/provider/settings",

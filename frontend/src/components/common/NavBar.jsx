@@ -3,7 +3,9 @@ import { IoMenu, IoSearch } from "react-icons/io5";
 import MenuSideBar from "./MenuSideBar";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const NavBar = () => {
+  const navigate = useNavigate()
   const [openMenuBar, setOpenMenuBar] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const role = user?.role;
@@ -34,7 +36,7 @@ const NavBar = () => {
           {/* Right Icons */}
           <div className="flex items-center gap-3">
             <div className="relative cursor-pointer">
-              <IoMdNotifications className="text-2xl" />
+              <IoMdNotifications className="text-2xl"  onClick={()=>navigate('/user/notification')}/>
               <div className="absolute -top-2 -right-2 bg-gray-500 text-white rounded-full px-1 text-[10px]">
                 0
               </div>

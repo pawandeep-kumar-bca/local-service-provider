@@ -43,6 +43,7 @@ import BasicInfo from "../pages/BecomeProviderPages/BasicInfo";
 import Review from "../pages/BecomeProviderPages/Review";
 import Submit from "../pages/BecomeProviderPages/Submit";
 import UploadDocuments from "../pages/BecomeProviderPages/UploadDocuments";
+import Notification from '../components/common/Notification'
 const AppRoutes = () => {
   return (
     <Routes>
@@ -91,8 +92,8 @@ const AppRoutes = () => {
              <Route path="upload-documents" element={<UploadDocuments/>}/>
              <Route path="review" element={<Review/>}/>
              <Route path="submit" element={<Submit/>}/>
-            
             </Route>
+            <Route path="/user/notification" element={<Notification/>}/>
           </Route>
           {/* Provider */}
           <Route element={<RoleRoute allowedRoles={["provider"]} />}>

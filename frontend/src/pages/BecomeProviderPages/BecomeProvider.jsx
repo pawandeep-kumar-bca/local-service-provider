@@ -79,11 +79,10 @@ const BecomeProvider = () => {
       {/* stepper */}
       <div className="flex w-full mb-4 mt-5 items-start md:w-[55%] mx-auto">
         {stepLabels.map((item, idx) => {
+          
           const isCompleted = idx < currentIndex || currentStep === "submit";
 
-          const isActive =
-  idx === currentIndex &&
-  currentStep !== "submit";
+          const isActive = idx === currentIndex && currentStep !== "submit";
 
           return (
             <React.Fragment key={item.step}>
