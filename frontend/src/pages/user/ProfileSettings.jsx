@@ -52,7 +52,7 @@ const ProfileSettings = () => {
               <h1 className="text-sm font-semibold text-muted">Become a Provider</h1>
               <p className="text-xs font-semibold text-muted ">Grow your business and earn more with Us.</p>
               <div className="mt-5 mb-3">
-                <Button fullWidth onClick={()=>navigate('/user/become-provider')}> 
+                <Button fullWidth onClick={()=>navigate('/user/become-provider/basic-info')}> 
                 Upgrade Now <HiMiniArrowSmallRight  size={20}/>
               </Button>
               </div>

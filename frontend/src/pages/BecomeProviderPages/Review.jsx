@@ -7,17 +7,17 @@ import { Link } from "react-router-dom";
 import StatusBudge from '../../components/common/StatusBadge'
 const Review = () => {
   return (
-    <div>
+    <div className="my-4">
       <h1 className="text-xl font-semibold">Review Your Details</h1>
       <p className="text-sm font-medium mb-5">Please review your information before submitting.</p>
 
-      <div>
-        <div>
-          <div className="flex justify-between items-center my-4">
+      <div className="md:flex md:w-full md:gap-5 ">
+        <div className="md:border md:p-3 md:rounded-md md:shadow-[inset_0_0_3px_rgba(255,255,255,0.9)] flex-1">
+          <div className="flex justify-between items-center md:my-1">
             <h1 className="text-lg font-semibold">Basic Information</h1>
             <Link to="/user/become-provider/basic-info" className="text-primary  font-semibold hover:underline">Edit</Link>
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 mt-4">
             <div className="flex justify-between items-center">
               <h3>Provider Name</h3>
               <p>Pawandeep kumar</p>
@@ -51,12 +51,12 @@ const Review = () => {
             </div>
           </div>
         </div>
-        <div>
-          <div className="flex justify-between items-center my-4">
+        <div className="md:border md:p-3 md:rounded-md md:shadow-[inset_0_0_3px_rgba(255,255,255,0.9)] flex-1">
+          <div className="flex justify-between items-center md:my-1 ">
             <h1 className="text-lg font-semibold ">Documents</h1>
             <Link to="/user/become-provider/documents" className="font-semibold text-primary hover:underline">Edit</Link>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 mt-4">
 
          
           <div className="flex justify-between items-center">
