@@ -1,9 +1,13 @@
 import ViewProviderBookingDetails from "./ViewProviderBookingDetails";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
+import { useState } from "react";
+import CancelConfirmedBooking from "./CancelConfirmedBooking";
+import CancelBooking from "./CancelBooking";
+
 
 const ViewUserBooking = () => {
-
+  const [cancel, setCancel] = useState(false);
   return (
     <>
       <div className="md:shadow-[inset_0_0_4px_rgba(0,0,0,0.54)] rounded-xl md:p-4 min-h-[calc(100vh-110px)] overflow-hidden">
@@ -19,13 +23,13 @@ const ViewUserBooking = () => {
             </Button>
           </div>
           <div className="w-full md:flex-1">
-            <Button color="danger" fullWidth>
+            <Button color="danger" fullWidth onClick={() => setCancel(true)}>
               Cancel Booking
             </Button>
           </div>
         </div>
       </div>
-      
+      {cancel && <CancelBooking />}
     </>
   );
 };
