@@ -16,9 +16,10 @@ import { SiPaytm, SiPhonepe } from "react-icons/si";
 
 import { RiMastercardLine, RiVisaLine } from "react-icons/ri";
 import { PiBankFill } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 const Payment = () => {
   const [selectedPayment, setSelectedPayment] = useState("Cash on Delivery");
-
+const navigate = useNavigate()
   const paymentMethods = [
     {
       id: "upi",
@@ -60,7 +61,7 @@ const Payment = () => {
 
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-4 rounded-lg">
-      <div className="flex items-center  justify-end mb-3">
+      <div className="flex items-center  justify-end mb-2">
         
         <Button color="white">
           <MdOutlineKeyboardArrowLeft size={24} />
@@ -120,7 +121,7 @@ const Payment = () => {
           </div>
 
 
-       <div className="lg:sticky lg:top-5 h-fit flex-1 mt-4">
+       <div className=" flex-1 mt-4 md:mt-0">
             <h1 className="text-2xl font-semibold mb-5">
               Payment Summary
             </h1>
@@ -240,7 +241,7 @@ const Payment = () => {
 
             
 
-            <Button fullWidth className="mt-4 py-3 text-lg rounded-xl">Pay Now
+            <Button fullWidth className="mt-4 py-3 text-lg rounded-xl" onClick={()=>navigate('/user/provider-details/booking-details/payment/success-payment')}>Pay Now
               <MdOutlineCurrencyRupee />
               520</Button>
           </div>
