@@ -5,6 +5,7 @@ import Button from "../../components/common/Button";
 import { AiFillClockCircle } from "react-icons/ai";
 import { FaLocationDot } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import ViewProviderBookingDetails from "./ViewProviderBookingDetails";
 const SuccessfulPayment = () => {
     const navigate = useNavigate()
   return (
@@ -64,7 +65,7 @@ const SuccessfulPayment = () => {
           <FaLock className="text-green-600" />
           <p>100% Secure Payment</p>
         </div>
-        <div className="flex justify-center mt-15 md:mt-3">
+        <div className="flex justify-center mt-15 md:mt-10">
           <Button
             color="success"
             className="  text-2xl md:text-xl md:py-2 py-3 px-10"
@@ -75,102 +76,7 @@ const SuccessfulPayment = () => {
       </div>
       {/* right side */}
       <div className="flex-1 hidden md:block shadow-[0_0_24px_rgba(0,0,0,0.24)] md:px-5 rounded-lg py-5">
-        <h1 className="flex items-center gap-2 text-2xl font-semibold">
-          <FaCalendarAlt className="text-green-600"/> Booking Details
-        </h1>
-        <div className="h-px flex-1 bg-muted my-4"></div>
-
-        <div className="flex gap-1 items-center">
-          <img
-            src="/assets/profile.png"
-            alt="provider"
-            className="w-[5rem] h-[5rem] rounded-full object-cover"
-          />
-          <div className="flex justify-between w-full">
-            <div>
-              <h1>Aman Gupta</h1>
-              <div className="flex gap-1 items-center" >
-                <FaStar className="text-xl text-yellow-500"/>
-                <h3 className="text-green-600 font-bold text-xl">4.8</h3>
-                <h3 className="text-sm font-semibold text-muted">(400 Reviews)</h3>
-              </div>
-            </div>
-            
-            <h3 className="bg-green-50  py-2 px-3 font-semibold rounded-md text-green-600 border h-min">Home Cleaning</h3>
-          </div>
-        </div>
-
-        <div className="h-px flex-1 bg-muted my-4"></div>
-
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 text-lg font-semibold text-muted">
-              <FaCalendarAlt />
-              <h3>Date & Time</h3>
-            </div>
-            <p className="text-text font-semibold text-lg">21 May 2025 , 11:00 AM - 01:20PM</p>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 text-lg font-semibold text-muted">
-              <AiFillClockCircle />
-              <h3>Duration</h3>
-            </div>
-            <p className="text-text font-semibold text-lg">2 Hours</p>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 text-lg font-semibold text-muted">
-              <FaLocationDot />
-              <h3>Address</h3>
-            </div>
-            <p className="text-text font-semibold text-lg max-w-[18rem] text-right">211B Baker Street, London, Uk</p>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 text-lg font-semibold text-muted">
-              <FaCreditCard />
-              <h3>Payment Method</h3>
-            </div>
-            <p className="text-text font-semibold text-lg">UPI</p>
-          </div>
-        </div>
-        <div className="h-px flex-1 bg-muted my-4"></div>
-        <div>
-          <h1 className="text-text font-semibold text-2xl mb-4">Payment Summary</h1>
-          <div className="flex flex-col gap-3">
-            <div className="flex justify-between items-center">
-              <h3 className="text-gray-500 font-medium text-lg flex items-center">
-                Price (
-                <MdOutlineCurrencyRupee />
-                250 × 2)
-              </h3>
-
-              <p className="font-semibold text-gray-800 text-lg flex items-center">
-                <MdOutlineCurrencyRupee />
-                500
-              </p>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <h3 className="text-gray-500 font-medium text-lg">
-                Platform Fee
-              </h3>
-
-              <p className="font-semibold text-gray-800 text-lg flex items-center">
-                <MdOutlineCurrencyRupee />
-                20
-              </p>
-            </div>
-            <div className="p-4 flex justify-between items-center bg-gray-50 border-t border-gray-200">
-              <h2 className="text-2xl font-bold text-green-600">Total Amount</h2>
-
-              <h2 className="flex items-center text-2xl font-bold text-green-600">
-                <MdOutlineCurrencyRupee />
-                520
-              </h2>
-            </div>
-          </div>
-        </div>
+        <ViewProviderBookingDetails layout="col"/>
       </div>
     </div>
   );

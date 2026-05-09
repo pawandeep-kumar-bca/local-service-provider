@@ -4,7 +4,9 @@ import { IoLocationOutline } from "react-icons/io5";
 import { MdOutlinePlumbing } from "react-icons/md";
 import Button from '../../components/common/Button'
 import StatusBadge from '../../components/common/StatusBadge'
+import { useNavigate } from "react-router-dom";
 const BookingProvider = ({data}) => {
+  const navigate = useNavigate()
   const {
     name,
     profession,
@@ -52,7 +54,7 @@ const BookingProvider = ({data}) => {
       
       <div className="flex gap-2 items-center w-full mb-4">
         <Button color="white" fullWidth>Reschedule</Button>
-        <Button color="success" fullWidth>View</Button>
+        <Button color="success" fullWidth onClick={()=>navigate('/user/my-bookings/booking-details')}>View</Button>
       </div>
     </div>
   );
