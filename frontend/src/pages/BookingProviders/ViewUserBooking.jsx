@@ -1,9 +1,7 @@
 import ViewProviderBookingDetails from "./ViewProviderBookingDetails";
 import Button from "../../components/common/Button";
-import Modal from "../../components/common/Modal";
 import { useState } from "react";
 import CancelConfirmedBooking from "./CancelConfirmedBooking";
-import CancelBooking from "./CancelBooking";
 
 
 const ViewUserBooking = () => {
@@ -29,7 +27,7 @@ const ViewUserBooking = () => {
           </div>
         </div>
       </div>
-      {cancel && <CancelBooking />}
+      {cancel && <CancelConfirmedBooking/>}
     </>
   );
 };

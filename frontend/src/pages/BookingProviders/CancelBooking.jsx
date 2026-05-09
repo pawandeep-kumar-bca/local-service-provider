@@ -8,7 +8,7 @@ import { RiBillLine } from "react-icons/ri";
 const CancelBooking = () => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-md px-5 py-7 shadow-[0_10px_40px_rgba(0,0,0,0.2)] animate-in zoom-in-95 fade-in duration-200 bg-white rounded-2xl relative ">
+      <div className=" w-full h-full md:h-auto md:max-w-md bg-white px-5 py-7 md:rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] animate-in zoom-in-95 fade-in duration-200 relative overflow-y-auto">
         <button className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-all cursor-pointer">
           <MdClose className="text-2xl text-gray-600" />
         </button>
@@ -16,7 +16,7 @@ const CancelBooking = () => {
           <h1 className="text-2xl font-bold text-center mb-7">
             Cancel Confirmed
           </h1>
-          <div className="relative flex items-center justify-center">
+          <div className="relative flex items-center justify-center mt-13 md:mt-0">
             {/* Decorative Dots */}
 
             <div className="absolute top-5 left-10 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-70"></div>
@@ -54,7 +54,7 @@ const CancelBooking = () => {
             </p>
           </div>
 
-          <div className="shadow-[inset_0_0_7px_rgba(0,0,0,0.4)] rounded-lg p-3 my-4">
+          <div className="bg-white shadow-[0_0_20px_rgba(255,255,255,0.9),0_8px_25px_rgba(0,0,0,0.12)] rounded-lg p-3 my-4 border border-muted">
             <div className="flex items-center">
               <img
                 src="/assets/profile.png"
@@ -99,7 +99,7 @@ const CancelBooking = () => {
             </div>
           </div>
 
-          <div className="w-full flex md:gap-4 gap-2 flex-col md:flex-row font-semibold">
+          <div className="w-full flex gap-4 flex-col md:flex-row font-semibold mt-7">
             <Button color="blue" fullWidth>
               Back to My Bookings
             </Button>
