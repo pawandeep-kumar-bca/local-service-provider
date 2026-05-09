@@ -122,7 +122,7 @@ const ProviderDetail = () => {
                   name="service"
                   id="electrician"
                   value="Electrician"
-                  className="peer sr-only"
+                  className="peer accent-green-600 absolute right-4 top-4"
                 />
 
                 {/* Card */}
@@ -158,7 +158,7 @@ const ProviderDetail = () => {
               >
                 <input
                   type="radio"
-                  className="peer sr-only"
+                  className="peer accent-green-600 absolute right-4 top-4"
                   value="plumber"
                   id="plumber"
                   name="service"
@@ -195,7 +195,7 @@ const ProviderDetail = () => {
                   name="service"
                   id="acRepair"
                   value="acRepair"
-                  className="peer sr-only"
+                  className="peer accent-green-600 absolute right-4 top-4"
                 />
 
                 <div className="border  rounded-2xl p-3 transition-all duration-300 hover:border-green-400 peer-checked:bg-green-50 peer-checked:border-green-500">

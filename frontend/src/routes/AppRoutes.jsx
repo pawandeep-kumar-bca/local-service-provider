@@ -45,6 +45,7 @@ import Submit from "../pages/BecomeProviderPages/Submit";
 import UploadDocuments from "../pages/BecomeProviderPages/UploadDocuments";
 import Notification from '../components/common/Notification'
 import BookingDetail from "../pages/BookingProviders/BookingDetail";
+import Payment from "../pages/BookingProviders/Payment";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -90,6 +91,7 @@ const AppRoutes = () => {
             <Route path="/user/provider-details" element={<ProviderDetail/>}/>
 
             <Route path="/user/provider-details/booking-details" element={<BookingDetail/>}/>
+            <Route path="/user/provider-details/booking-details/payment" element={<Payment/>}/>
             <Route path="/user/become-provider" element={<BecomeProvider/>}>
              <Route path="basic-info" element={<BasicInfo/>}/>
              <Route path="upload-documents" element={<UploadDocuments/>}/>

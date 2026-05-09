@@ -6,12 +6,12 @@ const Button = ({
   ...props
 }) => {
   const base =
-    "py-2 px-4 flex items-center justify-center gap-2 font-roboto rounded-[4px] cursor-pointer font-semibold shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed md:text-sm hover:scale-105  active:scale-95";
+    "py-2 px-4 flex items-center justify-center gap-2 font-roboto rounded-[4px] cursor-pointer font-semibold shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed  hover:scale-[1.01]  active:scale-95";
 
 
 
   const colors = {
-    success: "bg-[#16A34A] text-white hover:bg-[#14c756]",
+    success: "bg-green-600 text-white hover:bg-[#14c756]",
     white:
       "bg-white text-black border shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] border-border hover:bg-[#f0f1f4] ",
     blue: "bg-[#2563EB] text-white shadow-[#2563EB]/50 hover:bg-[#3B82F6] ",

@@ -3,8 +3,10 @@ import Button from "../../components/common/Button";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import Input from "../../components/common/Input";
 import { IoMdTime } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const BookingDetail = () => {
+    const navigate = useNavigate()
   const timeSlots = [
     "12:00 AM - 1:00 AM",
     "1:00 AM - 2:00 AM",
@@ -102,7 +104,7 @@ const BookingDetail = () => {
           </p>
         </div>
         <div className="mt-4 mb-5 flex md:w-[30%] mx-auto">
-          <Button fullWidth>Continue to Payment</Button>
+          <Button fullWidth onClick={()=>navigate('/user/provider-details/booking-details/payment')}>Continue to Payment</Button>
         </div>
       </div>
     </div>
