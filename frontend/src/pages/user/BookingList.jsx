@@ -56,7 +56,7 @@ const BookingList = () => {
     date: "18 May, 2026",
     time: "11:00 AM - 01:00 PM",
     location: "Noida",
-    status: "canceled"
+    status: "cancelled"
   },
   {
     id: 7,
@@ -182,7 +182,7 @@ const BookingList = () => {
     date: "17 May, 2026",
     time: "02:00 PM - 04:00 PM",
     location: "Noida",
-    status: "canceled"
+    status: "cancelled"
   }
 ];
 const {status} = useParams()

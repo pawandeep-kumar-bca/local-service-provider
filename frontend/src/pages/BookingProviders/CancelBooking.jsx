@@ -5,11 +5,12 @@ import Button from "../../components/common/Button";
 import StatusBadge from "../../components/common/StatusBadge";
 import { IoMdTime } from "react-icons/io";
 import { RiBillLine } from "react-icons/ri";
-const CancelBooking = () => {
+const CancelBooking = ({ setCancel }) => {
+    
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm">
       <div className=" w-full h-full md:h-auto md:max-w-md bg-white px-5 py-7 md:rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] animate-in zoom-in-95 fade-in duration-200 relative overflow-y-auto">
-        <button className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-all cursor-pointer">
+        <button className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-all cursor-pointer" onClick={() => setCancel(null)}>
           <MdClose className="text-2xl text-gray-600" />
         </button>
         <div>
@@ -68,7 +69,7 @@ const CancelBooking = () => {
                     Electrician
                   </p>
                 </div>
-                <StatusBadge badge="Cancelled" />
+                <StatusBadge badge="cancelled" />
               </div>
             </div>
             <div className="flex flex-col gap-2 mt-3">

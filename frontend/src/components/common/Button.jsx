@@ -1,14 +1,13 @@
 const Button = ({
   children,
   fullWidth = false,
-  className="",
+  className = "",
   color = "success",
   ...props
 }) => {
+  
   const base =
-    "py-2 px-4 flex items-center justify-center gap-2 font-roboto rounded-xl cursor-pointer font-semibold shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed  hover:scale-[1.01]  active:scale-95";
-
-
+  "py-3 md:py-2 lg:py-2 px-auto md:px-4   flex items-center justify-center gap-2 font-roboto rounded-xl cursor-pointer font-semibold shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-95 text-lg md:text-base";
 
   const colors = {
     success: "bg-green-600 text-white hover:bg-[#14c756]",
@@ -24,7 +23,7 @@ const Button = ({
   return (
     <button
       type="button"
-      className={`${base} ${width}  ${colors[color] || colors.success} ${className}`} 
+      className={`${base} ${width}  ${colors[color] || colors.success} ${className}`}
       {...props}
     >
       {children}
@@ -32,4 +31,4 @@ const Button = ({
   );
 };
 
-export default Button;//create: add welcome page UI
+export default Button; //create: add welcome page UI

@@ -14,7 +14,7 @@ const MyBookingsPage = () => {
             <NavLink to="/user/my-bookings/upcoming" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Upcoming</NavLink>
             <NavLink to="/user/my-bookings/active" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Active</NavLink>
             <NavLink to="/user/my-bookings/completed" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Completed</NavLink>
-            <NavLink to="/user/my-bookings/canceled" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Canceled</NavLink>
+            <NavLink to="/user/my-bookings/cancelled" className={({isActive})=>`border px-4 py-1 rounded ${isActive ?"bg-primary text-bg":"bg-bg text-text"}`}>Cancelled</NavLink>
           </ul>
         </div>
        

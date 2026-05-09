@@ -48,6 +48,7 @@ import BookingDetail from "../pages/BookingProviders/BookingDetail";
 import Payment from "../pages/BookingProviders/Payment";
 import SuccessfulPayment from "../pages/BookingProviders/SuccessfulPayment";
 import ViewUserBooking from "../pages/BookingProviders/ViewUserBooking";
+import RescheduleBooking from "../pages/BookingProviders/RescheduleBooking";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -96,6 +97,7 @@ const AppRoutes = () => {
             <Route path="/user/provider-details/booking-details/payment" element={<Payment/>}/>
             <Route path="/user/provider-details/booking-details/payment/success-payment" element={<SuccessfulPayment/>}/>
             <Route path="/user/my-bookings/booking-details" element={<ViewUserBooking/>}/>
+            <Route path="/user/my-bookings/reschedule-booking" element={<RescheduleBooking/>}/>
             <Route path="/user/become-provider" element={<BecomeProvider/>}>
              <Route path="basic-info" element={<BasicInfo/>}/>
              <Route path="upload-documents" element={<UploadDocuments/>}/>

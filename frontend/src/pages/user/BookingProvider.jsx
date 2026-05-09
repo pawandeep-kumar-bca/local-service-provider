@@ -53,7 +53,7 @@ const BookingProvider = ({data}) => {
       </div>
       
       <div className="flex gap-2 items-center w-full mb-4">
-        <Button color="white" fullWidth>Reschedule</Button>
+        <Button color="white" fullWidth onClick={()=>navigate('/user/my-bookings/reschedule-booking')}>Reschedule</Button>
         <Button color="success" fullWidth onClick={()=>navigate('/user/my-bookings/booking-details')}>View</Button>
       </div>
     </div>
