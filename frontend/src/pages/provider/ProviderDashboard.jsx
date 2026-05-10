@@ -12,8 +12,7 @@ const ProviderDashboard = () => {
     <>
       <div className="w-full p-3">
         <div
-          className="w-[100%] rounded-2xl 
-  bg-[#3B82F6]
+          className="w-[100%] rounded-2xl bg-[#3B82F6]
   shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] flex justify-between items-start mt-3"
         >
           <div className="p-5">
@@ -45,7 +44,7 @@ const ProviderDashboard = () => {
             Booking
           </Cards>
           <Cards icon={<FaStar className="text-warning text-2xl" />} value={3}>
-            Total Earning
+            Total Reviews
           </Cards>
         </div>
        

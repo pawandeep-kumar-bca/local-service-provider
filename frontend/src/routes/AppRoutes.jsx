@@ -130,7 +130,7 @@ const AppRoutes = () => {
               <Route path="review" element={<Review />} />
               <Route path="submit" element={<Submit />} />
             </Route>
-            <Route path="/user/notification" element={<Notification />} />
+            <Route path="/user/notification/:notification" element={<Notification />} />
           </Route>
 
           {/* Provider */}

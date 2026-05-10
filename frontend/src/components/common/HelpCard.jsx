@@ -39,7 +39,8 @@ transition-all duration-300 p-3 rounded-xl cursor-pointer hover:scale-[1.02] dur
         <h1 className="text-2xl  text-black font-bold my-4 text-center">
           {title}
         </h1>
-        <div className="w-full h-[1px] bg-muted my-4"></div>
+        
+        <div className="w-full border-t border-gray-200 my-3"></div>
         <p className="text-text text-lg font-semibold w-[45%] text-center mx-auto">
           {text}
         </p>

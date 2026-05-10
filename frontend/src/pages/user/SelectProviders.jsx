@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../../components/common/Button";
 import { FaStar } from "react-icons/fa";
 import { MdOutlineCurrencyRupee } from "react-icons/md";
+import { IoIosArrowBack } from "react-icons/io";
 
 const SelectProviders = () => {
   const providers = [
@@ -119,7 +120,7 @@ const SelectProviders = () => {
     <div>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-text">Select Provider</h1>
-        <Button color="white">Back</Button>
+        <Button color="white"><IoIosArrowBack />Back</Button>
       </div>
       <div className="border border-muted rounded-md mt-5">
         {providers.map((provider, index) => {
@@ -151,8 +152,7 @@ const SelectProviders = () => {
                     {/* Online Dot */}
                     <div className="absolute bottom-1 bg-white flex items-center justify-center right-0 w-4 h-4 rounded-full">
                         <div
-                      className={` w-3 h-3 rounded-full  shadow-sm
-    ${status ? "bg-green-500" : "bg-white border-3  border-green-500"}
+                      className={` w-3 h-3 rounded-full  shadow-sm ${status ? "bg-green-500" : "bg-white border-3  border-green-500"}
   `}
                     />
                     </div>

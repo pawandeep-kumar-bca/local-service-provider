@@ -8,7 +8,10 @@ const PaymentHistory = () => {
   
   const location = useLocation();
   const isLocation = location.pathname.includes("payment-info");
-  
+  const base =
+    "whitespace-nowrap border shrink-0 transition-all duration-300 mb-1 px-5 py-2 rounded-xl text-sm font-semibold";
+  const active = "bg-primary text-white";
+  const notActive = "border-muted border text-black";
   return (
     <div>
      
@@ -36,8 +39,8 @@ const PaymentHistory = () => {
                 to="/user/payment-history"
                 end
                 className={({ isActive }) =>
-                  `border px-4 py-1 rounded shrink-0 ${
-                    isActive ? "bg-primary text-white" : "bg-white"
+                  `${base} ${
+                    isActive ? active : notActive
                   }`
                 }
               >
@@ -47,8 +50,8 @@ const PaymentHistory = () => {
               <NavLink
                 to="/user/payment-history/completed"
                 className={({ isActive }) =>
-                  `border px-4 py-1 rounded shrink-0 ${
-                    isActive ? "bg-primary text-white" : "bg-white"
+                  `${base} ${
+                    isActive ? active : notActive
                   }`
                 }
               >
@@ -58,8 +61,8 @@ const PaymentHistory = () => {
               <NavLink
                 to="/user/payment-history/refund"
                 className={({ isActive }) =>
-                  `border px-4 py-1 rounded shrink-0 ${
-                    isActive ? "bg-primary text-white" : "bg-white"
+                  `${base} ${
+                    isActive ? active : notActive
                   }`
                 }
               >
@@ -69,8 +72,8 @@ const PaymentHistory = () => {
               <NavLink
                 to="/user/payment-history/pending"
                 className={({ isActive }) =>
-                  `border px-4 py-1 rounded shrink-0 ${
-                    isActive ? "bg-primary text-white" : "bg-white"
+                  `${base} ${
+                    isActive ? active : notActive
                   }`
                 }
               >
@@ -80,8 +83,8 @@ const PaymentHistory = () => {
               <NavLink
                 to="/user/payment-history/failed"
                 className={({ isActive }) =>
-                  `border px-4 py-1 rounded shrink-0 ${
-                    isActive ? "bg-primary text-white" : "bg-white"
+                  `${base} ${
+                    isActive ? active : notActive
                   }`
                 }
               >

@@ -443,10 +443,16 @@ const ProviderCard = () => {
                     />
 
                     {/* Online Dot */}
+                     {/* <div className="absolute bottom-1 bg-white flex items-center justify-center right-0 w-4 h-4 rounded-full">
+                        <div
+                      className={` w-3 h-3 rounded-full  shadow-sm ${status ? "bg-green-500" : "bg-white border-3  border-green-500"}
+  `}
+                    />
+                    </div> */}
                     <div
                       className=" absolute bottom-1 right-1 w-4 h-4 rounded-full bg-green-500 border-3 border-white shadow-sm
     "
-                    ></div>
+                    />
                   </div>
 
                   <div className="w-full flex flex-col gap-1 ">
@@ -491,7 +497,7 @@ const ProviderCard = () => {
                   </div>
                 </div>
 
-                <div className="w-full h-[1px] bg-muted my-3"></div>
+               <div className="w-full border-t border-gray-200 my-3"></div>
 
                 <div className="flex items-stretch justify-between">
                   <div className="flex flex-col justify-center items-center gap-1 flex-1">
@@ -531,7 +537,7 @@ const ProviderCard = () => {
                   </div>
                 </div>
 
-                <div className="w-full h-[1px] bg-muted my-3"></div>
+                <div className="w-full border-t border-gray-200 my-3"></div>
 
                 <div className="flex flex-col justify-center py-3">
                   <div className="flex items-center justify-between">
@@ -551,7 +557,7 @@ const ProviderCard = () => {
                       <p className="text-muted ">Hourly Rate</p>
                     </div>
                   </div>
-                  <div className="w-full h-[1px] bg-muted my-3"></div>
+                  <div className="w-full border-t border-gray-200 my-3"></div>
 
                   <div className="flex items-center justify-between mt-1">
                     <div className="w-full flex flex-col gap-5">

@@ -8,7 +8,10 @@ import { IoChevronBackSharp, IoClose } from "react-icons/io5";
 import StatusBadge from "../../components/common/StatusBadge";
 import { useNavigate, useParams } from "react-router-dom";
 import { payments } from "../../utils/payments";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 const PaymentInfo = () => {
+
     const navigate = useNavigate()
     const backHandler= ()=>{
         if(window.history.length>1){
@@ -42,6 +45,36 @@ const PaymentInfo = () => {
   adminCommission,
   providerEarning
 } = payment;
+
+
+const downloadInvoice = async () => {
+
+  const input = document.getElementById("invoice");
+
+ const canvas = await html2canvas(input, {
+  backgroundColor: "#ffffff",
+});
+
+  const imgData = canvas.toDataURL("image/png");
+
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+
+  const pdfHeight =
+    (canvas.height * pdfWidth) / canvas.width;
+
+  pdf.addImage(
+    imgData,
+    "PNG",
+    0,
+    0,
+    pdfWidth,
+    pdfHeight
+  );
+
+  pdf.save("invoice.pdf");
+};
   return (
     <div className="w-full md:flex md:justify-center md:mt-6 md:items-center">
       <div className="md:w-[60%]">
@@ -52,7 +85,7 @@ const PaymentInfo = () => {
           </h1>
         </div>
         <div className="p-2">
-          <div className="shadow-[0_0_30px_rgba(0,0,0,0.30)] p-3 md:px-3 rounded-lg md:bg-bg md:relative md:py-9 relative">
+          <div id="invoice" className="shadow-[0_0_30px_rgba(0,0,0,0.30)] p-3 md:px-3 rounded-lg md:bg-bg md:relative md:py-9 relative">
             <MdClose size={30} onClick={backHandler} className="absolute hidden md:flex right-4 top-4 cursor-pointer"/>
             <h1 className="text-2xl text-bg font-semibold md:text-text hidden md:block text-center">
               Transaction Details
@@ -150,9 +183,9 @@ const PaymentInfo = () => {
               <div className="flex flex-col w-[95%] mx-auto gap-3 my-3">
                 <div className="flex justify-between items-center text-lg font-semibold">
                   <h2>Provider Earning</h2>
-                  <h3>₹ {providerEarning}</h3>
+                  <h3>₹{providerEarning}</h3>
                 </div>
-                <Button>
+                <Button onClick={downloadInvoice}>
                   {" "}
                   <FaArrowAltCircleDown className="text-xl text-bg" /> Download
                   Invoice

@@ -2,11 +2,7 @@ const Cards = ({ children, icon, value }) => {
   return (
     <div
       className="backdrop-blur-sm
-            border
-border-muted
-bg-white
-
-shadow-[0_5px_15px_rgba(0,0,0,0.06)] p-5 rounded-lg  flex items-start gap-3"
+            border border-muted bg-white shadow-[0_5px_15px_rgba(0,0,0,0.06)] p-5 rounded-lg  flex items-start gap-3"
     >
       {icon}
       <div className="flex flex-col items-center">

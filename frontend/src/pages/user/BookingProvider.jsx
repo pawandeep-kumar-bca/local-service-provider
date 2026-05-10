@@ -40,7 +40,7 @@ const BookingProvider = ({ data }) => {
           </div>
         </div>
       </div>
-      <div className="w-full h-[1px] bg-muted my-3"></div>
+      <div className="w-full border-t border-gray-200 my-3"></div>
       <div
         className="flex flex-col
       gap-3 mb-5"
@@ -58,7 +58,7 @@ const BookingProvider = ({ data }) => {
           <p className="text-sm font-semibold">{location}</p>
         </div>
       </div>
-
+<div className="w-full border-t border-gray-200 my-3"></div>
       <div className="flex gap-2 items-center w-full mb-4">
         <Button
           color="white"

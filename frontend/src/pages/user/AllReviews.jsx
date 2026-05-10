@@ -35,7 +35,7 @@ const AllReviews = () => {
             </p>
           </div>
 
-          <div className="w-full h-[1px] bg-muted"></div>
+          <div className="w-full border-t border-gray-200"></div>
           <div className="p-3 flex justify-end gap-3">
             <Button color="blue">Edit</Button>
             <Button color="white" className="text-danger">

@@ -15,7 +15,7 @@ const PaymentList = () => {
     <>
       {paymentFilters.length > 0 ? (
         <div>
-          {paymentFilters.map((item) => {
+          {paymentFilters.map((item,idx) => {
             const { id, name, date, transactionId, status, amount } = item;
 
             return (
@@ -44,7 +44,8 @@ const PaymentList = () => {
                   </Button>
                 </div>
 
-                <div className="w-full h-[1px] bg-muted"></div>
+                {(idx !== paymentFilters.length-1)
+                && <div className="w-full border-t border-gray-200"></div>}
               </div>
             );
           })}
