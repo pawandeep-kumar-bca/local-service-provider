@@ -43,7 +43,6 @@ import BasicInfo from "../pages/BecomeProviderPages/BasicInfo";
 import Review from "../pages/BecomeProviderPages/Review";
 import Submit from "../pages/BecomeProviderPages/Submit";
 import UploadDocuments from "../pages/BecomeProviderPages/UploadDocuments";
-import Notification from "../components/common/Notification";
 import BookingDetail from "../pages/BookingProviders/BookingDetail";
 import Payment from "../pages/BookingProviders/Payment";
 import SuccessfulPayment from "../pages/BookingProviders/SuccessfulPayment";
@@ -130,7 +129,6 @@ const AppRoutes = () => {
               <Route path="review" element={<Review />} />
               <Route path="submit" element={<Submit />} />
             </Route>
-            <Route path="/user/notification/:notification" element={<Notification />} />
           </Route>
 
           {/* Provider */}

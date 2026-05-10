@@ -37,7 +37,7 @@ const NavBar = () => {
           {/* Right Icons */}
           <div className="flex items-center gap-3">
             <div className="relative cursor-pointer">
-              <IoMdNotifications className="text-2xl"  onClick={()=>setOpenNotification(true)}/>
+              <IoMdNotifications className="text-2xl"  onClick={()=>setOpenNotification((prev) => !prev)}/>
               <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full px-1 text-[10px]">
                 0
               </div>
