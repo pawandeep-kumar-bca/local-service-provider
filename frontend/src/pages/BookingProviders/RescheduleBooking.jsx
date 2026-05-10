@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RiBillLine, RiErrorWarningLine } from "react-icons/ri";
 import StatusBadge from "../../components/common/StatusBadge";
 import Input from "../../components/common/Input";
@@ -6,7 +6,9 @@ import Button from '../../components/common/Button'
 import { CiCalendar, CiCalendarDate } from "react-icons/ci";
 import { IoMdTime } from "react-icons/io";
 import { FaCalendarCheck ,FaRegCalendarCheck} from "react-icons/fa";
+import ConfirmReschedule from "./ConfirmReschedule";
 const RescheduleBooking = () => {
+    const [open,setOpen] = useState(false)
   const timeSlots = [
     "12:00 AM - 1:00 AM",
     "1:00 AM - 2:00 AM",
@@ -34,6 +36,7 @@ const RescheduleBooking = () => {
     "11:00 PM - 12:00 AM",
   ];
   return (
+    <>
     <div className="md:shadow-[inset_0_0_4px_rgba(0,0,0,0.56)] md:p-4 rounded-xl">
       <div>
         <h1 className="text-2xl font-semibold">Reschedule Booking</h1>
@@ -113,7 +116,7 @@ const RescheduleBooking = () => {
               <select
                 name="time"
                 id="time"
-                className="border px-3 py-2 text-lg rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 cursor-pointer"
+                className="border px-3 py-2 text-lg rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 cursor-pointer "
               >
                 <option value="">Select Time Slot</option>
                 {timeSlots.map((time, idx) => (
@@ -140,11 +143,15 @@ const RescheduleBooking = () => {
         </div>
       </div>
       <div className="w-full flex flex-col md:flex-row  gap-3 md:gap-7 mt-5 md:mt-4">
-        <Button color="blue" fullWidth>Cancel</Button>
-        <Button color="success" fullWidth><CiCalendar size={20}/>Confirm Reschedule</Button>
+        <Button color="gray" fullWidth>Cancel</Button>
+        <Button color="success" fullWidth onClick={()=>setOpen(true)}><CiCalendar size={20} />Confirm Reschedule</Button>
 
       </div>
     </div>
+    {
+        open && <ConfirmReschedule setOpen={setOpen}/>
+    }
+    </>
   );
 };
 
