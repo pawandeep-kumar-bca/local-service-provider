@@ -9,7 +9,18 @@ import { useNavigate } from "react-router-dom";
 const ProviderCard = () => {
   const navigate = useNavigate()
   return (
-    <div className="w-full bg-bg shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] p-5 rounded-lg mt-1">
+    <div className="w-full bg-bg backdrop-blur-sm
+            border
+border-muted
+bg-white
+hover:scale-95   ease-in-out
+shadow-[0_5px_15px_rgba(0,0,0,0.06)]
+
+hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)]
+
+
+transition-all duration-300
+ p-5 rounded-lg mt-1">
       <div className="flex w-full gap-3 items-center">
         <img
           src="/assets/profile.png"

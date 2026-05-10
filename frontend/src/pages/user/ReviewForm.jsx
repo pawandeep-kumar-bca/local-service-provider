@@ -7,7 +7,17 @@ const ReviewForm = () => {
     <div className="w-full min-h-screen flex items-center justify-center bg-black/40 px-4">
       
       {/* Card */}
-      <div className="bg-bg shadow-[0_10px_30px_rgba(0,0,0,0.25)] px-5 py-6 rounded-xl max-w-md w-full h-auto">
+      <div className="bg-bg backdrop-blur-sm
+            border
+border-muted
+bg-white
+hover:scale-95 ease-in-out
+shadow-[0_5px_15px_rgba(0,0,0,0.06)]
+
+hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)]
+
+
+transition-all duration-300 px-5 py-6 rounded-xl max-w-md w-full h-auto">
         
         {/* Header */}
         <div className="text-center">

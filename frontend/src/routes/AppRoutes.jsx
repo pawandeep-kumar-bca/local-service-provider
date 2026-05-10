@@ -43,12 +43,13 @@ import BasicInfo from "../pages/BecomeProviderPages/BasicInfo";
 import Review from "../pages/BecomeProviderPages/Review";
 import Submit from "../pages/BecomeProviderPages/Submit";
 import UploadDocuments from "../pages/BecomeProviderPages/UploadDocuments";
-import Notification from '../components/common/Notification'
+import Notification from "../components/common/Notification";
 import BookingDetail from "../pages/BookingProviders/BookingDetail";
 import Payment from "../pages/BookingProviders/Payment";
 import SuccessfulPayment from "../pages/BookingProviders/SuccessfulPayment";
 import ViewUserBooking from "../pages/BookingProviders/ViewUserBooking";
 import RescheduleBooking from "../pages/BookingProviders/RescheduleBooking";
+import CategoryList from "../pages/user/CategoryList";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -65,7 +66,6 @@ const AppRoutes = () => {
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
             <Route path="/user" element={<UserDashboard />}>
               <Route path="all-providers" element={<ViewAllProviders />} />
-              
             </Route>
             <Route path="/user/my-bookings" element={<MyBookingsPage />}>
               <Route index element={<BookingList />} />
@@ -90,24 +90,41 @@ const AppRoutes = () => {
               {/* ✅ Change password */}
               <Route path="change-password" element={<ChangePassword />} />
             </Route>
-            <Route path="/user/our-services" element={<OurServices />} />
-            <Route path="/user/provider-details" element={<ProviderDetail/>}/>
-
-            <Route path="/user/provider-details/booking-details" element={<BookingDetail/>}/>
-            <Route path="/user/provider-details/booking-details/payment" element={<Payment/>}/>
-            <Route path="/user/provider-details/booking-details/payment/success-payment" element={<SuccessfulPayment/>}/>
-            <Route path="/user/my-bookings/booking-details" element={<ViewUserBooking/>}/>
-            <Route path="/user/my-bookings/reschedule-booking" element={<RescheduleBooking/>}/>
-            <Route path="/user/become-provider" element={<BecomeProvider/>}>
-             <Route path="basic-info" element={<BasicInfo/>}/>
-             <Route path="upload-documents" element={<UploadDocuments/>}/>
-             <Route path="review" element={<Review/>}/>
-             <Route path="submit" element={<Submit/>}/>
+            <Route path="/user/our-services" element={<OurServices />} >
+               <Route index  element={<CategoryList/>}/>
+               <Route path=":category"  element={<CategoryList/>}/>
+            
             </Route>
-            <Route path="/user/notification" element={<Notification/>}/>
+            <Route path="/user/provider-details" element={<ProviderDetail />} />
+
+            <Route
+              path="/user/provider-details/booking-details"
+              element={<BookingDetail />}
+            />
+            <Route
+              path="/user/provider-details/booking-details/payment"
+              element={<Payment />}
+            />
+            <Route
+              path="/user/provider-details/booking-details/payment/success-payment"
+              element={<SuccessfulPayment />}
+            />
+            <Route
+              path="/user/my-bookings/booking-details"
+              element={<ViewUserBooking />}
+            />
+            <Route
+              path="/user/my-bookings/reschedule-booking"
+              element={<RescheduleBooking />}
+            />
+            <Route path="/user/become-provider" element={<BecomeProvider />}>
+              <Route path="basic-info" element={<BasicInfo />} />
+              <Route path="upload-documents" element={<UploadDocuments />} />
+              <Route path="review" element={<Review />} />
+              <Route path="submit" element={<Submit />} />
+            </Route>
+            <Route path="/user/notification" element={<Notification />} />
           </Route>
-
-
 
           {/* Provider */}
           <Route element={<RoleRoute allowedRoles={["provider"]} />}>
@@ -118,7 +135,7 @@ const AppRoutes = () => {
               element={<EarningAnalyticPage />}
             />
             <Route path="/provider/services" element={<ServicesPage />} />
-            
+
             <Route
               path="/provider/settings"
               element={<ProviderProfileSettings />}

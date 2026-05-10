@@ -15,7 +15,17 @@ const BookingProvider = ({data}) => {
     location,
     status} = data
   return (
-    <div className="bg-bg shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] rounded-lg p-3">
+    <div className="bg-bg backdrop-blur-sm
+            border
+border-muted
+bg-white
+hover:scale-95 ease-in-out
+shadow-[0_5px_15px_rgba(0,0,0,0.06)]
+
+hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)]
+
+
+transition-all duration-300  rounded-lg p-3">
       <div className="relative">
         <div className="absolute right-0">
             <StatusBadge badge={status}>{status}</StatusBadge>

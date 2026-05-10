@@ -5,8 +5,9 @@ const AllReviews = () => {
   return (
     <div>
       <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="border border-muted rounded-lg shadow-[0_0_20px_rgba(0,0,0,0.30)]">
-           
+        <div
+          className="rounded-lg backdrop-blur-sm border border-muted bg-white hover:scale-95 ease-in-out shadow-[0_5px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)] transition-all duration-300"
+        >
           <div className="py-3">
             <div className="flex gap-2">
               <img
@@ -37,10 +38,11 @@ const AllReviews = () => {
           <div className="w-full h-[1px] bg-muted"></div>
           <div className="p-3 flex justify-end gap-3">
             <Button color="blue">Edit</Button>
-            <Button color="white" className="text-danger">Delete</Button>
+            <Button color="white" className="text-danger">
+              Delete
+            </Button>
           </div>
         </div>
-       
       </div>
     </div>
   );
