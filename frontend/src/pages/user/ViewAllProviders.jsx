@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import ProviderCard from "../../components/provider/ProviderCard";
 import Button from "../../components/common/Button";
 import { IoIosArrowBack } from "react-icons/io";
+import FilterProviders from "./FilterProviders";
 const ViewAllProviders = () => {
   const navigate = useNavigate();
   const handleBack = () => {
@@ -20,15 +21,11 @@ const ViewAllProviders = () => {
           <IoIosArrowBack /> Go Back
         </Button>
       </div>
+      <FilterProviders url="user/all-providers"/>
       <div className="w-full h-[1px] bg-muted my-5"></div>
-      <div className="grid grid-col-1 gap-2 md:grid-cols-3">
-        <ProviderCard />
-        <ProviderCard />
-        <ProviderCard />
-        <ProviderCard />
-        <ProviderCard />
-        <ProviderCard />
-      </div>
+      <ProviderCard />
+      
+      
       <div className="my-3 flex justify-center">
         <Button color="blue">View More</Button>
       </div>

@@ -1,18 +1,16 @@
-import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import React from 'react'
+import { NavLink } from 'react-router-dom';
 
-const OurServices = () => {
-  const base =
+const FilterProviders = ({url}) => {
+    const base =
     "whitespace-nowrap border shrink-0 transition-all duration-300 mb-2 px-5 py-2 rounded-xl font-semibold";
   const active = "bg-primary text-white";
   const notActive = "border-muted border text-black";
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Our Services</h1>
-      <div className="mb-5 sticky top-20 bg-white z-40 pb-5 md:pb-1 pt-3 md:pt-1 px-2">
+     <div className="mb-5 sticky top-20 bg-white z-40 pb-5 md:pb-1 pt-3 md:pt-1 px-2">
         <ul className="mt-3 flex gap-4 overflow-x-auto scrollbar-hide">
           <NavLink
-            to="/user/our-services"
+            to={`/${url}/home-repair`}
             end
             className={({ isActive }) =>
               `${base} ${isActive ? `${active}` : `${notActive}`}`
@@ -29,7 +27,7 @@ const OurServices = () => {
             Home Repair
           </NavLink>
           <NavLink
-            to="/user/our-services/cleaning"
+            to={`/${url}/cleaning`}
             className={({ isActive }) =>
               `${base} ${isActive ? `${active}` : `${notActive}`}`
             }
@@ -37,7 +35,7 @@ const OurServices = () => {
             Cleaning
           </NavLink>
           <NavLink
-            to="/user/our-services/electrical"
+            to={`/${url}/electrical`}
             className={({ isActive }) =>
               `${base} ${isActive ? `${active}` : `${notActive}`}`
             }
@@ -45,7 +43,7 @@ const OurServices = () => {
             Electrical
           </NavLink>
           <NavLink
-            to="/user/our-services/plumbing"
+            to={`/${url}/plumbing`}
             className={({ isActive }) =>
               `${base} ${isActive ? `${active}` : `${notActive}`}`
             }
@@ -53,7 +51,7 @@ const OurServices = () => {
             Plumbing
           </NavLink>
           <NavLink
-            to="/user/our-services/appliance"
+            to={`/${url}/appliance`}
             className={({ isActive }) =>
               `${base} ${isActive ? `${active}` : `${notActive}`}`
             }
@@ -61,7 +59,7 @@ const OurServices = () => {
             Appliance
           </NavLink>
           <NavLink
-            to="/user/our-services/home-decor"
+            to={`/${url}/home-decor`}
             className={({ isActive }) =>
               `${base} ${isActive ? `${active}` : `${notActive}`}`
             }
@@ -70,12 +68,7 @@ const OurServices = () => {
           </NavLink>
         </ul>
       </div>
+  )
+}
 
-      <div>
-        <Outlet />
-      </div>
-    </div>
-  );
-};
-
-export default OurServices;
+export default FilterProviders

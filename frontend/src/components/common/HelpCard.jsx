@@ -28,7 +28,7 @@ shadow-[0_5px_15px_rgba(0,0,0,0.06)]
 hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)]
 
 
-transition-all duration-300 p-3 rounded-xl cursor-pointer hover:scale-95 duration-300 ease-in-out"
+transition-all duration-300 p-3 rounded-xl cursor-pointer hover:scale-[1.02] duration-300 ease-in-out"
     >
       {/* ✅ Dynamic icon */}
       <div className="text-6xl text-primary flex justify-center">

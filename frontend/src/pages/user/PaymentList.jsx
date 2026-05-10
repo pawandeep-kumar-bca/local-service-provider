@@ -16,19 +16,11 @@ const PaymentList = () => {
       {paymentFilters.length > 0 ? (
         <div>
           {paymentFilters.map((item) => {
-            const {
-              id,
-              name,
-              date,
-              transactionId,
-              status,
-              amount
-            } = item;
+            const { id, name, date, transactionId, status, amount } = item;
 
             return (
               <div key={id}>
                 <div className="grid md:grid-cols-6 grid-cols-4 text-sm md:text-lg font-semibold text-muted justify-items-center items-center py-3">
-                  
                   <h2>{name}</h2>
                   <p>{date}</p>
 
@@ -58,10 +50,10 @@ const PaymentList = () => {
           })}
         </div>
       ) : (
-        <div className="flex items-center justify-center p-10">
-          <p className="text-lg font-semibold text-text">
+        <div className="flex flex-col items-center justify-center py-16">
+          <h2 className="text-2xl font-bold text-gray-700">
             No payments found for this status.
-          </p>
+          </h2>
         </div>
       )}
     </>

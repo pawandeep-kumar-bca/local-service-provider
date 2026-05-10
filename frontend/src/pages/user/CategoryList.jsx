@@ -157,7 +157,8 @@ const CategoryList = () => {
   console.log(filterCategory);
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+    <>
+    {(filterCategory.length > 0) ?<div className="grid grid-cols-1 gap-4 md:grid-cols-4">
       {filterCategory.map((service) => {
         const {
           id,
@@ -174,16 +175,7 @@ const CategoryList = () => {
           <div
             key={id}
             className=" rounded-xl px-5 py-4 flex flex-col items-center justify-center relative backdrop-blur-sm
-            border
-border-muted
-bg-white
-
-shadow-[0_5px_15px_rgba(0,0,0,0.06)]
-
-hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)]
-hover:scale-95 duration-300 ease-in-out
-
-transition-all duration-300"
+            border border-muted bg-white shadow-[0_5px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)] hover:scale-[1.02] duration-300 ease-in-out transition-all duration-300"
           >
             <div className="absolute top-3 right-3">
               <StatusBadge badge={status} />
@@ -212,7 +204,16 @@ transition-all duration-300"
           </div>
         );
       })}
-    </div>
+    </div>:<div className="flex flex-col items-center justify-center py-16">
+  <h2 className="text-2xl font-bold text-gray-800">
+    No Services Found
+  </h2>
+
+  <p className="text-muted mt-2 text-center">
+    We couldn’t find any services in this category yet.
+  </p>
+</div>}
+    </>
   );
 };
 

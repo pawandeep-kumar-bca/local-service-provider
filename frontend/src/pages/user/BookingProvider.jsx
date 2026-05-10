@@ -19,7 +19,7 @@ const BookingProvider = ({data}) => {
             border
 border-muted
 bg-white
-hover:scale-95 ease-in-out
+hover:scale-[1.02] ease-in-out
 shadow-[0_5px_15px_rgba(0,0,0,0.06)]
 
 hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)]

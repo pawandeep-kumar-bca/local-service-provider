@@ -191,12 +191,18 @@ const {status} = useParams()
       ? bookings
       : bookings.filter((item) => item.status === status);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+    <>{(filteredBookings.length>0)?
+    (<div className="grid grid-cols-1 md:grid-cols-3 gap-2">
        {filteredBookings.map((item)=>(
            <BookingProvider data={item} key={item.id}/>)
       ) }
         
-       </div>
+       </div>):(<div className="flex flex-col items-center justify-center py-16">
+          <h2 className="text-2xl font-bold text-black">
+            No {status} bookings available here.
+          </h2>
+        </div>)}
+       </>
   )
 }
 

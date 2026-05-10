@@ -1,8 +1,9 @@
 import { FaCheckCircle, FaStar, FaWallet } from "react-icons/fa";
 import Navbar from "../../components/common/NavBar";
 import ProviderCard from "../../components/provider/ProviderCard";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import Cards from "../../components/common/Cards";
+import FilterProviders from "./FilterProviders";
 const UserDashboard = () => {
   const location = useLocation();
 
@@ -14,15 +15,13 @@ const UserDashboard = () => {
         {!isAllProviders && (
           <>
             <div
-              className="w-[100%] p-6 rounded-2xl 
-  bg-[#3B82F6]
-  shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] flex justify-between items-start mt-3"
+              className="w-[100%] p-6 rounded-2xl bg-[#3B82F6] shadow-[inset_0_0_3px_rgba(0,0,255,0.3)] flex justify-between items-start mt-3"
             >
               <div>
                 <h1 className="text-bg font-bold text-3xl pb-1">
                   Hi , shivam{" "}
                 </h1>
-                <p className="text-bg text-xl font-medium md:font-normal">
+                <p className="text-bg text-2xl font-semibold md:font-normal">
                   Welcome to your dashboard
                 </p>
               </div>
@@ -65,14 +64,9 @@ const UserDashboard = () => {
                   View All
                 </Link>
               </div>
-              <div className="grid grid-col-1 gap-2 md:grid-cols-3">
-                <ProviderCard />
-                <ProviderCard />
-                <ProviderCard />
-                <ProviderCard />
-                <ProviderCard />
-                <ProviderCard />
-              </div>
+
+             
+              <FilterProviders url='user'/>
             </div>
           </>
         )}

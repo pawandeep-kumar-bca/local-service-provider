@@ -50,6 +50,7 @@ import SuccessfulPayment from "../pages/BookingProviders/SuccessfulPayment";
 import ViewUserBooking from "../pages/BookingProviders/ViewUserBooking";
 import RescheduleBooking from "../pages/BookingProviders/RescheduleBooking";
 import CategoryList from "../pages/user/CategoryList";
+import ProviderCard from "../components/provider/ProviderCard";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -65,6 +66,8 @@ const AppRoutes = () => {
           {/* User */}
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
             <Route path="/user" element={<UserDashboard />}>
+               <Route index element={<ProviderCard/>}/>
+               <Route path=":category" element={<ProviderCard/>}/>
               <Route path="all-providers" element={<ViewAllProviders />} />
             </Route>
             <Route path="/user/my-bookings" element={<MyBookingsPage />}>
