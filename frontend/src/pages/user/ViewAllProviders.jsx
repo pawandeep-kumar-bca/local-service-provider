@@ -21,11 +21,10 @@ const ViewAllProviders = () => {
           <IoIosArrowBack /> Go Back
         </Button>
       </div>
-      <FilterProviders url="user/all-providers"/>
+      <FilterProviders url="user/all-providers" />
       <div className="w-full h-[1px] bg-muted my-5"></div>
       <ProviderCard />
-      
-      
+
       <div className="my-3 flex justify-center">
         <Button color="blue">View More</Button>
       </div>

@@ -51,6 +51,7 @@ import ViewUserBooking from "../pages/BookingProviders/ViewUserBooking";
 import RescheduleBooking from "../pages/BookingProviders/RescheduleBooking";
 import CategoryList from "../pages/user/CategoryList";
 import ProviderCard from "../components/provider/ProviderCard";
+import SelectProviders from "../pages/user/SelectProviders";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -68,13 +69,16 @@ const AppRoutes = () => {
             <Route path="/user" element={<UserDashboard />}>
                <Route index element={<ProviderCard/>}/>
                <Route path=":category" element={<ProviderCard/>}/>
-              <Route path="all-providers" element={<ViewAllProviders />} />
+              <Route path="all-providers" element={<ViewAllProviders />} >
+                             <Route path=":category" element={<ProviderCard/>}/>
+
+              </Route>
             </Route>
             <Route path="/user/my-bookings" element={<MyBookingsPage />}>
               <Route index element={<BookingList />} />
               <Route path=":status" element={<BookingList />} />
             </Route>
-
+            <Route path="/user/category/select-provider" element={<SelectProviders/>}/>
             <Route path="/user/saved-providers" element={<SavedProviders />} />
             <Route path="/user/payment-history" element={<PaymentHistory />}>
               <Route index element={<PaymentList />} />

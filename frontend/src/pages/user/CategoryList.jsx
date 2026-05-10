@@ -15,8 +15,9 @@ import {
 import { MdOutlineCurrencyRupee } from "react-icons/md";
 import Button from "../../components/common/Button";
 import StatusBadge from "../../components/common/StatusBadge";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const CategoryList = () => {
+  const navigate = useNavigate()
   const services = [
     {
       id: 1,
@@ -189,16 +190,16 @@ const CategoryList = () => {
             <div className="flex items-center gap-2">
               <FaStar className="text-yellow-500" size={24} />
               <h2 className="text-xl font-bold">{rating}</h2>
-              <p className="text-lg text-muted">({reviews})</p>
+              <p className="text-lg text-muted">({reviews} reviews)</p>
             </div>
-            <div className="flex items-center gap-2 my-2">
+            <div className="flex items-center mt-2 mb-5">
               <p className="text-lg ">Starting at</p>
               <div className="flex items-center font-bold text-xl">
-                <MdOutlineCurrencyRupee /> {startingPrice}
+                <MdOutlineCurrencyRupee />{startingPrice}
               </div>
             </div>
 
-            <Button color="success" fullWidth>
+            <Button color="success" fullWidth onClick={()=>navigate('/user/category/select-provider')}>
               Book Now
             </Button>
           </div>

@@ -8,6 +8,7 @@ const StatusBadge = ({
   category = "",
   className = "",
   children,
+  
   showIcon = false,
 }) => {
 
@@ -30,11 +31,11 @@ const StatusBadge = ({
 
     cancelled: "bg-red-100 text-red-600 border-red-200",
 
-    verified: "bg-green-100 text-green-600 border-green-200",
+    
 
     uploaded: "bg-green-100 text-green-600 border-green-200",
   };
-
+   
   // CATEGORY BADGES
   const categoryStyles = {
     electrician:
