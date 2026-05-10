@@ -281,7 +281,7 @@ async function verifyEmail(req, res) {
 
     await user.save();
 
-    return res.redirect("http://localhost:3000/login");
+    return res.redirect("http://localhost:5173/login");
   } catch (err) {
     console.error("verify error:", err);
     res.status(500).json({ message: "Internal server error" });

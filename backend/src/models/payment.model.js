@@ -43,7 +43,7 @@ const paymentSchema = new mongoose.Schema({
 
   paymentMethod: {
     type: String,
-    enum: ['upi', 'card', 'netBanking', 'wallet', 'emi']
+    enum: ['upi', 'card', 'netBanking', 'cash']
   }
 
 }, { timestamps: true })

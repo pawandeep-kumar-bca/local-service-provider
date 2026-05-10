@@ -10,7 +10,6 @@ const router = express.Router();
 router.post( 
   "/",
   authMiddleware.tokenVerify,
-   roleBased("provider"),
   providerValidator.providerValidator,
   providerControllers.providerProfileCreate,
 );
@@ -26,7 +25,7 @@ router.put(
   providerControllers.updateProvider,
 );
 // GET /api/v1/providers
-router.get("/", roleBased("provider"), providerControllers.getProviders);
+router.get("/",authMiddleware.tokenVerify, roleBased("provider"), providerControllers.getProviders);
 
 
 

@@ -55,7 +55,7 @@ async function providerProfileCreate(req, res) {
       message: "Internal server error",
     });
   }
-}
+} 
 
 async function getProvider(req, res) {
   try {

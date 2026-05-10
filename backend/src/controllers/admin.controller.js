@@ -48,7 +48,13 @@ async function updateProviderStatus(req, res, status, verificationStatus) {
   provider.status = status;
   provider.verificationStatus = verificationStatus;
   await provider.save();
+  if (status === "Approved") {
 
+      await userModel.findByIdAndUpdate(provider.userId, {
+        role: "provider",
+      });
+
+    }
   return res.status(200).json({
     message: `provider ${status.toLowerCase()} successfully`,
     provider,
