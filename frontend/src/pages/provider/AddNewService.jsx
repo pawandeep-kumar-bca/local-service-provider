@@ -139,8 +139,7 @@ const AddNewService = () => {
                 />
 
                 <div
-                  className="border rounded-xl border-gray-200 peer-checked:bg-green-50 peer-checked:border-green-400  hover:border-green-500
-          hover:bg-green-50 text-center transition-all peer-checked:scale-[1.02] duration-300 p-4 flex  flex-col justify-center items-center gap-2 peer-checked:ring-1 peer-checked:ring-green-200 "
+                  className="border rounded-xl border-gray-200 peer-checked:bg-green-50 peer-checked:border-green-400  hover:border-green-500 hover:bg-green-50 text-center transition-all peer-checked:scale-[1.02] duration-300 p-4 flex  flex-col justify-center items-center gap-2 peer-checked:ring-1 peer-checked:ring-green-200 "
                 >
                   <div
                     className={`md:w-16 md:h-16 h-14 w-14 ${bgColor} ${textColor} rounded-full flex justify-center items-center`}
@@ -189,11 +188,10 @@ const AddNewService = () => {
               <select
                 name="priceType"
                 id="priceType"
-                defaultValue=''
-                className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md
-  focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
+                defaultValue=""
+                className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
               >
-                <option disabled value=''>
+                <option disabled value="">
                   Select Price Type
                 </option>
 
@@ -218,11 +216,10 @@ const AddNewService = () => {
               <select
                 name="duration"
                 id="duration"
-                defaultValue=''
-                className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md
-  focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
+                defaultValue=""
+                className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
               >
-                <option disabled value=''>
+                <option disabled value="">
                   Select Duration
                 </option>
 
@@ -244,7 +241,7 @@ const AddNewService = () => {
               <div>
                 <h2 className="font-semibold text-green-600">Tip</h2>
 
-                <p className="text-sm text-green-500 mt-1">
+                <p className="text-xs text-green-400 font-semibold mt-1">
                   Set accurate pricing and duration to help customers make
                   faster booking decisions.
                 </p>
@@ -312,12 +309,7 @@ const AddNewService = () => {
                         />
 
                         <div
-                          className="w-16 h-9 flex items-center justify-center
-          rounded-lg bg-gray-100 text-gray-700 font-semibold
-          peer-checked:bg-green-100
-          peer-checked:text-green-600
-          peer-checked:border peer-checked:border-green-300
-          hover:bg-green-50 transition-all duration-300"
+                          className="w-16 h-9 flex items-center justify-center rounded-lg bg-gray-100 text-gray-700 font-semibold peer-checked:bg-green-100 peer-checked:text-green-600 peer-checked:border peer-checked:border-green-300 hover:bg-green-50 transition-all duration-300"
                         >
                           {day}
                         </div>
@@ -341,11 +333,12 @@ const AddNewService = () => {
                   <select
                     name="time"
                     id="time"
-                    defaultValue=''
-                    className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md
-  focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
+                    defaultValue=""
+                    className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
                   >
-                    <option disabled value=''>Start Time</option>
+                    <option disabled value="">
+                      Start Time
+                    </option>
                     {startTimes.map((time, idx) => (
                       <option key={idx} value={time}>
                         {time}
@@ -357,11 +350,12 @@ const AddNewService = () => {
                   <select
                     name="time"
                     id="time"
-                    defaultValue=''
-                    className=" w-full text-lg border border-gray-300 px-3 py-2 rounded-md
-  focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
+                    defaultValue=""
+                    className=" w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500 text-muted focus:outline-none bg-white"
                   >
-                    <option disabled value=''>End Time</option>
+                    <option disabled value="">
+                      End Time
+                    </option>
                     {endTimes.map((time, idx) => (
                       <option key={idx} value={time}>
                         {time}
@@ -380,23 +374,14 @@ const AddNewService = () => {
             </div>
           </div>
         </div>
-      
-       <div className="flex flex-col md:flex-row justify-end gap-3 my-5">
-<Button
-    className="w-full md:w-fit md:px-10"
-  >
-    Save Service
-  </Button>
 
-  <Button
-    color="white"
-    className="w-full md:w-fit md:px-10"
-  >
-    Cancel
-  </Button>
+        <div className="flex flex-col md:flex-row justify-end gap-3 my-5">
+          <Button className="w-full md:w-fit md:px-10">Save Service</Button>
 
-  
-</div>
+          <Button color="white" className="w-full md:w-fit md:px-10">
+            Cancel
+          </Button>
+        </div>
       </div>
     </div>
   );
