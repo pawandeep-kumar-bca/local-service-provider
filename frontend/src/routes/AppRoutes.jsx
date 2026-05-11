@@ -51,6 +51,7 @@ import RescheduleBooking from "../pages/BookingProviders/RescheduleBooking";
 import CategoryList from "../pages/user/CategoryList";
 import ProviderCard from "../components/provider/ProviderCard";
 import SelectProviders from "../pages/user/SelectProviders";
+import AddNewService from "../pages/provider/AddNewService";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -66,18 +67,20 @@ const AppRoutes = () => {
           {/* User */}
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
             <Route path="/user" element={<UserDashboard />}>
-               <Route index element={<ProviderCard/>}/>
-               <Route path=":category" element={<ProviderCard/>}/>
-              <Route path="all-providers" element={<ViewAllProviders />} >
-                             <Route path=":category" element={<ProviderCard/>}/>
-
+              <Route index element={<ProviderCard />} />
+              <Route path=":category" element={<ProviderCard />} />
+              <Route path="all-providers" element={<ViewAllProviders />}>
+                <Route path=":category" element={<ProviderCard />} />
               </Route>
             </Route>
             <Route path="/user/my-bookings" element={<MyBookingsPage />}>
               <Route index element={<BookingList />} />
               <Route path=":status" element={<BookingList />} />
             </Route>
-            <Route path="/user/category/select-provider" element={<SelectProviders/>}/>
+            <Route
+              path="/user/category/select-provider"
+              element={<SelectProviders />}
+            />
             <Route path="/user/saved-providers" element={<SavedProviders />} />
             <Route path="/user/payment-history" element={<PaymentHistory />}>
               <Route index element={<PaymentList />} />
@@ -96,10 +99,9 @@ const AppRoutes = () => {
               {/* ✅ Change password */}
               <Route path="change-password" element={<ChangePassword />} />
             </Route>
-            <Route path="/user/our-services" element={<OurServices />} >
-               <Route index  element={<CategoryList/>}/>
-               <Route path=":category"  element={<CategoryList/>}/>
-            
+            <Route path="/user/our-services" element={<OurServices />}>
+              <Route index element={<CategoryList />} />
+              <Route path=":category" element={<CategoryList />} />
             </Route>
             <Route path="/user/provider-details" element={<ProviderDetail />} />
 
@@ -139,8 +141,11 @@ const AppRoutes = () => {
               path="/provider/earnings"
               element={<EarningAnalyticPage />}
             />
-            <Route path="/provider/services" element={<ServicesPage />} />
-
+            <Route path="/provider/my-services" element={<ServicesPage />} />
+            <Route
+              path="/provider/my-services/add-service"
+              element={<AddNewService />}
+            />
             <Route
               path="/provider/settings"
               element={<ProviderProfileSettings />}

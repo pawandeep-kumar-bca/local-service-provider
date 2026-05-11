@@ -80,9 +80,9 @@ export  const providerMenu = [
         icon:<LuChartNoAxesCombined />,
         path:'/provider/earnings'
     },{
-        name:'Services',
+        name:'My Services',
         icon:<GrServices />,
-        path:'/provider/services'
+        path:'/provider/my-services'
     },
     {
       name: "Settings",

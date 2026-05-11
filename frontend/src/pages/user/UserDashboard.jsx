@@ -15,9 +15,9 @@ const UserDashboard = () => {
         {!isAllProviders && (
           <>
             <div
-              className="w-[100%] p-6 rounded-2xl bg-[#3B82F6] shadow-[inset_0_0_3px_rgba(0,0,255,0.3)] flex justify-between items-start mt-3"
+              className="w-[100%]  rounded-2xl bg-[#3B82F6] shadow-[inset_0_0_3px_rgba(0,0,255,0.3)] flex justify-between items-start mt-3"
             >
-              <div>
+              <div className="p-5">
                 <h1 className="text-bg font-bold text-3xl pb-1">
                   Hi , shivam{" "}
                 </h1>
@@ -28,7 +28,7 @@ const UserDashboard = () => {
               <img
                 src="/assets/man.png"
                 alt="image"
-                className="w-[18%] hidden md:block "
+                className="w-[22%] hidden md:block "
               />
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">

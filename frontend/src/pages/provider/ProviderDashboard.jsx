@@ -10,21 +10,21 @@ import EarningAnalytics from "./EarningAnalytics";
 const ProviderDashboard = () => {
   return (
     <>
-      <div className="w-full p-3">
+      <div className="w-full h-full">
         <div
-          className="w-[100%] rounded-2xl bg-[#3B82F6]
+          className="w-[100%]  rounded-2xl bg-[#3B82F6]
   shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] flex justify-between items-start mt-3"
         >
-          <div className="p-5">
-            <h1 className="text-bg font-bold text-2xl pb-1">Hi, shivam </h1>
-            <p className="text-bg text-lg font-medium md:font-normal">
+          <div className="p-6">
+            <h1 className="text-bg font-bold text-3xl pb-1">Hi, shivam </h1>
+            <p className="text-bg text-2xl font-semibold md:font-normal">
               Welcome to your dashboard
             </p>
           </div>
           <img
             src="/assets/service.png"
             alt="image"
-            className="w-[20%] hidden md:block "
+            className="w-[25%] hidden md:block "
           />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
@@ -40,7 +40,7 @@ const ProviderDashboard = () => {
           >
             Today Earning
           </Cards>
-          <Cards icon={<FaBook className="text-divider text-2xl" />} value={3}>
+           <Cards icon={<FaBook className="text-divider text-2xl" />} value={3}>
             Booking
           </Cards>
           <Cards icon={<FaStar className="text-warning text-2xl" />} value={3}>
