@@ -2,7 +2,7 @@
 
 import { AiFillHome } from "react-icons/ai";
 import { BiCategory } from "react-icons/bi";
-import { FaBookmark, FaUser } from "react-icons/fa";
+import { FaBookmark, FaRegStar, FaUser } from "react-icons/fa";
 import { FaChartSimple, FaListCheck } from "react-icons/fa6";
 import { GrServices } from "react-icons/gr";
 import { IoDocumentSharp } from "react-icons/io5";
@@ -83,6 +83,11 @@ export  const providerMenu = [
         name:'My Services',
         icon:<GrServices />,
         path:'/provider/my-services'
+    },
+    {
+      name:'Reviews',
+      icon:<FaRegStar />,
+      path:'/provider/reviews'
     },
     {
       name: "Settings",

@@ -329,6 +329,12 @@ const filterBookings =  filter === 'all'? bookings:bookings.filter((booking)=>bo
         >
           Completed
         </button>
+        <button
+          onClick={() => setFilter("cancelled")}
+          className={`${base} ${filter === "cancelled" ? `${active}` : `${notActive}`}`}
+        >
+          Cancelled
+        </button>
       </div>
 
      {filterBookings.length>0 ? <div className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
@@ -341,7 +347,7 @@ const filterBookings =  filter === 'all'? bookings:bookings.filter((booking)=>bo
           return (
             <div key={id}
           className="border border-gray-200 bg-white rounded-2xl p-5
-    shadow-sm hover:shadow-md transition-all duration-300"
+    shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300"
         >
           {/* Top */}
           <div className="flex justify-between items-start">
@@ -500,7 +506,7 @@ const filterBookings =  filter === 'all'? bookings:bookings.filter((booking)=>bo
         })}
       </div>:<div
   className="flex flex-col items-center justify-center
-  py-14 px-6 text-center rounded-2xl
+  py-20 px-6 text-center rounded-2xl
   border border-dashed border-gray-300 bg-gray-50"
 >
 

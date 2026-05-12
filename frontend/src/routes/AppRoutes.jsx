@@ -52,6 +52,7 @@ import CategoryList from "../pages/user/CategoryList";
 import ProviderCard from "../components/provider/ProviderCard";
 import SelectProviders from "../pages/user/SelectProviders";
 import AddNewService from "../pages/provider/AddNewService";
+import ProviderReviews from "../pages/provider/ProviderReviews";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -146,6 +147,7 @@ const AppRoutes = () => {
               path="/provider/my-services/add-service"
               element={<AddNewService />}
             />
+            <Route path="/provider/reviews" element={<ProviderReviews/>}/>
             <Route
               path="/provider/settings"
               element={<ProviderProfileSettings />}

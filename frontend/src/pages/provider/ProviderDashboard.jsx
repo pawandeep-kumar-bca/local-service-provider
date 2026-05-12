@@ -1,73 +1,162 @@
-
-import Cards from "../../components/common/Cards";
-import { FaBook, FaChevronRight, FaStar, FaWallet } from "react-icons/fa";
-import NavBar from "../../components/common/NavBar";
-import { Link } from "react-router-dom";
-import { MdDateRange } from "react-icons/md";
-import { IoBarChart } from "react-icons/io5";
-import EarningAnalytics from "./EarningAnalytics";
-
+import ProviderListCard from "./ProviderListCard";
+import {  IoMdCall } from "react-icons/io";
+import Button from "../../components/common/Button";
+import {Link} from 'react-router-dom'
+import { BiMessageRoundedDetail } from "react-icons/bi";
+import StatusBadge from "../../components/common/StatusBadge";
 const ProviderDashboard = () => {
   return (
-    <>
-      <div className="w-full h-full">
-        <div
-          className="w-[100%]  rounded-2xl bg-[#3B82F6]
-  shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] flex justify-between items-start mt-3"
-        >
-          <div className="p-6">
-            <h1 className="text-bg font-bold text-3xl pb-1">Hi, shivam </h1>
-            <p className="text-bg text-2xl font-semibold md:font-normal">
-              Welcome to your dashboard
-            </p>
-          </div>
+    <div className="w-full h-full">
+      {/* Welcome Banner */}
+      <div
+        className="
+          w-full
+          min-h-[220px]
+          rounded-3xl
+          bg-[#3B82F6]
+          shadow-[inset_0_0_3px_rgba(0,0,0,0.3)]
+          flex items-center justify-between
+          mt-3
+          overflow-hidden
+          px-6 md:px-8
+        "
+      >
+        {/* Left Content */}
+        <div className="py-8">
+          <h1 className="text-white font-bold text-3xl md:text-4xl">
+            Hi, Shivam 👋
+          </h1>
+
+          <p className="text-white/90 text-base md:text-xl mt-2 font-medium">
+            Welcome back to your provider dashboard
+          </p>
+
+          <button
+            className="
+              mt-5
+              bg-white
+              text-[#3B82F6]
+              px-5
+              py-2.5 cursor-pointer
+              rounded-xl
+              font-semibold
+              hover:scale-105
+              transition-all duration-300
+            "
+          >
+            View Bookings
+          </button>
+        </div>
+
+        {/* Right Image */}
+        <div className="hidden md:flex items-end justify-end h-full flex-1">
           <img
             src="/assets/service.png"
-            alt="image"
-            className="w-[25%] hidden md:block "
+            alt="service"
+            className="
+              w-[380px] lg:w-[420px] object-contain
+            "
           />
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
-          <Cards
-            icon={<FaWallet className="text-success text-2xl" />}
-            value={3}
-          >
-            Total Earning
-          </Cards>
-          <Cards
-            icon={<FaWallet className="text-primary text-2xl" />}
-            value={3}
-          >
-            Today Earning
-          </Cards>
-           <Cards icon={<FaBook className="text-divider text-2xl" />} value={3}>
-            Booking
-          </Cards>
-          <Cards icon={<FaStar className="text-warning text-2xl" />} value={3}>
-            Total Reviews
-          </Cards>
-        </div>
-       
-        <EarningAnalytics/>
-       
-        <div className="flex flex-col gap-3 md:hidden">
-          <Link className="shadow-[0_3px_34px_rgba(0,0,0,0.19)] rounded-xl p-6 flex justify-between items-center">
-          <div className="flex gap-3 items-center">
-            <MdDateRange className="text-2xl text-primary"/>
-          <h1 className="text-xl font-semibold">Incoming Booking</h1>
-          </div>
-          <FaChevronRight className="text-xl text-muted"/>
-        </Link>
-        <Link className="shadow-[0_3px_34px_rgba(0,0,0,0.19)] rounded-xl p-6 flex justify-between items-center">
-          <div className="flex gap-3 items-center">
-            <IoBarChart className="text-2xl text-primary"/>
-          <h1 className="text-xl font-semibold">Earning Analytics</h1>
-          </div>
-          <FaChevronRight className="text-xl text-muted"/>
-        </Link>
-        </div>
       </div>
-    </>
+
+      {/* Stats Cards */}
+      <ProviderListCard />
+
+      <div className="flex gap-2 flex-col md:flex-row">
+        <div
+          className="flex-1 bg-gradient-to-r from-white/20 to-white/40 shadow-[0_0_20px_rgba(0,0,0,0.20)]
+          px-3 pt-4 pb-5 rounded-xl"
+        >
+          <div className="flex justify-between mb-4">
+            <h1 className="text-xl font-semibold text-muted">Today's Bookings</h1>
+            <Link
+  className="
+    text-sm
+    font-semibold
+    text-primary
+    border-b-2
+    border-transparent
+    hover:border-primary
+    transition-all
+    duration-200
+  "
+>
+  View all
+</Link>
+          </div>
+          <div className='flex justify-between items-center'>
+            <div className="flex gap-3 items-center">
+              {/* Profile */}
+              <div className="relative">
+                <img
+                  src='https://randomuser.me/api/portraits/men/11.jpg'
+                  alt="profile"
+                  className="w-14 h-14 min-w-14 rounded-full object-cover
+            border-3 border-white shadow-md ring-2 ring-primary/10"
+                />
+
+                {/* Online Dot */}
+                <div
+                  className="absolute bottom-0 right-1 w-4 h-4 rounded-full
+            bg-green-500 border-2 border-white"
+                />
+              </div>
+
+              {/* Customer Info */}
+              <div >
+                <h1 className="text-lg md:text-xl font-semibold text-text">
+                  Priya Sharma
+                </h1>
+               <h2 className="text-sm  font-semibold text-blue-500">10:00 AM</h2>
+
+               
+              </div>
+            </div>
+
+            
+       <div>
+              <h3 className="text-lg md:text-xl font-semibold text-text">
+                AC Repair
+              </h3>
+              <p className="text-sm font-medium text-muted">
+                Malviya Nagar , Jaipur
+              </p>
+              </div>
+            <div>
+              <StatusBadge badge='accepted' />
+            </div>
+            <div className="flex gap-2">
+              {/* Call */}
+              <button
+                className="flex items-center justify-center
+          w-11 h-11 rounded-xl cursor-pointer
+          bg-green-50 border border-green-300 text-green-600
+          hover:bg-green-100 hover:scale-105
+          transition-all duration-300"
+              >
+                <IoMdCall size={22} />
+              </button>
+
+              {/* Chat */}
+              <button
+                className="flex items-center justify-center
+          w-11 h-11 rounded-xl cursor-pointer
+          bg-blue-50 border border-blue-300 text-blue-600
+          hover:bg-blue-100 hover:scale-105
+          transition-all duration-300"
+              >
+                <BiMessageRoundedDetail size={22} />
+              </button>
+            </div>
+          </div>
+          <div className='mt-5'>
+            <Button fullWidth color='white' className="text-green-500">View All Booking</Button>
+          </div>
+        </div>
+        <div className="flex-1"></div>
+      </div>
+    </div>
   );
 };
 
