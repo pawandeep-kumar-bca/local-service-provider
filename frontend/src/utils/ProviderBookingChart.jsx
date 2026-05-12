@@ -53,11 +53,50 @@ const chartData = {
 
     growth: "35%",
 
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    labels: [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+],
 
-    current: [40000, 58000, 72000, 85000, 92000, 110000],
+    current: [
+  40000,
+  58000,
+  72000,
+  85000,
+  92000,
+  110000,
+  118000,
+  125000,
+  132000,
+  145000,
+  152000,
+  168000,
+],
 
-    previous: [32000, 45000, 55000, 70000, 76000, 90000],
+previous: [
+  32000,
+  45000,
+  55000,
+  70000,
+  76000,
+  90000,
+  98000,
+  105000,
+  112000,
+  120000,
+  128000,
+  140000,
+],
   },
 };
 
@@ -193,7 +232,7 @@ const ProviderBookingChart = () => {
       </div>
 
       {/* Analytics */}
-      <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
+      <div className="flex md:items-center md:flex-row flex-col justify-between  gap-4 mb-6 relative">
         {/* Revenue */}
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
@@ -213,7 +252,7 @@ const ProviderBookingChart = () => {
         </div>
 
         {/* Chart Labels */}
-        <div className="flex items-center gap-5 text-sm font-medium text-muted">
+        <div className="flex items-center gap-5 absolute right-0  text-sm font-medium text-muted">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
 
@@ -229,7 +268,7 @@ const ProviderBookingChart = () => {
       </div>
 
       {/* Chart */}
-      <Line data={data} options={options} />
+      <Line data={data} options={options} className="shadow-[0_0_20px_rgba(0,0,0,0.10)] p-1 rounded-xl"/>
     </div>
   );
 };
