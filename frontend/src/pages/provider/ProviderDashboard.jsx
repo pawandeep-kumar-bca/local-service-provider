@@ -4,6 +4,7 @@ import Button from "../../components/common/Button";
 import {Link} from 'react-router-dom'
 import { BiMessageRoundedDetail } from "react-icons/bi";
 import StatusBadge from "../../components/common/StatusBadge";
+import ProviderBookingChart from "../../utils/ProviderBookingChart";
 const ProviderDashboard = () => {
   return (
     <div className="w-full h-full">
@@ -69,7 +70,7 @@ const ProviderDashboard = () => {
           px-3 pt-4 pb-5 rounded-xl"
         >
           <div className="flex justify-between mb-4">
-            <h1 className="text-xl font-semibold text-muted">Today's Bookings</h1>
+            <h1 className="text-2xl font-semibold text-muted">Today's Bookings</h1>
             <Link
   className="
     text-sm
@@ -127,34 +128,45 @@ const ProviderDashboard = () => {
               <StatusBadge badge='accepted' />
             </div>
             <div className="flex gap-2">
-              {/* Call */}
-              <button
-                className="flex items-center justify-center
-          w-11 h-11 rounded-xl cursor-pointer
-          bg-green-50 border border-green-300 text-green-600
-          hover:bg-green-100 hover:scale-105
-          transition-all duration-300"
-              >
-                <IoMdCall size={22} />
-              </button>
+  
+  {/* Call */}
+  <button
+    className="
+      flex items-center justify-center
+      w-11 h-11 rounded-xl cursor-pointer
+      bg-green-50 border border-green-300 text-green-600
+      hover:bg-green-100
+      hover:-translate-y-0.5
+      transition-all duration-300
+    "
+  >
+    <IoMdCall size={22} />
+  </button>
 
-              {/* Chat */}
-              <button
-                className="flex items-center justify-center
-          w-11 h-11 rounded-xl cursor-pointer
-          bg-blue-50 border border-blue-300 text-blue-600
-          hover:bg-blue-100 hover:scale-105
-          transition-all duration-300"
-              >
-                <BiMessageRoundedDetail size={22} />
-              </button>
-            </div>
+  {/* Chat */}
+  <button
+    className="
+      flex items-center justify-center
+      w-11 h-11 rounded-xl cursor-pointer
+      bg-blue-50 border border-blue-300 text-blue-600
+      hover:bg-blue-100
+      hover:-translate-y-0.5
+      transition-all duration-300
+    "
+  >
+    <BiMessageRoundedDetail size={22} />
+  </button>
+
+</div>
           </div>
           <div className='mt-5'>
             <Button fullWidth color='white' className="text-green-500">View All Booking</Button>
           </div>
         </div>
-        <div className="flex-1"></div>
+        <div className="flex-1 bg-gradient-to-r from-white/20 to-white/40 shadow-[0_0_20px_rgba(0,0,0,0.20)]
+          px-3 pt-4 pb-5 rounded-xl">
+          <ProviderBookingChart/>
+        </div>
       </div>
     </div>
   );

@@ -400,29 +400,37 @@ const filterBookings =  filter === 'all'? bookings:bookings.filter((booking)=>bo
             </div>
 
             {/* Actions */}
-            <div className="flex gap-2">
-              {/* Call */}
-              <button
-                className="flex items-center justify-center
-          w-11 h-11 rounded-xl cursor-pointer
-          bg-green-50 border border-green-300 text-green-600
-          hover:bg-green-100 hover:scale-105
-          transition-all duration-300"
-              >
-                <IoMdCall size={22} />
-              </button>
+             <div className="flex gap-2">
+  
+  {/* Call */}
+  <button
+    className="
+      flex items-center justify-center
+      w-11 h-11 rounded-xl cursor-pointer
+      bg-green-50 border border-green-300 text-green-600
+      hover:bg-green-100
+      hover:-translate-y-0.5
+      transition-all duration-300
+    "
+  >
+    <IoMdCall size={22} />
+  </button>
 
-              {/* Chat */}
-              <button
-                className="flex items-center justify-center
-          w-11 h-11 rounded-xl cursor-pointer
-          bg-blue-50 border border-blue-300 text-blue-600
-          hover:bg-blue-100 hover:scale-105
-          transition-all duration-300"
-              >
-                <BiMessageRoundedDetail size={22} />
-              </button>
-            </div>
+  {/* Chat */}
+  <button
+    className="
+      flex items-center justify-center
+      w-11 h-11 rounded-xl cursor-pointer
+      bg-blue-50 border border-blue-300 text-blue-600
+      hover:bg-blue-100
+      hover:-translate-y-0.5
+      transition-all duration-300
+    "
+  >
+    <BiMessageRoundedDetail size={22} />
+  </button>
+
+</div>
           </div>
 
           {/* Divider */}
