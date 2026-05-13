@@ -53,6 +53,7 @@ import ProviderCard from "../components/provider/ProviderCard";
 import SelectProviders from "../pages/user/SelectProviders";
 import AddNewService from "../pages/provider/AddNewService";
 import ProviderReviews from "../pages/provider/ProviderReviews";
+import ProviderSchedule from "../pages/provider/ProviderSchedule";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -137,6 +138,7 @@ const AppRoutes = () => {
           {/* Provider */}
           <Route element={<RoleRoute allowedRoles={["provider"]} />}>
             <Route path="/provider" element={<ProviderDashboard />} />
+            <Route path="/provider/schedule" element={<ProviderSchedule />} />
             <Route path="/provider/bookings" element={<AllBookings />} />
             <Route
               path="/provider/earnings"
