@@ -290,7 +290,7 @@ const AddNewService = () => {
               </div>
               <div className="flex-1 mt-3 md:mt-0">
                 <label className="block mb-2 font-medium text-lg md:text-sm">
-                  Available Days
+                  Working Days
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {days.map((day, index) => {
@@ -301,6 +301,7 @@ const AddNewService = () => {
                         className="cursor-pointer"
                       >
                         <input
+                         defaultChecked={index === 0}
                           type="checkbox"
                           name="days"
                           id={day}
@@ -332,7 +333,7 @@ const AddNewService = () => {
                 <div className="flex items-center gap-1">
                   <select
                     name="time"
-                    id="time"
+                    id="start-time"
                     defaultValue=""
                     className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
                   >
@@ -349,7 +350,7 @@ const AddNewService = () => {
 
                   <select
                     name="time"
-                    id="time"
+                    id="end-time"
                     defaultValue=""
                     className=" w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500 text-muted focus:outline-none bg-white"
                   >
