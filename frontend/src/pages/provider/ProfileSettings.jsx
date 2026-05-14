@@ -9,13 +9,10 @@ const ProfileSettings = () => {
   );
   return (
     <div
-        className="md:shadow-[0_5px_20px_rgba(0,0,0,0.06)]  bg-white
-      md:border md:border-slate-200
-      rounded-2xl "
       >
         <div className="mb-5">
-          <h1 className="text-3xl font-bold text-text">Profile Information</h1>
-          <p className="text-sm text-muted mt-1">
+          <h1 className="text-2xl font-bold text-text">Profile Information</h1>
+          <p className="md:text-sm text-muted text-lg mt-1">
             Update your personal details and profile information.
           </p>
         </div>
@@ -30,7 +27,7 @@ const ProfileSettings = () => {
 
               <label
                 htmlFor="uploadPhoto"
-                className="w-9 h-9 rounded-full bg-white absolute right-0 bottom-0 flex items-center justify-center text-white"
+                className="w-9 h-9 cursor-pointer rounded-full bg-white absolute right-0 bottom-0 flex items-center justify-center text-white"
               >
                 <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white ">
                   <input
@@ -49,7 +46,7 @@ const ProfileSettings = () => {
             </p>
           </div>
           <div className="mt-4">
-            <div>
+            <div className="flex flex-col md:gap-3 md:flex-row">
               <Input type="text" label="Full Name" id="Full Name" fullWidth />
               <Input
                 type="Email Address"
@@ -58,7 +55,7 @@ const ProfileSettings = () => {
                 fullWidth
               />
             </div>
-            <div>
+            <div className="flex flex-col md:gap-3 md:flex-row">
               <Input
                 type="tel"
                 label="Phone Number"
@@ -72,7 +69,8 @@ const ProfileSettings = () => {
                 fullWidth
               />
             </div>
-            <div>
+            <div className="flex flex-col md:gap-3 md:flex-row">
+            <div className="flex-1">
               <label
                 htmlFor="bio"
                 className="block mb-2 font-medium text-lg md:text-sm "
@@ -82,19 +80,20 @@ const ProfileSettings = () => {
               <textarea
                 name="bio"
                 id="bio"
-                rows={3}
-                className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md
-focus:ring focus:ring-blue-500 focus:outline-none bg-white"
+                rows={2}
+                className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500 focus:outline-none bg-white"
               ></textarea>
             </div>
-          </div>
-        </div>
-
-        <div className="mt-4">
+             <div className="mt-4 flex-1 flex items-end">
           <Button fullWidth color="success">
             Save Changes
           </Button>
         </div>
+        </div>
+          </div>
+        </div>
+
+       
       </div>
   )
 }

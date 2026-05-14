@@ -69,19 +69,19 @@ const NotificationSettings = () => {
     ]
   return (
     <div
-        className="md:shadow-[0_5px_20px_rgba(0,0,0,0.06)]  bg-white
-      md:border md:border-slate-200
-      rounded-2xl mt-5"
+
       >
         <div className="mb-5">
-          <h1 className="text-3xl font-bold text-text">
+          <h1 className="text-2xl font-bold text-text">
             Notification Settings
           </h1>
-          <p className="text-sm text-muted mt-1">
+          <p className="md:text-sm text-muted text-lg mt-1">
             Manage how you receive notifications.
           </p>
         </div>
         <div>
+<div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6'>
+
 
          { notifications.map((notification,idx)=>{
           const {Icon,bgColor,textColor,text,heading,value,setValue}= notification
@@ -101,7 +101,7 @@ const NotificationSettings = () => {
 
               {/* Text */}
               <div>
-                <h1 className="text-base sm:text-lg font-semibold text-slate-800">
+                <h1 className="md:text-base text-lg font-semibold text-slate-800">
                   {heading}
                 </h1>
 
@@ -136,6 +136,7 @@ const NotificationSettings = () => {
          })
           
          }
+         </div>
         </div>
       </div>
   )

@@ -55,8 +55,7 @@ import AddNewService from "../pages/provider/AddNewService";
 import ProviderReviews from "../pages/provider/ProviderReviews";
 import ProviderSchedule from "../pages/provider/ProviderSchedule";
 import NotificationSettings from "../pages/provider/NotificationSettings";
-import ProviderChangePassword from "../pages/provider/ProviderChangePassword"
-import ProfileInfoSettings from "../pages/provider/ProfileSettings"
+import ProfileInfoSettings from "../pages/provider/ProfileSettings";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -152,16 +151,35 @@ const AppRoutes = () => {
               path="/provider/my-services/add-service"
               element={<AddNewService />}
             />
-            <Route path="/provider/reviews" element={<ProviderReviews/>}/>
+            <Route path="/provider/reviews" element={<ProviderReviews />} />
             <Route
               path="/provider/settings"
               element={<ProviderProfileSettings />}
             >
-              <Route index element={<ProfileInfoSettings/>}/>
-              <Route path="notification-settings" element={<NotificationSettings/>}/>
-              <Route path="change-password" element={<ProviderChangePassword/>}/>
-              
+              <Route index element={<ProfileInfoSettings />} />
+              <Route
+                path="notification-settings"
+                element={<NotificationSettings />}
+              />
+              <Route
+                path="change-password"
+                element={<ChangePassword/>}
+              />
             </Route>
+            <Route
+              path="/provider/mobile/edit-profile"
+              element={<ProfileInfoSettings />}
+            />
+
+            <Route
+              path="/provider/mobile/notification-settings"
+              element={<NotificationSettings />}
+            />
+
+            <Route
+              path="/provider/mobile/change-password"
+              element={<ChangePassword />}
+            />
           </Route>
           {/* Admin */}
           <Route element={<RoleRoute allowedRoles={["admin"]} />}>

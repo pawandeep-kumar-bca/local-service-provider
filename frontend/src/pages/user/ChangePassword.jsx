@@ -9,17 +9,17 @@ const ChangePassword = () => {
   return (
     <div>
       <div className="flex gap-4">
-        <div className="bg-primary w-[3.5rem] h-[3.5rem] flex items-center justify-center rounded-full text-white">
+        <div className="bg-primary hidden md:flex w-[3.5rem] h-[3.5rem]  items-center justify-center rounded-full text-white">
           <CiLock size={30} />
         </div>
-        <div className="w-[75%]">
-          <h3 className="text-lg font-semibold text-text">Change Password</h3>
-          <p className="text-muted text-sm">
+        <div className="md:w-[75%]">
+          <h1 className="text-2xl font-bold text-text">Change Password</h1>
+          <p className="md:text-sm  text-lg text-muted mt-1">
             Update your password to keep your account secure
           </p>
         </div>
       </div>
-      <div className="mt-6 flex flex-col md:flex-row md:gap-3">
+      <div className="md:mt-6 mt-4 flex flex-col md:flex-row md:gap-3">
         <Input
           label="Current Password"
           id="currentPassword"
@@ -42,8 +42,8 @@ const ChangePassword = () => {
             <CiLock size={25} />
           </div>
           <div>
-            <h4 className="text-sm font-semibold">Password must contain:</h4>
-           <div className="text-xs font-semibold ml-4 mt-1">
+            <h4 className="md:text-sm font-semibold text-lg">Password must contain:</h4>
+           <div className="md:text-xs text-sm font-semibold ml-4 mt-1">
              <p className="flex items-center"><IoIosCheckmark className="text-xl text-success "/> At least 8 characters</p>
 
             <p className="flex items-center"><IoIosCheckmark className="text-xl text-success "/> One number</p>
@@ -55,7 +55,7 @@ const ChangePassword = () => {
         </div>
       </div>
       <div className="flex justify-end mt-5 mb-3">
-        <Button>Update Password</Button>
+        <Button className="md:w-auto w-full">Update Password</Button>
       </div>
     </div>
   );
