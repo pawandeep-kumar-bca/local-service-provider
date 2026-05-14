@@ -54,6 +54,9 @@ import SelectProviders from "../pages/user/SelectProviders";
 import AddNewService from "../pages/provider/AddNewService";
 import ProviderReviews from "../pages/provider/ProviderReviews";
 import ProviderSchedule from "../pages/provider/ProviderSchedule";
+import NotificationSettings from "../pages/provider/NotificationSettings";
+import ProviderChangePassword from "../pages/provider/ProviderChangePassword"
+import ProfileInfoSettings from "../pages/provider/ProfileSettings"
 const AppRoutes = () => {
   return (
     <Routes>
@@ -153,7 +156,12 @@ const AppRoutes = () => {
             <Route
               path="/provider/settings"
               element={<ProviderProfileSettings />}
-            />
+            >
+              <Route index element={<ProfileInfoSettings/>}/>
+              <Route path="notification-settings" element={<NotificationSettings/>}/>
+              <Route path="change-password" element={<ProviderChangePassword/>}/>
+              
+            </Route>
           </Route>
           {/* Admin */}
           <Route element={<RoleRoute allowedRoles={["admin"]} />}>

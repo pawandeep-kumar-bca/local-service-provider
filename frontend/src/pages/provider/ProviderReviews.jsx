@@ -319,7 +319,7 @@ const reviewsData = [
         </div>
         <div className="border-t border-gray-200 mb-4"></div>
         <div className="p-2">
-         <div className="mt-5 flex flex-col gap-2">
+         <div className=" flex flex-col gap-2">
   {reviewsData.map((item) => (
     <div
       key={item.id}
@@ -400,6 +400,7 @@ const reviewsData = [
               md:w-[140px]
               w-full
               h-[120px]
+              md:h-[80px]
               rounded-xl
               object-cover
             "
