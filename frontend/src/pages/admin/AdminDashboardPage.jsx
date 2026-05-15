@@ -1,6 +1,6 @@
-import { FaBook, FaUserFriends, FaUsers } from "react-icons/fa";
+import { FaBook, FaUser, FaUserFriends, FaUsers } from "react-icons/fa";
 import Cards from "../../components/common/Cards";
-
+import BookingOverviewChart from '../../utils/providerCharts/BookingsOverviewChart'
 import NavBar from "../../components/common/NavBar";
 import Button from "../../components/common/Button";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
@@ -8,7 +8,58 @@ import { Link } from "react-router-dom";
 import { MdOutlineChevronRight } from "react-icons/md";
 import BookingChart from "../../utils/lineChart";
 import StatusBadge from "../../components/common/StatusBadge";
+import { TfiWallet } from "react-icons/tfi";
+import { IoMdArrowRoundUp } from "react-icons/io";
 const ProviderDashboard = () => {
+  const statsData = [
+    {
+      id: 1,
+      title: "Total Users",
+      value: "12,835",
+      growth: "12%",
+      icon: <FaUser size={24} />,
+      iconBg: "bg-sky-100",
+      iconColor: "text-sky-500",
+      growthColor: "text-green-500",
+      bgColor: "bg-white border-white/50",
+    },
+
+    {
+      id: 2,
+      title: "Total Providers",
+      value: "12,345",
+      growth: "5%",
+      icon: <FaUserFriends size={24} />,
+      iconBg: "bg-indigo-100",
+      iconColor: "text-indigo-500",
+      growthColor: "text-green-500",
+      bgColor: "bg-white",
+    },
+
+    {
+      id: 3,
+      title: "Total Bookings",
+      value: "89,543",
+      growth: "18%",
+      icon: <FaBook size={24} />,
+      iconBg: "bg-pink-200",
+      iconColor: "text-pink-600",
+      growthColor: "text-green-500",
+      bgColor: "bg-white",
+    },
+
+    {
+      id: 4,
+      title: "Total Revenue",
+      value: "₹24,400",
+      growth: "10%",
+      icon: <TfiWallet size={24} />,
+      iconBg: "bg-green-200",
+      iconColor: "text-green-500",
+      growthColor: "text-green-500",
+      bgColor: "bg-white",
+    },
+  ];
   const bookings = [
     {
       user: "Pawandeep Kumar",
@@ -134,46 +185,86 @@ const ProviderDashboard = () => {
   return (
     <>
       <div className="w-full h-full p-3">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
-          <Cards
-            icon={
-              <FaUserFriends className="text-success text-2xl md:text-4xl" />
-            }
-            value={3}
-          >
-            Total Users
-          </Cards>
-          <Cards
-            icon={<FaUsers className="text-primary text-2xl md:text-4xl" />}
-            value={3}
-          >
-            Total Providers
-          </Cards>
-          <Cards
-            icon={<FaBook className="text-divider text-2xl md:text-4xl" />}
-            value={3}
-          >
-            Total Booking
-          </Cards>
-          <Cards
-            icon={
-              <FaMoneyBillTrendUp className="text-warning text-2xl md:text-4xl" />
-            }
-            value="₹6000"
-          >
-            Total Revenue
-          </Cards>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-4 mb-6">
+          {statsData.map((item) => (
+            <div
+              key={item.id}
+              className={`
+                    ${item.bgColor}
+                    border
+                    rounded-2xl
+                    p-5
+                    text-white
+                    shadow-[0_10px_30px_rgba(0,0,0,0.12)]
+                    hover:-translate-y-1
+                    hover:shadow-[0_15px_35px_rgba(0,0,0,0.18)]
+                    transition-all duration-300
+                    cursor-pointer
+                    relative
+                    overflow-hidden
+                  `}
+            >
+              <div className="relative flex items-center gap-4">
+                {/* Icon */}
+                <div
+                  className={`
+                        ${item.iconBg}
+                        ${item.iconColor}
+                        w-14 h-14
+                        rounded-2xl
+                        flex items-center justify-center
+                        shrink-0
+                        backdrop-blur-md
+                      `}
+                >
+                  {item.icon}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <h1 className="text-sm text-black/90 font-medium">
+                    {item.title}
+                  </h1>
+
+                  <h2 className="text-2xl md:text-3xl font-bold text-black mt-1">
+                    {item.value}
+                  </h2>
+
+                  <div className="flex items-center gap-2 mt-2 flex-wrap">
+                    <span
+                      className={`
+                            ${item.growthColor}
+                            flex items-center gap-1
+                            font-semibold
+                            text-sm
+                          `}
+                    >
+                      <IoMdArrowRoundUp size={18} />
+                      {item.growth}
+                    </span>
+
+                    <p className="text-xs md:text-sm text-black/70 font-medium">
+                      from last month
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="w-full flex gap-3">
+
+        <div className="w-full grid grid-cols-[2fr_1fr] gap-3">
           {/* LEFT SIDE */}
-          <div className="w-[50%] p-3 shadow-[0_0_15px_rgba(0,0,0,0.45)] rounded-lg">
-            <h2 className="mb-2 font-bold text-lg">Booking Analytics</h2>
-            <div className="w-full h-[1px] bg-muted mb-2"></div>
-            <BookingChart />
+          <div className=" bg-white
+        rounded-[28px]
+        border border-slate-200 p-5
+        shadow-[0_10px_40px_rgba(0,0,0,0.05)]">
+            
+            <BookingOverviewChart/>
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="w-[50%] pb-4 shadow-[0_0_15px_rgba(0,0,0,0.45)]  rounded-lg">
+          {/* <div className="w-[50%] pb-4 shadow-[0_0_15px_rgba(0,0,0,0.45)]  rounded-lg">
             <div className="flex justify-between items-center p-3">
               <h1 className="font-bold text-lg">Latest Booking</h1>
               <Link className="text-muted flex items-center gap-1">
@@ -194,27 +285,24 @@ const ProviderDashboard = () => {
               <div className="w-full h-[1px] bg-muted mb-3 mt-2"></div>
 
               <div>
-                {bookings.map(
-                  (items, idx) =>
-                     (
-                      <div
-                        className="grid grid-cols-4 text-center font-normal mb-3"
-                        key={idx}
-                      >
-                        <p>{items.user}</p>
+                {bookings.map((items, idx) => (
+                  <div
+                    className="grid grid-cols-4 text-center font-normal mb-3"
+                    key={idx}
+                  >
+                    <p>{items.user}</p>
 
-                        <p>{items.provider}</p>
+                    <p>{items.provider}</p>
 
-                        <p>{items.date}</p>
-                        <div className="flex items-center justify-center">
-                          <StatusBadge badge={items.status} />
-                        </div>
-                      </div>
-                    ),
-                )}
+                    <p>{items.date}</p>
+                    <div className="flex items-center justify-center">
+                      <StatusBadge badge={items.status} />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

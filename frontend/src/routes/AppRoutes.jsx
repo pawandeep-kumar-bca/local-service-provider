@@ -185,6 +185,7 @@ const AppRoutes = () => {
           <Route element={<RoleRoute allowedRoles={["admin"]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AllUsersList />} />
+            <Route path="/admin/providers" element={<AllUsersList />} />
             <Route path="/admin/bookings" element={<AllBookingsList />} />
             <Route path="/admin/categories" element={<AddCategories />} />
             <Route path="/admin/payments" element={<AllPayments />} />
