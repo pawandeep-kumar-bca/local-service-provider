@@ -2,6 +2,7 @@ import { FaBook, FaUser, FaUserFriends, FaUsers } from "react-icons/fa";
 import Cards from "../../components/common/Cards";
 import BookingOverviewChart from "../../utils/providerCharts/BookingsOverviewChart";
 import BookingStatusChart from "../../utils/providerCharts/BookingsStatusChart";
+import RevenueChart from "../../utils/providerCharts/RevenueChart";
 import NavBar from "../../components/common/NavBar";
 import Button from "../../components/common/Button";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
@@ -276,6 +277,26 @@ const ProviderDashboard = () => {
     "
           >
             <BookingStatusChart />
+          </div>
+        </div>
+
+         <div className="flex gap-5 items-stretch">
+          {/* Booking Overview */}
+          <div
+            className="
+      flex-[1.76]
+      
+    "
+          >
+            
+          </div>
+
+          <div
+            className="
+      flex-[1.25]
+    "
+          >
+            <RevenueChart/>
           </div>
         </div>
       </div>
