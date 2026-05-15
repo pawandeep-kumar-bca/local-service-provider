@@ -1,6 +1,7 @@
 import { FaBook, FaUser, FaUserFriends, FaUsers } from "react-icons/fa";
 import Cards from "../../components/common/Cards";
-import BookingOverviewChart from '../../utils/providerCharts/BookingsOverviewChart'
+import BookingOverviewChart from "../../utils/providerCharts/BookingsOverviewChart";
+import BookingStatusChart from "../../utils/providerCharts/BookingsStatusChart";
 import NavBar from "../../components/common/NavBar";
 import Button from "../../components/common/Button";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
@@ -253,18 +254,41 @@ const ProviderDashboard = () => {
           ))}
         </div>
 
-        <div className="w-full grid grid-cols-[2fr_1fr] gap-3">
-          {/* LEFT SIDE */}
-          <div className=" bg-white
-        rounded-[28px]
-        border border-slate-200 p-5
-        shadow-[0_10px_40px_rgba(0,0,0,0.05)]">
-            
-            <BookingOverviewChart/>
+        <div className="flex gap-5 items-stretch">
+          {/* Booking Overview */}
+          <div
+            className="
+      flex-[1.76]
+      bg-white
+      rounded-[28px]
+      border border-slate-200
+      p-5
+      shadow-[0_10px_40px_rgba(0,0,0,0.05)]
+    "
+          >
+            <BookingOverviewChart />
           </div>
 
-          {/* RIGHT SIDE */}
-          {/* <div className="w-[50%] pb-4 shadow-[0_0_15px_rgba(0,0,0,0.45)]  rounded-lg">
+          {/* Booking Status */}
+          <div
+            className="
+      flex-[1.25]
+    "
+          >
+            <BookingStatusChart />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default ProviderDashboard;
+{
+  /* RIGHT SIDE */
+}
+{
+  /* <div className="w-[50%] pb-4 shadow-[0_0_15px_rgba(0,0,0,0.45)]  rounded-lg">
             <div className="flex justify-between items-center p-3">
               <h1 className="font-bold text-lg">Latest Booking</h1>
               <Link className="text-muted flex items-center gap-1">
@@ -302,11 +326,5 @@ const ProviderDashboard = () => {
                 ))}
               </div>
             </div>
-          </div> */}
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default ProviderDashboard;
+          </div> */
+}

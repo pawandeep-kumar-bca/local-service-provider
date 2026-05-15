@@ -52,8 +52,8 @@ const monthlyData = [
 const weeklyData = [
   {
     day: "Mon",
-    bookings: 220,
-    completed: 120,
+    bookings: 1500,
+    completed: 1300,
   },
   {
     day: "Tue",
@@ -62,8 +62,8 @@ const weeklyData = [
   },
   {
     day: "Wed",
-    bookings: 380,
-    completed: 200,
+    bookings: 1000,
+    completed: 880,
   },
   {
     day: "Thu",
@@ -72,8 +72,8 @@ const weeklyData = [
   },
   {
     day: "Fri",
-    bookings: 780,
-    completed: 520,
+    bookings: 2000,
+    completed: 1900,
   },
   {
     day: "Sat",
@@ -156,7 +156,7 @@ const AppointmentsOverviewChart = () => {
       </div>
 
       {/* Chart */}
-      <div className="h-[320px] p-3
+      <div className="h-[280px] p-3
         shadow-[0_10px_40px_rgba(0,0,0,0.05)] rounded-2xl">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
