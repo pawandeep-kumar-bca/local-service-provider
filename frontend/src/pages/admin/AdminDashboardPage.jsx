@@ -1,17 +1,13 @@
 import { FaBook, FaUser, FaUserFriends, FaUsers } from "react-icons/fa";
-import Cards from "../../components/common/Cards";
+import { Link } from "react-router-dom";
+import { MdOutlinePlumbing } from "react-icons/md";
+import { TfiWallet } from "react-icons/tfi";
+import { IoMdArrowRoundUp } from "react-icons/io";
+
 import BookingOverviewChart from "../../utils/providerCharts/BookingsOverviewChart";
 import BookingStatusChart from "../../utils/providerCharts/BookingsStatusChart";
 import RevenueChart from "../../utils/providerCharts/RevenueChart";
-import NavBar from "../../components/common/NavBar";
-import Button from "../../components/common/Button";
-import { FaMoneyBillTrendUp } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import { MdOutlineChevronRight } from "react-icons/md";
-import BookingChart from "../../utils/lineChart";
-import StatusBadge from "../../components/common/StatusBadge";
-import { TfiWallet } from "react-icons/tfi";
-import { IoMdArrowRoundUp } from "react-icons/io";
+
 const ProviderDashboard = () => {
   const statsData = [
     {
@@ -62,290 +58,319 @@ const ProviderDashboard = () => {
       bgColor: "bg-white",
     },
   ];
-  const bookings = [
-    {
-      user: "Pawandeep Kumar",
-      provider: "Rahul Electrician",
-      date: "Apr 12, 2025",
-      status: "upcoming",
-    },
-    {
-      user: "Aman Verma",
-      provider: "Shivam Plumber",
-      date: "Apr 14, 2025",
-      status: "completed",
-    },
-    {
-      user: "Rohit Yadav",
-      provider: "Deepak Carpenter",
-      date: "Apr 15, 2025",
-      status: "pending",
-    },
-    {
-      user: "Anjali Sharma",
-      provider: "Suresh AC Repair",
-      date: "Apr 16, 2025",
-      status: "cancelled",
-    },
-    {
-      user: "Karan Singh",
-      provider: "Vikas Painter",
-      date: "Apr 17, 2025",
-      status: "upcoming",
-    },
-    {
-      user: "Priya Mehta",
-      provider: "Rohit Cleaner",
-      date: "Apr 18, 2025",
-      status: "completed",
-    },
-    {
-      user: "Nitin Kumar",
-      provider: "Ajay Electrician",
-      date: "Apr 19, 2025",
-      status: "pending",
-    },
-    {
-      user: "Simran Kaur",
-      provider: "Mohit Plumber",
-      date: "Apr 20, 2025",
-      status: "upcoming",
-    },
-    // {
-    //   user: "Rahul Mishra",
-    //   provider: "Ankit Carpenter",
-    //   date: "Apr 21, 2025",
-    //   status: "completed",
-    // },
-    // {
-    //   user: "Pooja Sharma",
-    //   provider: "Ravi AC Service",
-    //   date: "Apr 22, 2025",
-    //   status: "cancelled",
-    // },
-    // {
-    //   user: "Tarun Saxena",
-    //   provider: "Sanjay Painter",
-    //   date: "Apr 23, 2025",
-    //   status: "upcoming",
-    // },
-    // {
-    //   user: "Neha Agarwal",
-    //   provider: "Kunal Cleaner",
-    //   date: "Apr 24, 2025",
-    //   status: "pending",
-    // },
-    // {
-    //   user: "Arjun Patel",
-    //   provider: "Vivek Electrician",
-    //   date: "Apr 25, 2025",
-    //   status: "completed",
-    // },
-    // {
-    //   user: "Deepak Chauhan",
-    //   provider: "Raj Plumber",
-    //   date: "Apr 26, 2025",
-    //   status: "upcoming",
-    // },
-    // {
-    //   user: "Komal Singh",
-    //   provider: "Manoj Carpenter",
-    //   date: "Apr 27, 2025",
-    //   status: "pending",
-    // },
-    // {
-    //   user: "Sonia Gupta",
-    //   provider: "Harish AC Repair",
-    //   date: "Apr 28, 2025",
-    //   status: "completed",
-    // },
-    // {
-    //   user: "Ajay Kumar",
-    //   provider: "Rakesh Painter",
-    //   date: "Apr 29, 2025",
-    //   status: "upcoming",
-    // },
-    // {
-    //   user: "Riya Sharma",
-    //   provider: "Mukesh Cleaner",
-    //   date: "Apr 30, 2025",
-    //   status: "cancelled",
-    // },
-    // {
-    //   user: "Vikas Arora",
-    //   provider: "Amit Electrician",
-    //   date: "May 01, 2025",
-    //   status: "pending",
-    // },
-    // {
-    //   user: "Meena Devi",
-    //   provider: "Sunil Plumber",
-    //   date: "May 02, 2025",
-    //   status: "upcoming",
-    // },
-  ];
+
   return (
-    <>
-      <div className="w-full h-full p-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-4 mb-6">
-          {statsData.map((item) => (
-            <div
-              key={item.id}
-              className={`
-                    ${item.bgColor}
-                    border
-                    rounded-2xl
-                    p-5
-                    text-white
-                    shadow-[0_10px_30px_rgba(0,0,0,0.12)]
-                    hover:-translate-y-1
-                    hover:shadow-[0_15px_35px_rgba(0,0,0,0.18)]
-                    transition-all duration-300
-                    cursor-pointer
-                    relative
-                    overflow-hidden
-                  `}
-            >
-              <div className="relative flex items-center gap-4">
-                {/* Icon */}
-                <div
-                  className={`
-                        ${item.iconBg}
-                        ${item.iconColor}
-                        w-14 h-14
-                        rounded-2xl
-                        flex items-center justify-center
-                        shrink-0
-                        backdrop-blur-md
-                      `}
-                >
-                  {item.icon}
-                </div>
+    <div className="w-full h-full p-3">
 
-                {/* Content */}
-                <div className="flex-1">
-                  <h1 className="text-sm text-black/90 font-medium">
-                    {item.title}
-                  </h1>
+      {/* STATS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-4 mb-6">
+        {statsData.map((item) => (
+          <div
+            key={item.id}
+            className={`
+              ${item.bgColor}
+              border
+              rounded-2xl
+              p-5
+              shadow-[0_10px_30px_rgba(0,0,0,0.08)]
+              hover:-translate-y-1
+              hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
+              transition-all duration-300
+              cursor-pointer
+            `}
+          >
+            <div className="flex items-center gap-4">
 
-                  <h2 className="text-2xl md:text-3xl font-bold text-black mt-1">
-                    {item.value}
-                  </h2>
+              {/* Icon */}
+              <div
+                className={`
+                  ${item.iconBg}
+                  ${item.iconColor}
+                  w-14 h-14
+                  rounded-2xl
+                  flex items-center justify-center
+                  shrink-0
+                `}
+              >
+                {item.icon}
+              </div>
 
-                  <div className="flex items-center gap-2 mt-2 flex-wrap">
-                    <span
-                      className={`
-                            ${item.growthColor}
-                            flex items-center gap-1
-                            font-semibold
-                            text-sm
-                          `}
-                    >
-                      <IoMdArrowRoundUp size={18} />
-                      {item.growth}
-                    </span>
+              {/* Content */}
+              <div className="flex-1">
+                <h1 className="text-sm text-black/80 font-medium">
+                  {item.title}
+                </h1>
 
-                    <p className="text-xs md:text-sm text-black/70 font-medium">
-                      from last month
-                    </p>
-                  </div>
+                <h2 className="text-2xl md:text-3xl font-bold text-black mt-1">
+                  {item.value}
+                </h2>
+
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  <span
+                    className={`
+                      ${item.growthColor}
+                      flex items-center gap-1
+                      font-semibold
+                      text-sm
+                    `}
+                  >
+                    <IoMdArrowRoundUp size={18} />
+                    {item.growth}
+                  </span>
+
+                  <p className="text-xs md:text-sm text-black/60 font-medium">
+                    from last month
+                  </p>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
+        ))}
+      </div>
+
+      {/* CHART SECTION */}
+      <div className="flex flex-col xl:flex-row gap-5 items-stretch">
+        
+        {/* Booking Overview */}
+        <div
+          className="
+            flex-[1.76]
+            bg-white
+            rounded-[28px]
+            border border-slate-200
+            p-5
+            shadow-[0_10px_40px_rgba(0,0,0,0.05)]
+          "
+        >
+          <BookingOverviewChart />
         </div>
 
-        <div className="flex gap-5 items-stretch">
-          {/* Booking Overview */}
+        {/* Booking Status */}
+        <div className="flex-[1.25]">
+          <BookingStatusChart />
+        </div>
+      </div>
+
+      {/* BOTTOM SECTION */}
+      <div className="flex flex-col xl:flex-row gap-5 items-stretch mt-6">
+
+        {/* LEFT SIDE */}
+        <div className="flex-[1.76] flex flex-col md:flex-row gap-2">
+
+          {/* Recent Users */}
           <div
             className="
-      flex-[1.76]
-      bg-white
-      rounded-[28px]
-      border border-slate-200
-      p-5
-      shadow-[0_10px_40px_rgba(0,0,0,0.05)]
-    "
+              flex-1 flex flex-col
+              bg-white
+              rounded-[28px]
+              border border-slate-200
+              p-5
+              shadow-[0_10px_40px_rgba(0,0,0,0.05)]
+              hover:-translate-y-1
+              transition-all duration-300
+            "
           >
-            <BookingOverviewChart />
+            {/* Header */}
+            <div className="flex justify-between items-center mb-5">
+              <h1 className="text-xl font-semibold text-black/80">
+                Recent Users
+              </h1>
+
+              <Link className="text-sm text-primary font-semibold">
+                View All
+              </Link>
+            </div>
+
+            {/* Users */}
+            <div className="flex-1 space-y-5">
+
+              {[
+                {
+                  name: "John Doe",
+                  email: "john.doe@gmail.com",
+                  time: "2 min ago",
+                  image:
+                    "https://randomuser.me/api/portraits/women/34.jpg",
+                },
+
+                {
+                  name: "Aman Verma",
+                  email: "aman@gmail.com",
+                  time: "10 min ago",
+                  image:
+                    "https://randomuser.me/api/portraits/men/22.jpg",
+                },
+
+                {
+                  name: "Priya Sharma",
+                  email: "priya@gmail.com",
+                  time: "25 min ago",
+                  image:
+                    "https://randomuser.me/api/portraits/women/45.jpg",
+                },
+              ].map((user, idx) => (
+                <div
+                  key={idx}
+                  className="
+                    flex justify-between items-center
+                    pb-4 border-b border-slate-100
+                    last:border-none last:pb-0
+                  "
+                >
+                  <div className="flex gap-3 items-center">
+                    <img
+                      src={user.image}
+                      alt="profile"
+                      className="
+                        w-12 h-12 min-w-12
+                        rounded-full
+                        object-cover
+                        ring-2 ring-primary/10
+                      "
+                    />
+
+                    <div>
+                      <h1 className="text-base font-bold text-black/90">
+                        {user.name}
+                      </h1>
+
+                      <p className="text-sm text-muted">
+                        {user.email}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-muted whitespace-nowrap">
+                    {user.time}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Booking Status */}
+          {/* Top Services */}
           <div
             className="
-      flex-[1.25]
-    "
+              flex-1 flex flex-col
+              bg-white
+              rounded-[28px]
+              border border-slate-200
+              p-5
+              shadow-[0_10px_40px_rgba(0,0,0,0.05)]
+              hover:-translate-y-1
+              transition-all duration-300
+            "
           >
-            <BookingStatusChart />
+            {/* Header */}
+            <div className="flex justify-between items-center mb-5">
+              <h1 className="text-xl font-semibold text-black/80">
+                Top Services
+              </h1>
+
+              <Link className="text-sm text-primary font-semibold">
+                View All
+              </Link>
+            </div>
+
+            {/* Services */}
+            <div className="flex-1 space-y-2">
+
+              {[
+                {
+                  title: "Plumbing",
+                  total: "2,346",
+                  progress: "75%",
+                  icon: <MdOutlinePlumbing size={24} />,
+                  bg: "bg-green-100",
+                  color: "text-green-500",
+                },
+
+                {
+                  title: "Electrician",
+                  total: "1,875",
+                  progress: "60%",
+                  icon: <FaBook size={22} />,
+                  bg: "bg-blue-100",
+                  color: "text-blue-500",
+                },
+
+                {
+                  title: "Cleaning",
+                  total: "1,240",
+                  progress: "45%",
+                  icon: <FaUsers size={22} />,
+                  bg: "bg-pink-100",
+                  color: "text-pink-500",
+                },
+              ].map((service, idx) => (
+                <div
+                  key={idx}
+                  className="
+                    border border-slate-100
+                    rounded-2xl
+                    p-4
+                  "
+                >
+                  <div className="flex items-center justify-between">
+
+                    <div className="flex gap-3 items-center">
+                      <div
+                        className={`
+                          w-12 h-12 rounded-xl
+                          flex items-center justify-center
+                          ${service.bg}
+                          ${service.color}
+                        `}
+                      >
+                        {service.icon}
+                      </div>
+
+                      <div>
+                        <h1 className="text-base font-semibold text-black/80">
+                          {service.title}
+                        </h1>
+
+                        <p className="text-sm text-muted">
+                          {service.total} bookings
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="text-sm font-semibold text-slate-600">
+                      {service.progress}
+                    </span>
+                  </div>
+
+                  {/* Progress */}
+                  <div className="mt-4 w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className={`
+                        h-full rounded-full
+                        ${
+                          idx === 0
+                            ? "bg-green-500 w-[75%]"
+                            : idx === 1
+                            ? "bg-blue-500 w-[60%]"
+                            : "bg-pink-500 w-[45%]"
+                        }
+                      `}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-         <div className="flex gap-5 items-stretch">
-          {/* Booking Overview */}
-          <div
-            className="
-      flex-[1.76]
-      
-    "
-          >
-            
-          </div>
-
-          <div
-            className="
-      flex-[1.25]
-    "
-          >
-            <RevenueChart/>
+        {/* RIGHT SIDE */}
+        <div className="flex-[1.17] flex">
+          <div className="w-full">
+            <RevenueChart />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 export default ProviderDashboard;
-{
-  /* RIGHT SIDE */
-}
-{
-  /* <div className="w-[50%] pb-4 shadow-[0_0_15px_rgba(0,0,0,0.45)]  rounded-lg">
-            <div className="flex justify-between items-center p-3">
-              <h1 className="font-bold text-lg">Latest Booking</h1>
-              <Link className="text-muted flex items-center gap-1">
-                View All <MdOutlineChevronRight className="text-2xl" />
-              </Link>
-            </div>
-            <div className="w-full h-[1px] bg-muted mb-2"></div>
-
-            <div>
-              <div>
-                <ul className="flex justify-around items-center text-lg font-semibold">
-                  <li>User</li>
-                  <li>Provider</li>
-                  <li>Date</li>
-                  <li>Status</li>
-                </ul>
-              </div>
-              <div className="w-full h-[1px] bg-muted mb-3 mt-2"></div>
-
-              <div>
-                {bookings.map((items, idx) => (
-                  <div
-                    className="grid grid-cols-4 text-center font-normal mb-3"
-                    key={idx}
-                  >
-                    <p>{items.user}</p>
-
-                    <p>{items.provider}</p>
-
-                    <p>{items.date}</p>
-                    <div className="flex items-center justify-center">
-                      <StatusBadge badge={items.status} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div> */
-}
