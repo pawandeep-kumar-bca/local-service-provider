@@ -19,7 +19,7 @@ const ProviderDashboard = () => {
       iconBg: "bg-sky-100",
       iconColor: "text-sky-500",
       growthColor: "text-green-500",
-      bgColor: "bg-white border-white/50",
+      bgColor: "bg-white",
     },
 
     {
@@ -57,7 +57,7 @@ const ProviderDashboard = () => {
       growthColor: "text-green-500",
       bgColor: "bg-white",
     },
-  ];
+  ]; 
 
   return (
     <div className="w-full h-full p-3">
@@ -69,7 +69,7 @@ const ProviderDashboard = () => {
             key={item.id}
             className={`
               ${item.bgColor}
-              border
+              border border-gray-200
               rounded-2xl
               p-5
               shadow-[0_10px_30px_rgba(0,0,0,0.08)]
