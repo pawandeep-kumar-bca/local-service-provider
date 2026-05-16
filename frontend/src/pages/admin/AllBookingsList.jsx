@@ -362,7 +362,7 @@ const AllBookingsList = () => {
           </div>
         </div>
       </div>
-    </>
+    </> 
   );
 };
 
