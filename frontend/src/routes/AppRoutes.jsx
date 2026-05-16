@@ -56,6 +56,7 @@ import ProviderReviews from "../pages/provider/ProviderReviews";
 import ProviderSchedule from "../pages/provider/ProviderSchedule";
 import NotificationSettings from "../pages/provider/NotificationSettings";
 import ProfileInfoSettings from "../pages/provider/ProfileSettings";
+import AllProvidersList from "../pages/admin/AllProvidersList";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -185,7 +186,7 @@ const AppRoutes = () => {
           <Route element={<RoleRoute allowedRoles={["admin"]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AllUsersList />} />
-            <Route path="/admin/providers" element={<AllUsersList />} />
+            <Route path="/admin/providers" element={<AllProvidersList />} />
             <Route path="/admin/bookings" element={<AllBookingsList />} />
             <Route path="/admin/categories" element={<AddCategories />} />
             <Route path="/admin/payments" element={<AllPayments />} />

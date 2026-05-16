@@ -3,7 +3,7 @@ import { IoSearch } from "react-icons/io5";
 import StatusBudge from "../../components/common/StatusBadge";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-import { FaUserGroup, FaUserShield, FaUserLock } from "react-icons/fa6";
+import {  FaUserShield, FaUserLock, FaUser } from "react-icons/fa6";
 import { RiDeleteBin6Line, RiUserAddFill } from "react-icons/ri";
 import {
   MdOutlineEdit,
@@ -22,7 +22,7 @@ const AllUsersList = () => {
       title: "Total Users",
       value: "12,835",
       growth: "12%",
-      icon: <FaUserGroup size={22} />,
+      icon: <FaUser size={22} />,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-500",
       growthColor: "text-green-500",
@@ -103,10 +103,10 @@ const menuRef = useRef(null);
 
   // toggle menu
 
-  const toggleMenu = (id) => {
+  const toggleMenu = () => {
 
     setActiveMenu((prev) =>
-      prev === id ? null : id
+      prev === 1 ? null : 1
     );
 
   };
@@ -201,7 +201,7 @@ const menuRef = useRef(null);
                   defaultValue=""
                   name="role"
                   id="role"
-                  defaultValue=""
+                  
                   className="rounded-lg px-4 w-full  py-2 outline-0 border border-slate-300 text-muted"
                 >
                   <option disabled> Role</option>
@@ -299,7 +299,7 @@ const menuRef = useRef(null);
                 <p className="text-sm text-muted">12</p>
               </div>
               <button
-              ref={menuRef}
+              
   onClick={() => toggleMenu(1)}
   className="
 
@@ -317,6 +317,7 @@ const menuRef = useRef(null);
 </button>
 {activeMenu === 1 && (
   <div
+  ref={menuRef}
     className="
       absolute
       top-15
