@@ -100,7 +100,7 @@ const AllProvidersList = () => {
 
   const toggleMenu = () => {
     setActiveMenu((prev) => (prev === 1 ? null : 1));
-  };
+  }; 
   return (
     <>
       <div>
