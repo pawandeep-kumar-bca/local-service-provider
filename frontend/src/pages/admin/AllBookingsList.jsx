@@ -65,7 +65,7 @@ const AllBookingsList = () => {
       iconColor: "text-purple-500",
       growthColor: "text-green-500",
     },
-  ];
+  ]; 
   const [activeMenu, setActiveMenu] = useState(null);
 
   const menuRef = useRef(null);

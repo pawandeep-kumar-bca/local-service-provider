@@ -9,7 +9,7 @@ import { IoMdArrowRoundUp } from 'react-icons/io';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import CustomDatePicker from "../../components/common/CustomDatePicker";
-const AddCategories = () => {
+const AllCategoriesList = () => {
   const statsData = [
       {
         id: 1,
@@ -99,7 +99,7 @@ const AddCategories = () => {
           <p className='text-sm text-muted'>Categories and manage all service categories.</p>
         </div>
         <div>
-          <Button><HiPlus />Add New Category</Button>
+          <Button><HiPlus size={22}/>Add New Category</Button>
         </div>
        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2 mt-4 mb-6">
@@ -176,7 +176,7 @@ const AddCategories = () => {
             <div className="flex items-center gap-4 pl-4 pr-2 py-2 border border-slate-300 rounded-lg text-muted flex-1">
               <input
                 type="search"
-                placeholder="Search by booking Id  ,provider,user or services..."
+                placeholder="Search by categories..."
                 className="outline-0 border-0 w-full "
               />
               <IoSearch size={18} />
@@ -227,7 +227,7 @@ const AddCategories = () => {
             <div className="border-t border-gray-200 mt-3 mb-2"></div>
             <div className="relative">
               <div className="grid grid-cols-[2.3fr_1fr_1fr_1fr_1fr_1fr_1.2fr_1fr] items-center justify-items-center gap-3 mb-2">
-                <div className="flex items-center gap-2">
+                <div className="flex items-start gap-3">
                   <div
                     className="
                             w-12 h-12 min-w-12
@@ -243,7 +243,7 @@ const AddCategories = () => {
                       Plumbing
                     </h1>
 
-                    <p className="text-sm text-muted">All plumbing related services.</p>
+                    <p className="text-sm text-muted mt-1">All plumbing related services.</p>
                   </div>
                 </div>
                 <div>
@@ -283,7 +283,7 @@ const AddCategories = () => {
                 </div>
                 <div>
                   <h3 className='text-sm font-semibold text-black/80'>May 12, 2024</h3>
-                  <p className='text-sm text-muted'>10:20 AM</p>
+                  <p className='text-sm text-muted mt-1'>10:20 AM</p>
                 </div>
                
                
@@ -359,4 +359,4 @@ const AddCategories = () => {
   )
 }
 
-export default AddCategories
+export default AllCategoriesList

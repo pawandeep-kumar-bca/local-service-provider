@@ -22,7 +22,7 @@ import AllBookings from "../pages/provider/AllBookings";
 import AdminDashboard from "../pages/admin/AdminDashboardPage";
 import AllUsersList from "../pages/admin/AllUsersList";
 import AllBookingsList from "../pages/admin/AllBookingsList";
-import AddCategories from "../pages/admin/AddCategories";
+import AllCategoriesList from "../pages/admin/AllCategoriesList";
 import AllPayments from "../pages/admin/AllPayments";
 import AllReports from "../pages/admin/AllReports";
 import Setting from "../pages/admin/Setting";
@@ -188,7 +188,7 @@ const AppRoutes = () => {
             <Route path="/admin/users" element={<AllUsersList />} />
             <Route path="/admin/providers" element={<AllProvidersList />} />
             <Route path="/admin/bookings" element={<AllBookingsList />} />
-            <Route path="/admin/categories" element={<AddCategories />} />
+            <Route path="/admin/categories" element={<AllCategoriesList />} />
             <Route path="/admin/payments" element={<AllPayments />} />
             <Route path="/admin/reports" element={<AllReports />} />
             <Route path="/admin/settings" element={<Setting />} />
