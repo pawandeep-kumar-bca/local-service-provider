@@ -191,7 +191,6 @@ const AppRoutes = () => {
             <Route path="/admin/categories" element={<AllCategoriesList />} />
             <Route path="/admin/payments" element={<AllPayments />} />
             <Route path="/admin/reports" element={<AllReports />} />
-            <Route path="/admin/settings" element={<Setting />} />
           </Route>
         </Route>
       </Route>

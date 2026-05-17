@@ -141,9 +141,5 @@ export const adminMenu = [
     icon: <MdReport />,
     path: "/admin/reports",
   },
-  {
-    name: "Settings",
-    icon: <TbSettings />,
-    path: "/admin/settings",
-  },
+  
 ];
