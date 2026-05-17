@@ -1,27 +1,39 @@
-import React, { useEffect, useRef, useState } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import React from "react";
+
 import { FaHourglassStart } from "react-icons/fa6";
-import { IoMdArrowRoundUp } from "react-icons/io";
-import { IoSearch } from "react-icons/io5";
+
 import {
   MdOutlineRemoveRedEye,
   MdOutlineReportGmailerrorred,
   MdOutlineTaskAlt,
   MdPriorityHigh,
 } from "react-icons/md";
+
 import { RiAlarmWarningLine } from "react-icons/ri";
-import CustomDatePicker from "../../components/common/CustomDatePicker";
+
+import StatsCard from "../../components/common/admin/StatsCard";
+import SearchFilterBar from "../../components/common/admin/SearchFilterBar";
+import TableWrapper from "../../components/common/admin/TableWrapper";
+import UserInfo from "../../components/common/admin/UserInfo";
+import ActionDropdown from "../../components/common/admin/ActionDropdown";
+
 const AllReports = () => {
+
+  // stats data
+
   const statsData = [
     {
       id: 1,
       title: "Total Reports",
       value: "1,235",
       growth: "12%",
-      icon: <MdOutlineReportGmailerrorred size={24} />,
+      icon: (
+        <MdOutlineReportGmailerrorred
+          size={24}
+        />
+      ),
       iconBg: "bg-purple-100",
       iconColor: "text-purple-500",
-      growthColor: "text-green-500",
     },
 
     {
@@ -32,7 +44,6 @@ const AllReports = () => {
       icon: <FaHourglassStart size={24} />,
       iconBg: "bg-yellow-100",
       iconColor: "text-yellow-500",
-      growthColor: "text-green-500",
     },
 
     {
@@ -40,10 +51,11 @@ const AllReports = () => {
       title: "Resolved Cases",
       value: "543",
       growth: "18%",
-      icon: <MdOutlineTaskAlt size={24} />,
-      iconBg: "bg-green-200",
+      icon: (
+        <MdOutlineTaskAlt size={24} />
+      ),
+      iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      growthColor: "text-green-500",
     },
 
     {
@@ -52,300 +64,373 @@ const AllReports = () => {
       value: "78",
       growth: "10%",
       icon: <MdPriorityHigh size={24} />,
-      iconBg: "bg-red-200",
+      iconBg: "bg-red-100",
       iconColor: "text-red-500",
-      growthColor: "text-green-500",
     },
   ];
-  const [activeMenu, setActiveMenu] = useState(null);
 
-  const menuRef = useRef(null);
+  // reports data
 
-  // close outside click
+  const reports = [
+    {
+      id: 1,
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setActiveMenu(null);
-      }
-    };
+      reportId: "#REP10234",
 
-    document.addEventListener("mousedown", handleClickOutside);
+      reportBy: {
+        image:
+          "https://randomuser.me/api/portraits/women/34.jpg",
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+        name: "John Doe",
 
-  // toggle menu
+        id: "#USR0934",
+      },
 
-  const toggleMenu = () => {
-    setActiveMenu((prev) => (prev === 1 ? null : 1));
-  };
+      against: {
+        image:
+          "https://randomuser.me/api/portraits/men/22.jpg",
+
+        name: "Aman Doe",
+
+        id: "#PRO0934",
+      },
+
+      bookingId: "#BK10234",
+
+      reportType: "Fraud",
+
+      priority: "High",
+
+      status: "Under Review",
+
+      date: "May 12, 2024",
+
+      time: "10:30 AM",
+    },
+
+    {
+      id: 2,
+
+      reportId: "#REP10235",
+
+      reportBy: {
+        image:
+          "https://randomuser.me/api/portraits/women/40.jpg",
+
+        name: "Priya Sharma",
+
+        id: "#USR2034",
+      },
+
+      against: {
+        image:
+          "https://randomuser.me/api/portraits/men/30.jpg",
+
+        name: "Rahul Kumar",
+
+        id: "#PRO2034",
+      },
+
+      bookingId: "#BK10235",
+
+      reportType: "Payment Issue",
+
+      priority: "Medium",
+
+      status: "Resolved",
+
+      date: "May 15, 2024",
+
+      time: "2:45 PM",
+    },
+  ];
+
   return (
     <>
       <div>
+
+        {/* stats cards */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2 mt-4 mb-6">
+
           {statsData.map((item) => (
-            <div
+
+            <StatsCard
               key={item.id}
-              className={`
-                        bg-white
-                        border border-gray-200
-                        rounded-2xl
-                        p-5
-                        shadow-[0_10px_30px_rgba(0,0,0,0.08)]
-                        hover:-translate-y-1
-                        hover:shadow-[0_15px_35px_rgba(0,0,0,0.12)]
-                        transition-all duration-300
-                        cursor-pointer
-                      `}
-            >
-              <div className="flex items-center gap-3">
-                {/* Icon */}
-                <div
-                  className={`
-                            ${item.iconBg}
-                            ${item.iconColor}
-                            w-13 h-13
-                            rounded-full
-                            flex items-center justify-center
-                            shrink-0
-                          `}
-                >
-                  {item.icon}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1">
-                  <h1 className="text-sm text-black/60 font-medium">
-                    {item.title}
-                  </h1>
-
-                  <h2 className="text-2xl md:text-3xl font-bold text-black ">
-                    {item.value}
-                  </h2>
-                </div>
-              </div>
-              <div className="flex items-center justify-center gap-2 mt-2 flex-wrap ">
-                <span
-                  className={`
-                                ${item.growthColor}
-                                flex items-center gap-1
-                                font-semibold
-                                text-sm
-                              `}
-                >
-                  <IoMdArrowRoundUp size={18} />
-                  {item.growth}
-                </span>
-
-                <p className="text-xs md:text-sm text-black/60 font-medium">
-                  from last month
-                </p>
-              </div>
-            </div>
+              title={item.title}
+              value={item.value}
+              growth={item.growth}
+              icon={item.icon}
+              iconBg={item.iconBg}
+              iconColor={item.iconColor}
+            />
           ))}
         </div>
-        <div
-          className="bg-white
-                rounded-2xl
-                border border-slate-300
-                p-5
-                shadow-[0_10px_40px_rgba(0,0,0,0.05)]"
-        >
-          <div className="flex gap-3 mb-5">
-            <div className="flex items-center gap-4 pl-4 pr-2 py-2 border border-slate-300 rounded-lg text-muted flex-1">
-              <input
-                type="search"
-                placeholder="Search by report ID, user or provider..."
-                className="outline-0 border-0 w-full "
-              />
-              <IoSearch size={18} />
-            </div>
-            <div className="flex gap-3 flex-2 ">
-              <div className="flex-1 ">
-                <select
-                  defaultValue=""
-                  name="report status"
-                  id="report status"
-                  className="rounded-lg px-4 w-full  py-2 outline-0 border border-slate-300 text-muted"
-                >
-                  <option disabled> All Report Status</option>
-                  <option value="under review">Under Review</option>
-                  <option value="pending">Pending</option>
-                  <option value="escalated">Escalated</option>
-                  <option value="resolved">Resolved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </div>
-              <div className="flex-1">
-                <select
-                  defaultValue=""
-                  name="report type"
-                  id="report type"
-                  className="rounded-lg px-4 w-full  py-2 outline-0 border border-slate-300 text-muted"
-                >
-                  <option disabled>All Report Type</option>
-                  <option value="Misbehavior">Misbehavior</option>
-                  <option value="No Show">No Show</option>
-                  <option value="Payment Issue">Payment Issue</option>
-                  <option value="Fraud">Fraud</option>
-                  <option value="Poor Service">Poor Service</option>
-                </select>
-              </div>
-              <div className="flex-1">
-                <select
-                  defaultValue=""
-                  name="priority"
-                  id="priority"
-                  className="rounded-lg px-4 w-full  py-2 outline-0 border border-slate-300 text-muted"
-                >
-                  <option disabled>All Priority</option>
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </select>
-              </div>
-              <div>
-                <CustomDatePicker />
-              </div>
-            </div>
-          </div>
-          <div className="border border-slate-300 rounded-xl ">
-            <div className="grid grid-cols-[1fr_1.2fr_1.2fr_1fr_1fr_1fr_1.2fr_1fr_1fr] items-center justify-items-center mt-3 text-sm font-bold text-black/80">
-              <span>Report Id</span>
+
+        {/* table wrapper */}
+
+        <TableWrapper>
+
+          {/* filters */}
+
+          <SearchFilterBar
+            placeholder="Search by report ID, user or provider..."
+            filters={[
+              {
+                label:
+                  "Report Status",
+
+                options: [
+                  "Under Review",
+                  "Pending",
+                  "Escalated",
+                  "Resolved",
+                  "Rejected",
+                ],
+              },
+
+              {
+                label:
+                  "Report Type",
+
+                options: [
+                  "Misbehavior",
+                  "No Show",
+                  "Payment Issue",
+                  "Fraud",
+                  "Poor Service",
+                ],
+              },
+
+              {
+                label: "Priority",
+
+                options: [
+                  "High",
+                  "Medium",
+                  "Low",
+                ],
+              },
+            ]}
+          />
+
+          {/* table */}
+
+          <div className="border border-slate-300 rounded-xl overflow-hidden">
+
+            {/* heading */}
+
+            <div
+              className="
+                grid
+                grid-cols-[1fr_1.2fr_1.2fr_1fr_1fr_1fr_1.2fr_1fr_1fr]
+                items-center
+                justify-items-center
+                mt-3
+                text-sm
+                font-bold
+                text-black/80
+                px-3
+              "
+            >
+
+              <span>Report ID</span>
+
               <span>Report By</span>
+
               <span>Against</span>
+
               <span>Booking ID</span>
+
               <span>Report Type</span>
-              <span>priority</span>
+
+              <span>Priority</span>
+
               <span>Status</span>
+
               <span>Date & Time</span>
+
               <span>Action</span>
+
             </div>
+
             <div className="border-t border-gray-200 mt-3 mb-2"></div>
-            <div className="relative">
-              <div className="grid grid-cols-[1fr_1.2fr_1.2fr_1fr_1fr_1fr_1.2fr_1fr_1fr] items-center justify-items-center gap-3 mb-2">
-                <div>
-                  <h1 className="text-sm font-semibold text-blue-500">
-                    #REP10234
-                  </h1>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <img
-                    src="https://randomuser.me/api/portraits/women/34.jpg"
-                    alt="profile"
-                    className="
-                            w-10 h-10 min-w-10
-                            rounded-full
-                            object-cover
-                            ring-2 ring-primary/10
-                          "
-                  />
-                  <div>
-                    <h1 className="text-base font-bold text-black/90">
-                      John Doe
-                    </h1>
+            {/* rows */}
 
-                    <p className="text-sm text-muted">#USO0934</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <img
-                    src="https://randomuser.me/api/portraits/women/36.jpg"
-                    alt="profile"
-                    className="
-                            w-10 h-10 min-w-10
-                            rounded-full
-                            object-cover
-                            ring-2 ring-primary/10
-                          "
-                  />
-                  <div>
-                    <h1 className="text-base font-bold text-black/90">
-                      Aman Doe
-                    </h1>
+            <div className="space-y-2 pb-3">
 
-                    <p className="text-sm text-muted">#PRO0934</p>
-                  </div>
-                </div>
-                <div>
-                  <h1 className="text-sm font-semibold text-blue-500">
-                    #BK10234
-                  </h1>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
-                    <RiAlarmWarningLine size={20} />
-                  </div>
-                  <p className="text-sm text-muted">Fraud</p>
-                </div>
+              {reports.map((report) => (
 
-                <div>
-                  <span className="text-sm text-red-500 bg-red-100 rounded-sm border-red-300 border py-1 px-3 font-semibold">
-                    Hight
-                  </span>
-                </div>
-                <div>
-                  <span className="text-sm text-yellow-500 bg-yellow-100 rounded-sm font-semibold border border-yellow-400 py-1 px-3">
-                    Under Review
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold  text-black/80">
-                    May 12,2024
-                  </h3>
-                  <p className="text-sm text-muted">10:30 AM</p>
-                </div>
-
-                <button
-                  onClick={() => toggleMenu(1)}
+                <div
+                  key={report.id}
                   className="
-    
-        w-10 h-10
-        rounded-xl
-        border border-slate-300
-        flex items-center justify-center
-        text-muted
-        hover:bg-slate-100
-        transition-all duration-300
-        cursor-pointer
-      "
+                    grid
+                    grid-cols-[1fr_1.2fr_1.2fr_1fr_1fr_1fr_1.2fr_1fr_1fr]
+                    items-center
+                    justify-items-center
+                    gap-3
+                    px-3
+                  "
                 >
-                  <BsThreeDotsVertical size={18} />
-                </button>
-                {activeMenu === 1 && (
-                  <div
-                    ref={menuRef}
-                    className="
-          absolute
-          top-15
-          right-12
-          z-[999]
-          min-w-[220px]
-          bg-white
-          border border-slate-200
-          rounded-2xl
-          p-2
-          shadow-[0_10px_30px_rgba(0,0,0,0.12)]
-          animate-in
-          fade-in
-          zoom-in-95
-          duration-200
-        "
-                  >
-                    <button className="w-full flex items-center gap-3 cursor-pointer px-3 py-2 rounded-xl hover:bg-slate-100 transition-all duration-300">
-                      <MdOutlineRemoveRedEye size={20} />
-                      <p className="text-sm font-medium">View Report</p>
-                    </button>
+
+                  {/* report id */}
+
+                  <div>
+
+                    <h1 className="text-sm font-semibold text-blue-500">
+                      {report.reportId}
+                    </h1>
+
                   </div>
-                )}
-              </div>
+
+                  {/* report by */}
+
+                  <UserInfo
+                    image={
+                      report.reportBy.image
+                    }
+                    name={
+                      report.reportBy.name
+                    }
+                    id={
+                      report.reportBy.id
+                    }
+                  />
+
+                  {/* against */}
+
+                  <UserInfo
+                    image={
+                      report.against.image
+                    }
+                    name={
+                      report.against.name
+                    }
+                    id={
+                      report.against.id
+                    }
+                  />
+
+                  {/* booking id */}
+
+                  <div>
+
+                    <h1 className="text-sm font-semibold text-blue-500">
+                      {report.bookingId}
+                    </h1>
+
+                  </div>
+
+                  {/* report type */}
+
+                  <div className="flex items-center gap-2">
+
+                    <div
+                      className="
+                        w-10 h-10 rounded-full
+                        bg-red-100
+                        text-red-500
+                        flex items-center justify-center
+                      "
+                    >
+
+                      <RiAlarmWarningLine
+                        size={20}
+                      />
+
+                    </div>
+
+                    <p className="text-sm text-muted">
+                      {report.reportType}
+                    </p>
+
+                  </div>
+
+                  {/* priority */}
+
+                  <div>
+
+                    <span
+                      className={`
+                        text-sm rounded-md border py-1 px-3 font-semibold
+
+                        ${
+                          report.priority ===
+                          "High"
+                            ? "text-red-500 bg-red-100 border-red-300"
+                            : report.priority ===
+                              "Medium"
+                            ? "text-yellow-500 bg-yellow-100 border-yellow-300"
+                            : "text-green-500 bg-green-100 border-green-300"
+                        }
+                      `}
+                    >
+                      {report.priority}
+                    </span>
+
+                  </div>
+
+                  {/* status */}
+
+                  <div>
+
+                    <span
+                      className={`
+                        text-sm rounded-md border py-1 px-3 font-semibold
+
+                        ${
+                          report.status ===
+                          "Resolved"
+                            ? "text-green-500 bg-green-100 border-green-300"
+                            : "text-yellow-500 bg-yellow-100 border-yellow-300"
+                        }
+                      `}
+                    >
+                      {report.status}
+                    </span>
+
+                  </div>
+
+                  {/* date */}
+
+                  <div>
+
+                    <h3 className="text-sm font-semibold text-black/80">
+                      {report.date}
+                    </h3>
+
+                    <p className="text-sm text-muted">
+                      {report.time}
+                    </p>
+
+                  </div>
+
+                  {/* action dropdown */}
+
+                  <ActionDropdown
+                    items={[
+                      {
+                        label:
+                          "View Report",
+
+                        icon: (
+                          <MdOutlineRemoveRedEye
+                            size={20}
+                          />
+                        ),
+
+                        onClick: () =>
+                          console.log("view"),
+                      },
+                    ]}
+                  />
+
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        </TableWrapper>
       </div>
     </>
   );
