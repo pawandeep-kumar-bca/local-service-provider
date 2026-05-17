@@ -137,7 +137,7 @@ export const adminMenu = [
     path: "/admin/payments",
   },
   {
-    name: "Reports",
+    name: "Reports & Complaints",
     icon: <MdReport />,
     path: "/admin/reports",
   },
