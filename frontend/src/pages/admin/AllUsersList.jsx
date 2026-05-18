@@ -1,6 +1,8 @@
 import React from "react";
 
 import {
+  FaArrowDown,
+  FaArrowUp,
   FaUser,
   FaUserLock,
   FaUserShield,
@@ -36,6 +38,8 @@ const AllUsersList = () => {
       icon: <FaUser size={22} />,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-500",
+      growthIcon:<FaArrowUp size={20}/>,
+      growthColor:"text-green-500",
     },
 
     {
@@ -46,6 +50,8 @@ const AllUsersList = () => {
       icon: <FaUserShield size={22} />,
       iconBg: "bg-green-100",
       iconColor: "text-green-500",
+      growthIcon:<FaArrowUp size={20}/>,
+      growthColor:"text-green-500",
     },
 
     {
@@ -56,6 +62,8 @@ const AllUsersList = () => {
       icon: <FaUserLock size={22} />,
       iconBg: "bg-red-100",
       iconColor: "text-red-500",
+      growthIcon:<FaArrowDown size={20}/>,
+      growthColor:"text-red-500",
     },
 
     {
@@ -66,6 +74,8 @@ const AllUsersList = () => {
       icon: <RiUserAddFill size={22} />,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-500",
+      growthIcon:<FaArrowUp size={20}/>,
+      growthColor:"text-green-500",
     },
 
     {
@@ -76,6 +86,8 @@ const AllUsersList = () => {
       icon: <MdVerifiedUser size={24} />,
       iconBg: "bg-green-100",
       iconColor: "text-green-500",
+      growthIcon:<FaArrowUp size={20}/>,
+      growthColor:"text-green-500",
     },
   ];
 
@@ -90,7 +102,6 @@ const AllUsersList = () => {
       userId: "#USR0934",
       email: "john.doe@example.com",
       phone: "+91 99843 43243",
-      role: "Provider",
       roleColor:
         "bg-blue-100 text-blue-500",
       status: "active",
@@ -106,7 +117,6 @@ const AllUsersList = () => {
       userId: "#USR2034",
       email: "aman@example.com",
       phone: "+91 99843 12345",
-      role: "User",
       roleColor:
         "bg-purple-100 text-purple-500",
       status: "blocked",
@@ -131,6 +141,8 @@ const AllUsersList = () => {
               icon={item.icon}
               iconBg={item.iconBg}
               iconColor={item.iconColor}
+              growthIcon={item.growthIcon}
+              growthColor={item.growthColor}
             />
           ))}
         </div>
@@ -173,11 +185,11 @@ const AllUsersList = () => {
 
           {/* table */}
 
-          <div className="border border-slate-300 rounded-xl overflow-hidden">
+          <div className="border border-slate-300 rounded-xl">
 
             {/* table heading */}
 
-            <div className="grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1fr_1fr_1fr] items-center justify-items-center mt-3 font-semibold px-3">
+            <div className="grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1fr_1fr] items-center justify-items-start mt-3 font-semibold px-4">
 
               <span className="text-black/80 text-lg">
                 User
@@ -191,9 +203,7 @@ const AllUsersList = () => {
                 Phone
               </span>
 
-              <span className="text-black/80 text-lg">
-                Role
-              </span>
+             
 
               <span className="text-black/80 text-lg">
                 Status
@@ -225,11 +235,11 @@ const AllUsersList = () => {
                   key={user.id}
                   className="
                     grid
-                    grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1fr_1fr_1fr]
+                    grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1fr_1fr]
                     items-center
-                    justify-items-center
+                    justify-items-start
                     gap-3
-                    px-3
+                    px-4
                   "
                 >
 
@@ -257,19 +267,7 @@ const AllUsersList = () => {
                     </p>
                   </div>
 
-                  {/* role */}
-
-                  <div>
-                    <span
-                      className={`
-                        px-3 py-1 rounded-md text-sm font-medium
-                        ${user.roleColor}
-                      `}
-                    >
-                      {user.role}
-                    </span>
-                  </div>
-
+                 
                   {/* status */}
 
                   <div>

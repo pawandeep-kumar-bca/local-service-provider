@@ -215,7 +215,7 @@ const AllCategoriesList = () => {
 
           {/* table */}
 
-          <div className="border border-slate-300 rounded-xl overflow-hidden">
+          <div className="border border-slate-300 rounded-xl">
 
             {/* heading */}
 

@@ -203,7 +203,7 @@ const AllProvidersList = () => {
 
           {/* table */}
 
-          <div className="border border-slate-300 rounded-xl overflow-hidden">
+          <div className="border border-slate-300 rounded-xl">
 
             {/* table heading */}
 

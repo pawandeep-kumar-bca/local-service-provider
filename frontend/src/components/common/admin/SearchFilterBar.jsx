@@ -1,7 +1,7 @@
 
 import React from "react";
 import { IoSearch } from "react-icons/io5";
-import CustomDatePicker from "./CustomDatePicker";
+import CustomDatePicker from "../CustomDatePicker";
 
 const SearchFilterBar = ({
   placeholder,

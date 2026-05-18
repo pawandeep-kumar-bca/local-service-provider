@@ -10,7 +10,7 @@ const StatsCard = ({
   growthIcon,
   iconBg,
   iconColor,
-  growthColor = "text-green-500",
+  growthColor 
 }) => {
   return (
     <div
@@ -39,7 +39,9 @@ const StatsCard = ({
         >
           {icon}
         </div>
+          <div>
 
+          
         <div className="flex-1">
           <h1 className="text-sm text-black/60 font-medium">
             {title}
@@ -49,9 +51,10 @@ const StatsCard = ({
             {value}
           </h2>
         </div>
+         
       </div>
-
-      <div className="flex items-center justify-end gap-2 mt-2 flex-wrap">
+      </div>
+<div className="flex items-center justify-center gap-2 mt-2 ">
         <span
           className={`
             ${growthColor}
@@ -68,6 +71,7 @@ const StatsCard = ({
           from last month
         </p>
       </div>
+     
     </div>
   );
 };

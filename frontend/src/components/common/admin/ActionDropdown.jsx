@@ -44,7 +44,7 @@ const ActionDropdown = ({ items = [] }) => {
           rounded-xl
           border border-slate-300
           flex items-center justify-center
-          text-muted
+          text-muted 
           hover:bg-slate-100
           transition-all duration-300
           cursor-pointer
@@ -57,9 +57,10 @@ const ActionDropdown = ({ items = [] }) => {
         <div
           className="
             absolute
+            
             top-12
             right-0
-            z-[999]
+            z-[9999]
             min-w-[220px]
             bg-white
             border border-slate-200
