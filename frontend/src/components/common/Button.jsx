@@ -16,7 +16,7 @@ const Button = ({
     blue: "bg-[#2563EB] text-white shadow-[#2563EB]/50 hover:bg-[#3B82F6] ",
     purple:"bg-purple-600 text-white shadow-purple-300 hover:bg-purple-700",
     danger: "bg-[#EF4444] text-white hover:bg-[#DC2626]",
-    pending: "bg-[#FBBF24] text-white hover:bg-[#F59E0B]",
+    yellow: "bg-[#FBBF24] text-white hover:bg-[#F59E0B]",
     gray:'bg-white border border-gray-300 text-gray-700'
   };
 

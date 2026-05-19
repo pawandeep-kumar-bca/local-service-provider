@@ -25,9 +25,10 @@ import UserInfo from "../../components/common/admin/UserInfo";
 import ActionDropdown from "../../components/common/admin/ActionDropdown";
 import StatusBudge from "../../components/common/StatusBadge";
 import Modal from "../../components/common/Modal"
+import { useNavigate } from "react-router-dom";
 
 const AllUsersList = () => {
-
+ const navigate = useNavigate()
   // stats data
 
   const statsData = [
@@ -306,7 +307,7 @@ const AllUsersList = () => {
                         ),
 
                         onClick: () =>
-                          console.log("view"),
+                         navigate('/admin/users/view-user-profile')
                       },
 
                       {
