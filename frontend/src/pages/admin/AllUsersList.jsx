@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   FaArrowDown,
@@ -24,6 +24,7 @@ import TableWrapper from "../../components/common/admin/TableWrapper";
 import UserInfo from "../../components/common/admin/UserInfo";
 import ActionDropdown from "../../components/common/admin/ActionDropdown";
 import StatusBudge from "../../components/common/StatusBadge";
+import Modal from "../../components/common/Modal"
 
 const AllUsersList = () => {
 
@@ -124,7 +125,7 @@ const AllUsersList = () => {
       bookings: 5,
     },
   ];
-
+ const [isOpen,setIsOpen]= useState(false)
   return (
     <>
       <div>
@@ -182,11 +183,11 @@ const AllUsersList = () => {
               },
             ]}
           />
-
+ 
           {/* table */}
 
           <div className="border border-slate-300 rounded-xl">
-
+ 
             {/* table heading */}
 
             <div className="grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1fr_1fr] items-center justify-items-start mt-3 font-semibold px-4">
@@ -367,10 +368,10 @@ const AllUsersList = () => {
 
                         variant: "danger",
 
-                        onClick: () =>
-                          console.log(
-                            "delete"
-                          ),
+                        onClick: () =>{
+                          setIsOpen(true)
+                        }
+                         
                       },
                     ]}
                   />
@@ -381,6 +382,20 @@ const AllUsersList = () => {
           </div>
         </TableWrapper>
       </div>
+      {
+        isOpen && <Modal isOpen={isOpen} onClose={()=>setIsOpen(false)} title="Delete User" showFooter size="sm"
+        children={<div className="flex flex-col items-center text-center">
+          <div className="text-red-500 bg-red-100 w-14 h-14 rounded-full flex items-center justify-center mb-4">
+            <RiDeleteBin6Line size={26}/>
+          </div>
+          <h2 className="text-xl text-red-500 font-bold mb-4">Delete User</h2>
+          <p className="text-red-500 font-semibold text-sm mb-4">
+        Are you sure you want delete this user? This action cannot be undone.</p>
+          </div>
+
+        } rightBtnText="Delete Permanently" rightBtnColor="danger" leftBtnColor="white"/>
+        
+      }
     </>
   );
 };

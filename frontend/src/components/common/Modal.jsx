@@ -4,11 +4,13 @@ import Button from "./Button";
 const Modal = ({
   isOpen,
   onClose,
-  title = "Modal Title",
   children,
   onConfirm,
   showFooter = true,
   size = "md",
+  rightBtnColor,
+  rightBtnText,
+  leftBtnColor
 }) => {
   if (!isOpen) return null;
 
@@ -35,6 +37,7 @@ const Modal = ({
           bg-white
           rounded-2xl
           shadow-[0_10px_40px_rgba(0,0,0,0.2)]
+          pt-10 pb-2
           relative
           overflow-hidden
           animate-in
@@ -43,37 +46,36 @@ const Modal = ({
           duration-200
           max-h-[90vh]
           overflow-y-auto
+          relative
         `}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
 
-        <div className="flex items-center justify-between border-b px-5 py-4">
-          <h2 className="text-xl md:text-2xl font-semibold text-text">
-            {title}
-          </h2>
+      
+          
 
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 transition-all"
+            className="p-2 rounded-full hover:bg-gray-100 transition-all absolute top-2  right-2 cursor-pointer"
           >
             <IoClose className="text-2xl" />
           </button>
-        </div>
+       
 
         {/* Body */}
-
-        <div className="p-5">{children}</div>
+          
+        <div className="px-5 ">{children}</div>
 
         {/* Footer */}
 
         {showFooter && (
-          <div className="flex justify-end gap-3 border-t px-5 py-4 bg-gray-50">
-            <Button onClick={onClose} color="danger">
+          <div className="flex justify-end gap-3 px-5 py-4 bg-white">
+            <Button onClick={onClose} color={leftBtnColor}>
               Cancel
             </Button>
 
-            <Button onClick={onConfirm}>Confirm</Button>
+            <Button onClick={onConfirm} color={rightBtnColor}>{rightBtnText}</Button>
           </div>
         )}
       </div>
