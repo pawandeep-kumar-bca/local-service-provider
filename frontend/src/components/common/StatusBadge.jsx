@@ -18,6 +18,7 @@ const StatusBadge = ({
   // STATUS BADGES
   const badges = {
     active: "bg-green-100 text-green-600 border-green-200",
+   success: "bg-green-100 text-green-600 border-green-200",
     verified: "bg-green-100 text-green-600 border-green-200",
    available: "bg-green-100 text-green-600 border-green-200",
    accepted: "bg-green-100 text-green-600 border-green-200",
