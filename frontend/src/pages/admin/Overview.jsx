@@ -3,9 +3,9 @@ import React from 'react'
 const Overview = () => {
   return (
     <div>
-      <h2 className='text-2xl font-bold text-text mt-7'>Statistics</h2>
+      <h1 className='text-xl font-bold text-text '>Statistics</h1>
 
-      <div className='flex justify-between mt-5 mb-4'>
+      <div className='flex justify-between mt-3 mb-4'>
         <div className='text-center'>
           <h3 className='text-sm font-semibold text-muted mb-1'>Total Bookings</h3>
           <span className='text-2xl font-semibold text-text'>12</span>

@@ -67,20 +67,20 @@ const ViewUserProfile = () => {
       </div>
       <div className="flex gap-3 mt-5">
         <div className="border border-gray-300 rounded-2xl  gap-1 py-3 px-6 shadow-[0_0_10px_rgba(0,0,0,0.2)] flex-1">
-            <div className="flex justify-around">
+            <div className="flex justify-around border-b border-gray-300">
                 <NavLink
                 to='/admin/users/view-user-profile'
                 end
-                className={({isActive})=>` text-lg transition-all cursor-pointer duration-300 font-semibold ${isActive ?'text-primary border-b-[2px] border-primary':'text-muted border-b-[2px] border-transparent hover:text-primary hover:border-b-[2px] hover:border-primary'}`}>Overview</NavLink>
+                className={({isActive})=>` text-lg transition-all cursor-pointer duration-300 font-semibold ${isActive ?'text-primary border-b-[2px] pb-2 border-primary':'text-muted border-b-[2px] pb-2 border-transparent hover:text-primary hover:border-b-[2px] hover:border-primary'}`}>Overview</NavLink>
                 <NavLink
                 to='/admin/users/view-user-profile/booking-history'
-                 className={({isActive})=>` text-lg transition-all cursor-pointer duration-300 font-semibold ${isActive ?'text-primary border-b-[2px] border-primary':'text-muted border-b-[2px] border-transparent hover:text-primary hover:border-b-[2px] hover:border-primary'}`}>Booking History</NavLink>
+                 className={({isActive})=>` text-lg transition-all cursor-pointer duration-300 font-semibold ${isActive ?'text-primary border-b-[2px] pb-2 border-primary':'text-muted border-b-[2px] pb-2 border-transparent hover:text-primary hover:border-b-[2px] hover:border-primary'}`}>Booking History</NavLink>
                 <NavLink
                 to='/admin/users/view-user-profile/payment-history'
-                 className={({isActive})=>` text-lg transition-all cursor-pointer duration-300 font-semibold ${isActive ?'text-primary border-b-[2px] border-primary':'text-muted border-b-[2px] border-transparent hover:text-primary hover:border-b-[2px] hover:border-primary'}`}>Payment History</NavLink>
+                 className={({isActive})=>` text-lg transition-all cursor-pointer duration-300 font-semibold ${isActive ?'text-primary border-b-[2px] pb-2 border-primary':'text-muted border-b-[2px] pb-2 border-transparent hover:text-primary hover:border-b-[2px] hover:border-primary'}`}>Payment History</NavLink>
                 <NavLink
                to='/admin/users/view-user-profile/active-logs'
-                 className={({isActive})=>` text-lg transition-all cursor-pointer duration-300 font-semibold ${isActive ?'text-primary border-b-[2px] border-primary':'text-muted border-b-[2px] border-transparent hover:text-primary hover:border-b-[2px] hover:border-primary'}`}>Active Logs</NavLink>
+                 className={({isActive})=>` text-lg transition-all cursor-pointer duration-300 font-semibold ${isActive ?'text-primary border-b-[2px] pb-2 border-primary':'text-muted border-b-[2px] pb-2 border-transparent hover:text-primary hover:border-b-[2px] hover:border-primary'}`}>Active Logs</NavLink>
             </div>
             <div className="mt-4">
                 <Outlet/>
