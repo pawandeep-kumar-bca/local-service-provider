@@ -58,6 +58,10 @@ import NotificationSettings from "../pages/provider/NotificationSettings";
 import ProfileInfoSettings from "../pages/provider/ProfileSettings";
 import AllProvidersList from "../pages/admin/AllProvidersList";
 import ViewUserProfile from "../pages/admin/ViewUserProfile";
+import Overview from "../pages/admin/Overview";
+import BookingHistory from "../pages/admin/BookingHistory";
+import PaymentUserHistory from "../pages/admin/PaymentHistory";
+import ActiveLogs from "../pages/admin/ActiveLogs";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -163,10 +167,7 @@ const AppRoutes = () => {
                 path="notification-settings"
                 element={<NotificationSettings />}
               />
-              <Route
-                path="change-password"
-                element={<ChangePassword/>}
-              />
+              <Route path="change-password" element={<ChangePassword />} />
             </Route>
             <Route
               path="/provider/mobile/edit-profile"
@@ -187,7 +188,16 @@ const AppRoutes = () => {
           <Route element={<RoleRoute allowedRoles={["admin"]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AllUsersList />} />
-            <Route path="/admin/users/view-user-profile" element={<ViewUserProfile />} />
+            <Route
+              path="/admin/users/view-user-profile"
+              element={<ViewUserProfile />}
+            >
+              <Route index element={<Overview />} />
+              <Route path="booking-history" element={<BookingHistory />} />
+              <Route path="payment-history" element={<PaymentUserHistory />} />
+              <Route path="active-logs" element={<ActiveLogs />} />
+            </Route>
+
             <Route path="/admin/providers" element={<AllProvidersList />} />
             <Route path="/admin/bookings" element={<AllBookingsList />} />
             <Route path="/admin/categories" element={<AllCategoriesList />} />
