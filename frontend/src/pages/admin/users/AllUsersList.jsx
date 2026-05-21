@@ -18,14 +18,16 @@ import {
   MdVerifiedUser,
 } from "react-icons/md";
 
-import StatsCard from "../../components/common/admin/StatsCard";
-import SearchFilterBar from "../../components/common/admin/SearchFilterBar";
-import TableWrapper from "../../components/common/admin/TableWrapper";
-import UserInfo from "../../components/common/admin/UserInfo";
-import ActionDropdown from "../../components/common/admin/ActionDropdown";
-import StatusBudge from "../../components/common/StatusBadge";
-import Modal from "../../components/common/Modal"
+import StatsCard from "../../../components/common/admin/StatsCard";
+import SearchFilterBar from "../../../components/common/admin/SearchFilterBar";
+import TableWrapper from "../../../components/common/admin/TableWrapper";
+import UserInfo from "../../../components/common/admin/UserInfo";
+import ActionDropdown from "../../../components/common/admin/ActionDropdown";
+import StatusBudge from "../../../components/common/StatusBadge";
+
 import { useNavigate } from "react-router-dom";
+import { IoIosWarning } from "react-icons/io";
+import DeleteModal from "../modals/DeleteModal";
 
 const AllUsersList = () => {
  const navigate = useNavigate()
@@ -127,6 +129,7 @@ const AllUsersList = () => {
     },
   ];
  const [isOpen,setIsOpen]= useState(false)
+ const [isSuspend,setIsSuspend]= useState(false)
   return (
     <>
       <div>
@@ -352,9 +355,7 @@ const AllUsersList = () => {
                         variant: "warning",
 
                         onClick: () =>
-                          console.log(
-                            "suspend"
-                          ),
+                          setIsSuspend(true)
                       },
 
                       {
@@ -383,18 +384,40 @@ const AllUsersList = () => {
           </div>
         </TableWrapper>
       </div>
+     {
+        isOpen && isOpen && <DeleteModal open={isOpen} close={()=>setIsOpen(false)}/>
+        
+      }
       {
-        isOpen && <Modal isOpen={isOpen} onClose={()=>setIsOpen(false)} title="Delete User" showFooter size="sm"
-        children={<div className="flex flex-col items-center text-center">
-          <div className="text-red-500 bg-red-100 w-14 h-14 rounded-full flex items-center justify-center mb-4">
-            <RiDeleteBin6Line size={26}/>
+        isSuspend && <Modal isOpen={isSuspend} onClose={()=>setIsSuspend(false)} title="Delete User" showFooter size="sm"
+        children={
+      <div className="flex flex-col items-center text-center">
+          <div className="text-yellow-500 bg-yellow-100 w-14 h-14 rounded-full flex items-center justify-center mb-4">
+            <IoIosWarning size={26}/>
           </div>
-          <h2 className="text-xl text-red-500 font-bold mb-4">Delete User</h2>
-          <p className="text-red-500 font-semibold text-sm mb-4">
-        Are you sure you want delete this user? This action cannot be undone.</p>
+          <h2 className="text-xl text-text font-bold mb-4">Suspend User</h2>
+          <p className="text-muted font-semibold text-sm mb-4">
+        Are you sure you want suspend this user? User will not be able to login or access the system.</p>
+
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col items-start gap-2 w-full">
+            <label htmlFor="reason" className="text-sm font-semibold text-text">
+              Reason
+            </label>
+            <select name="reason" id="reason" className="border border-muted rounded-lg py-1 px-2 text-sm inline-block w-full">
+                <option value="Suspicious Activity">Suspicious Activity</option>
+                <option value="Fake Booking Attempts">Fake Booking Attempts</option>
+                <option value="Fake Reviews or Ratings">Fake Reviews or Ratings</option>
+              </select>
+          </div>
+          <div className="flex flex-col items-start gap-2">
+            <label htmlFor="note" className="text-sm font-semibold text-text">Note (Optional)</label>
+            <textarea rows={2} name="note" className="border border-muted rounded-lg py-1 px-2 text-sm w-full"/>
+          </div>
+        </div>
           </div>
 
-        } rightBtnText="Delete Permanently" rightBtnColor="danger" leftBtnColor="white"/>
+        } rightBtnText="Suspend User" rightBtnColor="yellow" leftBtnColor="white"/>
         
       }
     </>

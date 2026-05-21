@@ -1,5 +1,5 @@
 import React from "react";
-import StatusBadge from "../../components/common/StatusBadge";
+import StatusBadge from "../../../components/common/StatusBadge";
 
 import { FaChrome } from "react-icons/fa";
 import { MdLogin } from "react-icons/md";

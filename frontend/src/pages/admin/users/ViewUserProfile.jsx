@@ -1,10 +1,16 @@
-import StatusBadge from "../../components/common/StatusBadge";
+import StatusBadge from "../../../components/common/StatusBadge";
 import { NavLink, Outlet } from "react-router-dom";
-import Button from '../../components/common/Button'
+import Button from '../../../components/common/Button'
 import { MdBlock, MdDeleteOutline, MdLockReset, MdOutlineEdit } from "react-icons/md";
+import { useState } from "react";
+
+import { RiDeleteBin6Line } from "react-icons/ri";
+import DeleteModal from "../modals/DeleteModal";
 const ViewUserProfile = () => {
-    
+    const [isOpen,setIsOpen]= useState(false)
   return (
+    <>
+
     <div>
       <button className="flex items-center gap-2 cursor-pointer" type="button">
         <h2 className="text-3xl text-text font-bold">Back to Users</h2>
@@ -95,12 +101,18 @@ const ViewUserProfile = () => {
                 </div>
                 <div className="flex mt-5 gap-3 w-full">
                     <Button color="yellow" fullWidth><MdBlock size={20}/>Suspend User</Button>
-                    <Button color="danger" fullWidth><MdDeleteOutline size={20}/>Delete User</Button>
+                    <Button color="danger" fullWidth onClick={ () =>setIsOpen(true)}><MdDeleteOutline size={20}/>Delete User</Button>
                 </div>
             </div>
         </div>
       </div>
     </div>
+
+ {
+        isOpen && <DeleteModal open={isOpen} close={()=>setIsOpen(false)}/>
+        
+      }
+    </>
   );
 };
 

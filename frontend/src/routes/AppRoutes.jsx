@@ -20,7 +20,7 @@ import AllBookings from "../pages/provider/AllBookings";
 
 // Admin
 import AdminDashboard from "../pages/admin/AdminDashboardPage";
-import AllUsersList from "../pages/admin/AllUsersList";
+import AllUsersList from "../pages/admin/users/AllUsersList";
 import AllBookingsList from "../pages/admin/AllBookingsList";
 import AllCategoriesList from "../pages/admin/AllCategoriesList";
 import AllPayments from "../pages/admin/AllPayments";
@@ -57,11 +57,11 @@ import ProviderSchedule from "../pages/provider/ProviderSchedule";
 import NotificationSettings from "../pages/provider/NotificationSettings";
 import ProfileInfoSettings from "../pages/provider/ProfileSettings";
 import AllProvidersList from "../pages/admin/AllProvidersList";
-import ViewUserProfile from "../pages/admin/ViewUserProfile";
-import Overview from "../pages/admin/Overview";
-import BookingHistory from "../pages/admin/BookingHistory";
-import PaymentUserHistory from "../pages/admin/PaymentHistory";
-import ActiveLogs from "../pages/admin/ActiveLogs";
+import ViewUserProfile from "../pages/admin/users/ViewUserProfile";
+import Overview from "../pages/admin/users/Overview";
+import BookingHistory from "../pages/admin/users/BookingHistory";
+import PaymentUserHistory from "../pages/admin/users/PaymentHistory";
+import ActiveLogs from "../pages/admin/users/ActiveLogs";
 const AppRoutes = () => {
   return (
     <Routes>
