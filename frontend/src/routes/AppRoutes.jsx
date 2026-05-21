@@ -21,7 +21,7 @@ import AllBookings from "../pages/provider/AllBookings";
 // Admin
 import AdminDashboard from "../pages/admin/AdminDashboardPage";
 import AllUsersList from "../pages/admin/users/AllUsersList";
-import AllBookingsList from "../pages/admin/AllBookingsList";
+import AllBookingsList from "../pages/admin/bookings/AllBookingsList";
 import AllCategoriesList from "../pages/admin/AllCategoriesList";
 import AllPayments from "../pages/admin/AllPayments";
 import AllReports from "../pages/admin/AllReports";
@@ -62,6 +62,7 @@ import Overview from "../pages/admin/users/Overview";
 import BookingHistory from "../pages/admin/users/BookingHistory";
 import PaymentUserHistory from "../pages/admin/users/PaymentHistory";
 import ActiveLogs from "../pages/admin/users/ActiveLogs";
+import BookingDetails from "../pages/admin/bookings/bookingDetails";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -200,6 +201,7 @@ const AppRoutes = () => {
 
             <Route path="/admin/providers" element={<AllProvidersList />} />
             <Route path="/admin/bookings" element={<AllBookingsList />} />
+            <Route path="/admin/bookings/booking-details" element={<BookingDetails/>}/>
             <Route path="/admin/categories" element={<AllCategoriesList />} />
             <Route path="/admin/payments" element={<AllPayments />} />
             <Route path="/admin/reports" element={<AllReports />} />

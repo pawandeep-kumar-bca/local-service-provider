@@ -21,15 +21,16 @@ import {
 
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-import StatsCard from "../../components/common/admin/StatsCard";
-import SearchFilterBar from "../../components/common/admin/SearchFilterBar";
-import TableWrapper from "../../components/common/admin/TableWrapper";
-import UserInfo from "../../components/common/admin/UserInfo";
-import ActionDropdown from "../../components/common/admin/ActionDropdown";
-import StatusBudge from "../../components/common/StatusBadge";
+import StatsCard from "../../../components/common/admin/StatsCard";
+import SearchFilterBar from "../../../components/common/admin/SearchFilterBar";
+import TableWrapper from "../../../components/common/admin/TableWrapper";
+import UserInfo from "../../../components/common/admin/UserInfo";
+import ActionDropdown from "../../../components/common/admin/ActionDropdown";
+import StatusBudge from "../../../components/common/StatusBadge";
+import { useNavigate } from "react-router-dom";
 
 const AllBookingsList = () => {
-
+   const navigate = useNavigate()
   // stats data
 
   const statsData = [
@@ -407,7 +408,7 @@ const AllBookingsList = () => {
                         ),
 
                         onClick: () =>
-                          console.log("view"),
+                          navigate('/admin/bookings/booking-details')
                       },
 
                       {
