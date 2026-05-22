@@ -1,5 +1,5 @@
 import StatusBadge from "../../../components/common/StatusBadge";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Button from "../../../components/common/Button";
 import {
   MdBlock,
@@ -12,17 +12,20 @@ import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import DeleteModal from "../modals/DeleteModal";
 import SuspendModal from "../modals/SuspendModal";
+import { FaAngleLeft } from "react-icons/fa";
 const ViewUserProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSuspend, setIsSuspend] = useState(false);
+  const navigate= useNavigate()
   return (
     <>
       <div>
         <button
-          className="flex items-center gap-2 cursor-pointer"
+          className="flex items-center  cursor-pointer text-2xl text-text font-bold"
           type="button"
         >
-          <h2 className="text-3xl text-text font-bold">Back to Users</h2>
+          <FaAngleLeft />
+          Back to Users
         </button>
         <div className="flex gap-3 mt-4">
           <div className="border border-gray-300 rounded-2xl flex flex-col items-center gap-1 px-5 py-6 shadow-[0_0_10px_rgba(0,0,0,0.2)] flex-[0.5]">
@@ -149,7 +152,7 @@ const ViewUserProfile = () => {
             <h1 className="text-2xl font-bold text-text">Actions</h1>
             <div className="mt-6 mb-5">
               <div className="flex gap-3 w-full">
-                <Button color="blue" fullWidth>
+                <Button color="blue" fullWidth onClick={()=>navigate('/admin/users/edit-user')}>
                   <MdOutlineEdit size={20} />
                   Edit User
                 </Button>

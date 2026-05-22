@@ -326,7 +326,7 @@ const AllUsersList = () => {
                         variant: "primary",
 
                         onClick: () =>
-                          console.log("edit"),
+                         navigate('/admin/users/edit-user')
                       },
 
                       {

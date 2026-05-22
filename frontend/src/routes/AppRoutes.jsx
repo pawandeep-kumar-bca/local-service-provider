@@ -63,6 +63,7 @@ import BookingHistory from "../pages/admin/users/BookingHistory";
 import PaymentUserHistory from "../pages/admin/users/PaymentHistory";
 import ActiveLogs from "../pages/admin/users/ActiveLogs";
 import BookingDetails from "../pages/admin/bookings/bookingDetails";
+import EditUser from "../pages/admin/users/EditUser";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -198,7 +199,7 @@ const AppRoutes = () => {
               <Route path="payment-history" element={<PaymentUserHistory />} />
               <Route path="active-logs" element={<ActiveLogs />} />
             </Route>
-
+           <Route path="/admin/users/edit-user" element={<EditUser/>}/>
             <Route path="/admin/providers" element={<AllProvidersList />} />
             <Route path="/admin/bookings" element={<AllBookingsList />} />
             <Route path="/admin/bookings/booking-details" element={<BookingDetails/>}/>

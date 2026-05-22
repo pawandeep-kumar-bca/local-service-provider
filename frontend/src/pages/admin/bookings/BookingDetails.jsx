@@ -1,7 +1,9 @@
 import React from 'react'
 import StatusBadge from '../../../components/common/StatusBadge'
 import UserInfo from '../../../components/common/admin/UserInfo'
-
+import { MdOutlineEmail } from 'react-icons/md'
+import { IoCallOutline } from 'react-icons/io5'
+import { CiLocationOn } from "react-icons/ci";
 const BookingDetails = () => {
   return (
     <div>
@@ -42,28 +44,28 @@ const BookingDetails = () => {
                 <h2>Customer</h2>
                <UserInfo name="John" image="https://randomuser.me/api/portraits/men/30.jpg" id="#USE4943"/>
                <div>
-                <span>+91 98453 24423</span>
+                <span><IoCallOutline />+91 98453 24423</span>
                </div>
                <div>
-                <span>john.doe@example.com</span>
+                <span><MdOutlineEmail /> john.doe@example.com</span>
                </div>
                <div>
                 <span>Address</span>
-                <span>132,Green Park ,New delhi,india</span>
+                <span><CiLocationOn />132,Green Park ,New delhi,india</span>
                </div>
             </div>
             <div>
                 <h2>Provider</h2>
                <UserInfo name="John" image="https://randomuser.me/api/portraits/men/30.jpg" id="#USE4943"/>
                <div>
-                <span>+91 98453 24423</span>
+                <span><IoCallOutline />+91 98453 24423</span>
                </div>
                <div>
-                <span>john.doe@example.com</span>
+                <span><MdOutlineEmail />john.doe@example.com</span>
                </div>
                <div>
                 <span>Address</span>
-                <span>132,Green Park ,New delhi,india</span>
+                <span><CiLocationOn />132,Green Park ,New delhi,india</span>
                </div>
             </div>
         </div>
