@@ -13,9 +13,11 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import DeleteModal from "../modals/DeleteModal";
 import SuspendModal from "../modals/SuspendModal";
 import { FaAngleLeft } from "react-icons/fa";
+import ResetPasswordModal from "../modals/ResetPasswordModal";
 const ViewUserProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSuspend, setIsSuspend] = useState(false);
+  const [isResetPassword,setIsResetPassword]= useState(false)
   const navigate= useNavigate()
   return (
     <>
@@ -156,7 +158,7 @@ const ViewUserProfile = () => {
                   <MdOutlineEdit size={20} />
                   Edit User
                 </Button>
-                <Button color="success" fullWidth>
+                <Button color="success" fullWidth onClick={()=>setIsResetPassword(true)}>
                   <MdLockReset size={20} />
                   Reset Password
                 </Button>
@@ -188,6 +190,9 @@ const ViewUserProfile = () => {
       {isSuspend && (
         <SuspendModal open={isSuspend} close={() => setIsSuspend(false)} />
       )}
+      {
+        isResetPassword && (<ResetPasswordModal onClick={isResetPassword} onClose={()=>setIsResetPassword(false)}/>)
+      }
     </>
   );
 };

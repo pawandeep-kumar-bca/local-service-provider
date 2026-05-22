@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosWarning } from "react-icons/io";
 import DeleteModal from "../modals/DeleteModal";
 import SuspendModal from "../modals/SuspendModal";
+import ResetPasswordModal from "../modals/ResetPasswordModal";
 
 const AllUsersList = () => {
  const navigate = useNavigate()
@@ -131,6 +132,7 @@ const AllUsersList = () => {
   ];
  const [isOpen,setIsOpen]= useState(false)
  const [isSuspend,setIsSuspend]= useState(false)
+ const [isResetPassword,setIsResetPassword]= useState(false)
   return (
     <>
       <div>
@@ -340,7 +342,7 @@ const AllUsersList = () => {
                         ),
 
                         onClick: () =>
-                          console.log("reset"),
+                         setIsResetPassword(true)
                       },
 
                       {
@@ -392,6 +394,9 @@ const AllUsersList = () => {
       {
         isSuspend && <SuspendModal open={isSuspend} close={()=>setIsSuspend(false)}/>
         
+      }
+      {
+        isResetPassword && <ResetPasswordModal onClick={isResetPassword} onClose={()=>setIsResetPassword(false)}/>
       }
     </>
   );
