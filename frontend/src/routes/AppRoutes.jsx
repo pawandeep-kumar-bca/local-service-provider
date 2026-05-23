@@ -56,7 +56,7 @@ import ProviderReviews from "../pages/provider/ProviderReviews";
 import ProviderSchedule from "../pages/provider/ProviderSchedule";
 import NotificationSettings from "../pages/provider/NotificationSettings";
 import ProfileInfoSettings from "../pages/provider/ProfileSettings";
-import AllProvidersList from "../pages/admin/AllProvidersList";
+import AllProvidersList from "../pages/admin/providers/AllProvidersList";
 import ViewUserProfile from "../pages/admin/users/ViewUserProfile";
 import Overview from "../pages/admin/users/Overview";
 import BookingHistory from "../pages/admin/users/BookingHistory";
@@ -199,6 +199,9 @@ const AppRoutes = () => {
               <Route path="payment-history" element={<PaymentUserHistory />} />
               <Route path="active-logs" element={<ActiveLogs />} />
             </Route>
+             <Route path="/admin/users/booking-history" element={<BookingHistory />} />
+              <Route path="/admin/users/payment-history" element={<PaymentUserHistory />} />
+              <Route path="/admin/users/active-logs" element={<ActiveLogs />} />
            <Route path="/admin/users/edit-user" element={<EditUser/>}/>
             <Route path="/admin/providers" element={<AllProvidersList />} />
             <Route path="/admin/bookings" element={<AllBookingsList />} />

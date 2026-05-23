@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
 import {
-  FaArrowDown,
-  FaArrowUp,
+  
   FaUser,
   FaUserLock,
   FaUserShield,
@@ -26,13 +25,15 @@ import ActionDropdown from "../../../components/common/admin/ActionDropdown";
 import StatusBudge from "../../../components/common/StatusBadge";
 
 import { useNavigate } from "react-router-dom";
-import { IoIosWarning } from "react-icons/io";
+import { IoIosWarning, IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 import DeleteModal from "../modals/DeleteModal";
 import SuspendModal from "../modals/SuspendModal";
 import ResetPasswordModal from "../modals/ResetPasswordModal";
+import { FiBook } from "react-icons/fi";
+import { BsCash } from "react-icons/bs";
 
 const AllUsersList = () => {
- const navigate = useNavigate()
+  const navigate = useNavigate();
   // stats data
 
   const statsData = [
@@ -44,8 +45,8 @@ const AllUsersList = () => {
       icon: <FaUser size={22} />,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-500",
-      growthIcon:<FaArrowUp size={20}/>,
-      growthColor:"text-green-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -56,8 +57,8 @@ const AllUsersList = () => {
       icon: <FaUserShield size={22} />,
       iconBg: "bg-green-100",
       iconColor: "text-green-500",
-      growthIcon:<FaArrowUp size={20}/>,
-      growthColor:"text-green-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -68,8 +69,8 @@ const AllUsersList = () => {
       icon: <FaUserLock size={22} />,
       iconBg: "bg-red-100",
       iconColor: "text-red-500",
-      growthIcon:<FaArrowDown size={20}/>,
-      growthColor:"text-red-500",
+      growthIcon: <IoMdArrowRoundDown size={20} />,
+      growthColor: "text-red-500",
     },
 
     {
@@ -80,8 +81,8 @@ const AllUsersList = () => {
       icon: <RiUserAddFill size={22} />,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-500",
-      growthIcon:<FaArrowUp size={20}/>,
-      growthColor:"text-green-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -92,8 +93,8 @@ const AllUsersList = () => {
       icon: <MdVerifiedUser size={24} />,
       iconBg: "bg-green-100",
       iconColor: "text-green-500",
-      growthIcon:<FaArrowUp size={20}/>,
-      growthColor:"text-green-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
   ];
 
@@ -102,14 +103,12 @@ const AllUsersList = () => {
   const users = [
     {
       id: 1,
-      image:
-        "https://randomuser.me/api/portraits/women/34.jpg",
+      image: "https://randomuser.me/api/portraits/women/34.jpg",
       name: "John Doe",
       userId: "#USR0934",
       email: "john.doe@example.com",
       phone: "+91 99843 43243",
-      roleColor:
-        "bg-blue-100 text-blue-500",
+      roleColor: "bg-blue-100 text-blue-500",
       status: "active",
       joinedDate: "May 12, 2024",
       bookings: 12,
@@ -117,26 +116,23 @@ const AllUsersList = () => {
 
     {
       id: 2,
-      image:
-        "https://randomuser.me/api/portraits/men/22.jpg",
+      image: "https://randomuser.me/api/portraits/men/22.jpg",
       name: "Aman Kumar",
       userId: "#USR2034",
       email: "aman@example.com",
       phone: "+91 99843 12345",
-      roleColor:
-        "bg-purple-100 text-purple-500",
+      roleColor: "bg-purple-100 text-purple-500",
       status: "blocked",
       joinedDate: "May 15, 2024",
       bookings: 5,
     },
   ];
- const [isOpen,setIsOpen]= useState(false)
- const [isSuspend,setIsSuspend]= useState(false)
- const [isResetPassword,setIsResetPassword]= useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSuspend, setIsSuspend] = useState(false);
+  const [isResetPassword, setIsResetPassword] = useState(false);
   return (
     <>
       <div>
-
         {/* stats cards */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2 mt-4 mb-6">
@@ -158,7 +154,6 @@ const AllUsersList = () => {
         {/* table wrapper */}
 
         <TableWrapper>
-
           {/* filters */}
 
           <SearchFilterBar
@@ -166,91 +161,77 @@ const AllUsersList = () => {
             filters={[
               {
                 label: "Role",
-                options: [
-                  "User",
-                  "Provider",
-                ],
+                options: ["User", "Provider"],
               },
 
               {
                 label: "Status",
-                options: [
-                  "Active",
-                  "Pending",
-                  "Blocked",
-                ],
+                options: ["Active", "Pending", "Blocked"],
               },
 
               {
                 label: "Verified",
-                options: [
-                  "Verified",
-                  "Not Verified",
-                ],
+                options: ["Verified", "Not Verified"],
               },
             ]}
           />
- 
+
           {/* table */}
 
           <div className="border border-slate-300 rounded-xl">
- 
             {/* table heading */}
 
-            <div className="grid grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1fr_1fr] items-center justify-items-start mt-3 font-semibold px-4">
+           
+              <div
+              className="
+    grid
+    grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_0.7fr_0.4fr]
+    items-center
+    bg-gray-50
+    rounded-xl
+    px-4
+    py-4
+    text-sm
+    font-semibold
+    text-gray-700
+  ">
+              <span className="text-black/80 text-lg">User</span>
 
-              <span className="text-black/80 text-lg">
-                User
-              </span>
+              <span className="text-black/80 text-lg">Email</span>
 
-              <span className="text-black/80 text-lg">
-                Email
-              </span>
+              <span className="text-black/80 text-lg">Phone</span>
 
-              <span className="text-black/80 text-lg">
-                Phone
-              </span>
+              <span className="text-black/80 text-lg">Status</span>
 
-             
+              <span className="text-black/80 text-lg">Joined Date</span>
 
-              <span className="text-black/80 text-lg">
-                Status
-              </span>
+              <span className="text-black/80 text-lg">Bookings</span>
 
-              <span className="text-black/80 text-lg">
-                Joined Date
-              </span>
-
-              <span className="text-black/80 text-lg">
-                Bookings
-              </span>
-
-              <span className="text-black/80 text-lg">
-                Action
-              </span>
-
+              <span className="text-black/80 text-lg">Action</span>
             </div>
 
-            <div className="border-t border-gray-200 mt-3 mb-2"></div>
+            <div className="border-t border-gray-200  mb-2"></div>
 
             {/* rows */}
 
             <div className="space-y-2 pb-3">
-
               {users.map((user) => (
-
-                <div
-                  key={user.id}
+                 <div
                   className="
-                    grid
-                    grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1fr_1fr]
-                    items-center
-                    justify-items-start
-                    gap-3
-                    px-4
-                  "
+    min-w-[1200px]
+    grid
+    grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_0.7fr_0.4fr]
+    items-center
+    px-4
+    py-4
+    rounded-2xl
+    border border-transparent
+    hover:border-gray-200
+    hover:bg-gray-50
+    hover:shadow-sm
+    transition-all duration-200
+  "
                 >
-
                   {/* user info */}
 
                   <UserInfo
@@ -262,42 +243,31 @@ const AllUsersList = () => {
                   {/* email */}
 
                   <div>
-                    <p className="text-sm text-muted">
-                      {user.email}
-                    </p>
+                    <p className="text-sm text-muted">{user.email}</p>
                   </div>
 
                   {/* phone */}
 
                   <div>
-                    <p className="text-sm text-muted">
-                      {user.phone}
-                    </p>
+                    <p className="text-sm text-muted">{user.phone}</p>
                   </div>
 
-                 
                   {/* status */}
 
                   <div>
-                    <StatusBudge
-                      badge={user.status}
-                    />
+                    <StatusBudge badge={user.status} />
                   </div>
 
                   {/* joined date */}
 
                   <div>
-                    <p className="text-sm text-muted">
-                      {user.joinedDate}
-                    </p>
+                    <p className="text-sm text-muted">{user.joinedDate}</p>
                   </div>
 
                   {/* bookings */}
 
                   <div>
-                    <p className="text-sm text-muted">
-                      {user.bookings}
-                    </p>
+                    <p className="text-sm text-muted">{user.bookings}</p>
                   </div>
 
                   {/* actions */}
@@ -306,98 +276,112 @@ const AllUsersList = () => {
                     items={[
                       {
                         label: "View Profile",
-                        icon: (
-                          <MdOutlineRemoveRedEye
-                            size={20}
-                          />
-                        ),
+                        icon: <MdOutlineRemoveRedEye size={20} />,
 
                         onClick: () =>
-                         navigate('/admin/users/view-user-profile')
+                          navigate("/admin/users/view-user-profile"),
+                      },
+                      {
+                        label: "Booking History",
+                        icon: <FiBook size={20} />,
+                        variant: "green",
+
+                        onClick: () => navigate("/admin/users/booking-history"),
+                      },
+
+                      {
+                        label: "Payment History",
+                        icon: <BsCash size={20} />,
+
+                        onClick: () => navigate("/admin/users/payment-history"),
                       },
 
                       {
                         label: "Edit User",
 
-                        icon: (
-                          <MdOutlineEdit
-                            size={20}
-                          />
-                        ),
+                        icon: <MdOutlineEdit size={20} />,
 
                         variant: "primary",
 
-                        onClick: () =>
-                         navigate('/admin/users/edit-user')
+                        onClick: () => navigate("/admin/users/edit-user"),
                       },
 
                       {
-                        label:
-                          "Reset Password",
+                        label: "Reset Password",
 
-                        icon: (
-                          <MdOutlineLock
-                            size={20}
-                          />
-                        ),
+                        icon: <MdOutlineLock size={20} />,
 
-                        onClick: () =>
-                         setIsResetPassword(true)
+                        onClick: () => setIsResetPassword(true),
                       },
 
                       {
-                        label:
-                          "Suspend User",
+                        label: "Suspend User",
 
-                        icon: (
-                          <MdOutlinePauseCircle
-                            size={20}
-                          />
-                        ),
+                        icon: <MdOutlinePauseCircle size={20} />,
 
                         variant: "warning",
 
-                        onClick: () =>
-                          setIsSuspend(true)
+                        onClick: () => setIsSuspend(true),
                       },
 
                       {
-                        label:
-                          "Delete User",
+                        label: "Delete User",
 
-                        icon: (
-                          <RiDeleteBin6Line
-                            size={20}
-                          />
-                        ),
+                        icon: <RiDeleteBin6Line size={20} />,
 
                         variant: "danger",
 
-                        onClick: () =>{
-                          setIsOpen(true)
-                        }
-                         
+                        onClick: () => {
+                          setIsOpen(true);
+                        },
                       },
                     ]}
                   />
-
                 </div>
               ))}
             </div>
           </div>
         </TableWrapper>
       </div>
-     {
-        isOpen && isOpen && <DeleteModal open={isOpen} close={()=>setIsOpen(false)}/>
-        
-      }
-      {
-        isSuspend && <SuspendModal open={isSuspend} close={()=>setIsSuspend(false)}/>
-        
-      }
-      {
-        isResetPassword && <ResetPasswordModal onClick={isResetPassword} onClose={()=>setIsResetPassword(false)}/>
-      }
+      {isOpen && isOpen && (
+        <DeleteModal
+          open={isOpen}
+          close={() => setIsOpen(false)}
+          text=" Are you sure you want delete this user? This action cannot be undone."
+          title="User"
+        />
+      )}
+      {isSuspend && (
+        <SuspendModal
+          open={isSuspend}
+          close={() => setIsSuspend(false)}
+          text="Are you sure you want suspend this user? User will not be able to login or access the system." title='User' reason={[
+            "Spam activity",
+            "Fake account detected",
+            "Multiple policy violations",
+            "Abusive behavior",
+            "Fraudulent transactions",
+            "Suspicious login activity",
+            "Posting inappropriate content",
+            "Harassment or bullying",
+            "Using fake information",
+            "Chargeback or payment fraud",
+            "Violation of platform rules",
+            "Too many failed login attempts",
+            "Account reported by multiple users",
+            "Scam or misleading activity",
+            "Unauthorized access attempt",
+            "Temporary suspension for investigation",
+            "Permanent suspension by admin",
+          ]} rightBtnText='Suspend User'
+        />
+      )}
+      {isResetPassword && (
+        <ResetPasswordModal
+          onClick={isResetPassword}
+          onClose={() => setIsResetPassword(false)}
+        />
+      )}
     </>
   );
 };

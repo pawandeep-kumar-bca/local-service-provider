@@ -17,8 +17,8 @@ import ResetPasswordModal from "../modals/ResetPasswordModal";
 const ViewUserProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSuspend, setIsSuspend] = useState(false);
-  const [isResetPassword,setIsResetPassword]= useState(false)
-  const navigate= useNavigate()
+  const [isResetPassword, setIsResetPassword] = useState(false);
+  const navigate = useNavigate();
   return (
     <>
       <div>
@@ -154,11 +154,19 @@ const ViewUserProfile = () => {
             <h1 className="text-2xl font-bold text-text">Actions</h1>
             <div className="mt-6 mb-5">
               <div className="flex gap-3 w-full">
-                <Button color="blue" fullWidth onClick={()=>navigate('/admin/users/edit-user')}>
+                <Button
+                  color="blue"
+                  fullWidth
+                  onClick={() => navigate("/admin/users/edit-user")}
+                >
                   <MdOutlineEdit size={20} />
                   Edit User
                 </Button>
-                <Button color="success" fullWidth onClick={()=>setIsResetPassword(true)}>
+                <Button
+                  color="success"
+                  fullWidth
+                  onClick={() => setIsResetPassword(true)}
+                >
                   <MdLockReset size={20} />
                   Reset Password
                 </Button>
@@ -186,13 +194,47 @@ const ViewUserProfile = () => {
         </div>
       </div>
 
-      {isOpen && <DeleteModal open={isOpen} close={() => setIsOpen(false)} />}
-      {isSuspend && (
-        <SuspendModal open={isSuspend} close={() => setIsSuspend(false)} />
+      {isOpen && (
+        <DeleteModal
+          open={isOpen}
+          close={() => setIsOpen(false)}
+          text=" Are you sure you want delete this user? This action cannot be undone."
+          title="User"
+        />
       )}
-      {
-        isResetPassword && (<ResetPasswordModal onClick={isResetPassword} onClose={()=>setIsResetPassword(false)}/>)
-      }
+      {isSuspend && (
+        <SuspendModal
+          open={isSuspend}
+          close={() => setIsSuspend(false)}
+          text="Are you sure you want suspend this user? User will not be able to login or access the system."
+          title="User"
+          reason={[
+            "Spam activity",
+            "Fake account detected",
+            "Multiple policy violations",
+            "Abusive behavior",
+            "Fraudulent transactions",
+            "Suspicious login activity",
+            "Posting inappropriate content",
+            "Harassment or bullying",
+            "Using fake information",
+            "Chargeback or payment fraud",
+            "Violation of platform rules",
+            "Too many failed login attempts",
+            "Account reported by multiple users",
+            "Scam or misleading activity",
+            "Unauthorized access attempt",
+            "Temporary suspension for investigation",
+            "Permanent suspension by admin",
+          ]} rightBtnText='Suspend User'
+        />
+      )}
+      {isResetPassword && (
+        <ResetPasswordModal
+          onClick={isResetPassword}
+          onClose={() => setIsResetPassword(false)}
+        />
+      )}
     </>
   );
 };

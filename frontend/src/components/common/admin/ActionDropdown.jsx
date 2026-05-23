@@ -90,6 +90,8 @@ const ActionDropdown = ({ items = [] }) => {
                     ? "hover:bg-red-50 text-red-500"
                     : item.variant === "warning"
                     ? "hover:bg-yellow-50 text-yellow-500"
+                    : item.variant === "green"
+                    ? "hover:bg-green-50 text-green-500"
                     : item.variant === "primary"
                     ? "hover:bg-blue-50 text-blue-500"
                     : "hover:bg-slate-100"
