@@ -2,8 +2,10 @@ import React from "react";
 import { IoClose } from "react-icons/io5";
 import StatusBudge from "../../../components/common/StatusBadge";
 import { FaStar } from "react-icons/fa6";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { NavLink } from "react-router-dom";
 const ReviewProvider = ({ close }) => {
-    const reviewData = [
+  const reviewData = [
     {
       star: "5 Star",
       width: "87%",
@@ -36,7 +38,7 @@ const ReviewProvider = ({ close }) => {
       onClick={close}
     >
       <div
-        className="w-full max-w-3xl p-3 bg-white rounded-r-sm shadow-[0_0_20px_rgba(0,0,0,0.10)]"
+        className="w-full max-w-3xl p-3 bg-white rounded-r-sm shadow-[0_0_20px_rgba(0,0,0,0.10)] h-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center">
@@ -48,7 +50,7 @@ const ReviewProvider = ({ close }) => {
             <IoClose className="text-2xl" />
           </button>
         </div>
-        <div className="border border-muted rounded-lg">
+        <div className="border border-gray-300 rounded-lg mt-6">
           <div className="flex gap-3 mt-4 items-center p-3">
             <img
               src="https://randomuser.me/api/portraits/women/34.jpg"
@@ -69,58 +71,141 @@ const ReviewProvider = ({ close }) => {
               <p className="text-sm text-muted mt-1">+91 98543 24321</p>
             </div>
           </div>
-          
 
-           <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] border-y border-gray-300">
-          {/* Left Rating Box */}
-          <div className="border-r border-gray-200 p-6 flex flex-col items-center justify-center">
-            <h1 className="text-5xl font-bold">4.3</h1>
+          <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] border-y border-gray-300">
+            {/* Left Rating Box */}
+            <div className="border-r border-gray-200 p-6 flex flex-col items-center justify-center">
+              <h1 className="text-5xl font-bold">4.3</h1>
 
-            <div className="flex gap-1 text-yellow-500 text-xl my-4">
-              <FaStar />
-              <FaStar />
-              <FaStar />
-              <FaStar />
-              <FaStar />
+              <div className="flex gap-1 text-yellow-500 text-xl my-4">
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
+              </div>
+
+              <p className="text-sm text-muted">Based on 128 Reviews</p>
             </div>
 
-            <p className="text-sm text-muted">
-              Based on 128 Reviews
-            </p>
-          </div>
+            {/* Progress Bars */}
+            <div className="p-6 flex flex-col gap-3">
+              {reviewData.map((item, index) => (
+                <div key={index} className="flex items-center gap-3 w-full">
+                  {/* Label */}
+                  <p className="text-sm text-muted w-10 shrink-0 whitespace-nowrap">
+                    {item.star}
+                  </p>
 
-          {/* Progress Bars */}
-          <div className="p-6 flex flex-col gap-3">
-            {reviewData.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-3 w-full"
-              >
-                {/* Label */}
-                <p className="text-sm text-muted w-10 shrink-0 whitespace-nowrap">
-                  {item.star}
-                </p>
+                  {/* Progress */}
+                  <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-yellow-500 transition-all duration-500"
+                      style={{ width: item.width }}
+                    />
+                  </div>
 
-                {/* Progress */}
-                <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-yellow-500 transition-all duration-500"
-                    style={{ width: item.width }}
-                  />
+                  {/* Count */}
+                  <p className="text-sm text-muted w-10 shrink-0 text-right whitespace-nowrap">
+                    {item.total}
+                  </p>
                 </div>
-
-                {/* Count */}
-                <p className="text-sm text-muted w-10 shrink-0 text-right whitespace-nowrap">
-                  {item.total}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      
+
+        <div className="flex justify-between mt-8">
+          <div className="flex gap-5">
+            <NavLink
+              className={({ isActive }) =>
+                `text-sm font-bold ${isActive ? "text-primary border-b-[3px] pb-2 border-primary" : "text-muted border-b border-transparent pb-2"}`
+              }
+            >
+              All Reviews
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `text-sm font-bold ${isActive ? "text-primary border-b-[3px] pb-2 border-primary" : "text-muted border-b border-transparent pb-2"}`
+              }
+            >
+              5 Star
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `text-sm font-bold ${isActive ? "text-primary border-b-[3px] pb-2 border-primary" : "text-muted border-b border-transparent pb-2"}`
+              }
+            >
+              4 Star
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `text-sm font-bold ${isActive ? "text-primary border-b-[3px] pb-2 border-primary" : "text-muted border-b border-transparent pb-2"}`
+              }
+            >
+              3 Star
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `text-sm font-bold ${isActive ? "text-primary border-b-[3px] pb-2 border-primary" : "text-muted border-b border-transparent pb-2"}`
+              }
+            >
+              2 Star
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `text-sm font-bold ${isActive ? "text-primary border-b-[3px] pb-2 border-primary" : "text-muted border-b border-transparent pb-2"}`
+              }
+            >
+              1 Star
+            </NavLink>
+          </div>
+
+          <div>
+            <select
+              name="recent"
+              id="recent"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="recent">Most Recent</option>
+              <option value="highest">Highest Rating</option>
+              <option value="lowest">Lowest Rating</option>
+              <option value="positive">Positive Reviews</option>
+              <option value="negative">Negative Reviews</option>
+            </select>
+          </div>
         </div>
 
-        
+
+        <div className="border border-gray-300 rounded-lg  mt-4">
+          <div className="flex justify-between transition-all duration-300 hover:bg-gray-100 rounded-lg px-4 py-2">
+            <div className="flex gap-3 items-center">
+              <img
+              src="https://randomuser.me/api/portraits/women/34.jpg"
+              alt="profile image"
+              className="w-14 h-14 rounded-full object-cover"
+            />
+            <div>
+              <div className="flex gap-6">
+                <h4 className="text-lg font-semibold">Priya Sharma</h4>
+                <StatusBudge badge="verified" showIcon/>
+              </div>
+              <div className="text-lg text-yellow-500 flex gap-1 mt-1">
+                <FaStar/>
+                <FaStar/>
+                <FaStar/>
+                <FaStar/>
+                <FaStar/>
+              </div>
+              <p className="text-sm text-muted mt-1">Excellent cleaning service! Very professional and punctual.</p>
+            </div>
+            </div>
+            <div className="flex flex-col justify-around items-end">
+              <p className="text-sm text-muted">May 20 , 2024</p>
+              <BsThreeDotsVertical className="text-xl cursor-pointer text-muted"/>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
