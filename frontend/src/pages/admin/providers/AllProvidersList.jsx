@@ -37,6 +37,7 @@ import ResetPasswordModal from "../modals/ResetPasswordModal";
 import DeleteModal from "../modals/DeleteModal";
 import SuspendModal from "../modals/SuspendModal";
 import VerifyProviderModal from "../modals/VerifyProviderModal";
+import ReviewProvider from "../modals/ReviewProvider";
 
 const AllProvidersList = () => {
   // stats data
@@ -162,6 +163,7 @@ const AllProvidersList = () => {
   const [deleteProvider, setDeleteProvider] = useState(false);
   const [suspendProvider, setSuspendProvider] = useState(false);
   const [verifyProvider, setVerifyProvider] = useState(false);
+  const [reviewProvider, setReviewProvider] = useState(false);
   return (
     <>
       <div>
@@ -370,7 +372,7 @@ const AllProvidersList = () => {
 
                         variant: "warning",
 
-                        onClick: () => console.log("edit"),
+                        onClick: () => setReviewProvider(true),
                       },
                       {
                         label: "Verify Provider",
@@ -461,7 +463,11 @@ const AllProvidersList = () => {
       )}
 
       {
-        verifyProvider && <VerifyProviderModal open={verifyProvider} close={()=>setVerifyProvider(false)}/>
+        verifyProvider && <VerifyProviderModal close={()=>setVerifyProvider(false)}/>
+      }
+
+      {
+        reviewProvider && <ReviewProvider close={()=>setReviewProvider(false)}/>
       }
     </>
   );
