@@ -36,6 +36,7 @@ import { CiStar } from "react-icons/ci";
 import ResetPasswordModal from "../modals/ResetPasswordModal";
 import DeleteModal from "../modals/DeleteModal";
 import SuspendModal from "../modals/SuspendModal";
+import VerifyProviderModal from "../modals/VerifyProviderModal";
 
 const AllProvidersList = () => {
   // stats data
@@ -160,6 +161,7 @@ const AllProvidersList = () => {
   const [resetPassword, setResetPassword] = useState(false);
   const [deleteProvider, setDeleteProvider] = useState(false);
   const [suspendProvider, setSuspendProvider] = useState(false);
+  const [verifyProvider, setVerifyProvider] = useState(false);
   return (
     <>
       <div>
@@ -377,7 +379,7 @@ const AllProvidersList = () => {
 
                         variant: "green",
 
-                        onClick: () => console.log("edit"),
+                        onClick: () => setVerifyProvider(true),
                       },
                       {
                         label: "Reset Password",
@@ -433,29 +435,34 @@ const AllProvidersList = () => {
           text="Are you sure you want to suspend this provider? Provider will not able to login or access the system."
           rightBtnText="Suspend Provider"
           close={() => setSuspendProvider(false)}
-          open={suspendProvider} reason={[
-  "Poor service quality",
-  "Late arrivals",
-  "Multiple booking cancellations",
-  "Fake service listings",
-  "Customer complaints",
-  "Unprofessional behavior",
-  "Fraudulent activity",
-  "Violation of platform guidelines",
-  "Low ratings from customers",
-  "Incomplete service delivery",
-  "Overcharging customers",
-  "Using fake documents",
-  "Inactive for long time",
-  "Suspicious account activity",
-  "Payment settlement issues",
-  "Misbehavior with customers",
-  "Safety policy violation",
-  "Temporary suspension for review",
-  "Permanent suspension by admin",
-]}
+          open={suspendProvider}
+          reason={[
+            "Poor service quality",
+            "Late arrivals",
+            "Multiple booking cancellations",
+            "Fake service listings",
+            "Customer complaints",
+            "Unprofessional behavior",
+            "Fraudulent activity",
+            "Violation of platform guidelines",
+            "Low ratings from customers",
+            "Incomplete service delivery",
+            "Overcharging customers",
+            "Using fake documents",
+            "Inactive for long time",
+            "Suspicious account activity",
+            "Payment settlement issues",
+            "Misbehavior with customers",
+            "Safety policy violation",
+            "Temporary suspension for review",
+            "Permanent suspension by admin",
+          ]}
         />
       )}
+
+      {
+        verifyProvider && <VerifyProviderModal open={verifyProvider} close={()=>setVerifyProvider(false)}/>
+      }
     </>
   );
 };
