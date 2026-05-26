@@ -358,7 +358,7 @@ const AllProvidersList = () => {
 
                         icon: <RiHistoryLine size={20} />,
 
-                        onClick: () => console.log("edit"),
+                        onClick: () => navigate("/admin/providers/job-completed")
                       },
                       {
                         label: "Earnings & Payouts",
