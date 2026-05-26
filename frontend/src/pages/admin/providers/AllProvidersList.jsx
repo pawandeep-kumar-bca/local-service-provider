@@ -38,10 +38,11 @@ import DeleteModal from "../modals/DeleteModal";
 import SuspendModal from "../modals/SuspendModal";
 import VerifyProviderModal from "../modals/VerifyProviderModal";
 import ReviewProvider from "../modals/ReviewProvider";
+import { useNavigate } from "react-router-dom";
 
 const AllProvidersList = () => {
   // stats data
-
+  const navigate = useNavigate();
   const statsData = [
     {
       id: 1,
@@ -334,7 +335,8 @@ const AllProvidersList = () => {
 
                         icon: <MdOutlineRemoveRedEye size={20} />,
 
-                        onClick: () => console.log("view"),
+                        onClick: () =>
+                          navigate("/admin/providers/view-provider-profile"),
                       },
 
                       {
@@ -462,13 +464,13 @@ const AllProvidersList = () => {
         />
       )}
 
-      {
-        verifyProvider && <VerifyProviderModal close={()=>setVerifyProvider(false)}/>
-      }
+      {verifyProvider && (
+        <VerifyProviderModal close={() => setVerifyProvider(false)} />
+      )}
 
-      {
-        reviewProvider && <ReviewProvider close={()=>setReviewProvider(false)}/>
-      }
+      {reviewProvider && (
+        <ReviewProvider close={() => setReviewProvider(false)} />
+      )}
     </>
   );
 };

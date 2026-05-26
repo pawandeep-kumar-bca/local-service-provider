@@ -64,6 +64,11 @@ import PaymentUserHistory from "../pages/admin/users/PaymentHistory";
 import ActiveLogs from "../pages/admin/users/ActiveLogs";
 import BookingDetails from "../pages/admin/bookings/bookingDetails";
 import EditUser from "../pages/admin/users/EditUser";
+import ViewProviderProfile from "../pages/admin/providers/ViewProviderProfile";
+import OverviewProvider from "../pages/admin/providers/OverviewProvider";
+import Documents from "../pages/admin/providers/Documents";
+import BankDetailsProvider from "../pages/admin/providers/BankDetailsProvider";
+import ServiceAndPricingProvider from "../pages/admin/providers/ServiceAndPricingProvider";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -204,6 +209,12 @@ const AppRoutes = () => {
               <Route path="/admin/users/active-logs" element={<ActiveLogs />} />
            <Route path="/admin/users/edit-user" element={<EditUser/>}/>
             <Route path="/admin/providers" element={<AllProvidersList />} />
+            <Route path="/admin/providers/view-provider-profile" element={<ViewProviderProfile/>}>
+            <Route index element={<OverviewProvider/>}/>
+            <Route path="documents" element={<Documents/>}/>
+            <Route path="bank-details" element={<BankDetailsProvider/>}/>
+            <Route path="service-&-pricing" element={<ServiceAndPricingProvider/>}/>
+            </Route>
             <Route path="/admin/bookings" element={<AllBookingsList />} />
             <Route path="/admin/bookings/booking-details" element={<BookingDetails/>}/>
             <Route path="/admin/categories" element={<AllCategoriesList />} />
