@@ -1,11 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MdBlock, MdDeleteOutline, MdLockReset, MdOutlineEdit, MdOutlineVerifiedUser } from 'react-icons/md'
 import { NavLink, Outlet } from 'react-router-dom'
 import Button from '../../../components/common/Button'
 import StatusBadge from '../../../components/common/StatusBadge'
 import { FaAngleLeft } from 'react-icons/fa6'
+import { RiResetLeftLine } from 'react-icons/ri'
+import ResetPasswordModal from '../modals/ResetPasswordModal'
+import DeleteModal from '../modals/DeleteModal'
+import SuspendModal from '../modals/SuspendModal'
+import VerifyProviderModal from '../modals/VerifyProviderModal'
 
 const ViewProviderProfile = () => {
+    const [resetPassword, setResetPassword] = useState(false);
+      const [deleteProvider, setDeleteProvider] = useState(false);
+      const [suspendProvider, setSuspendProvider] = useState(false);
+      const [verifyProvider, setVerifyProvider] = useState(false);
   return (
       <>
           <div>
@@ -14,7 +23,7 @@ const ViewProviderProfile = () => {
               type="button"
             >
               <FaAngleLeft />
-              Back to Users
+              Back to Providers
             </button>
             <div className="flex gap-3 mt-4">
               <div className="border border-gray-300 rounded-2xl flex flex-col items-center gap-1 px-5 py-6 shadow-[0_0_10px_rgba(0,0,0,0.2)] flex-[0.5]">
@@ -24,17 +33,17 @@ const ViewProviderProfile = () => {
                   className="w-25 h-25 rounded-full object-cover"
                 />
                 <h2 className="text-xl font-bold text-text my-2">John Doe</h2>
-                <p className="text-lg font-semibold text-muted">#USE2343</p>
+                <p className="text-lg font-semibold text-muted">#PRO2343</p>
                 <div className="flex justify-center gap-4 mt-5 w-full">
                   <StatusBadge badge="active" />
-                  <StatusBadge badge="verified" showIcon />
+                  <StatusBadge category='plumbing' showIcon />
                 </div>
               </div>
               <div className="border border-gray-300 rounded-2xl  gap-1 py-3 px-6 shadow-[0_0_10px_rgba(0,0,0,0.2)] flex-[1.5]">
                 <h1 className="text-2xl font-bold text-text mt-2">
-                  User Information
+                  Provider Information
                 </h1>
-                <div className="flex gap-15 mt-8">
+                <div className="flex gap-15 mt-6">
                   <div className="flex-1 flex flex-col gap-5 ">
                     <div className="flex justify-between">
                       <span className="text-lg font-bold text-text">Full Name</span>
@@ -72,10 +81,10 @@ const ViewProviderProfile = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-lg font-bold text-text">
-                        Last Login
+                        Status
                       </span>
                       <span className="text-lg text-muted font-semibold">
-                        May 30 ,2024
+                        Active
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -86,7 +95,7 @@ const ViewProviderProfile = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-lg font-bold text-text">
-                        Total Spent
+                        Total Earings
                       </span>
                       <span className="text-lg text-muted font-semibold">
                         ₹ 12,599
@@ -144,15 +153,15 @@ const ViewProviderProfile = () => {
                     <Button
                       color="blue"
                       fullWidth
-                    //   onClick={() => navigate("/admin/users/edit-user")}
+                      onClick={() => setResetPassword(true)}
                     >
-                      <MdOutlineEdit size={20} />
-                      Edit Provider
+                      <RiResetLeftLine size={20} />
+                     Reset Password
                     </Button>
                     <Button
                       color="success"
                       fullWidth
-                    //   onClick={() => setIsResetPassword(true)}
+                      onClick={() => setVerifyProvider(true)}
                     >
                       <MdOutlineVerifiedUser size={20} />
                       Verify Provider
@@ -162,7 +171,7 @@ const ViewProviderProfile = () => {
                     <Button
                       color="yellow"
                       fullWidth
-                    //   onClick={() => setIsSuspend(true)}
+                      onClick={() => setSuspendProvider(true)}
                     >
                       <MdBlock size={20} />
                       Suspend Provider
@@ -170,7 +179,7 @@ const ViewProviderProfile = () => {
                     <Button
                       color="danger"
                       fullWidth
-                    //   onClick={() => setIsOpen(true)}
+                      onClick={() => setDeleteProvider(true)}
                     >
                       <MdDeleteOutline size={20} />
                       Delete Provider
@@ -181,7 +190,53 @@ const ViewProviderProfile = () => {
             </div>
           </div>
     
-         
+         {resetPassword && (
+        <ResetPasswordModal onClose={() => setResetPassword(false)} />
+      )}
+
+      {deleteProvider && (
+        <DeleteModal
+          close={() => setDeleteProvider(false)}
+          text="Are you sure you want to delete this provider? This action cannot be undone."
+          title="Provider"
+          open={deleteProvider}
+        />
+      )}
+
+      {suspendProvider && (
+        <SuspendModal
+          title="Provider"
+          text="Are you sure you want to suspend this provider? Provider will not able to login or access the system."
+          rightBtnText="Suspend Provider"
+          close={() => setSuspendProvider(false)}
+          open={suspendProvider}
+          reason={[
+            "Poor service quality",
+            "Late arrivals",
+            "Multiple booking cancellations",
+            "Fake service listings",
+            "Customer complaints",
+            "Unprofessional behavior",
+            "Fraudulent activity",
+            "Violation of platform guidelines",
+            "Low ratings from customers",
+            "Incomplete service delivery",
+            "Overcharging customers",
+            "Using fake documents",
+            "Inactive for long time",
+            "Suspicious account activity",
+            "Payment settlement issues",
+            "Misbehavior with customers",
+            "Safety policy violation",
+            "Temporary suspension for review",
+            "Permanent suspension by admin",
+          ]}
+        />
+      )}
+
+      {verifyProvider && (
+        <VerifyProviderModal close={() => setVerifyProvider(false)} />
+      )}
         </>
   )
 }
