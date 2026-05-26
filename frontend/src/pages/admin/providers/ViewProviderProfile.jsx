@@ -25,8 +25,11 @@ const ViewProviderProfile = () => {
               <FaAngleLeft />
               Back to Providers
             </button>
-            <div className="flex gap-3 mt-4">
-              <div className="border border-gray-300 rounded-2xl flex flex-col items-center gap-1 px-5 py-6 shadow-[0_0_10px_rgba(0,0,0,0.2)] flex-[0.5]">
+            <div className="grid
+            grid-cols-[320px_1fr]
+            gap-5
+            mt-5">
+              <div className="border border-gray-300 rounded-2xl flex flex-col items-center gap-1 px-5 py-6 shadow-[0_0_10px_rgba(0,0,0,0.2)]">
                 <img
                   src="https://randomuser.me/api/portraits/women/86.jpg"
                   alt="profile"
@@ -39,7 +42,7 @@ const ViewProviderProfile = () => {
                   <StatusBadge category='plumbing' showIcon />
                 </div>
               </div>
-              <div className="border border-gray-300 rounded-2xl  gap-1 py-3 px-6 shadow-[0_0_10px_rgba(0,0,0,0.2)] flex-[1.5]">
+              <div className="border border-gray-300 rounded-2xl  gap-1 py-3 px-6 shadow-[0_0_10px_rgba(0,0,0,0.2)] ">
                 <h1 className="text-2xl font-bold text-text mt-2">
                   Provider Information
                 </h1>
