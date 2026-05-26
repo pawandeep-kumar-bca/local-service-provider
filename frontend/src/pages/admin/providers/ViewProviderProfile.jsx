@@ -89,7 +89,7 @@ const ViewProviderProfile = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-lg font-bold text-text">
-                        Total Bookings
+                        Total Jobs
                       </span>
                       <span className="text-lg text-muted font-semibold">12</span>
                     </div>
