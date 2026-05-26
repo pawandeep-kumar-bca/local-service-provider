@@ -69,6 +69,7 @@ import OverviewProvider from "../pages/admin/providers/OverviewProvider";
 import Documents from "../pages/admin/providers/Documents";
 import BankDetailsProvider from "../pages/admin/providers/BankDetailsProvider";
 import ServiceAndPricingProvider from "../pages/admin/providers/ServiceAndPricingProvider";
+import EditProviderProfile from "../pages/admin/providers/EditProviderProfile";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -215,6 +216,7 @@ const AppRoutes = () => {
             <Route path="bank-details" element={<BankDetailsProvider/>}/>
             <Route path="service-&-pricing" element={<ServiceAndPricingProvider/>}/>
             </Route>
+            <Route path="/admin/providers/edit-provider-profile" element={<EditProviderProfile/>}/>
             <Route path="/admin/bookings" element={<AllBookingsList />} />
             <Route path="/admin/bookings/booking-details" element={<BookingDetails/>}/>
             <Route path="/admin/categories" element={<AllCategoriesList />} />

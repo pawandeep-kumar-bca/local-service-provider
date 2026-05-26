@@ -344,7 +344,7 @@ const AllProvidersList = () => {
 
                         icon: <MdOutlineEdit size={20} />,
 
-                        onClick: () => console.log("edit"),
+                        onClick: () => navigate('/admin/providers/edit-provider-profile'),
                       },
                       {
                         label: "Service & Pricing",
