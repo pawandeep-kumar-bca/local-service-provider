@@ -185,7 +185,7 @@ const AllProvidersList = () => {
             />
           ))}
         </div>
-
+ 
         {/* table wrapper */}
 
         <TableWrapper>
@@ -233,7 +233,7 @@ const AllProvidersList = () => {
     text-gray-700
   "
             >
-              <span className="text-center">Provider</span>
+              <span className="pl-9">Provider</span>
 
               <span>Service Category</span>
 

@@ -24,7 +24,7 @@ const UserInfo = ({
           {name}
         </h1>
 
-        <p className="text-sm text-muted">
+        <p className="text-sm mt-1 text-muted">
           {id}
         </p>
       </div>

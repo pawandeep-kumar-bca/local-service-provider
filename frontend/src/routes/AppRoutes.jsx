@@ -62,7 +62,7 @@ import Overview from "../pages/admin/users/Overview";
 import BookingHistory from "../pages/admin/users/BookingHistory";
 import PaymentUserHistory from "../pages/admin/users/PaymentHistory";
 import ActiveLogs from "../pages/admin/users/ActiveLogs";
-import BookingDetails from "../pages/admin/bookings/bookingDetails";
+import BookingDetails from "../pages/admin/bookings/BookingDetails";
 import EditUser from "../pages/admin/users/EditUser";
 import ViewProviderProfile from "../pages/admin/providers/ViewProviderProfile";
 import OverviewProvider from "../pages/admin/providers/OverviewProvider";
