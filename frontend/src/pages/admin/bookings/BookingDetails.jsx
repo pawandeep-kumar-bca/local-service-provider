@@ -1,7 +1,7 @@
 import React from "react";
 import StatusBadge from "../../../components/common/StatusBadge";
 import UserInfo from "../../../components/common/admin/UserInfo";
-import { MdOutlineEmail } from "react-icons/md";
+import { MdOutlineEmail, MdOutlinePlumbing } from "react-icons/md";
 import { IoCallOutline } from "react-icons/io5";
 import { CiLocationOn } from "react-icons/ci";
 
@@ -16,11 +16,11 @@ const BookingDetails = () => {
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
         {/* Booking Information */}
-        <div className="shadow-[0_0_20px_rgba(0,0,0,0.10)] p-5 rounded-xl bg-white">
-          <h2 className="text-xl font-semibold mb-5">
+        <div className="shadow-[0_0_10px_rgba(0,0,0,0.06)] p-5 rounded-xl bg-white border border-gray-200">
+          <h2 className="text-xl font-bold mb-5">
             Booking Information
           </h2>
 
@@ -65,8 +65,8 @@ const BookingDetails = () => {
         </div>
 
         {/* Customer */}
-        <div className="shadow-[0_0_20px_rgba(0,0,0,0.10)] p-5 rounded-xl bg-white">
-          <h2 className="text-xl font-semibold mb-5">
+        <div className="shadow-[0_0_10px_rgba(0,0,0,0.06)] p-5 rounded-xl bg-white border border-gray-200">
+          <h2 className="text-xl font-bold mb-5">
             Customer
           </h2>
 
@@ -104,8 +104,8 @@ const BookingDetails = () => {
         </div>
 
         {/* Provider */}
-        <div className="shadow-[0_0_20px_rgba(0,0,0,0.10)] p-5 rounded-xl bg-white">
-          <h2 className="text-xl font-semibold mb-5">
+        <div className="shadow-[0_0_10px_rgba(0,0,0,0.06)] p-5 rounded-xl bg-white border border-gray-200">
+          <h2 className="text-xl font-bold mb-5">
             Provider
           </h2>
 
@@ -143,6 +143,65 @@ const BookingDetails = () => {
         </div>
 
       </div>
+
+      {/* Service Details */}
+      <div className="mt-6 shadow-[0_0_10px_rgba(0,0,0,0.06)] px-5 pt-3 pb-8 rounded-xl bg-white border border-gray-200">
+        <h2 className="text-xl font-bold mb-5">
+          Service Details
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+
+          <div className="flex gap-3 items-center">
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-blue-100 text-blue-500">
+            <MdOutlinePlumbing  size={26}/>
+            </div>
+            <div>
+            <p className="text-gray-500 mb-1">
+              Service Name
+            </p>
+
+            <p className="font-medium text-gray-800">
+              Plumbing Repair
+            </p>
+          </div>
+          </div>
+
+          <div>
+            <p className="text-gray-500 mb-1">
+              Category
+            </p>
+
+            <p className="font-medium text-gray-800">
+              Home Services
+            </p>
+          </div>
+
+          <div>
+            <p className="text-gray-500 mb-1">
+              Duration
+            </p>
+
+            <p className="font-medium text-gray-800">
+              2 Hours
+            </p>
+          </div>
+
+          <div>
+            <p className="text-gray-500 mb-1">
+              Service Charge
+            </p>
+
+            <p className="font-medium text-gray-800">
+              ₹ 1,200
+            </p>
+          </div>
+
+          
+
+        </div>
+      </div>
+
     </div>
   );
 };

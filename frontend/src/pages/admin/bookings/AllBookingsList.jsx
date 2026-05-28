@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { FiBook } from "react-icons/fi";
 
@@ -35,7 +35,7 @@ import UserInfo from "../../../components/common/admin/UserInfo";
 import ActionDropdown from "../../../components/common/admin/ActionDropdown";
 import StatusBudge from "../../../components/common/StatusBadge";
 import { useNavigate } from "react-router-dom";
-
+import SuspendModal from "../modals/SuspendModal";
 const AllBookingsList = () => {
   const navigate = useNavigate();
   // stats data
@@ -174,6 +174,9 @@ const AllBookingsList = () => {
     },
   ];
 
+  const [cancelBooking, setCancelBooking] = useState();
+  const [rescheduleBooking, setRescheduleBooking] = useState();
+  const [refundPayment, setRefundPayment] = useState();
   return (
     <>
       <div>
@@ -418,7 +421,7 @@ const AllBookingsList = () => {
 
                           variant: "danger",
 
-                          onClick: () => console.log("suspend"),
+                          onClick: () => setCancelBooking(true),
                         },
                         {
                           label: "Refund Payment",
@@ -447,6 +450,33 @@ const AllBookingsList = () => {
           </div>
         </TableWrapper>
       </div>
+
+      {cancelBooking && (
+        <SuspendModal
+          reason={[
+            "Customer changed plans",
+            "Service no longer needed",
+            "Booked by mistake",
+            "Found another provider",
+            "Price issue",
+            "Schedule conflict",
+            "Customer unavailable",
+            "Duplicate booking",
+            "Wrong service selected",
+            "Location issue",
+            "Emergency situation",
+            "Payment issue",
+            "Requested reschedule instead",
+            "Provider delay concern",
+            "Other",
+          ]}
+          open={cancelBooking}
+          close={() => setCancelBooking(false)}
+          text="Are you sure you want to cancel this booking? This action cannot be undone."
+          rightBtnText="Yes, Cancel Booking"
+          title="Booking"
+        />
+      )}
     </>
   );
 };
