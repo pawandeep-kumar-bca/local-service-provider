@@ -36,6 +36,7 @@ import ActionDropdown from "../../../components/common/admin/ActionDropdown";
 import StatusBudge from "../../../components/common/StatusBadge";
 import { useNavigate } from "react-router-dom";
 import SuspendModal from "../modals/SuspendModal";
+import RescheduleBooking from "../modals/RescheduleBooking";
 const AllBookingsList = () => {
   const navigate = useNavigate();
   // stats data
@@ -390,7 +391,7 @@ const AllBookingsList = () => {
 
                           icon: <FaRegCalendarPlus size={20} />,
 
-                          onClick: () => console.log("reset"),
+                          onClick: () => setRescheduleBooking(true)
                         },
 
                         {
@@ -477,6 +478,8 @@ const AllBookingsList = () => {
           title="Booking"
         />
       )}
+
+      {rescheduleBooking && <RescheduleBooking close={()=>setRescheduleBooking(false)}/>}
     </>
   );
 };
