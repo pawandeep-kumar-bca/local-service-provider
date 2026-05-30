@@ -37,6 +37,7 @@ import StatusBudge from "../../../components/common/StatusBadge";
 import { useNavigate } from "react-router-dom";
 import SuspendModal from "../modals/SuspendModal";
 import RescheduleBooking from "../modals/RescheduleBooking";
+import EditBookingModal from "../modals/EditBookingModal";
 const AllBookingsList = () => {
   const navigate = useNavigate();
   // stats data
@@ -178,6 +179,7 @@ const AllBookingsList = () => {
   const [cancelBooking, setCancelBooking] = useState();
   const [rescheduleBooking, setRescheduleBooking] = useState();
   const [refundPayment, setRefundPayment] = useState();
+  const [editBooking,setEditBooking]= useState(false)
   return (
     <>
       <div>
@@ -383,7 +385,7 @@ const AllBookingsList = () => {
 
                           icon: <MdOutlineEdit size={20} />,
 
-                          onClick: () => console.log("edit"),
+                          onClick: () => setEditBooking(true)
                         },
 
                         {
@@ -480,6 +482,10 @@ const AllBookingsList = () => {
       )}
 
       {rescheduleBooking && <RescheduleBooking close={()=>setRescheduleBooking(false)}/>}
+
+        {
+          editBooking && <EditBookingModal close={()=>setEditBooking(false)}/>
+        }
     </>
   );
 };
