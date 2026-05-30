@@ -43,7 +43,7 @@ const PaymentDetailsModal = ({ close }) => {
 
           <button
             onClick={close}
-            className="rounded-full p-2 hover:bg-slate-100"
+            className="rounded-full cursor-pointer p-2 hover:bg-slate-100"
           >
             <IoClose className="text-2xl text-slate-700" />
           </button>

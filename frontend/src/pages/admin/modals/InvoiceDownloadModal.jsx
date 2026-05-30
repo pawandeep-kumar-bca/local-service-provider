@@ -43,7 +43,7 @@ const InvoiceDownloadModal = ({ close }) => {
 
           <button
             onClick={close}
-            className="rounded-full p-2 hover:bg-slate-100"
+            className="rounded-full cursor-pointer p-2 hover:bg-slate-100"
           >
             <IoClose className="text-2xl text-slate-700" />
           </button>
@@ -146,7 +146,7 @@ const InvoiceDownloadModal = ({ close }) => {
 
         {/* Footer */}
         <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button color="white">Close</Button>
+          <Button color="white" onClick={close}>Close</Button>
 
           <Button color="success">Download PDF</Button>
 

@@ -37,7 +37,7 @@ const RefundPaymentModal = ({ close }) => {
           <button
             onClick={close}
             className="
-              rounded-full p-2
+              rounded-full p-2 cursor-pointer
               transition-all duration-200
               hover:bg-slate-100
               cursor-pointer

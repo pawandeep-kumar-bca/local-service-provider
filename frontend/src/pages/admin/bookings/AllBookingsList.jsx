@@ -441,16 +441,7 @@ const AllBookingsList = () => {
                           variant: "primary",
 
                           onClick: () => setRefundPayment(true)
-                        },
-                        {
-                          label: "Delete Booking",
-
-                          icon: <RiDeleteBin6Line size={20} />,
-
-                          variant: "danger",
-
-                          onClick: () => console.log("delete"),
-                        },
+                        }
                       ]}
                     />
                   </div>
@@ -504,7 +495,7 @@ const AllBookingsList = () => {
           paymentDetails && <PaymentDetailsModal close={()=>setPaymentDetails(false)}/>
         }
         {
-          invoiceDownload && <InvoiceDownloadModal cancel={()=>setInvoiceDownload(false)}/>
+          invoiceDownload && <InvoiceDownloadModal close={()=>setInvoiceDownload(false)}/>
         }
     </>
   );
