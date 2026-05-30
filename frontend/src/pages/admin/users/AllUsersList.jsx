@@ -355,6 +355,7 @@ const AllUsersList = () => {
         <SuspendModal
           open={isSuspend}
           close={() => setIsSuspend(false)}
+          title="Suspend User"
           text="Are you sure you want suspend this user? User will not be able to login or access the system." title='User' reason={[
             "Spam activity",
             "Fake account detected",

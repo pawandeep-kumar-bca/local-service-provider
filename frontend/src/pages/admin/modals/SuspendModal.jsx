@@ -15,7 +15,7 @@ const SuspendModal = ({open,close,text,title,reason,rightBtnText}) => {
           <div className="text-yellow-500 bg-yellow-100 w-14 h-14 rounded-full flex items-center justify-center mb-4">
             <IoIosWarning size={30} />
           </div>
-          <h2 className="text-xl text-text font-bold mb-4">Suspend {title}</h2>
+          <h2 className="text-xl text-text font-bold mb-4">{title}</h2>
           <p className="text-muted font-semibold text-sm mb-6">
             {text}
           </p>

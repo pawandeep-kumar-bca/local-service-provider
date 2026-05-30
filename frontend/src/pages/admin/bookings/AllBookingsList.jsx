@@ -41,6 +41,7 @@ import EditBookingModal from "../modals/EditBookingModal";
 import RefundPaymentModal from "../modals/RefundPaymentModal";
 import BookingHistoryModal from "../modals/BookingHistoryModal";
 import PaymentDetailsModal from "../modals/PaymentDetailsModal";
+import InvoiceDownloadModal from "../modals/InvoiceDownloadModal";
 const AllBookingsList = () => {
   const navigate = useNavigate();
   // stats data
@@ -179,12 +180,13 @@ const AllBookingsList = () => {
     },
   ];
 
-  const [cancelBooking, setCancelBooking] = useState();
-  const [rescheduleBooking, setRescheduleBooking] = useState();
-  const [refundPayment, setRefundPayment] = useState();
+  const [cancelBooking, setCancelBooking] = useState(false);
+  const [rescheduleBooking, setRescheduleBooking] = useState(false);
+  const [refundPayment, setRefundPayment] = useState(false);
   const [editBooking,setEditBooking]= useState(false)
   const [bookingHistory,setBookingHistory]= useState(false)
   const [paymentDetails,setPaymentDetails]= useState(false)
+  const [invoiceDownload,setInvoiceDownload]= useState(false)
   return (
     <>
       <div>
@@ -420,7 +422,7 @@ const AllBookingsList = () => {
 
                           icon: <LiaFileInvoiceSolid size={20} />,
 
-                          onClick: () => console.log("suspend"),
+                          onClick: () => setInvoiceDownload(true)
                         },
                         {
                           label: "Cancel Booking",
@@ -482,7 +484,7 @@ const AllBookingsList = () => {
           close={() => setCancelBooking(false)}
           text="Are you sure you want to cancel this booking? This action cannot be undone."
           rightBtnText="Yes, Cancel Booking"
-          title="Booking"
+          title="Cancel Booking"
         />
       )}
 
@@ -500,6 +502,9 @@ const AllBookingsList = () => {
         }
         {
           paymentDetails && <PaymentDetailsModal close={()=>setPaymentDetails(false)}/>
+        }
+        {
+          invoiceDownload && <InvoiceDownloadModal cancel={()=>setInvoiceDownload(false)}/>
         }
     </>
   );

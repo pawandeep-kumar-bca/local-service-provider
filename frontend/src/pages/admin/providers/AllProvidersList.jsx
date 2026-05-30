@@ -435,7 +435,7 @@ const AllProvidersList = () => {
 
       {suspendProvider && (
         <SuspendModal
-          title="Provider"
+          title="Suspend Provider"
           text="Are you sure you want to suspend this provider? Provider will not able to login or access the system."
           rightBtnText="Suspend Provider"
           close={() => setSuspendProvider(false)}
