@@ -39,6 +39,7 @@ import SuspendModal from "../modals/SuspendModal";
 import RescheduleBooking from "../modals/RescheduleBooking";
 import EditBookingModal from "../modals/EditBookingModal";
 import RefundPaymentModal from "../modals/RefundPaymentModal";
+import BookingHistoryModal from "../modals/BookingHistoryModal";
 const AllBookingsList = () => {
   const navigate = useNavigate();
   // stats data
@@ -181,6 +182,7 @@ const AllBookingsList = () => {
   const [rescheduleBooking, setRescheduleBooking] = useState();
   const [refundPayment, setRefundPayment] = useState();
   const [editBooking,setEditBooking]= useState(false)
+  const [bookingHistory,setBookingHistory]= useState(false)
   return (
     <>
       <div>
@@ -402,7 +404,7 @@ const AllBookingsList = () => {
 
                           icon: <FaHistory size={20} />,
 
-                          onClick: () => console.log("suspend"),
+                          onClick: () => setBookingHistory(true)
                         },
                         {
                           label: "Payment Details",
@@ -490,6 +492,9 @@ const AllBookingsList = () => {
 
         {
           refundPayment && <RefundPaymentModal close={()=>setRefundPayment(false)}/>
+        }
+        {
+          bookingHistory && <BookingHistoryModal close={()=>setBookingHistory(false)}/>
         }
     </>
   );
