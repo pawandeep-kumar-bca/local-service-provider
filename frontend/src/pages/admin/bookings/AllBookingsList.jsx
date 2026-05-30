@@ -38,6 +38,7 @@ import { useNavigate } from "react-router-dom";
 import SuspendModal from "../modals/SuspendModal";
 import RescheduleBooking from "../modals/RescheduleBooking";
 import EditBookingModal from "../modals/EditBookingModal";
+import RefundPaymentModal from "../modals/RefundPaymentModal";
 const AllBookingsList = () => {
   const navigate = useNavigate();
   // stats data
@@ -433,7 +434,7 @@ const AllBookingsList = () => {
 
                           variant: "primary",
 
-                          onClick: () => console.log("suspend"),
+                          onClick: () => setRefundPayment(true)
                         },
                         {
                           label: "Delete Booking",
@@ -485,6 +486,10 @@ const AllBookingsList = () => {
 
         {
           editBooking && <EditBookingModal close={()=>setEditBooking(false)}/>
+        }
+
+        {
+          refundPayment && <RefundPaymentModal close={()=>setRefundPayment(false)}/>
         }
     </>
   );
