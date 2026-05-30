@@ -40,6 +40,7 @@ import RescheduleBooking from "../modals/RescheduleBooking";
 import EditBookingModal from "../modals/EditBookingModal";
 import RefundPaymentModal from "../modals/RefundPaymentModal";
 import BookingHistoryModal from "../modals/BookingHistoryModal";
+import PaymentDetailsModal from "../modals/PaymentDetailsModal";
 const AllBookingsList = () => {
   const navigate = useNavigate();
   // stats data
@@ -183,6 +184,7 @@ const AllBookingsList = () => {
   const [refundPayment, setRefundPayment] = useState();
   const [editBooking,setEditBooking]= useState(false)
   const [bookingHistory,setBookingHistory]= useState(false)
+  const [paymentDetails,setPaymentDetails]= useState(false)
   return (
     <>
       <div>
@@ -411,7 +413,7 @@ const AllBookingsList = () => {
 
                           icon: <TbListDetails size={20} />,
 
-                          onClick: () => console.log("suspend"),
+                          onClick: () => setPaymentDetails(true)
                         },
                         {
                           label: "Invoice",
@@ -495,6 +497,9 @@ const AllBookingsList = () => {
         }
         {
           bookingHistory && <BookingHistoryModal close={()=>setBookingHistory(false)}/>
+        }
+        {
+          paymentDetails && <PaymentDetailsModal close={()=>setPaymentDetails(false)}/>
         }
     </>
   );
