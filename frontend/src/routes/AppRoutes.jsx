@@ -22,7 +22,7 @@ import AllBookings from "../pages/provider/AllBookings";
 import AdminDashboard from "../pages/admin/AdminDashboardPage";
 import AllUsersList from "../pages/admin/users/AllUsersList";
 import AllBookingsList from "../pages/admin/bookings/AllBookingsList";
-import AllCategoriesList from "../pages/admin/AllCategoriesList";
+import AllCategoriesList from "../pages/admin/categories/AllCategoriesList";
 import AllPayments from "../pages/admin/AllPayments";
 import AllReports from "../pages/admin/AllReports";
 import Setting from "../pages/admin/Setting";

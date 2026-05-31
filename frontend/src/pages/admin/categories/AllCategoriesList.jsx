@@ -4,9 +4,7 @@ import { BiCategory } from "react-icons/bi";
 
 import { FaRegCircleCheck } from "react-icons/fa6";
 
-import {
-  IoEyeOffOutline,
-} from "react-icons/io5";
+import { IoEyeOffOutline } from "react-icons/io5";
 
 import {
   MdOutlineEdit,
@@ -17,24 +15,20 @@ import {
   MdOutlineRemoveRedEye,
 } from "react-icons/md";
 
-import {
-  HiMiniUsers,
-  HiPlus,
-} from "react-icons/hi2";
+import { HiMiniUsers, HiPlus } from "react-icons/hi2";
 
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-import Button from "../../components/common/Button";
+import Button from "../../../components/common/Button";
 
-import StatsCard from "../../components/common/admin/StatsCard";
-import SearchFilterBar from "../../components/common/admin/SearchFilterBar";
-import TableWrapper from "../../components/common/admin/TableWrapper";
-import ActionDropdown from "../../components/common/admin/ActionDropdown";
-import ToggleSwitch from "../../components/common/ToggleSwitch";
-import PageHeader from "../../components/common/admin/PageHeader";
+import StatsCard from "../../../components/common/admin/StatsCard";
+import SearchFilterBar from "../../../components/common/admin/SearchFilterBar";
+import TableWrapper from "../../../components/common/admin/TableWrapper";
+import ActionDropdown from "../../../components/common/admin/ActionDropdown";
+import ToggleSwitch from "../../../components/common/ToggleSwitch";
+import PageHeader from "../../../components/common/admin/PageHeader";
 
 const AllCategoriesList = () => {
-
   // stats data
 
   const statsData = [
@@ -53,9 +47,7 @@ const AllCategoriesList = () => {
       title: "Active Categories",
       value: "12,345",
       growth: "5%",
-      icon: (
-        <FaRegCircleCheck size={22} />
-      ),
+      icon: <FaRegCircleCheck size={22} />,
       iconBg: "bg-green-100",
       iconColor: "text-green-500",
     },
@@ -65,9 +57,7 @@ const AllCategoriesList = () => {
       title: "Hidden Categories",
       value: "89,543",
       growth: "18%",
-      icon: (
-        <IoEyeOffOutline size={22} />
-      ),
+      icon: <IoEyeOffOutline size={22} />,
       iconBg: "bg-red-100",
       iconColor: "text-red-500",
     },
@@ -77,11 +67,7 @@ const AllCategoriesList = () => {
       title: "Total Services",
       value: "24,400",
       growth: "10%",
-      icon: (
-        <MdOutlineMiscellaneousServices
-          size={22}
-        />
-      ),
+      icon: <MdOutlineMiscellaneousServices size={22} />,
       iconBg: "bg-yellow-100",
       iconColor: "text-yellow-500",
     },
@@ -105,8 +91,7 @@ const AllCategoriesList = () => {
 
       title: "Plumbing",
 
-      description:
-        "All plumbing related services.",
+      description: "All plumbing related services.",
 
       slug: "plumbing",
 
@@ -128,8 +113,7 @@ const AllCategoriesList = () => {
 
       title: "Cleaning",
 
-      description:
-        "All cleaning related services.",
+      description: "All cleaning related services.",
 
       slug: "cleaning",
 
@@ -139,7 +123,7 @@ const AllCategoriesList = () => {
 
       status: "Active",
 
-      homepage: false,
+      homepage: true,
 
       createdDate: "May 15, 2024",
 
@@ -150,7 +134,6 @@ const AllCategoriesList = () => {
   return (
     <>
       <div>
-
         {/* page header */}
 
         <PageHeader
@@ -167,9 +150,7 @@ const AllCategoriesList = () => {
         {/* stats cards */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2 mt-4 mb-6">
-
           {statsData.map((item) => (
-
             <StatsCard
               key={item.id}
               title={item.title}
@@ -185,7 +166,6 @@ const AllCategoriesList = () => {
         {/* table wrapper */}
 
         <TableWrapper>
-
           {/* filters */}
 
           <SearchFilterBar
@@ -194,10 +174,7 @@ const AllCategoriesList = () => {
               {
                 label: "All Status",
 
-                options: [
-                  "Active",
-                  "Hidden",
-                ],
+                options: ["Active", "Hidden"],
               },
 
               {
@@ -216,15 +193,13 @@ const AllCategoriesList = () => {
           {/* table */}
 
           <div className="border border-slate-300 rounded-xl">
-
             {/* heading */}
 
             <div
               className="
                 grid
-                grid-cols-[2.3fr_1fr_1fr_1fr_1fr_1fr_1.2fr_1fr]
+                grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.2fr_0.5fr]
                 items-center
-                justify-items-center
                 mt-3
                 text-sm
                 font-bold
@@ -232,23 +207,21 @@ const AllCategoriesList = () => {
                 px-3
               "
             >
+              <span className="pl-15">Category</span>
 
-              <span>Category</span>
+              <span className="text-center">Slug</span>
 
-              <span>Slug</span>
+              <span className="text-center">Services</span>
 
-              <span>Services</span>
+              <span className="text-center">Providers</span>
 
-              <span>Providers</span>
+              <span className="text-center">Status</span>
 
-              <span>Status</span>
+              <span className="text-center">Homepage</span>
 
-              <span>Homepage</span>
+              <span className="text-center">Created Date</span>
 
-              <span>Created Date</span>
-
-              <span>Action</span>
-
+              <span className="text-center">Action</span>
             </div>
 
             <div className="border-t border-gray-200 mt-3 mb-2"></div>
@@ -256,25 +229,19 @@ const AllCategoriesList = () => {
             {/* rows */}
 
             <div className="space-y-2 pb-3">
-
               {categories.map((category) => (
-
                 <div
                   key={category.id}
                   className="
                     grid
-                    grid-cols-[2.3fr_1fr_1fr_1fr_1fr_1fr_1.2fr_1fr]
+                    grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.2fr_0.5fr]
                     items-center
-                    justify-items-center
-                    gap-3
                     px-3
                   "
                 >
-
                   {/* category */}
 
-                  <div className="flex items-start gap-3">
-
+                  <div className="flex items-center ml-3 gap-3">
                     <div
                       className="
                         w-12 h-12 min-w-12
@@ -284,70 +251,51 @@ const AllCategoriesList = () => {
                         text-blue-500
                       "
                     >
-
-                      <MdOutlinePlumbing
-                        size={24}
-                      />
-
+                      <MdOutlinePlumbing size={24} />
                     </div>
 
                     <div>
-
                       <h1 className="text-sm font-bold text-black/90">
                         {category.title}
                       </h1>
 
                       <p className="text-sm text-muted mt-1">
-                        {
-                          category.description
-                        }
+                        {category.description}
                       </p>
-
                     </div>
-
                   </div>
 
                   {/* slug */}
 
-                  <div>
-
-                    <p className="text-sm text-muted">
-                      {category.slug}
-                    </p>
-
+                  <div className="text-center">
+                    <p className="text-sm text-muted">{category.slug}</p>
                   </div>
 
                   {/* services */}
 
-                  <div>
-
+                  <div className="text-center">
                     <p className="text-sm font-semibold text-black/80">
                       {category.services}
                     </p>
-
                   </div>
 
                   {/* providers */}
 
-                  <div>
-
+                  <div className="text-center">
                     <p className="text-sm font-semibold text-black/80">
                       {category.providers}
                     </p>
-
                   </div>
 
                   {/* status */}
 
-                  <div>
-
+                  <div className="text-center">
                     <span
                       className={`
                         py-1 px-3 rounded-lg text-sm border
 
                         ${
-                          category.status ===
-                          "Active"
+                          category.status === "Active"
                             ? "text-green-500 bg-green-100 border-green-500"
                             : "text-red-500 bg-red-100 border-red-500"
                         }
@@ -355,125 +303,78 @@ const AllCategoriesList = () => {
                     >
                       {category.status}
                     </span>
-
                   </div>
 
                   {/* homepage toggle */}
 
-                  <div>
-
-                    <ToggleSwitch
-                      enabled={
-                        category.homepage
-                      }
-                    />
-
+                  <div className="flex justify-center">
+                    <ToggleSwitch enabled={category.homepage} />
                   </div>
 
                   {/* date */}
 
-                  <div>
-
+                  <div className="text-center">
                     <h3 className="text-sm font-semibold text-black/80">
-                      {
-                        category.createdDate
-                      }
+                      {category.createdDate}
                     </h3>
 
                     <p className="text-sm text-muted mt-1">
-                      {
-                        category.createdTime
-                      }
+                      {category.createdTime}
                     </p>
-
                   </div>
 
                   {/* actions */}
+                  <div className="flex justify-center">
+                    <ActionDropdown
+                      items={[
+                        {
+                          label: "View Category",
 
-                  <ActionDropdown
-                    items={[
-                      {
-                        label:
-                          "View Category",
+                          icon: <MdOutlineRemoveRedEye size={20} />,
 
-                        icon: (
-                          <MdOutlineRemoveRedEye
-                            size={20}
-                          />
-                        ),
+                          onClick: () => console.log("view"),
+                        },
 
-                        onClick: () =>
-                          console.log("view"),
-                      },
+                        {
+                          label: "Edit Category",
 
-                      {
-                        label:
-                          "Edit Category",
+                          icon: <MdOutlineEdit size={20} />,
 
-                        icon: (
-                          <MdOutlineEdit
-                            size={20}
-                          />
-                        ),
+                          variant: "primary",
 
-                        variant: "primary",
+                          onClick: () => console.log("edit"),
+                        },
 
-                        onClick: () =>
-                          console.log("edit"),
-                      },
+                        {
+                          label: "Reset Category",
 
-                      {
-                        label:
-                          "Reset Category",
+                          icon: <MdOutlineLock size={20} />,
 
-                        icon: (
-                          <MdOutlineLock
-                            size={20}
-                          />
-                        ),
+                          onClick: () => console.log("reset"),
+                        },
 
-                        onClick: () =>
-                          console.log("reset"),
-                      },
+                        {
+                          label: "Suspend Category",
 
-                      {
-                        label:
-                          "Suspend Category",
+                          icon: <MdOutlinePauseCircle size={20} />,
 
-                        icon: (
-                          <MdOutlinePauseCircle
-                            size={20}
-                          />
-                        ),
+                          variant: "warning",
 
-                        variant: "warning",
+                          onClick: () => console.log("suspend"),
+                        },
 
-                        onClick: () =>
-                          console.log(
-                            "suspend"
-                          ),
-                      },
+                        {
+                          label: "Delete Category",
 
-                      {
-                        label:
-                          "Delete Category",
+                          icon: <RiDeleteBin6Line size={20} />,
 
-                        icon: (
-                          <RiDeleteBin6Line
-                            size={20}
-                          />
-                        ),
+                          variant: "danger",
 
-                        variant: "danger",
-
-                        onClick: () =>
-                          console.log(
-                            "delete"
-                          ),
-                      },
-                    ]}
-                  />
-
+                          onClick: () => console.log("delete"),
+                        },
+                      ]}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
