@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { BiCategory } from "react-icons/bi";
 
@@ -27,10 +27,11 @@ import TableWrapper from "../../../components/common/admin/TableWrapper";
 import ActionDropdown from "../../../components/common/admin/ActionDropdown";
 import ToggleSwitch from "../../../components/common/ToggleSwitch";
 import PageHeader from "../../../components/common/admin/PageHeader";
+import ViewCategoryModal from "../modals/ViewCategoryModal";
+import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 
 const AllCategoriesList = () => {
   // stats data
-
   const statsData = [
     {
       id: 1,
@@ -40,6 +41,8 @@ const AllCategoriesList = () => {
       icon: <BiCategory size={22} />,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -50,6 +53,8 @@ const AllCategoriesList = () => {
       icon: <FaRegCircleCheck size={22} />,
       iconBg: "bg-green-100",
       iconColor: "text-green-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -60,6 +65,8 @@ const AllCategoriesList = () => {
       icon: <IoEyeOffOutline size={22} />,
       iconBg: "bg-red-100",
       iconColor: "text-red-500",
+      growthIcon: <IoMdArrowRoundDown size={20} />,
+      growthColor: "text-red-500",
     },
 
     {
@@ -70,6 +77,8 @@ const AllCategoriesList = () => {
       icon: <MdOutlineMiscellaneousServices size={22} />,
       iconBg: "bg-yellow-100",
       iconColor: "text-yellow-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -80,6 +89,8 @@ const AllCategoriesList = () => {
       icon: <HiMiniUsers size={24} />,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
   ];
 
@@ -130,7 +141,7 @@ const AllCategoriesList = () => {
       createdTime: "11:40 AM",
     },
   ];
-
+  const [viewModal, setViewModal] = useState(false);
   return (
     <>
       <div>
@@ -159,6 +170,8 @@ const AllCategoriesList = () => {
               icon={item.icon}
               iconBg={item.iconBg}
               iconColor={item.iconColor}
+              growthColor={item.growthColor}
+              growthIcon={item.growthIcon}
             />
           ))}
         </div>
@@ -329,48 +342,35 @@ const AllCategoriesList = () => {
                       items={[
                         {
                           label: "View Category",
-
                           icon: <MdOutlineRemoveRedEye size={20} />,
-
-                          onClick: () => console.log("view"),
+                          onClick: () => {
+                            setViewModal(true);
+                          },
                         },
 
                         {
                           label: "Edit Category",
-
                           icon: <MdOutlineEdit size={20} />,
-
                           variant: "primary",
-
-                          onClick: () => console.log("edit"),
+                          onClick: () => {},
                         },
 
                         {
-                          label: "Reset Category",
-
-                          icon: <MdOutlineLock size={20} />,
-
-                          onClick: () => console.log("reset"),
+                          label: "Add Subcategory",
+                          icon: <HiPlus size={20} />,
+                          onClick: () => {},
                         },
 
                         {
-                          label: "Suspend Category",
-
-                          icon: <MdOutlinePauseCircle size={20} />,
-
-                          variant: "warning",
-
-                          onClick: () => console.log("suspend"),
+                          label: "Services",
+                          icon: <MdOutlineMiscellaneousServices size={20} />,
+                          onClick: () => {},
                         },
 
                         {
-                          label: "Delete Category",
-
-                          icon: <RiDeleteBin6Line size={20} />,
-
-                          variant: "danger",
-
-                          onClick: () => console.log("delete"),
+                          label: "Providers",
+                          icon: <HiMiniUsers size={20} />,
+                          onClick: () => {},
                         },
                       ]}
                     />
@@ -381,6 +381,8 @@ const AllCategoriesList = () => {
           </div>
         </TableWrapper>
       </div>
+
+      {viewModal && <ViewCategoryModal close={() => setViewModal(false)} />}
     </>
   );
 };
