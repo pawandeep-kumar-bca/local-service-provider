@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { BiCategory } from "react-icons/bi";
 
@@ -141,7 +141,7 @@ const AllCategoriesList = () => {
       createdTime: "11:40 AM",
     },
   ];
-  const [viewModal, setViewModal] = useState(false);
+ 
   return (
     <>
       <div>
@@ -344,7 +344,7 @@ const AllCategoriesList = () => {
                           label: "View Category",
                           icon: <MdOutlineRemoveRedEye size={20} />,
                           onClick: () => {
-                            setViewModal(true);
+                            
                           },
                         },
 
@@ -382,7 +382,7 @@ const AllCategoriesList = () => {
         </TableWrapper>
       </div>
 
-      {viewModal && <ViewCategoryModal close={() => setViewModal(false)} />}
+      
     </>
   );
 };
