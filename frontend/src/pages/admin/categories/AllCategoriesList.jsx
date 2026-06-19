@@ -353,7 +353,9 @@ const AllCategoriesList = () => {
                           label: "Edit Category",
                           icon: <MdOutlineEdit size={20} />,
                           variant: "primary",
-                          onClick: () => {},
+                          onClick: () => {navigate(
+                            '/admin/categories/edit-category'
+                          )},
                         },
 
                         {

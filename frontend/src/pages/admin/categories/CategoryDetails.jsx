@@ -9,6 +9,7 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 import Button from "../../../components/common/Button";
+import { useNavigate } from "react-router-dom";
 
 const services = [
   {
@@ -34,6 +35,7 @@ const services = [
 ];
 
 const CategoryDetails = () => {
+  const navigate = useNavigate()
   return (
     <div>
       {/* Header */}
@@ -53,7 +55,9 @@ const CategoryDetails = () => {
             Back
           </Button>
 
-          <Button color="purple">
+          <Button color="purple" onClick={()=>navigate(
+            '/admin/categories/edit-category'
+          )}>
             <FaEdit />
             Edit
           </Button>

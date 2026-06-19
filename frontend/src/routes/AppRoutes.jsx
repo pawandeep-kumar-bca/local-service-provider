@@ -73,6 +73,7 @@ import EditProviderProfile from "../pages/admin/providers/EditProviderProfile";
 import JobHistoryProvider from "../pages/admin/providers/JobHistoryProvider";
 import EarningsAndPayout from "../pages/admin/providers/EarningsAndPayout";
 import CategoryDetails from "../pages/admin/categories/CategoryDetails";
+import EditCategory from "../pages/admin/categories/EditCategory";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -226,6 +227,7 @@ const AppRoutes = () => {
             <Route path="/admin/bookings/booking-details" element={<BookingDetails/>}/>
             <Route path="/admin/categories" element={<AllCategoriesList />} />
             <Route path="/admin/categories/category-details" element={<CategoryDetails />} />
+            <Route path="/admin/categories/edit-category" element={<EditCategory />} />
             <Route path="/admin/payments" element={<AllPayments />} />
             <Route path="/admin/reports" element={<AllReports />} />
           </Route>
