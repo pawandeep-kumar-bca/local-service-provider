@@ -77,6 +77,7 @@ import EditCategory from "../pages/admin/categories/EditCategory";
 import AddCategory from "../pages/admin/categories/AddCategory";
 import AddSubCategory from "../pages/admin/categories/AddSubCategory";
 import CategoryServices from "../pages/admin/categories/CategoryServices";
+import CategoryProviders from "../pages/admin/categories/CategoryProviders";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -233,7 +234,8 @@ const AppRoutes = () => {
             <Route path="/admin/categories/edit-category" element={<EditCategory />} />
             <Route path="/admin/categories/add-category" element={<AddCategory />} />
             <Route path="/admin/categories/add-sub-category" element={<AddSubCategory />} />
-            <Route path="/admin/categories/category-service" element={<CategoryServices/>} />
+            <Route path="/admin/categories/category-services" element={<CategoryServices/>} />
+            <Route path="/admin/categories/category-providers" element={<CategoryProviders/>} />
             <Route path="/admin/payments" element={<AllPayments />} />
             <Route path="/admin/reports" element={<AllReports />} />
           </Route>

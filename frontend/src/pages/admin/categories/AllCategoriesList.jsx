@@ -369,13 +369,13 @@ const AllCategoriesList = () => {
                         {
                           label: "Services",
                           icon: <MdOutlineMiscellaneousServices size={20} />,
-                          onClick: () => {navigate('/admin/categories/category-service')},
+                          onClick: () => {navigate('/admin/categories/category-services')},
                         },
 
                         {
                           label: "Providers",
                           icon: <HiMiniUsers size={20} />,
-                          onClick: () => {},
+                          onClick: () => {navigate('/admin/categories/category-providers')},
                         },
                       ]}
                     />
