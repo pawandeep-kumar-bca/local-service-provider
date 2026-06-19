@@ -27,8 +27,8 @@ import TableWrapper from "../../../components/common/admin/TableWrapper";
 import ActionDropdown from "../../../components/common/admin/ActionDropdown";
 import ToggleSwitch from "../../../components/common/ToggleSwitch";
 import PageHeader from "../../../components/common/admin/PageHeader";
-import ViewCategoryModal from "../modals/ViewCategoryModal";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const AllCategoriesList = () => {
   // stats data
@@ -142,6 +142,7 @@ const AllCategoriesList = () => {
     },
   ];
  
+  const navigate = useNavigate()
   return (
     <>
       <div>
@@ -344,7 +345,7 @@ const AllCategoriesList = () => {
                           label: "View Category",
                           icon: <MdOutlineRemoveRedEye size={20} />,
                           onClick: () => {
-                            
+                            navigate('/admin/categories/category-details')
                           },
                         },
 
