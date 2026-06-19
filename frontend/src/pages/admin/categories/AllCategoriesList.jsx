@@ -369,7 +369,7 @@ const AllCategoriesList = () => {
                         {
                           label: "Services",
                           icon: <MdOutlineMiscellaneousServices size={20} />,
-                          onClick: () => {},
+                          onClick: () => {navigate('/admin/categories/category-service')},
                         },
 
                         {
