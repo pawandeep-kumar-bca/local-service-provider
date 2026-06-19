@@ -152,7 +152,7 @@ const AllCategoriesList = () => {
           title="Categories Management"
           subtitle="Create and manage all service categories."
           button={
-            <Button>
+            <Button onClick={()=>navigate('/admin/categories/add-category')}>
               <HiPlus size={22} />
               Add New Category
             </Button>
