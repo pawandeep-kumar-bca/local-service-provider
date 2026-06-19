@@ -361,7 +361,9 @@ const AllCategoriesList = () => {
                         {
                           label: "Add Subcategory",
                           icon: <HiPlus size={20} />,
-                          onClick: () => {},
+                          onClick: () => {navigate(
+                           "/admin/categories/add-sub-category"
+                          )},
                         },
 
                         {
