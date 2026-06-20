@@ -343,7 +343,7 @@ const AllUsersList = () => {
           </div>
         </TableWrapper>
       </div>
-      {isOpen && isOpen && (
+      {isOpen  && (
         <DeleteModal
           open={isOpen}
           close={() => setIsOpen(false)}

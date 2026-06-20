@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { BiCategory } from "react-icons/bi";
 
 import { FaRegCircleCheck } from "react-icons/fa6";
 
-import { IoEyeOffOutline } from "react-icons/io5";
-
+import { IoEyeOffOutline, IoHomeOutline } from "react-icons/io5";
+import { CgArrowsExchangeAltV } from "react-icons/cg";
 import {
   MdOutlineEdit,
   MdOutlineLock,
@@ -29,6 +29,7 @@ import ToggleSwitch from "../../../components/common/ToggleSwitch";
 import PageHeader from "../../../components/common/admin/PageHeader";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import DeleteModal from "../modals/DeleteModal";
 
 const AllCategoriesList = () => {
   // stats data
@@ -143,6 +144,8 @@ const AllCategoriesList = () => {
   ];
  
   const navigate = useNavigate()
+
+  const [isDelete ,setIsDelete] = useState(false)
   return (
     <>
       <div>
@@ -352,7 +355,6 @@ const AllCategoriesList = () => {
                         {
                           label: "Edit Category",
                           icon: <MdOutlineEdit size={20} />,
-                          variant: "primary",
                           onClick: () => {navigate(
                             '/admin/categories/edit-category'
                           )},
@@ -377,6 +379,24 @@ const AllCategoriesList = () => {
                           icon: <HiMiniUsers size={20} />,
                           onClick: () => {navigate('/admin/categories/category-providers')},
                         },
+                        {
+                          label: "Change Status",
+                          variant:'green',
+                          icon: <CgArrowsExchangeAltV size={20} />,
+                          onClick: () => {},
+                        },
+                        {
+                          label: "Toggle HomePage",
+                          variant:'primary',
+                          icon: <IoHomeOutline  size={20} />,
+                          onClick: () => {},
+                        },
+                        {
+                          label: "Delete Category",
+                          variant:'danger',
+                          icon: <RiDeleteBin6Line size={20} />,
+                          onClick: () => {setIsDelete(true)},
+                        },
                       ]}
                     />
                   </div>
@@ -387,6 +407,15 @@ const AllCategoriesList = () => {
         </TableWrapper>
       </div>
 
+      
+        {isDelete  && (
+        <DeleteModal
+          open={isDelete}
+          close={() => setIsDelete(false)}
+          text=" Are you sure you want delete Plumbing category? This action cannot be undone."
+          title="Category"
+        />
+      )}
       
     </>
   );
