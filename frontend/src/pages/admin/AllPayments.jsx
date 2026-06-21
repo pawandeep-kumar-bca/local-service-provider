@@ -2,10 +2,7 @@ import React from "react";
 
 import { CiBank } from "react-icons/ci";
 
-import {
-  FaHourglassStart,
-  FaRegCircleCheck,
-} from "react-icons/fa6";
+import { FaHourglassStart, FaRegCircleCheck } from "react-icons/fa6";
 
 import { IoWalletOutline } from "react-icons/io5";
 
@@ -13,10 +10,7 @@ import { AiOutlineReload } from "react-icons/ai";
 
 import { SiPaytm } from "react-icons/si";
 
-import {
-  MdOutlineFileDownload,
-  MdOutlineRemoveRedEye,
-} from "react-icons/md";
+import { MdOutlineFileDownload, MdOutlineRemoveRedEye } from "react-icons/md";
 
 import StatsCard from "../../components/common/admin/StatsCard";
 import SearchFilterBar from "../../components/common/admin/SearchFilterBar";
@@ -26,9 +20,9 @@ import ActionDropdown from "../../components/common/admin/ActionDropdown";
 
 import RevenueOverview from "../../utils/providerCharts/RevenueOverview";
 import UpiStatus from "../../utils/providerCharts/UpiStatus";
+import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 
 const AllPayments = () => {
-
   // stats data
 
   const statsData = [
@@ -40,6 +34,8 @@ const AllPayments = () => {
       icon: <IoWalletOutline size={22} />,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -50,6 +46,8 @@ const AllPayments = () => {
       icon: <FaRegCircleCheck size={22} />,
       iconBg: "bg-green-100",
       iconColor: "text-green-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -60,6 +58,8 @@ const AllPayments = () => {
       icon: <FaHourglassStart size={22} />,
       iconBg: "bg-yellow-100",
       iconColor: "text-yellow-500",
+      growthIcon: <IoMdArrowRoundDown size={20} />,
+      growthColor: "text-yellow-500",
     },
 
     {
@@ -70,6 +70,8 @@ const AllPayments = () => {
       icon: <AiOutlineReload size={22} />,
       iconBg: "bg-red-100",
       iconColor: "text-red-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
 
     {
@@ -80,6 +82,8 @@ const AllPayments = () => {
       icon: <CiBank size={24} />,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+      growthColor: "text-green-500",
     },
   ];
 
@@ -94,8 +98,7 @@ const AllPayments = () => {
       bookingId: "#BK10234",
 
       customer: {
-        image:
-          "https://randomuser.me/api/portraits/women/34.jpg",
+        image: "https://randomuser.me/api/portraits/women/34.jpg",
 
         name: "John Doe",
 
@@ -103,8 +106,7 @@ const AllPayments = () => {
       },
 
       provider: {
-        image:
-          "https://randomuser.me/api/portraits/men/22.jpg",
+        image: "https://randomuser.me/api/portraits/men/22.jpg",
 
         name: "Aman Doe",
 
@@ -134,8 +136,7 @@ const AllPayments = () => {
       bookingId: "#BK10235",
 
       customer: {
-        image:
-          "https://randomuser.me/api/portraits/women/40.jpg",
+        image: "https://randomuser.me/api/portraits/women/40.jpg",
 
         name: "Priya Sharma",
 
@@ -143,8 +144,7 @@ const AllPayments = () => {
       },
 
       provider: {
-        image:
-          "https://randomuser.me/api/portraits/men/30.jpg",
+        image: "https://randomuser.me/api/portraits/men/30.jpg",
 
         name: "Rahul Kumar",
 
@@ -170,13 +170,10 @@ const AllPayments = () => {
   return (
     <>
       <div>
-
         {/* stats cards */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2 mt-4 mb-6">
-
           {statsData.map((item) => (
-
             <StatsCard
               key={item.id}
               title={item.title}
@@ -185,6 +182,8 @@ const AllPayments = () => {
               icon={item.icon}
               iconBg={item.iconBg}
               iconColor={item.iconColor}
+              growthColor={item.growthColor}
+              growthIcon={item.growthIcon}
             />
           ))}
         </div>
@@ -192,7 +191,6 @@ const AllPayments = () => {
         {/* charts */}
 
         <div className="flex gap-3 my-4">
-
           <div
             className="
               flex-[1.76]
@@ -209,13 +207,11 @@ const AllPayments = () => {
           <div>
             <UpiStatus />
           </div>
-
         </div>
 
         {/* table wrapper */}
 
         <TableWrapper>
-
           {/* filters */}
 
           <SearchFilterBar
@@ -224,33 +220,19 @@ const AllPayments = () => {
               {
                 label: "Payment Status",
 
-                options: [
-                  "Paid",
-                  "Pending",
-                  "Refunded",
-                  "Failed",
-                ],
+                options: ["Paid", "Pending", "Refunded", "Failed"],
               },
 
               {
                 label: "Payment Method",
 
-                options: [
-                  "UPI",
-                  "Credit Card",
-                  "Wallet",
-                  "Net Banking",
-                ],
+                options: ["UPI", "Credit Card", "Wallet", "Net Banking"],
               },
 
               {
-                label:
-                  "Service Categories",
+                label: "Service Categories",
 
-                options: [
-                  "Plumbing",
-                  "Cleaning",
-                ],
+                options: ["Plumbing", "Cleaning"],
               },
             ]}
           />
@@ -258,15 +240,13 @@ const AllPayments = () => {
           {/* table */}
 
           <div className="border border-slate-300 rounded-xl">
-
             {/* table heading */}
 
             <div
               className="
                 grid
-                grid-cols-[1fr_1fr_1.5fr_1.5fr_1.4fr_1fr_1fr_1.4fr_1fr_1.2fr_0.7fr]
+                grid-cols-[1fr_1.5fr_1.5fr_1.1fr_1fr_1fr_1.2fr_0.5fr]
                 items-center
-                justify-items-center
                 mt-3
                 text-sm
                 font-bold
@@ -274,29 +254,21 @@ const AllPayments = () => {
                 px-3
               "
             >
-
               <span>Transaction ID</span>
 
-              <span>Booking ID</span>
+              <span className="pl-7">Customer</span>
 
-              <span>Customer</span>
+              <span className="pl-7">Provider</span>
 
-              <span>Provider</span>
+              <span className="text-center">Payment Method</span>
 
-              <span>Payment Method</span>
+              <span className="text-center">Amount</span>
 
-              <span>Amount</span>
+              <span className="text-center">Status</span>
 
-              <span>Platform Fee</span>
-
-              <span>Provider Earnings</span>
-
-              <span>Status</span>
-
-              <span>Date & Time</span>
+              <span className="text-center">Date & Time</span>
 
               <span>Action</span>
-
             </div>
 
             <div className="border-t border-gray-200 mt-3 mb-2"></div>
@@ -304,34 +276,18 @@ const AllPayments = () => {
             {/* rows */}
 
             <div className="space-y-2 pb-3">
-
               {payments.map((payment) => (
-
                 <div
                   key={payment.id}
                   className="
-                    grid
-                    grid-cols-[1fr_1fr_1.5fr_1.5fr_1.4fr_1fr_1fr_1.4fr_1fr_1.2fr_0.7fr]
-                    items-center
-                    justify-items-center
-                    gap-3
-                    px-3
+                    grid grid-cols-[1fr_1.5fr_1.5fr_1.1fr_1fr_1fr_1.2fr_0.5fr] items-center px-3
                   "
                 >
-
                   {/* transaction id */}
 
                   <div>
                     <h1 className="text-sm font-semibold text-blue-500">
                       {payment.transactionId}
-                    </h1>
-                  </div>
-
-                  {/* booking id */}
-
-                  <div>
-                    <h1 className="text-sm font-semibold text-blue-500">
-                      {payment.bookingId}
                     </h1>
                   </div>
 
@@ -353,47 +309,21 @@ const AllPayments = () => {
 
                   {/* payment method */}
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <SiPaytm size={24} className="text-blue-500" />
 
-                    <SiPaytm
-                      size={24}
-                      className="text-blue-500"
-                    />
-
-                    <p>
-                      {payment.paymentMethod}
-                    </p>
-
+                    <p>{payment.paymentMethod}</p>
                   </div>
 
                   {/* amount */}
 
-                  <div>
-                    <p className="text-sm font-semibold text-black/80">
+                  <div >
+                    <p className="text-sm text-center font-semibold text-black/80">
                       {payment.amount}
                     </p>
                   </div>
 
-                  {/* platform fee */}
-
-                  <div>
-                    <p className="text-sm font-semibold text-black/80">
-                      {payment.platformFee}
-                    </p>
-                  </div>
-
-                  {/* provider earnings */}
-
-                  <div>
-                    <p className="text-sm font-semibold text-black/80">
-                      {payment.providerEarnings}
-                    </p>
-                  </div>
-
-                  {/* payment status */}
-
-                  <div>
-
+                  <div className="flex items-center justify-center">
                     <span
                       className={`
                         py-1 px-3 rounded-lg text-sm flex items-center gap-2 border
@@ -405,7 +335,6 @@ const AllPayments = () => {
                         }
                       `}
                     >
-
                       <div
                         className={`
                           w-2 h-2 rounded-full
@@ -418,26 +347,18 @@ const AllPayments = () => {
                         `}
                       />
 
-                      <p>
-                        {payment.status}
-                      </p>
-
+                      <p>{payment.status}</p>
                     </span>
-
                   </div>
 
                   {/* date time */}
 
-                  <div>
-
+                  <div className="text-center">
                     <h3 className="text-sm font-semibold text-black/80">
                       {payment.date}
                     </h3>
 
-                    <p className="text-sm text-muted">
-                      {payment.time}
-                    </p>
-
+                    <p className="text-sm text-muted">{payment.time}</p>
                   </div>
 
                   {/* action dropdown */}
@@ -445,39 +366,24 @@ const AllPayments = () => {
                   <ActionDropdown
                     items={[
                       {
-                        label:
-                          "View Transaction",
+                        label: "View Transaction",
 
-                        icon: (
-                          <MdOutlineRemoveRedEye
-                            size={20}
-                          />
-                        ),
+                        icon: <MdOutlineRemoveRedEye size={20} />,
 
-                        onClick: () =>
-                          console.log("view"),
+                        onClick: () => console.log("view"),
                       },
 
                       {
-                        label:
-                          "Download Invoice",
+                        label: "Download Invoice",
 
-                        icon: (
-                          <MdOutlineFileDownload
-                            size={20}
-                          />
-                        ),
+                        icon: <MdOutlineFileDownload size={20} />,
 
                         variant: "primary",
 
-                        onClick: () =>
-                          console.log(
-                            "download"
-                          ),
+                        onClick: () => console.log("download"),
                       },
                     ]}
                   />
-
                 </div>
               ))}
             </div>
