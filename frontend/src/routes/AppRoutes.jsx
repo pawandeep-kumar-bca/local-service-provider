@@ -23,7 +23,7 @@ import AdminDashboard from "../pages/admin/AdminDashboardPage";
 import AllUsersList from "../pages/admin/users/AllUsersList";
 import AllBookingsList from "../pages/admin/bookings/AllBookingsList";
 import AllCategoriesList from "../pages/admin/categories/AllCategoriesList";
-import AllPayments from "../pages/admin/AllPayments";
+import AllPayments from "../pages/admin/payments/AllPayments";
 import AllReports from "../pages/admin/AllReports";
 import Setting from "../pages/admin/Setting";
 import AuthLayout from "../layouts/AuthLayout";
@@ -78,6 +78,7 @@ import AddCategory from "../pages/admin/categories/AddCategory";
 import AddSubCategory from "../pages/admin/categories/AddSubCategory";
 import CategoryServices from "../pages/admin/categories/CategoryServices";
 import CategoryProviders from "../pages/admin/categories/CategoryProviders";
+import PaymentTransitionDetails from "../pages/admin/payments/PaymentTransitionDetails";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -237,6 +238,7 @@ const AppRoutes = () => {
             <Route path="/admin/categories/category-services" element={<CategoryServices/>} />
             <Route path="/admin/categories/category-providers" element={<CategoryProviders/>} />
             <Route path="/admin/payments" element={<AllPayments />} />
+            <Route path="/admin/payments/payment-details" element={<PaymentTransitionDetails />} />
             <Route path="/admin/reports" element={<AllReports />} />
           </Route>
         </Route>

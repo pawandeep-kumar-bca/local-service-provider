@@ -12,15 +12,16 @@ import { SiPaytm } from "react-icons/si";
 
 import { MdOutlineFileDownload, MdOutlineRemoveRedEye } from "react-icons/md";
 
-import StatsCard from "../../components/common/admin/StatsCard";
-import SearchFilterBar from "../../components/common/admin/SearchFilterBar";
-import TableWrapper from "../../components/common/admin/TableWrapper";
-import UserInfo from "../../components/common/admin/UserInfo";
-import ActionDropdown from "../../components/common/admin/ActionDropdown";
+import StatsCard from "../../../components/common/admin/StatsCard";
+import SearchFilterBar from "../../../components/common/admin/SearchFilterBar";
+import TableWrapper from "../../../components/common/admin/TableWrapper";
+import UserInfo from "../../../components/common/admin/UserInfo";
+import ActionDropdown from "../../../components/common/admin/ActionDropdown";
 
-import RevenueOverview from "../../utils/providerCharts/RevenueOverview";
-import UpiStatus from "../../utils/providerCharts/UpiStatus";
+import RevenueOverview from "../../../utils/providerCharts/RevenueOverview";
+import UpiStatus from "../../../utils/providerCharts/UpiStatus";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const AllPayments = () => {
   // stats data
@@ -166,7 +167,7 @@ const AllPayments = () => {
       time: "2:45 PM",
     },
   ];
-
+const navigate = useNavigate()
   return (
     <>
       <div>
@@ -370,7 +371,7 @@ const AllPayments = () => {
 
                         icon: <MdOutlineRemoveRedEye size={20} />,
 
-                        onClick: () => console.log("view"),
+                        onClick: () => navigate('/admin/payments/payment-details'),
                       },
 
                       {
