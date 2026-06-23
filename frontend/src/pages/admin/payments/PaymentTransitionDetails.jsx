@@ -31,7 +31,7 @@ const PaymentTransitionDetails = () => {
         </Button>
       </div>
 
-      <div className="flex gap-4 mt-5">
+      <div className="flex gap-2 mt-5">
         <div className="border border-gray-100 rounded-lg bg-white p-5 shadow-[0_0_5px_rgba(0,0,0,0.10)] flex-1">
           <h1 className="text-xl font-bold text-black/80">Transaction Information</h1>
           <div className="flex flex-col gap-3 mt-4">
