@@ -11,11 +11,12 @@ import {
 
 import { RiAlarmWarningLine } from "react-icons/ri";
 
-import StatsCard from "../../components/common/admin/StatsCard";
-import SearchFilterBar from "../../components/common/admin/SearchFilterBar";
-import TableWrapper from "../../components/common/admin/TableWrapper";
-import UserInfo from "../../components/common/admin/UserInfo";
-import ActionDropdown from "../../components/common/admin/ActionDropdown";
+import StatsCard from "../../../components/common/admin/StatsCard";
+import SearchFilterBar from "../../../components/common/admin/SearchFilterBar";
+import TableWrapper from "../../../components/common/admin/TableWrapper";
+import UserInfo from "../../../components/common/admin/UserInfo";
+import ActionDropdown from "../../../components/common/admin/ActionDropdown";
+import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 
 const AllReports = () => {
 
@@ -34,6 +35,8 @@ const AllReports = () => {
       ),
       iconBg: "bg-purple-100",
       iconColor: "text-purple-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+            growthColor: "text-green-500",
     },
 
     {
@@ -44,6 +47,8 @@ const AllReports = () => {
       icon: <FaHourglassStart size={24} />,
       iconBg: "bg-yellow-100",
       iconColor: "text-yellow-500",
+      growthIcon: <IoMdArrowRoundDown size={20} />,
+            growthColor: "text-yellow-500",
     },
 
     {
@@ -56,6 +61,8 @@ const AllReports = () => {
       ),
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+            growthColor: "text-green-500",
     },
 
     {
@@ -66,6 +73,8 @@ const AllReports = () => {
       icon: <MdPriorityHigh size={24} />,
       iconBg: "bg-red-100",
       iconColor: "text-red-500",
+      growthIcon: <IoMdArrowRoundUp size={20} />,
+            growthColor: "text-green-500",
     },
   ];
 
@@ -163,6 +172,8 @@ const AllReports = () => {
               icon={item.icon}
               iconBg={item.iconBg}
               iconColor={item.iconColor}
+              growthColor={item.growthColor}
+              growthIcon={item.growthIcon}
             />
           ))}
         </div>
@@ -223,9 +234,8 @@ const AllReports = () => {
             <div
               className="
                 grid
-                grid-cols-[1fr_1.2fr_1.2fr_1fr_1fr_1fr_1.2fr_1fr_1fr]
+                grid-cols-[1fr_1.5fr_1.5fr_1.1fr_1fr_1fr_1.2fr_0.5fr]
                 items-center
-                justify-items-center
                 mt-3
                 text-sm
                 font-bold
@@ -236,19 +246,17 @@ const AllReports = () => {
 
               <span>Report ID</span>
 
-              <span>Report By</span>
+              <span className="pl-8">Report By</span>
 
-              <span>Against</span>
-
-              <span>Booking ID</span>
+              <span className="pl-8">Against</span>
 
               <span>Report Type</span>
 
-              <span>Priority</span>
+              <span className="text-center">Priority</span>
 
-              <span>Status</span>
+              <span className="text-center">Status</span>
 
-              <span>Date & Time</span>
+              <span className="text-center">Date & Time</span>
 
               <span>Action</span>
 
@@ -266,10 +274,8 @@ const AllReports = () => {
                   key={report.id}
                   className="
                     grid
-                    grid-cols-[1fr_1.2fr_1.2fr_1fr_1fr_1fr_1.2fr_1fr_1fr]
+                    grid-cols-[1fr_1.5fr_1.5fr_1.1fr_1fr_1fr_1.2fr_0.5fr]
                     items-center
-                    justify-items-center
-                    gap-3
                     px-3
                   "
                 >
@@ -312,16 +318,6 @@ const AllReports = () => {
                     }
                   />
 
-                  {/* booking id */}
-
-                  <div>
-
-                    <h1 className="text-sm font-semibold text-blue-500">
-                      {report.bookingId}
-                    </h1>
-
-                  </div>
-
                   {/* report type */}
 
                   <div className="flex items-center gap-2">
@@ -349,7 +345,7 @@ const AllReports = () => {
 
                   {/* priority */}
 
-                  <div>
+                  <div className="flex items-center justify-center">
 
                     <span
                       className={`
@@ -373,7 +369,7 @@ const AllReports = () => {
 
                   {/* status */}
 
-                  <div>
+                  <div className="flex items-center justify-center">
 
                     <span
                       className={`
@@ -394,7 +390,7 @@ const AllReports = () => {
 
                   {/* date */}
 
-                  <div>
+                  <div className="text-center">
 
                     <h3 className="text-sm font-semibold text-black/80">
                       {report.date}
