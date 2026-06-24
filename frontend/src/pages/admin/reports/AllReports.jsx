@@ -1,435 +1,304 @@
 import React from "react";
-
-import { FaHourglassStart } from "react-icons/fa6";
+import Button from "../../../components/common/Button";
+import UserInfo from "../../../components/common/admin/UserInfo";
 
 import {
-  MdOutlineRemoveRedEye,
-  MdOutlineReportGmailerrorred,
-  MdOutlineTaskAlt,
-  MdPriorityHigh,
+  MdOutlineChevronLeft,
+  MdOutlineReportProblem,
+  MdOutlineAssignment,
+  MdOutlineEmail,
+  MdOutlinePhone,
+  MdOutlineLocationOn,
+  MdOutlineCheckCircle,
+  MdOutlineBlock,
+  MdOutlineWarningAmber,
+  MdOutlineCalendarToday,
 } from "react-icons/md";
 
-import { RiAlarmWarningLine } from "react-icons/ri";
-
-import StatsCard from "../../../components/common/admin/StatsCard";
-import SearchFilterBar from "../../../components/common/admin/SearchFilterBar";
-import TableWrapper from "../../../components/common/admin/TableWrapper";
-import UserInfo from "../../../components/common/admin/UserInfo";
-import ActionDropdown from "../../../components/common/admin/ActionDropdown";
-import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
-
-const AllReports = () => {
-
-  // stats data
-
-  const statsData = [
-    {
-      id: 1,
-      title: "Total Reports",
-      value: "1,235",
-      growth: "12%",
-      icon: (
-        <MdOutlineReportGmailerrorred
-          size={24}
-        />
-      ),
-      iconBg: "bg-purple-100",
-      iconColor: "text-purple-500",
-      growthIcon: <IoMdArrowRoundUp size={20} />,
-            growthColor: "text-green-500",
-    },
-
-    {
-      id: 2,
-      title: "Pending Review",
-      value: "345",
-      growth: "5%",
-      icon: <FaHourglassStart size={24} />,
-      iconBg: "bg-yellow-100",
-      iconColor: "text-yellow-500",
-      growthIcon: <IoMdArrowRoundDown size={20} />,
-            growthColor: "text-yellow-500",
-    },
-
-    {
-      id: 3,
-      title: "Resolved Cases",
-      value: "543",
-      growth: "18%",
-      icon: (
-        <MdOutlineTaskAlt size={24} />
-      ),
-      iconBg: "bg-green-100",
-      iconColor: "text-green-600",
-      growthIcon: <IoMdArrowRoundUp size={20} />,
-            growthColor: "text-green-500",
-    },
-
-    {
-      id: 4,
-      title: "High Priority",
-      value: "78",
-      growth: "10%",
-      icon: <MdPriorityHigh size={24} />,
-      iconBg: "bg-red-100",
-      iconColor: "text-red-500",
-      growthIcon: <IoMdArrowRoundUp size={20} />,
-            growthColor: "text-green-500",
-    },
-  ];
-
-  // reports data
-
-  const reports = [
-    {
-      id: 1,
-
-      reportId: "#REP10234",
-
-      reportBy: {
-        image:
-          "https://randomuser.me/api/portraits/women/34.jpg",
-
-        name: "John Doe",
-
-        id: "#USR0934",
-      },
-
-      against: {
-        image:
-          "https://randomuser.me/api/portraits/men/22.jpg",
-
-        name: "Aman Doe",
-
-        id: "#PRO0934",
-      },
-
-      bookingId: "#BK10234",
-
-      reportType: "Fraud",
-
-      priority: "High",
-
-      status: "Under Review",
-
-      date: "May 12, 2024",
-
-      time: "10:30 AM",
-    },
-
-    {
-      id: 2,
-
-      reportId: "#REP10235",
-
-      reportBy: {
-        image:
-          "https://randomuser.me/api/portraits/women/40.jpg",
-
-        name: "Priya Sharma",
-
-        id: "#USR2034",
-      },
-
-      against: {
-        image:
-          "https://randomuser.me/api/portraits/men/30.jpg",
-
-        name: "Rahul Kumar",
-
-        id: "#PRO2034",
-      },
-
-      bookingId: "#BK10235",
-
-      reportType: "Payment Issue",
-
-      priority: "Medium",
-
-      status: "Resolved",
-
-      date: "May 15, 2024",
-
-      time: "2:45 PM",
-    },
-  ];
-
+const ReportDetails = () => {
   return (
-    <>
-      <div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold text-gray-900">
+                Report #RPT1023
+              </h1>
 
-        {/* stats cards */}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2 mt-4 mb-6">
-
-          {statsData.map((item) => (
-
-            <StatsCard
-              key={item.id}
-              title={item.title}
-              value={item.value}
-              growth={item.growth}
-              icon={item.icon}
-              iconBg={item.iconBg}
-              iconColor={item.iconColor}
-              growthColor={item.growthColor}
-              growthIcon={item.growthIcon}
-            />
-          ))}
-        </div>
-
-        {/* table wrapper */}
-
-        <TableWrapper>
-
-          {/* filters */}
-
-          <SearchFilterBar
-            placeholder="Search by report ID, user or provider..."
-            filters={[
-              {
-                label:
-                  "Report Status",
-
-                options: [
-                  "Under Review",
-                  "Pending",
-                  "Escalated",
-                  "Resolved",
-                  "Rejected",
-                ],
-              },
-
-              {
-                label:
-                  "Report Type",
-
-                options: [
-                  "Misbehavior",
-                  "No Show",
-                  "Payment Issue",
-                  "Fraud",
-                  "Poor Service",
-                ],
-              },
-
-              {
-                label: "Priority",
-
-                options: [
-                  "High",
-                  "Medium",
-                  "Low",
-                ],
-              },
-            ]}
-          />
-
-          {/* table */}
-
-          <div className="border border-slate-300 rounded-xl">
-
-            {/* heading */}
-
-            <div
-              className="
-                grid
-                grid-cols-[1fr_1.5fr_1.5fr_1.1fr_1fr_1fr_1.2fr_0.5fr]
-                items-center
-                mt-3
-                text-sm
-                font-bold
-                text-black/80
-                px-3
-              "
-            >
-
-              <span>Report ID</span>
-
-              <span className="pl-8">Report By</span>
-
-              <span className="pl-8">Against</span>
-
-              <span>Report Type</span>
-
-              <span className="text-center">Priority</span>
-
-              <span className="text-center">Status</span>
-
-              <span className="text-center">Date & Time</span>
-
-              <span>Action</span>
-
+              <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+                Pending Investigation
+              </span>
             </div>
 
-            <div className="border-t border-gray-200 mt-3 mb-2"></div>
+            <p className="text-sm text-gray-500 mt-2">
+              Created on May 12, 2024 at 10:20 AM
+            </p>
+          </div>
 
-            {/* rows */}
+          <Button color="green">
+            <MdOutlineChevronLeft size={20} />
+            Back
+          </Button>
+        </div>
+      </div>
 
-            <div className="space-y-2 pb-3">
+      {/* Info Cards */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+        {/* Report Info */}
+        <div className="bg-white rounded-3xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-lg font-bold">
+              Report Information
+            </h2>
 
-              {reports.map((report) => (
-
-                <div
-                  key={report.id}
-                  className="
-                    grid
-                    grid-cols-[1fr_1.5fr_1.5fr_1.1fr_1fr_1fr_1.2fr_0.5fr]
-                    items-center
-                    px-3
-                  "
-                >
-
-                  {/* report id */}
-
-                  <div>
-
-                    <h1 className="text-sm font-semibold text-blue-500">
-                      {report.reportId}
-                    </h1>
-
-                  </div>
-
-                  {/* report by */}
-
-                  <UserInfo
-                    image={
-                      report.reportBy.image
-                    }
-                    name={
-                      report.reportBy.name
-                    }
-                    id={
-                      report.reportBy.id
-                    }
-                  />
-
-                  {/* against */}
-
-                  <UserInfo
-                    image={
-                      report.against.image
-                    }
-                    name={
-                      report.against.name
-                    }
-                    id={
-                      report.against.id
-                    }
-                  />
-
-                  {/* report type */}
-
-                  <div className="flex items-center gap-2">
-
-                    <div
-                      className="
-                        w-10 h-10 rounded-full
-                        bg-red-100
-                        text-red-500
-                        flex items-center justify-center
-                      "
-                    >
-
-                      <RiAlarmWarningLine
-                        size={20}
-                      />
-
-                    </div>
-
-                    <p className="text-sm text-muted">
-                      {report.reportType}
-                    </p>
-
-                  </div>
-
-                  {/* priority */}
-
-                  <div className="flex items-center justify-center">
-
-                    <span
-                      className={`
-                        text-sm rounded-md border py-1 px-3 font-semibold
-
-                        ${
-                          report.priority ===
-                          "High"
-                            ? "text-red-500 bg-red-100 border-red-300"
-                            : report.priority ===
-                              "Medium"
-                            ? "text-yellow-500 bg-yellow-100 border-yellow-300"
-                            : "text-green-500 bg-green-100 border-green-300"
-                        }
-                      `}
-                    >
-                      {report.priority}
-                    </span>
-
-                  </div>
-
-                  {/* status */}
-
-                  <div className="flex items-center justify-center">
-
-                    <span
-                      className={`
-                        text-sm rounded-md border py-1 px-3 font-semibold
-
-                        ${
-                          report.status ===
-                          "Resolved"
-                            ? "text-green-500 bg-green-100 border-green-300"
-                            : "text-yellow-500 bg-yellow-100 border-yellow-300"
-                        }
-                      `}
-                    >
-                      {report.status}
-                    </span>
-
-                  </div>
-
-                  {/* date */}
-
-                  <div className="text-center">
-
-                    <h3 className="text-sm font-semibold text-black/80">
-                      {report.date}
-                    </h3>
-
-                    <p className="text-sm text-muted">
-                      {report.time}
-                    </p>
-
-                  </div>
-
-                  {/* action dropdown */}
-
-                  <ActionDropdown
-                    items={[
-                      {
-                        label:
-                          "View Report",
-
-                        icon: (
-                          <MdOutlineRemoveRedEye
-                            size={20}
-                          />
-                        ),
-
-                        onClick: () =>
-                          console.log("view"),
-                      },
-                    ]}
-                  />
-
-                </div>
-              ))}
+            <div className="w-11 h-11 rounded-2xl bg-red-50 flex items-center justify-center">
+              <MdOutlineReportProblem
+                size={24}
+                className="text-red-600"
+              />
             </div>
           </div>
-        </TableWrapper>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-500">
+                Report ID
+              </p>
+              <p className="font-semibold mt-1">
+                #RPT1023
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-500">
+                Priority
+              </p>
+              <p className="font-semibold text-red-500 mt-1">
+                High
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-500">
+                Category
+              </p>
+              <p className="font-semibold mt-1">
+                Fraud Activity
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-500">
+                Status
+              </p>
+              <p className="font-semibold text-yellow-600 mt-1">
+                Pending
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 bg-gray-50 rounded-2xl p-4">
+            <p className="text-xs text-gray-500 mb-2">
+              Description
+            </p>
+
+            <p className="text-sm text-gray-700 leading-6">
+              Customer reported that the provider
+              collected payment outside the platform
+              and did not complete the requested
+              plumbing service.
+            </p>
+          </div>
+        </div>
+
+        {/* Booking Info */}
+        <div className="bg-white rounded-3xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-lg font-bold">
+              Booking Information
+            </h2>
+
+            <div className="w-11 h-11 rounded-2xl bg-blue-50 flex items-center justify-center">
+              <MdOutlineAssignment
+                size={24}
+                className="text-blue-600"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-500">
+                Booking ID
+              </p>
+              <p className="font-semibold mt-1">
+                #BK2034
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-500">
+                Service
+              </p>
+              <p className="font-semibold mt-1">
+                Plumbing
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-500">
+                Amount
+              </p>
+              <p className="font-semibold mt-1">
+                ₹1,200
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <p className="text-xs text-gray-500">
+                Payment
+              </p>
+              <p className="font-semibold text-green-600 mt-1">
+                Paid
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center gap-2 text-gray-500">
+            <MdOutlineCalendarToday />
+            <span className="text-sm">
+              12 May 2024
+            </span>
+          </div>
+        </div>
       </div>
-    </>
+
+      {/* Reporter & Provider */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+        {/* Reporter */}
+        <div className="bg-white rounded-3xl border border-gray-100 p-5 shadow-sm">
+          <h2 className="text-lg font-bold mb-5">
+            Reporter Details
+          </h2>
+
+          <UserInfo
+            image="https://randomuser.me/api/portraits/women/44.jpg"
+            name="Priya Sharma"
+            id="#USR2034"
+          />
+
+          <div className="mt-5 space-y-3">
+            <div className="flex items-center gap-3">
+              <MdOutlinePhone className="text-blue-600" />
+              <p>+91 9876543210</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <MdOutlineEmail className="text-purple-600" />
+              <p>priya@gmail.com</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <MdOutlineLocationOn className="text-orange-600" />
+              <p>Noida Sector 2</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Provider */}
+        <div className="bg-white rounded-3xl border border-gray-100 p-5 shadow-sm">
+          <h2 className="text-lg font-bold mb-5">
+            Reported Provider
+          </h2>
+
+          <UserInfo
+            image="https://randomuser.me/api/portraits/men/55.jpg"
+            name="Manish Kumar"
+            id="#PRO2034"
+          />
+
+          <div className="mt-5 space-y-3">
+            <div className="flex items-center gap-3">
+              <MdOutlinePhone className="text-blue-600" />
+              <p>+91 9876543210</p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <MdOutlineEmail className="text-purple-600" />
+              <p>manish@gmail.com</p>
+            </div>
+
+            <div className="flex items-center justify-between bg-green-50 rounded-xl px-4 py-3">
+              <span className="text-sm">
+                Verification Status
+              </span>
+
+              <span className="text-green-600 font-semibold">
+                Verified
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Evidence */}
+      <div className="bg-white rounded-3xl border border-gray-100 p-5 shadow-sm">
+        <h2 className="text-lg font-bold mb-5">
+          Evidence Attachments
+        </h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              className="group overflow-hidden rounded-2xl border"
+            >
+              <img
+                src={`https://picsum.photos/400/300?random=${item}`}
+                alt=""
+                className="w-full h-44 object-cover group-hover:scale-110 transition-all duration-300"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Admin Notes */}
+      <div className="bg-white rounded-3xl border border-gray-100 p-5 shadow-sm">
+        <h2 className="text-lg font-bold mb-4">
+          Admin Notes
+        </h2>
+
+        <textarea
+          rows={5}
+          placeholder="Write investigation notes..."
+          className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-indigo-500 resize-none"
+        />
+      </div>
+
+      {/* Actions */}
+      <div className="bg-white rounded-3xl border border-gray-100 p-5 shadow-sm">
+        <div className="flex flex-wrap justify-end gap-3">
+          <Button color="red">
+            <MdOutlineBlock />
+            Suspend Provider
+          </Button>
+
+          <Button color="yellow">
+            <MdOutlineWarningAmber />
+            Reject Report
+          </Button>
+
+          <Button color="green">
+            <MdOutlineCheckCircle />
+            Resolve Report
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default AllReports;
+export default ReportDetails;

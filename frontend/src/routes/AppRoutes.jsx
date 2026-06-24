@@ -79,6 +79,7 @@ import AddSubCategory from "../pages/admin/categories/AddSubCategory";
 import CategoryServices from "../pages/admin/categories/CategoryServices";
 import CategoryProviders from "../pages/admin/categories/CategoryProviders";
 import PaymentTransitionDetails from "../pages/admin/payments/PaymentTransitionDetails";
+import ReportDetails from "../pages/admin/reports/ReportDetails";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -240,6 +241,7 @@ const AppRoutes = () => {
             <Route path="/admin/payments" element={<AllPayments />} />
             <Route path="/admin/payments/payment-details" element={<PaymentTransitionDetails />} />
             <Route path="/admin/reports" element={<AllReports />} />
+            <Route path="/admin/reports/report-details" element={<ReportDetails />} />
           </Route>
         </Route>
       </Route>
