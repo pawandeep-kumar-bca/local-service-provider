@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useState } from "react";
 const LoginPage = () => {
- const { registerMutation } = useAuth(); 
-  const [fullname ,setName] = useState('')
-  const [email ,setEmail] = useState('')
-  const [password ,setPassword] = useState('')
- const submitForm = (e) => {
+  const { registerMutation } = useAuth();
+  const [fullname, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const submitForm = (e) => {
     e.preventDefault(); // 🔥 page reload stop
 
     registerMutation.mutate({
@@ -17,9 +17,9 @@ const LoginPage = () => {
       email,
       password,
     });
-    setName('')
-    setEmail('')
-    setPassword('')
+    setName("");
+    setEmail("");
+    setPassword("");
   };
   return (
     <div className="w-full md:flex h-full">
@@ -28,15 +28,33 @@ const LoginPage = () => {
       </h1>
       <div className=" rounded-t-3xl md:rounded-xl -mt-11 md:mt-0  bg-card  px-6 py-8 max-w-md w-full mx-auto">
         <form onSubmit={submitForm}>
-          <Input label="Name" id="name" type="text" value={fullname} onChange={(e)=>{
-            setName(e.target.value)
-          }}/>
-          <Input label="Email" id="email" type="text" value={email} onChange={(e)=>{
-            setEmail(e.target.value)
-          }}/>
-          <Input label="Password" id="password" type="password" value={password} onChange={(e)=>{
-            setPassword(e.target.value)
-          }}/>
+          <Input
+            label="Name"
+            id="name"
+            type="text"
+            value={fullname}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+          <Input
+            label="Email"
+            id="email"
+            type="text"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+          <Input
+            label="Password"
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
 
           <Button type="submit" color="success" fullWidth>
             Sign Up
@@ -44,11 +62,11 @@ const LoginPage = () => {
         </form>
 
         <div className="w-full h-[2px] md:hidden flex bg-border rounded-full mt-6 mb-2"></div>
-        <h4 className="text-center md:hidden flex text-sm">
+        <h4 className="text-center  md:hidden flex text-sm">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="font-semibold cursor-pointer text-primary"
+            className="font-bold pl-1 cursor-pointer text-primary"
           >
             Login
           </Link>{" "}

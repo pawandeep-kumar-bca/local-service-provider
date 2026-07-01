@@ -1,20 +1,20 @@
-import { IoMdClose, IoMdNotifications } from "react-icons/io";
+import { IoIosArrowDown, IoMdClose, IoMdNotifications } from "react-icons/io";
 import { IoMenu, IoSearch } from "react-icons/io5";
 import MenuSideBar from "./MenuSideBar";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import Notification from "./Notification";
+import { FaLocationDot } from "react-icons/fa6";
 const NavBar = () => {
-  
   const [openMenuBar, setOpenMenuBar] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const role = user?.role;
-  const [openNotification,setOpenNotification]=useState(false)
+  const [openNotification, setOpenNotification] = useState(false);
   return (
     <>
       <div className="w-full bg-bg h-[5.3rem] flex items-center">
         {/* LEFT (same as sidebar width) */}
- 
+
         {/* RIGHT SIDE */}
         <div className="flex flex-1 items-center justify-between pr-4 pl-1 md:px-4">
           {/* Mobile Profile */}
@@ -25,7 +25,7 @@ const NavBar = () => {
           />
 
           {/* Search */}
-          <div className="flex items-center gap-2 border border-muted rounded-lg py-1 px-2 flex-1 md:ml-7 md:mr-4 mx-4">
+          <div className="flex items-center gap-2 border border-muted rounded-lg py-1 px-2 flex-1 md:mx-7 md:mr-4 mx-4">
             <IoSearch className="text-xl" />
             <input
               type="text"
@@ -35,19 +35,32 @@ const NavBar = () => {
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center gap-3">
-            <div className="relative cursor-pointer">
-              <IoMdNotifications className="text-2xl"  onClick={()=>setOpenNotification((prev) => !prev)}/>
-              <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full px-1 text-[10px]">
-                0
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 cursor-pointer">
+              <FaLocationDot />
+              <div className="flex items-center gap-2">
+                <span>Noida</span>
+                <IoIosArrowDown />
               </div>
             </div>
 
-            <img
-              src="/assets/profile.png"
-              alt="profile"
-              className="hidden cursor-pointer md:flex w-12 h-12 rounded-full"
-            />
+            <div className="flex items-center gap-3">
+              <div className="relative cursor-pointer">
+                <IoMdNotifications
+                  className="text-2xl"
+                  onClick={() => setOpenNotification((prev) => !prev)}
+                />
+                <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full px-1 text-[10px]">
+                  0
+                </div>
+              </div>
+
+              <img
+                src="/assets/profile.png"
+                alt="profile"
+                className="hidden cursor-pointer md:flex w-12 h-12 rounded-full"
+              />
+            </div>
 
             {/* Hamburger */}
             {openMenuBar ? (
@@ -76,7 +89,9 @@ const NavBar = () => {
           </div>
         </>
       )}
-      {openNotification && <Notification setOpenNotification={setOpenNotification}/>}
+      {openNotification && (
+        <Notification setOpenNotification={setOpenNotification} />
+      )}
     </>
   );
 };

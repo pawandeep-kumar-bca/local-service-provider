@@ -1,6 +1,7 @@
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
-const LoginPage = () => {
+import { Link } from "react-router-dom";
+const LoginPage = () => {  
   return (
     <div className="w-full min-h-screen">
       <h1 className="bg-gradient-to-br text-center from-blue-400 via-blue-600 to-blue-800 text-2xl text-white font-medium pb-16 pt-10 rounded-b-3xl shadow-lg">
@@ -23,9 +24,9 @@ const LoginPage = () => {
         </form>
 
         <div className="w-full h-[2px] bg-border rounded-full mt-6 mb-2"></div>
-        <h4 className="text-center text-sm font-bold cursor-pointer text-primary">
+        <Link to='/login' className="text-center text-sm font-bold cursor-pointer text-primary">
           Back To Login
-        </h4>
+        </Link>
       </div>
     </div>
   );

@@ -80,12 +80,14 @@ import CategoryServices from "../pages/admin/categories/CategoryServices";
 import CategoryProviders from "../pages/admin/categories/CategoryProviders";
 import PaymentTransitionDetails from "../pages/admin/payments/PaymentTransitionDetails";
 import ReportDetails from "../pages/admin/reports/ReportDetails";
+
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage'
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<AuthLayout />} />
       <Route path="/register" element={<AuthLayout />} />
-
+      <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />

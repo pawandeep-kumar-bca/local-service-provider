@@ -5,10 +5,9 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useState } from "react";
 const LoginPage = () => {
-
-  const {loginMutation} = useAuth()
-  const [email,setEmail] = useState('')
-  const [password,setPassword] = useState('')
+  const { loginMutation } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const submitForm = (e) => {
     e.preventDefault(); // 🔥 page reload stop
@@ -17,9 +16,9 @@ const LoginPage = () => {
       email,
       password,
     });
-   
-    setEmail('')
-    setPassword('')
+
+    setEmail("");
+    setPassword("");
   };
   return (
     <div className="w-full md:flex h-full">
@@ -28,17 +27,32 @@ const LoginPage = () => {
       </h1>
       <div className=" rounded-t-3xl md:rounded-xl -mt-11 md:mt-0  bg-card  px-6 py-8 max-w-md w-full mx-auto">
         <form onSubmit={submitForm}>
-          <Input label="Email" id="email" type="text" value={email} onChange={(e)=>{
-            setEmail(e.target.value)
-          }} />
-          <Input label="Password" id="password" type="password" value={password} onChange={(e)=>{
-            setPassword(e.target.value)
-          }}/>
-          <span className="pb-7 block text-right cursor-pointer text-primary text-sm font-medium">
+          <Input
+            label="Email"
+            id="email"
+            type="text"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+          <Input
+            label="Password"
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+          <Link
+            to="/forgot-password"
+            className="pb-7 block text-right cursor-pointer text-primary text-sm font-medium"
+          >
             Forgot password?
-          </span>
+          </Link>
 
-          <Button color="success" type='submit' fullWidth>
+          <Button color="success" type="submit" fullWidth>
             Login
           </Button>
         </form>
@@ -58,7 +72,10 @@ const LoginPage = () => {
         <div className="w-full h-[2px] md:hidden flex bg-border rounded-full mt-6 mb-2"></div>
         <h4 className="text-center md:hidden flex text-sm">
           Don't have an account?{" "}
-          <Link to='/register' className="font-semibold cursor-pointer text-primary">
+          <Link
+            to="/register"
+            className="font-bold pl-1 cursor-pointer text-primary"
+          >
             Register
           </Link>{" "}
         </h4>
