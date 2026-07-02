@@ -19,19 +19,13 @@ const UserDashboard = () => {
             >
               <div className="p-5">
                 <h1 className="text-bg font-bold text-3xl pb-1">
-                  Hi , shivam{" "}
+                  Welcome Back , shivam 👋
                 </h1>
-                <p className="text-bg text-2xl font-semibold md:font-normal">
-                  Welcome to your dashboard
-                </p>
+                
               </div>
-              <img
-                src="/assets/man.png"
-                alt="image"
-                className="w-[22%] hidden md:block "
-              />
+              
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
+            {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
               <Cards
                 icon={<FaWallet className="text-success text-2xl" />}
                 value={3}
@@ -56,9 +50,9 @@ const UserDashboard = () => {
               >
                 Reviewed
               </Cards>
-            </div>
-            <div className="px-3">
-              <div className="flex justify-between items-center pb-5">
+            </div> */}
+            <div className="px-3 mt-6 sticky top-21 bg-white z-[999]">
+              <div className="flex justify-between items-center pb-1">
                 <h1 className="text-2xl font-bold">Providers</h1>
                 <Link to="all-providers" className="text-primary font-semibold">
                   View All
@@ -66,7 +60,8 @@ const UserDashboard = () => {
               </div>
 
              
-              <FilterProviders url='user'/>
+              
+               <FilterProviders url='user'/>
             </div>
           </>
         )}
