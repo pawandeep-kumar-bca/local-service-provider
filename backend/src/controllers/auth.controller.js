@@ -94,7 +94,6 @@ async function registerUser(req, res) {
 // ================= LOGIN =================
 async function loginUser(req, res) {
   try {
-    console.log("🔥 Login API Hit");
     const { email, password } = req.body;
 
     const user = await userModel.findOne({ email }).select("+password");
