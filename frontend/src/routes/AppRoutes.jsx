@@ -82,6 +82,7 @@ import PaymentTransitionDetails from "../pages/admin/payments/PaymentTransitionD
 import ReportDetails from "../pages/admin/reports/ReportDetails";
 
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage'
+import ProviderList from "../components/provider/ProviderList";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -97,8 +98,8 @@ const AppRoutes = () => {
           {/* User */}
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
             <Route path="/user" element={<UserDashboard />}>
-              <Route index element={<ProviderCard />} />
-              <Route path=":category" element={<ProviderCard />} />
+              <Route index element={<ProviderList />} />
+              <Route path=":category" element={<ProviderList />} />
               <Route path="all-providers" element={<ViewAllProviders />}>
                 <Route path=":category" element={<ProviderCard />} />
               </Route>

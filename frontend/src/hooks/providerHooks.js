@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllProviders } from "../services/providerService";
 
-export const useProviders = () => {
+export const useProviders = ({ category } = {}) => {
   return useQuery({
-    queryKey: ["providers"],
-    queryFn: getAllProviders,
+    queryKey: ["providers", category],       // category change hote hi refetch hoga
+    queryFn: () => getAllProviders({ category }),
+    enabled: true,                            // agar category required ho to yaha condition laga sakte ho
   });
 };
