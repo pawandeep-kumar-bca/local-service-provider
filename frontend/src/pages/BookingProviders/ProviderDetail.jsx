@@ -14,14 +14,41 @@ import { FaBolt } from "react-icons/fa";
 import { FaFaucet } from "react-icons/fa6";
 
 import { MdOutlineAcUnit } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useProvider } from "../../hooks/providerHooks";
 const ProviderDetail = () => {
-  const navigate = useNavigate()
+  const { providerId } = useParams();
+  const navigate = useNavigate();
+  const { data, isLoading, error } = useProvider(providerId);
+
+  if (isLoading) return <h1>Loading...</h1>;
+
+  if (error) return <h1>Something went wrong.</h1>;
+
+  const provider = data?.providerExists;
+
+  const {
+    providerName,
+    profileImage,
+    price,
+    experience,
+    city,
+    verificationStatus,
+    rating,
+    totalReview,
+    availability,
+    categories = [],
+  } = provider;
+
+
+  const profileImageUrl =
+    profileImage?.url ||
+    "https://ui-avatars.com/api/?name=" + encodeURIComponent(providerName);
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-3 md:rounded">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Provider Details</h1>
-        <Button color="white" >
+        <Button color="white">
           <MdOutlineKeyboardArrowLeft size={24} />
           Back
         </Button>
@@ -30,13 +57,13 @@ const ProviderDetail = () => {
         <div className="w-full">
           <div className="flex gap-3 items-center">
             <img
-              src="/assets/profile.png"
+              src={profileImageUrl}
               alt="profile"
               className="object-cover w-[5rem] h-[5rem] rounded-full"
             />
 
             <div className="w-full flex flex-col gap-1 ">
-              <h1 className="md:text-2xl font-semibold">Aman Gupta</h1>
+              <h1 className="md:text-2xl font-semibold">{providerName}</h1>
 
               <div className="flex items-center gap-2 text-yellow-500">
                 <div className="flex gap-1">
@@ -46,11 +73,11 @@ const ProviderDetail = () => {
                   <FaStar />
                   <FaStar />
                 </div>
-                <h2 className="text-muted text-sm">400 Reviews</h2>
+                <h2 className="text-muted text-sm">{totalReview} Reviews</h2>
               </div>
               <div className="flex items-center gap-2">
                 <IoShieldCheckmarkOutline className="text-success " />
-                <h3>Available Now</h3>
+                <h3>{availability ? "Available Now" : "Unavailable"}</h3>
               </div>
             </div>
           </div>
@@ -62,7 +89,7 @@ const ProviderDetail = () => {
               />
 
               <div>
-                <h1 className="text-sm font-medium">5+ Years</h1>
+                <h1 className="text-sm font-medium">{experience} Years</h1>
                 <p className="text-sm text-muted">Experience</p>
               </div>
             </div>
@@ -74,7 +101,7 @@ const ProviderDetail = () => {
               />
 
               <div>
-                <h1 className="text-sm font-medium">Delhi, India</h1>
+                <h1 className="text-sm font-medium">{city}</h1>
                 <p className="text-sm text-muted">Location</p>
               </div>
             </div>
@@ -86,7 +113,9 @@ const ProviderDetail = () => {
               />
 
               <div>
-                <h1 className="text-sm font-medium">Verified</h1>
+                <h1 className="text-sm font-medium">{verificationStatus === "verified"
+  ? "Verified"
+  : "Not Verified"}</h1>
                 <p className="text-sm text-muted">Professional</p>
               </div>
             </div>
@@ -94,17 +123,24 @@ const ProviderDetail = () => {
         </div>
         <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] py-4 md:px-4 px-2 rounded flex md:flex-col justify-end items-center md:gap-0 gap-6 mt-4">
           <h3 className="flex items-center text-xl font-bold mb-3 md:mx-15 ">
-            <MdOutlineCurrencyRupee /> 250/hr
+            <MdOutlineCurrencyRupee /> {price}/hr
           </h3>
-          <Button fullWidth onClick={()=>navigate('/user/provider-details/booking-details')}>Book Now</Button>
+          <Button
+            fullWidth
+            onClick={() => navigate(`/user/provider-details/${providerId}/booking-details`)}
+          >
+            Book Now
+          </Button>
         </div>
       </div>
 
       <div className="mt-3">
         <h1 className="text-xl font-bold text-text mb-2">About Me</h1>
         <p>
-          Hi, I am Aman gupta . I have 5+ years of experience in home services.
-          I am professional and reliable.
+          Hi, I'm <strong>{providerName}</strong>. I have{" "}
+          <strong>{experience} years</strong> of experience in{" "}
+          <strong>{categories?.map((c) => c.name).join(", ")}</strong>. I
+          provide reliable and professional services at affordable prices.
         </p>
       </div>
       <div className="w-full">
@@ -112,113 +148,44 @@ const ProviderDetail = () => {
           <h2 className="text-xl font-bold text-text">Select Service</h2>
           <div className="mt-4">
             <div className="mt-4 grid gird-cols-1 md:grid-cols-3 gap-3">
-              <label
-                htmlFor="electrician"
-                className="inline-block cursor-pointer relative"
-              >
-                {/* Original Radio */}
-                <input
-                  type="radio"
-                  name="service"
-                  id="electrician"
-                  value="Electrician"
-                  className="peer accent-green-600 absolute right-4 top-4"
-                />
-
-                {/* Card */}
-                <div
-                  className="
-       border rounded-2xl p-3 transition-all duration-300 hover:border-green-400 peer-checked:border-green-500 peer-checked:bg-green-50
-      "
+              {categories?.map((category) => (
+                <label
+                  key={category._id}
+                  htmlFor={category._id}
+                  className="inline-block cursor-pointer relative"
                 >
-                  {/* Content */}
-                  <div className="mt-3 flex gap-5 flex-row ">
-                    <div className="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center">
-                      <FaBolt className="text-yellow-500" size={24} />
-                    </div>
-                    <div>
-                      <h2 className="font-semibold text-lg">Electrician</h2>
+                  <input
+                    type="radio"
+                    id={category._id}
+                    name="service"
+                    value={category.name}
+                    className="peer accent-green-600 absolute right-4 top-4"
+                  />
 
-                      <div className="flex items-center font-bold text-green-500">
-                        <MdOutlineCurrencyRupee />
-                        300/Hr
+                  <div className="border rounded-2xl p-3 transition-all duration-300 hover:border-green-400 peer-checked:border-green-500 peer-checked:bg-green-50">
+                    <div className="mt-3 flex gap-5">
+                      <div className="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center">
+                        <FaTools className="text-orange-500" size={24} />
+                      </div>
+
+                      <div>
+                        <h2 className="font-semibold text-lg capitalize">
+                          {category.name}
+                        </h2>
+
+                        <div className="flex items-center font-bold text-green-500">
+                          <MdOutlineCurrencyRupee />
+                          {price}/Hr
+                        </div>
                       </div>
                     </div>
+
+                    <p className="text-muted text-sm mt-2">
+                      {category.description}
+                    </p>
                   </div>
-
-                  <p className="w-[80%] text-muted font-semibold text-sm leading-6 mt-1">
-                    Wiring & Fitting, Electrical Repair, Fan & Light Fixing
-                  </p>
-                </div>
-              </label>
-
-              <label
-                htmlFor="plumber"
-                className="inline-block cursor-pointer relative"
-              >
-                <input
-                  type="radio"
-                  className="peer accent-green-600 absolute right-4 top-4"
-                  value="plumber"
-                  id="plumber"
-                  name="service"
-                />
-
-                <div className="border rounded-2xl p-3 transition-all duration-300 hover:border-green-400 peer-checked:bg-green-50 peer-checked:border-green-500">
-                  <div className="mt-3 flex gap-5 flex-row ">
-                    <div className="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center">
-                      <FaFaucet className=" text-blue-500" size={24} />
-                    </div>
-                    <div>
-                      <h2 className="font-semibold text-lg">Plumber</h2>
-
-                      <div className="flex items-center font-bold text-green-500">
-                        <MdOutlineCurrencyRupee />
-                        350/Hr
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="w-[80%] text-muted font-semibold text-sm leading-6 mt-1">
-                    Pipe Leakage Fix, Bathroom Fitting, Water Tank Repair, Tap &
-                    Pipe Service
-                  </p>
-                </div>
-              </label>
-
-              <label
-                htmlFor="acRepair"
-                className="relative inline-block cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name="service"
-                  id="acRepair"
-                  value="acRepair"
-                  className="peer accent-green-600 absolute right-4 top-4"
-                />
-
-                <div className="border  rounded-2xl p-3 transition-all duration-300 hover:border-green-400 peer-checked:bg-green-50 peer-checked:border-green-500">
-                  <div className="mt-3 flex gap-5 flex-row ">
-                    <div className="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center">
-                      <MdOutlineAcUnit className=" text-sky-600" size={24} />
-                    </div>
-                    <div>
-                      <h2 className="font-semibold text-lg">AC Repair</h2>
-
-                      <div className="flex items-center font-bold text-green-500">
-                        <MdOutlineCurrencyRupee />
-                        350/Hr
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="w-[80%] text-muted font-semibold text-sm leading-6 mt-1">
-                    AC Installation, Cooling Service, AC Gas Filling, AC
-                    Maintenance
-                  </p>
-                </div>
-              </label>
+                </label>
+              ))}
             </div>
           </div>
         </div>
@@ -228,12 +195,12 @@ const ProviderDetail = () => {
           <div className="flex-1 md:border rounded-2xl md:p-5 shadow-[inset_0_0_3px_rgba(255,255,255,0.8)]">
             {/* Heading */}
             <h2 className="flex items-center gap-1 text-2xl font-semibold text-text">
-              Reviews <span>(400)</span>
+              Reviews <span>({totalReview})</span>
             </h2>
 
             {/* Rating */}
             <div className="flex items-center gap-3 mt-3 mb-5">
-              <h4 className="text-4xl font-bold">4.8</h4>
+              <h4 className="text-4xl font-bold">{rating}</h4>
 
               <div>
                 <div className="flex text-yellow-500 gap-1">
@@ -244,7 +211,9 @@ const ProviderDetail = () => {
                   <FaStar />
                 </div>
 
-                <p className="text-sm text-muted mt-1">Based on 400 reviews</p>
+                <p className="text-sm text-muted mt-1">
+                  Based on {totalReview} reviews
+                </p>
               </div>
             </div>
 
@@ -366,39 +335,35 @@ const ProviderDetail = () => {
               </div>
 
               {/* Review 2 */}
-               <div className="flex gap-3">
-        <img
-          src="/assets/profile.png"
-          alt=""
-          className="w-14 h-14 rounded-full"
-        />
+              <div className="flex gap-3">
+                <img
+                  src="/assets/profile.png"
+                  alt=""
+                  className="w-14 h-14 rounded-full"
+                />
 
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold">
-              Priya Verma
-            </h3>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold">Priya Verma</h3>
 
-            <p className="text-sm text-muted">
-              1 week ago
-            </p>
-          </div>
+                    <p className="text-sm text-muted">1 week ago</p>
+                  </div>
 
-          <div className="flex text-yellow-500 gap-1 mt-1">
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-          </div>
+                  <div className="flex text-yellow-500 gap-1 mt-1">
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                  </div>
 
-          <p className="text-muted text-sm mt-1 leading-6">
-            Good work and very friendly behavior.
-          </p>
-        </div>
-      </div>
+                  <p className="text-muted text-sm mt-1 leading-6">
+                    Good work and very friendly behavior.
+                  </p>
+                </div>
+              </div>
 
-      {/* Review 3 */}
+              {/* Review 3 */}
               <div className="flex gap-3">
                 <img
                   src="/assets/profile.png"

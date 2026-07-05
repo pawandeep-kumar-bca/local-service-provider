@@ -134,10 +134,10 @@ const AppRoutes = () => {
               <Route index element={<CategoryList />} />
               <Route path=":category" element={<CategoryList />} />
             </Route>
-            <Route path="/user/provider-details" element={<ProviderDetail />} />
+            <Route path="/user/provider-details/:providerId" element={<ProviderDetail />} />
 
             <Route
-              path="/user/provider-details/booking-details"
+              path="/user/provider-details/:providerId/booking-details"
               element={<BookingDetail />}
             />
             <Route
