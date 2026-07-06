@@ -4,26 +4,43 @@ import ProviderCard from "../../components/provider/ProviderCard";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import Cards from "../../components/common/Cards";
 import FilterProviders from "./FilterProviders";
+import { useState } from "react";
 const UserDashboard = () => {
   const location = useLocation();
 
   const isAllProviders = location.pathname.includes("all-providers");
+  const [filters, setFilters] = useState({
+    category: "all",
 
+    search: "",
+
+    city: "",
+
+    minRating: "",
+
+    minExperience: "",
+
+    availability: "",
+
+    sort: "latest",
+
+    page: 1,
+
+    limit: 9,
+  });
   return (
     <>
       <div className="w-full h-full">
         {!isAllProviders && (
           <>
-            <div
-              className="w-[100%]  rounded-2xl bg-[#3B82F6] shadow-[inset_0_0_3px_rgba(0,0,255,0.3)] flex justify-between items-start mt-3"
-            >
+            <div className="w-[100%] h-[25rem] rounded-2xl bg-[#3B82F6] bg-[url(/assets/cleaning-service.svg)] object-fill bg-no-repeat object-right shadow-[inset_0_0_3px_rgba(0,0,255,0.3)] flex justify-between items-start mt-3">
               <div className="p-5">
                 <h1 className="text-bg font-bold text-3xl pb-1">
                   Welcome Back , shivam 👋
                 </h1>
                 
               </div>
-              
+             
             </div>
             {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
               <Cards
@@ -59,14 +76,15 @@ const UserDashboard = () => {
                 </Link>
               </div>
 
-             
-              
-               <FilterProviders url='user'/>
+              <FilterProviders url="user" filters={filters} setFilters={setFilters}/>
             </div>
           </>
         )}
-        <Outlet />
-      </div>
+        <Outlet context={{
+        filters,
+        setFilters
+    }}/>
+      </div> 
     </>
   );
 };

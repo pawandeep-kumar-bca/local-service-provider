@@ -101,7 +101,7 @@ const AppRoutes = () => {
               <Route index element={<ProviderList />} />
               <Route path=":category" element={<ProviderList />} />
               <Route path="all-providers" element={<ViewAllProviders />}>
-                <Route path=":category" element={<ProviderCard />} />
+                <Route path=":category" element={<ProviderList />} />
               </Route>
             </Route>
             <Route path="/user/my-bookings" element={<MyBookingsPage />}>

@@ -1,7 +1,7 @@
 import api from "./api";
 
-export const getAllProviders = async () => {
-  const response = await api.get("/providers");
+export const getAllProviders = async (params) => {
+  const response = await api.get("/providers",{params});
   return response.data;
 };
 

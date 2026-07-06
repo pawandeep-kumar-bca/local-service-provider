@@ -15,14 +15,14 @@ import StatusBadge from "../common/StatusBadge";
 import { CiStar } from "react-icons/ci";
 import { AiOutlineLike } from "react-icons/ai";
 
-const ProviderCard = ({ provider }) => {
+const ProviderCard = ({ provider, selectedCategory }) => {
   const navigate = useNavigate();
 
   const {
     _id,
     providerName,
     profileImage,
-    categories,
+    
     verificationStatus,
     rating,
     totalReview,
@@ -41,8 +41,14 @@ const ProviderCard = ({ provider }) => {
   const profileImageUrl =
     profileImage?.url ||
     "https://ui-avatars.com/api/?name=" + encodeURIComponent(providerName);
+    
+  console.log(selectedCategory);
+  
+  const matchedCategory = provider.categories.find(
+    (cat) => cat._id.toString() === selectedCategory,
+  );
 
-  const categoryName = categories?.[0]?.name || "Service";
+  const categoryName = matchedCategory?.name || provider.categories[0]?.name;
 
   const isVerified = verificationStatus === "verified";
 
@@ -176,9 +182,7 @@ const ProviderCard = ({ provider }) => {
             <div className="flex items-center gap-2 ">
               <FaLocationDot className=" text-black" size={24} />
               <div>
-                <h3 className="font-semibold text-text text-lg">
-                  {cityName}
-                </h3>
+                <h3 className="font-semibold text-text text-lg">{cityName}</h3>
                 <p className="text-sm text-muted">{locationText}</p>
               </div>
             </div>
@@ -197,9 +201,7 @@ const ProviderCard = ({ provider }) => {
                 {topRated ? (
                   <span className="bg-yellow-50  flex items-center gap-1 font-bold rounded-md py-2 px-5">
                     <CiStar className="text-yellow-500" size={20} />
-                    <h1 className="text-yellow-500 font-semibold">
-                      Top Rated
-                    </h1>
+                    <h1 className="text-yellow-500 font-semibold">Top Rated</h1>
                   </span>
                 ) : (
                   <span className="bg-blue-50 flex items-center gap-2 font-bold rounded-md py-2 px-5">
@@ -218,9 +220,7 @@ const ProviderCard = ({ provider }) => {
                   <span className="bg-gray-50 flex items-center gap-1 font-bold rounded-md py-2 px-5">
                     <IoRocketOutline className="text-gray-500" size={20} />
 
-                    <h1 className="text-text font-semibold">
-                      Recently Joined
-                    </h1>
+                    <h1 className="text-text font-semibold">Recently Joined</h1>
                   </span>
                 )}
               </div>

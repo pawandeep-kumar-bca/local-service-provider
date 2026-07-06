@@ -40,28 +40,34 @@ const StatusBadge = ({
   };
    
   // CATEGORY BADGES
-  const categoryStyles = {
-    electrician:
-      "bg-yellow-100 text-yellow-600 border-yellow-200",
+  const badgeColors = [
+  "bg-red-100 text-red-600 border-red-200",
+  "bg-orange-100 text-orange-600 border-orange-200",
+  "bg-yellow-100 text-yellow-600 border-yellow-200",
+  "bg-green-100 text-green-600 border-green-200",
+  "bg-emerald-100 text-emerald-600 border-emerald-200",
+  "bg-teal-100 text-teal-600 border-teal-200",
+  "bg-cyan-100 text-cyan-600 border-cyan-200",
+  "bg-sky-100 text-sky-600 border-sky-200",
+  "bg-blue-100 text-blue-600 border-blue-200",
+  "bg-indigo-100 text-indigo-600 border-indigo-200",
+  "bg-violet-100 text-violet-600 border-violet-200",
+  "bg-purple-100 text-purple-600 border-purple-200",
+  "bg-pink-100 text-pink-600 border-pink-200",
+  "bg-rose-100 text-rose-600 border-rose-200",
+];
+const getCategoryStyle = (category) => {
+  let hash = 0;
 
-    plumbing:
-      "bg-blue-100 text-blue-600 border-blue-200",
+  for (let i = 0; i < category.length; i++) {
+    hash += category.charCodeAt(i);
+  }
 
-    cleaning:
-      "bg-pink-100 text-pink-600 border-pink-200",
-
-    appliance:
-      "bg-cyan-100 text-cyan-600 border-cyan-200",
-
-    "home-repair":
-      "bg-orange-100 text-orange-600 border-orange-200",
-
-    "home-decor":
-      "bg-green-100 text-green-600 border-green-200",
-
-    beauty:
-      "bg-purple-100 text-purple-600 border-purple-200",
-  };
+  return badgeColors[hash % badgeColors.length];
+};
+const finalStyle = badge
+  ? badges[badge]
+  : getCategoryStyle(category);
 
   // ICONS
   const icons = {
@@ -76,11 +82,6 @@ const StatusBadge = ({
     pending: <IoTimeOutline size={18} />,
   };
 
-  // FINAL STYLE
-  const finalStyle =
-    badge
-      ? badges[badge]
-      : categoryStyles[category];
 
   // FINAL TEXT
   const finalText =
