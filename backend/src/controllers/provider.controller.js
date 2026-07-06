@@ -55,7 +55,7 @@ async function providerProfileCreate(req, res) {
       message: "Internal server error",
     });
   }
-} 
+}
 
 async function getProvider(req, res) {
   try {
@@ -135,18 +135,96 @@ async function updateProvider(req, res) {
 
 async function getProviders(req, res) {
   try {
-    const providers = await providerModel.find();
-    const count = await providerModel.countDocuments();
+    const limit = parseInt(req.query.limit) || 9;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
+
+    const {
+      category,
+      search,
+      city,
+      availability,
+      minRating,
+      minExperience,
+      sort = "latest",
+    } = req.query;
+    const filter = {};
+    // Category Filter (Multiple Categories)
+    if (category && category !== "all") {
+      filter.categories = { $in: [category] };
+    }
+
+    // search by provider name
+    if (search) {
+      filter.providerName = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+    // search by city
+    if (city) {
+      filter.city = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+    // Availability Filter
+    if (availability) {
+      filter.availability = availability;
+    }
+    // search by experience
+    if (minExperience) {
+      filter.experience = {
+        $gte: Number(minExperience),
+      };
+    }
+
+    // search by rating
+    if (minRating) {
+      filter.rating = {
+        $gte: Number(minRating),
+      };
+    }
+    // sorting
+    let sortOption = {};
+
+    switch (sort) {
+      case "rating":
+        sortOption= {
+          rating: -1
+        }
+        break;
+      case "price-low":
+        sortOption = { price: 1 };
+        break;
+
+      case "price-high":
+        sortOption = { price: -1 };
+        break;
+
+      default:
+        sortOption = { createdAt: -1 };
+    }
+    const providers = await providerModel
+      .find(filter)
+      .populate("categories", "name")
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit);
+    const totalProviders = await providerModel.countDocuments(filter);
     if (providers.length === 0) {
       return res
         .status(200)
-        .json({ message: "Providers not found", providers, count });
+        .json({ message: "Providers not found", providers, totalProviders });
     }
 
     return res.status(200).json({
-      message: "all provider fetch successfully",
+      success: true,
+      message: "Provider fetch successfully",
       providers,
-      count,
+      totalProviders,
+      currentPage: page,
+      totalPages: Math.ceil(totalProviders / limit),
     });
   } catch (err) {
     console.error("Get providers error:", err);
@@ -158,11 +236,14 @@ async function getOneProviderDetails(req, res) {
   try {
     const providerId = req.params.id;
 
-    const providerExists = await providerModel.findById(providerId);
+    const providerExists = await providerModel
+      .findById(providerId)
+      .populate("categories");
     if (!providerExists) {
       return res.status(404).json({ message: "Wrong Provider Id" });
     }
     return res.status(200).json({
+      success: true,
       message: "provider details fetch successfully",
       providerExists,
     });

@@ -25,7 +25,7 @@ router.put(
   providerControllers.updateProvider,
 );
 // GET /api/v1/providers
-router.get("/",authMiddleware.tokenVerify, roleBased("provider"), providerControllers.getProviders);
+router.get("/", providerControllers.getProviders);
 
 
 
@@ -53,7 +53,7 @@ router.put(
 );
 // GET /api/v1/providers/:id
 router.get(
-  "/:id", roleBased("provider"),
+  "/:id",
   validateObjectIdMiddleware('id'),
   providerControllers.getOneProviderDetails,
 );

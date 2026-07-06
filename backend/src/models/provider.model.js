@@ -14,7 +14,7 @@ const providerSchema = new mongoose.Schema(
 
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       required: true,
       unique: true,
     },
@@ -36,36 +36,22 @@ const providerSchema = new mongoose.Schema(
 
     documents: {
       aadharCard: {
-        url: {
-          type: String,
-          required: true,
-        },
-        fileId: {
-          type: String,
-        },
+        url: String,
+        fileId: String,
       },
       certificate: {
-        url: {
-          type: String,
-          required: true,
-        },
-        fileId: {
-          type: String,
-        },
+        url: String,
+        fileId: String,
       },
     },
 
     profileImage: {
-      url: {
-        type: String,
-      },
-      fileId: {
-        type: String,
-      },
+      url: String,
+      fileId: String,
     },
 
     verificationStatus: {
-      type: String, 
+      type: String,
       enum: ["verified", "not verified"],
       default: "not verified",
     },
@@ -86,28 +72,52 @@ const providerSchema = new mongoose.Schema(
       default: 0,
     },
 
+    completedJobs: {
+      type: Number,
+      default: 0,
+    },
+
     availability: {
       type: Boolean,
       default: true,
     },
 
-    // GEO LOCATION FIELD
+    responseTime: {
+      type: String,
+      default: "30 mins",
+    },
+
+    topRated: {
+      type: Boolean,
+      default: false,
+    },
+
+    trusted: {
+      type: Boolean,
+      default: false,
+    },
+
     location: {
       type: {
         type: String,
         enum: ["Point"],
       },
       coordinates: {
-        type: [Number], // [longitude, latitude]
+        type: [Number],
       },
     },
+
+    categories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );
 
-// GEO INDEX
 providerSchema.index({ location: "2dsphere" });
 
-const providerModel = mongoose.model("Provider", providerSchema);
-
-module.exports = providerModel;
+module.exports = mongoose.model("Provider", providerSchema);
