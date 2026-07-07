@@ -155,7 +155,6 @@ const CategoryList = () => {
   const filterCategory = !category
     ? services
     : services.filter((items) => items.category === category);
-  console.log(filterCategory);
 
   return (
     <>

@@ -15,14 +15,15 @@ import StatusBadge from "../common/StatusBadge";
 import { CiStar } from "react-icons/ci";
 import { AiOutlineLike } from "react-icons/ai";
 
+
 const ProviderCard = ({ provider, selectedCategory }) => {
   const navigate = useNavigate();
-
+ 
   const {
     _id,
     providerName,
     profileImage,
-    
+
     verificationStatus,
     rating,
     totalReview,
@@ -41,9 +42,7 @@ const ProviderCard = ({ provider, selectedCategory }) => {
   const profileImageUrl =
     profileImage?.url ||
     "https://ui-avatars.com/api/?name=" + encodeURIComponent(providerName);
-    
-  console.log(selectedCategory);
-  
+
   const matchedCategory = provider.categories.find(
     (cat) => cat._id.toString() === selectedCategory,
   );

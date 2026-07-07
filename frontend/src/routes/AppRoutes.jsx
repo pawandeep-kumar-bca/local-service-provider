@@ -101,6 +101,7 @@ const AppRoutes = () => {
               <Route index element={<ProviderList />} />
               <Route path=":category" element={<ProviderList />} />
               <Route path="all-providers" element={<ViewAllProviders />}>
+               <Route index element={<ProviderList />} />
                 <Route path=":category" element={<ProviderList />} />
               </Route>
             </Route>

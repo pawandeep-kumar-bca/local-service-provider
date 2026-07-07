@@ -34,8 +34,9 @@ const FilterProviders = ({ url, setFilters }) => {
       <ul className="mt-3 flex gap-4 overflow-x-auto scrollbar-hide">
 
         <NavLink
-          end
+          
           to={`/${url}`}
+          end
           onClick={() => handleCategory("all")}
           className={({ isActive }) =>
             `${base} ${isActive ? active : notActive}`
