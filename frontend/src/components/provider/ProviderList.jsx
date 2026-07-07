@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useProviders } from "../../hooks/providerHooks";
 import { useOutletContext } from "react-router-dom";
 import ProviderCard from "./ProviderCard";
 
 const ProviderList = () => {
-  const { filters } = useOutletContext();
+  const { filters ,setTotalPages} = useOutletContext();
   const { data, isLoading } = useProviders(filters);
-
+useEffect(() => {
+  if (data) {
+    setTotalPages(data.totalPages);
+  }
+}, [data, setTotalPages]);
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">Loading...</div>

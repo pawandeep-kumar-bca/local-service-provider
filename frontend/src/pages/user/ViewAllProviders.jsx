@@ -36,7 +36,7 @@ const ViewAllProviders = () => {
 
     limit: 9,
   });
-
+console.log("Total Pages:", totalPages);
 
   return (
     <div className="mt-4">
