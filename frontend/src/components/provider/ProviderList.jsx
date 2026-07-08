@@ -4,10 +4,17 @@ import { useOutletContext } from "react-router-dom";
 import ProviderCard from "./ProviderCard";
 
 const ProviderList = () => {
-  const { filters ,setTotalPages} = useOutletContext();
+  // const { filters ,setTotalPages} = useOutletContext();
+  const context = useOutletContext();
+
+  const filters = context.filters;
+  const setTotalPages = context.setTotalPages;
   const { data, isLoading } = useProviders(filters);
-useEffect(() => {
-  if (data) {
+
+ 
+
+  useEffect(() => {
+  if (data && typeof setTotalPages === "function") {
     setTotalPages(data.totalPages);
   }
 }, [data, setTotalPages]);

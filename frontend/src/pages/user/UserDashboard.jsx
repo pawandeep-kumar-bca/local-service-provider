@@ -1,10 +1,16 @@
-import { FaCheckCircle, FaStar, FaWallet } from "react-icons/fa";
+import { FaCheckCircle, FaRegCalendarCheck, FaStar, FaWallet } from "react-icons/fa";
 import Navbar from "../../components/common/NavBar";
 import ProviderCard from "../../components/provider/ProviderCard";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import Cards from "../../components/common/Cards";
 import FilterProviders from "./FilterProviders";
 import { useState } from "react";
+import Button from "../../components/common/Button";
+import { MdVerifiedUser } from "react-icons/md";
+import { GoClock } from "react-icons/go";
+
+import { LuLock } from "react-icons/lu";
+import { FaHandshakeAngle, FaUserGroup } from "react-icons/fa6";
 const UserDashboard = () => {
   const location = useLocation();
 
@@ -33,15 +39,64 @@ const UserDashboard = () => {
       <div className="w-full h-full">
         {!isAllProviders && (
           <>
-            <div className="w-[100%] h-[25rem] rounded-2xl bg-[#3B82F6] bg-[url(/assets/cleaning-service.svg)] object-fill bg-no-repeat object-right shadow-[inset_0_0_3px_rgba(0,0,255,0.3)] flex justify-between items-start mt-3">
-              <div className="p-5">
-                <h1 className="text-bg font-bold text-3xl pb-1">
-                  Welcome Back , shivam 👋
-                </h1>
-                
-              </div>
-             
-            </div>
+    <div className="relative w-full h-[20rem] rounded-2xl overflow-hidden bg-gradient-to-r from-[#3B82F6] via-[#7EAEFC] to-[#97BEFD]">
+
+  <img
+    src="/assets/cleaning-service.svg"
+    alt="Cleaning"
+    className="absolute right-0 -bottom-4 h-full object-contain z-[2]"
+  />
+  {/* <img
+    src="/assets/home.png"
+    alt="Cleaning"
+    className="absolute right-50 z-[1] -bottom-4 h-[80%] object-contain"
+  /> */}
+
+  <div className="relative px-10 py-8 z-10 ">
+    <div>
+      <h1 className="text-white text-3xl font-bold">
+      Welcome Back, Shivam 👋
+    </h1>
+    <p>Find trusted professionals for your home services.</p>
+    </div>
+    <div className="flex">
+      <div className="flex gap-3 items-center">
+        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-green-200 text-green-600">
+          <MdVerifiedUser size={20}/>
+        </div>
+        <div>
+        <h3>250+</h3>
+        <p>Verified Providers</p>
+        </div>
+      </div>
+      <div className="flex gap-3 items-center">
+        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white">
+<GoClock size={18}/>
+        </div>
+        <div>
+        <h3>12 min</h3>
+        <p>Avg. Response Time</p>
+        </div>
+      </div>
+      <div className="flex gap-3 items-center">
+       <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white">
+          <LuLock size={18}/>
+        </div>
+        <div>
+        <h3>100%</h3>
+        <p>Secure Booking</p>
+        </div>
+      </div>
+    </div>
+
+    <div className="flex gap-3">
+      <Button className="text-primary" color="white"><FaRegCalendarCheck  size={18}/>Book a Service</Button>
+      <Button className="border-white text-white"><FaUserGroup size={20}/>Explore Providers</Button>
+      <Button color="green"><FaHandshakeAngle size={20}/>Became a Provider</Button>
+    </div>
+  </div>
+
+</div>
             {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
               <Cards
                 icon={<FaWallet className="text-success text-2xl" />}
