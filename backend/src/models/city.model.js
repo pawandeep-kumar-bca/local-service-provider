@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 
 const citySchema = new mongoose.Schema({
-    city:{
+    name:{
         type:String,
         required:true
     },
-    district:{
+    districtId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'District',
         required:true
