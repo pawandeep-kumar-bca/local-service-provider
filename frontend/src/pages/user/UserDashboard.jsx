@@ -6,7 +6,7 @@ import {
 } from "react-icons/fa";
 import Navbar from "../../components/common/NavBar";
 import ProviderCard from "../../components/provider/ProviderCard";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Cards from "../../components/common/Cards";
 import FilterProviders from "./FilterProviders";
 import { useState } from "react";
@@ -18,7 +18,7 @@ import { LuLock } from "react-icons/lu";
 import { FaHandshakeAngle, FaUserGroup } from "react-icons/fa6";
 const UserDashboard = () => {
   const location = useLocation();
-
+ const navigate = useNavigate()
   const isAllProviders = location.pathname.includes("all-providers");
   const [filters, setFilters] = useState({
     category: "all",
@@ -56,7 +56,7 @@ const UserDashboard = () => {
                   <h1 className="text-white text-3xl font-bold">
                     Welcome Back, Shivam 👋
                   </h1>
-                  <p className="text-white text-lg font-light mt-3">
+                  <p className="text-white text-lg font-light mt-2">
                     Find trusted professionals for your home services.
                   </p>
                 </div>
@@ -118,7 +118,7 @@ const UserDashboard = () => {
                     <FaUserGroup size={18} />
                     Explore Providers
                   </Button>
-                  <Button color="blue">
+                  <Button color="blue" onClick={()=>navigate('/user/become-provider/basic-info')}>
                     <FaHandshakeAngle size={20} />
                     Became a Provider
                   </Button>
