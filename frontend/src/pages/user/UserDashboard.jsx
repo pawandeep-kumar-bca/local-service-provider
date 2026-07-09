@@ -1,4 +1,9 @@
-import { FaCheckCircle, FaRegCalendarCheck, FaStar, FaWallet } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaRegCalendarCheck,
+  FaStar,
+  FaWallet,
+} from "react-icons/fa";
 import Navbar from "../../components/common/NavBar";
 import ProviderCard from "../../components/provider/ProviderCard";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
@@ -39,64 +44,87 @@ const UserDashboard = () => {
       <div className="w-full h-full">
         {!isAllProviders && (
           <>
-    <div className="relative w-full h-[20rem] rounded-2xl overflow-hidden bg-gradient-to-r from-[#3B82F6] via-[#7EAEFC] to-[#97BEFD]">
+            <div className="relative w-full h-[20rem] rounded-2xl overflow-hidden bg-gradient-to-r from-[#1447E6]  to-[#97BEFD]">
+              <img
+                src="/assets/cleaning-service.svg"
+                alt="Cleaning"
+                className="absolute right-0 -bottom-7 h-full object-contain z-[2]"
+              />
 
-  <img
-    src="/assets/cleaning-service.svg"
-    alt="Cleaning"
-    className="absolute right-0 -bottom-4 h-full object-contain z-[2]"
-  />
-  {/* <img
-    src="/assets/home.png"
-    alt="Cleaning"
-    className="absolute right-50 z-[1] -bottom-4 h-[80%] object-contain"
-  /> */}
+              <div className="relative px-10 py-8 z-10 flex flex-col h-full justify-between">
+                <div>
+                  <h1 className="text-white text-3xl font-bold">
+                    Welcome Back, Shivam 👋
+                  </h1>
+                  <p className="text-white text-lg font-light mt-3">
+                    Find trusted professionals for your home services.
+                  </p>
+                </div>
+                <div className="flex">
+                  {/* Verified Providers */}
+                  <div
+                    className="flex items-center gap-3 pl-5 pr-8 py-3 -ml-4  rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg "
+                  >
+                    <div className="w-11 h-11 rounded-full bg-green-400/20 flex items-center justify-center">
+                      <MdVerifiedUser className="text-green-300 text-2xl" />
+                    </div>
 
-  <div className="relative px-10 py-8 z-10 ">
-    <div>
-      <h1 className="text-white text-3xl font-bold">
-      Welcome Back, Shivam 👋
-    </h1>
-    <p>Find trusted professionals for your home services.</p>
-    </div>
-    <div className="flex">
-      <div className="flex gap-3 items-center">
-        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-green-200 text-green-600">
-          <MdVerifiedUser size={20}/>
-        </div>
-        <div>
-        <h3>250+</h3>
-        <p>Verified Providers</p>
-        </div>
-      </div>
-      <div className="flex gap-3 items-center">
-        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white">
-<GoClock size={18}/>
-        </div>
-        <div>
-        <h3>12 min</h3>
-        <p>Avg. Response Time</p>
-        </div>
-      </div>
-      <div className="flex gap-3 items-center">
-       <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white">
-          <LuLock size={18}/>
-        </div>
-        <div>
-        <h3>100%</h3>
-        <p>Secure Booking</p>
-        </div>
-      </div>
-    </div>
+                    <div className="text-white">
+                      <h3 className="text-xl font-bold leading-none">250+</h3>
+                      <p className="text-sm text-white/80">
+                        Verified Providers
+                      </p>
+                    </div>
+                  </div>
 
-    <div className="flex gap-3">
-      <Button className="text-primary" color="white"><FaRegCalendarCheck  size={18}/>Book a Service</Button>
-      <Button className="border-white text-white"><FaUserGroup size={20}/>Explore Providers</Button>
-      <Button color="green"><FaHandshakeAngle size={20}/>Became a Provider</Button>
-    </div>
-  </div>
+                  {/* Response Time */}
+                  <div
+                    className="flex items-center gap-3 pl-5 pr-8 py-3 -ml-4  rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg "
+                  >
+                    <div className="w-11 h-11 rounded-full bg-blue-400/20 flex items-center justify-center">
+                      <GoClock className="text-blue-200 text-2xl" />
+                    </div>
 
-</div>
+                    <div className="text-white" >
+                      <h3 className="text-xl font-bold leading-none">
+                        12 min
+                      </h3>
+                      <p className="text-sm text-white/80">
+                        Avg. Response Time
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Secure Booking */}
+                   <div
+                    className="flex items-center gap-3 pl-5 pr-8 py-3 -ml-4  rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg "
+                  >
+                    <div className="w-11 h-11 rounded-full bg-indigo-400/20 flex items-center justify-center">
+                      <LuLock className="text-indigo-200 text-2xl" />
+                    </div>
+
+                    <div className="text-white">
+                      <h3 className="text-xl font-bold leading-none">100%</h3>
+                      <p className="text-sm text-white/80">Secure Booking</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <Button color="success">
+                    <FaRegCalendarCheck size={18} />
+                    Book a Service
+                  </Button>
+                  <Button color="white">
+                    <FaUserGroup size={18} />
+                    Explore Providers
+                  </Button>
+                  <Button color="blue">
+                    <FaHandshakeAngle size={20} />
+                    Became a Provider
+                  </Button>
+                </div>
+              </div>
+            </div>
             {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 mb-6">
               <Cards
                 icon={<FaWallet className="text-success text-2xl" />}
@@ -131,15 +159,21 @@ const UserDashboard = () => {
                 </Link>
               </div>
 
-              <FilterProviders url="user" filters={filters} setFilters={setFilters}/>
+              <FilterProviders
+                url="user"
+                filters={filters}
+                setFilters={setFilters}
+              />
             </div>
           </>
         )}
-        <Outlet context={{
-        filters,
-        setFilters
-    }}/>
-      </div> 
+        <Outlet
+          context={{
+            filters,
+            setFilters,
+          }}
+        />
+      </div>
     </>
   );
 };

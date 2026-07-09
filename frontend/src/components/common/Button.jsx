@@ -14,7 +14,7 @@ const Button = ({
     "bg-green-600 text-white hover:bg-green-700",
 
   white:
-    "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50",
+    "bg-white text-slate-700  hover:bg-slate-50",
 
   blue:
     "bg-blue-600 text-white hover:bg-blue-700",
