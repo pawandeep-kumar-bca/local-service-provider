@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const districtSchema = new mongoose.Schema({
     name:{
-        type:string,
+        type:String,
         required:true
     },
     state:{
@@ -13,6 +13,6 @@ const districtSchema = new mongoose.Schema({
 })
 
 
-const districtModel = mongoose.model('district',districtSchema)
+const districtModel = mongoose.model('District',districtSchema)
 
 module.exports = districtModel

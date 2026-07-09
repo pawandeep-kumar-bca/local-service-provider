@@ -28,7 +28,7 @@ const notificationRoutes = require('./routes/notification.routes');
 const paymentRoutes = require('./routes/payment.routes');
 const adminRoutes = require('./routes/admin.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
-
+const stateRoutes = require('./routes/state.routes')
 app.use('/api/v1/payments/webhook', express.raw({ type: 'application/json' }));
 
 app.use('/api/v1/auth', authRoutes);
@@ -42,7 +42,7 @@ app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes); 
-
+app.use('/api/v1',stateRoutes)
 // global error handler
 app.use((err, req, res, next) => {
   console.error(err);

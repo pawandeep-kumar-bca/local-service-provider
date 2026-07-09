@@ -11,6 +11,6 @@ const stateSchema = new mongoose.Schema({
 })
 
 
-const stateModal = mongoose.model('state',stateSchema)
+const stateModal = mongoose.model('State',stateSchema)
 
 module.exports = stateModal

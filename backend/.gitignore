@@ -1,3 +1,5 @@
 node_modules/
 .env
 seedData.js
+seedLocations.js
+india.json
