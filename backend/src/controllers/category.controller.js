@@ -57,7 +57,7 @@ async function getCategory(req, res) {
     console.error("getCategory error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
-}
+} 
 
 async function updateCategory(req, res) {
   try {

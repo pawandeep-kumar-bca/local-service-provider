@@ -98,12 +98,44 @@ const providerSchema = new mongoose.Schema(
     },
 
     location: {
-      type: {
-        type: String,
-        enum: ["Point"],
+      state: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "State",
+        required: true,
       },
+
+      district: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "District",
+        required: true,
+      },
+
+      city: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "City",
+        required: true,
+      },
+
+      pinCode: {
+        type: String,
+        required: true,
+      },
+
+      address: {
+        type: String,
+        required: true,
+      },
+
       coordinates: {
-        type: [Number],
+        type: {
+          type: String,
+          enum: ["Point"],
+          default: "Point",
+        },
+        coordinates: {
+          type: [Number], // [longitude, latitude]
+          required: true,
+        },
       },
     },
 
@@ -115,9 +147,11 @@ const providerSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-providerSchema.index({ location: "2dsphere" });
+providerSchema.index({
+  "location.coordinates": "2dsphere",
+});
 
 module.exports = mongoose.model("Provider", providerSchema);

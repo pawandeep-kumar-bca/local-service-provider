@@ -1,6 +1,8 @@
 const providerModel = require("../models/provider.model");
 const uploadImage = require("../config/imagekit");
 const imagekit = require("@imagekit/nodejs");
+const categoryModel = require("../models/category.model");
+const { default: mongoose } = require("mongoose");
 
 async function providerProfileCreate(req, res) {
   try {
@@ -135,11 +137,7 @@ async function updateProvider(req, res) {
 
 async function getProviders(req, res) {
   try {
-    const limit = parseInt(req.query.limit) || 9;
-    const page = parseInt(req.query.page) || 1;
-    const skip = (page - 1) * limit;
-
-    const {
+       const {
       category,
       search,
       city,
@@ -148,11 +146,21 @@ async function getProviders(req, res) {
       minExperience,
       sort = "latest",
     } = req.query;
+    const limit = parseInt(req.query.limit) || 9;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
+
+ 
+    
+    
     const filter = {};
     // Category Filter (Multiple Categories)
     if (category && category !== "all") {
-      filter.categories = { $in: [category] };
+      filter.categories = {
+        $in: [category],
+      };
     }
+
 
     // search by provider name
     if (search) {
@@ -190,9 +198,9 @@ async function getProviders(req, res) {
 
     switch (sort) {
       case "rating":
-        sortOption= {
-          rating: -1
-        }
+        sortOption = {
+          rating: -1,
+        };
         break;
       case "price-low":
         sortOption = { price: 1 };
@@ -211,6 +219,7 @@ async function getProviders(req, res) {
       .sort(sortOption)
       .skip(skip)
       .limit(limit);
+     
     const totalProviders = await providerModel.countDocuments(filter);
     if (providers.length === 0) {
       return res
