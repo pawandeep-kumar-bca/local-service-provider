@@ -6,7 +6,7 @@ const { default: mongoose } = require("mongoose");
 
 async function providerProfileCreate(req, res) {
   try {
-    const { providerName, phoneNumber, price, experience, city, lat, lng } =
+    const { providerName, phoneNumber, price, experience,state,district, city,village, lat, lng } =
       req.body;
 
     const userId = req.user.id;
@@ -37,7 +37,10 @@ async function providerProfileCreate(req, res) {
       phoneNumber,
       price,
       experience,
+      state,
+      district,
       city,
+      village,
       userId,
 
       location: {

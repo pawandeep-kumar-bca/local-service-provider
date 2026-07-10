@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post( 
   "/",
-  authMiddleware.tokenVerify,
+  authMiddleware.tokenVerify, 
   providerValidator.providerValidator,
   providerControllers.providerProfileCreate,
 );

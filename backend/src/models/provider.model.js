@@ -115,13 +115,7 @@ const providerSchema = new mongoose.Schema(
         ref: "City",
         required: true,
       },
-
-      pinCode: {
-        type: String,
-        required: true,
-      },
-
-      address: {
+      village: {
         type: String,
         required: true,
       },
