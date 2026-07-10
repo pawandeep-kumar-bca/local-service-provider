@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { NavLink } from "react-router-dom";
-import { useCategories } from "../../hooks/categoryHooks";
+import { useCategories } from "../../hooks/useCategories";
 import { BsGridFill } from "react-icons/bs";
 
 const FilterProviders = ({ url, setFilters }) => {

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useProviders } from "../../hooks/providerHooks";
+import { useProviders } from "../../hooks/useProvider";
 import { useOutletContext } from "react-router-dom";
 import ProviderCard from "./ProviderCard";
 

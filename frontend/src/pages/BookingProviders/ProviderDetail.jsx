@@ -15,7 +15,7 @@ import { FaFaucet } from "react-icons/fa6";
 
 import { MdOutlineAcUnit } from "react-icons/md";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useProvider } from "../../hooks/providerHooks";
+import { useProvider } from "../../hooks/useProvider";
 const ProviderDetail = () => {
   const { providerId } = useParams();
   const navigate = useNavigate();
