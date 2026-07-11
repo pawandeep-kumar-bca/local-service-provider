@@ -6,6 +6,7 @@
 // import { useCategories } from "../../hooks/useCategories";
 // import { useStates } from "../../hooks/useStates";
 // import { useDistrict } from "../../hooks/useDistricts";
+// import { useCity } from "../../hooks/useCity";
 // const BasicInfo = () => {
 //   const [cityOpen, setCityOpen] = useState(false);
 //   const [serviceOpen, setServiceOpen] = useState(false);
@@ -53,10 +54,14 @@
 //   const { data: getState } = useStates();
 //   const states = getState?.allStates;
 //   const { data: getDistrict } = useDistrict(state);
-//   console.log(getDistrict);
+  
 //   const districts = getDistrict?.AllDistricts;
-//   console.log(districts);
-
+// //   console.log(district?.districtId);
+  
+//   const {data:getCities} = useCity(district)
+//    const cities = getCities?.allCities
+   
+   
 //   return (
 //     <div>
 //       <h1 className="text-xl font-semibold text-text mt-2 mb-5">
@@ -216,11 +221,11 @@
 //                 onClick={() => setDistrictOpen((prev) => !prev)}
 //               >
 //                 <option value="" disabled className="bg-muted text-white">
-//                   Select Service
+//                   Select District
 //                 </option>
 
 //                 {districts?.map((dis) => (
-//                   <option key={dis._id} value={dis.stateId}>
+//                   <option key={dis._id} value={dis._id}>
 //                     {dis.name.charAt(0).toUpperCase() + dis.name.slice(1)}
 //                   </option>
 //                 ))}
@@ -252,7 +257,7 @@
 //               <select
 //                 name="city"
 //                 id="city"
-//                 value={city}
+                
 //                 onChange={(e) => setCity(e.target.value)}
 //                 className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
 //       "
@@ -261,12 +266,11 @@
 //                 <option value="" disabled className="bg-muted text-white">
 //                   Select City
 //                 </option>
-
-//                 <option value="sultanganj">Sultanganj</option>
-
-//                 <option value="bhagalpur">Bhagalpur</option>
-
-//                 <option value="mungar">Mungar</option>
+// {
+//     cities?.map((city)=><option key={city._id} value={city.name}>{city.name.charAt(0).toUpperCase() + city.name.slice(1)}</option>
+// )
+// }
+                
 //               </select>
 
 //               {/* custom arrow */}
