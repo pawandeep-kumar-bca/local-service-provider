@@ -5,6 +5,7 @@
 // import { useCreateProviders } from "../../hooks/useProvider";
 // import { useCategories } from "../../hooks/useCategories";
 // import { useStates } from "../../hooks/useStates";
+// import { useDistrict } from "../../hooks/useDistricts";
 // const BasicInfo = () => {
 //   const [cityOpen, setCityOpen] = useState(false);
 //   const [serviceOpen, setServiceOpen] = useState(false);
@@ -51,6 +52,10 @@
 
 //   const { data: getState } = useStates();
 //   const states = getState?.allStates;
+//   const { data: getDistrict } = useDistrict(state);
+//   console.log(getDistrict);
+//   const districts = getDistrict?.AllDistricts;
+//   console.log(districts);
 
 //   return (
 //     <div>
@@ -161,7 +166,6 @@
 //               <select
 //                 name="state"
 //                 id="state"
-//                 value={state}
 //                 onChange={(e) => setState(e.target.value)}
 //                 className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
 //       "
@@ -206,7 +210,6 @@
 //               <select
 //                 name="district"
 //                 id="district"
-//                 value={district}
 //                 onChange={(e) => setDistrict(e.target.value)}
 //                 className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
 //       "
@@ -216,11 +219,11 @@
 //                   Select Service
 //                 </option>
 
-//                 <option value="mistry">Mistry</option>
-
-//                 <option value="painter">Painter</option>
-
-//                 <option value="electrician">Electrician</option>
+//                 {districts?.map((dis) => (
+//                   <option key={dis._id} value={dis.stateId}>
+//                     {dis.name.charAt(0).toUpperCase() + dis.name.slice(1)}
+//                   </option>
+//                 ))}
 //               </select>
 
 //               {/* custom arrow */}
