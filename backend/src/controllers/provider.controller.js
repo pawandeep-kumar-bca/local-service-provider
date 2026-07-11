@@ -6,8 +6,19 @@ const { default: mongoose } = require("mongoose");
 
 async function providerProfileCreate(req, res) {
   try {
-    const { providerName, phoneNumber, price, experience,state,district, city,village, lat, lng } =
-      req.body;
+    const {
+      providerName,
+      phoneNumber,
+      price,
+      experience,
+      state,
+      categories,
+      district,
+      city,
+      village,
+      lat,
+      lng,
+    } = req.body;
 
     const userId = req.user.id;
 
@@ -37,13 +48,14 @@ async function providerProfileCreate(req, res) {
       phoneNumber,
       price,
       experience,
-      state,
-      district,
-      city,
-      village,
       userId,
-
+      categories,
       location: {
+        state,
+        district,
+        city,
+        village,
+
         type: "Point",
         coordinates: [Number(lng), Number(lat)],
       },
@@ -140,7 +152,7 @@ async function updateProvider(req, res) {
 
 async function getProviders(req, res) {
   try {
-       const {
+    const {
       category,
       search,
       city,
@@ -153,9 +165,6 @@ async function getProviders(req, res) {
     const page = parseInt(req.query.page) || 1;
     const skip = (page - 1) * limit;
 
- 
-    
-    
     const filter = {};
     // Category Filter (Multiple Categories)
     if (category && category !== "all") {
@@ -163,7 +172,6 @@ async function getProviders(req, res) {
         $in: [category],
       };
     }
-
 
     // search by provider name
     if (search) {
@@ -222,7 +230,7 @@ async function getProviders(req, res) {
       .sort(sortOption)
       .skip(skip)
       .limit(limit);
-     
+
     const totalProviders = await providerModel.countDocuments(filter);
     if (providers.length === 0) {
       return res

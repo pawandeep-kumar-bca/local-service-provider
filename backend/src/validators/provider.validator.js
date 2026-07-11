@@ -36,16 +36,12 @@ const providerValidator = [
     .withMessage("Experience is required")
     .isNumeric()
     .withMessage("Experience must be a number"),
-   body('state')
-   .notEmpty()
-   .withMessage('State is required')
-   ,,
-   body('district')
-   .notEmpty()
-   .withMessage('District is required'),
-   body('city')
-   .notEmpty()
-   .withMessage('city is required'),
+  body("categories").notEmpty().withMessage("categories is required"),
+
+  body("state").notEmpty().withMessage("State is required"),
+  ,
+  body("district").notEmpty().withMessage("District is required"),
+  body("city").notEmpty().withMessage("city is required"),
   body("village")
     .notEmpty()
     .withMessage("Village is required")

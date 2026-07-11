@@ -28,12 +28,6 @@ const providerSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-
-    city: {
-      type: String,
-      required: true,
-    },
-
     documents: {
       aadharCard: {
         url: String,
@@ -115,21 +109,21 @@ const providerSchema = new mongoose.Schema(
         ref: "City",
         required: true,
       },
+
       village: {
         type: String,
         required: true,
       },
 
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+
       coordinates: {
-        type: {
-          type: String,
-          enum: ["Point"],
-          default: "Point",
-        },
-        coordinates: {
-          type: [Number], // [longitude, latitude]
-          required: true,
-        },
+        type: [Number],
+        required: true,
       },
     },
 
@@ -145,7 +139,7 @@ const providerSchema = new mongoose.Schema(
 );
 
 providerSchema.index({
-  "location.coordinates": "2dsphere",
+  location: "2dsphere",
 });
 
 module.exports = mongoose.model("Provider", providerSchema);
