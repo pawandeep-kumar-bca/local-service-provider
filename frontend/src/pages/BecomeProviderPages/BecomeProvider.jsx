@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
@@ -10,7 +10,25 @@ import Button from "../../components/common/Button";
 const BecomeProvider = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [formData, setFormData] = useState({
+    providerName: "",
+    phoneNumber: "",
+    experience: "",
+    price: "",
+    category: "",
 
+    state:null,
+    district: null,
+    city: null,
+    village: null,
+
+    lat: null,
+    lng: null,
+
+    aadharCard: null,
+    certificate: null,
+    profileImage: null,
+  });
   // steps
   const stepsArray = ["basic-info", "upload-documents", "review", "submit"];
 
@@ -41,8 +59,7 @@ const BecomeProvider = () => {
   const currentIndex = stepsArray.findIndex((step) => step === currentStep);
 
   // next button text
-  const nextButtonText =
-    currentStep === "review" ? "Submit Application" : "Next";
+  // const nextButtonText =currentStep === "review" ? "Submit Application" : "Next";
 
   // hide buttons on submit page
   const hideButtons = currentStep === "submit";
@@ -79,7 +96,6 @@ const BecomeProvider = () => {
       {/* stepper */}
       <div className="flex w-full mb-4 mt-5 items-start md:w-[55%] mx-auto">
         {stepLabels.map((item, idx) => {
-          
           const isCompleted = idx < currentIndex || currentStep === "submit";
 
           const isActive = idx === currentIndex && currentStep !== "submit";
@@ -144,13 +160,15 @@ const BecomeProvider = () => {
 
       {/* page content */}
       <div className="p-1 md:w-[80%] mx-auto">
-        <Outlet />
+        <Outlet
+          context={{ formData, setFormData, nextMoveForm, prevMoveForm,hideButtons }}
+        />
       </div>
 
       {/* navigation buttons */}
-      {!hideButtons && (
+      {/* {!hideButtons && (
         <div className="flex justify-between items-center md:w-[80%] mx-auto mt-3">
-          {/* back */}
+         
           <Button
             color="white"
             onClick={prevMoveForm}
@@ -160,14 +178,14 @@ const BecomeProvider = () => {
             Back
           </Button>
 
-          {/* next */}
+          
           <Button onClick={nextMoveForm}>
             {nextButtonText}
 
             <MdChevronRight size={25} />
           </Button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

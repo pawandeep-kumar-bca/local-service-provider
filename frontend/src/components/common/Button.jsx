@@ -4,6 +4,7 @@ const Button = ({
   className = "",
   color = "success",
   loading = false,
+  type='submit',
   ...props
 }) => {
   const base =
@@ -36,7 +37,7 @@ const Button = ({
 
   return (
     <button
-      type="button"
+      type={type}
       disabled={loading || props.disabled}
       className={`${base} ${width} ${
         colors[color] || colors.success

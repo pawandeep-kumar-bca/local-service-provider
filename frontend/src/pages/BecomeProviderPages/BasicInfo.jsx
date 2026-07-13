@@ -1,65 +1,54 @@
-import React, {  useState } from "react";
+import React from "react";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { useCreateProviders } from "../../hooks/useProvider";
 import { useCategories } from "../../hooks/useCategories";
 import { useStates } from "../../hooks/useStates";
 import { useDistrict } from "../../hooks/useDistricts";
 import { useCity } from "../../hooks/useCity";
-import { useNavigate } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
+import { MdChevronRight } from "react-icons/md";
 
 const BasicInfo = () => {
-  const navigate = useNavigate();
-  const { createProviderMutation } = useCreateProviders();
+  // const navigate = useNavigate();
+  // const { createProviderMutation } = useCreateProviders();
 
   const { data, isLoading } = useCategories();
-  const [form, setForm] = useState({
-    providerName: "",
-    phoneNumber: "",
-    experience: "",
-    price: "",
-    state: "",
-    district: "",
-    city: "",
-    village: "",
-    category: "",
-    lat: null,
-    lng: null,
-  });
+  const { formData, setFormData, nextMoveForm } = useOutletContext();
   const submitForm = (e) => {
     e.preventDefault();
-    if (form.lat === null || form.lng === null) {
+    if (formData.lat === null || formData.lng === null) {
       return alert("Please select location.");
     }
-   createProviderMutation.mutate(
-  {
-    ...form,
-  },
-  {
-    onSuccess: () => {
-      setForm({
-        providerName: "",
-        phoneNumber: "",
-        experience: "",
-        price: "",
-        state: "",
-        district: "",
-        city: "",
-        village: "",
-        category: "",
-        lat: null,
-        lng: null,
-      });
+    //    createProviderMutation.mutate(
+    //   {
+    //     ...formData,
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       setFormData({
+    //         providerName: "",
+    //         phoneNumber: "",
+    //         experience: "",
+    //         price: "",
+    //         state: "",
+    //         district: "",
+    //         city: "",
+    //         village: "",
+    //         category: "",
+    //         lat: null,
+    //         lng: null,
+    //       });
 
-      navigate("/user/become-provider/upload-documents");
-    },
+    //       navigate("/user/become-provider/upload-documents");
+    //     },
 
-    onError: (error) => {
-      console.log(error);
-    },
-  }
-);
+    //     onError: (error) => {
+    //       console.log(error);
+    //     },
+    //   }
+    // );
+    nextMoveForm();
   };
 
   const categories = data?.categories;
@@ -67,14 +56,14 @@ const BasicInfo = () => {
   const { data: getState, isLoading: getStateIsLoading } = useStates();
   const states = getState?.allStates;
   const { data: getDistrict, isLoading: getDistrictIsLoading } = useDistrict(
-    form.state,
+    formData.state?._id,
   );
 
   const districts = getDistrict?.AllDistricts;
   //   console.log(district?.districtId);
 
   const { data: getCities, isLoading: getCitiesIsLoading } = useCity(
-    form.district,
+    formData.district?._id,
   );
   const cities = getCities?.allCities;
 
@@ -89,16 +78,13 @@ const BasicInfo = () => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-        setForm((prev) => ({
+        setFormData((prev) => ({
           ...prev,
 
           lat: latitude,
 
           lng: longitude,
         }));
-
-        console.log("Latitude:", latitude);
-        console.log("Longitude:", longitude);
       },
       (error) => {
         console.log(error);
@@ -111,11 +97,12 @@ const BasicInfo = () => {
       },
     );
   };
-
+ 
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setForm((prev) => ({
+    setFormData((prev) => ({
       ...prev,
 
       [name]: value,
@@ -134,7 +121,7 @@ const BasicInfo = () => {
               id="providerName"
               placeholder="Enter your name"
               type="text"
-              value={form.providerName}
+              value={formData.providerName}
               onChange={handleChange}
               required
             />
@@ -145,7 +132,7 @@ const BasicInfo = () => {
               type="tel"
               maxLength={10}
               pattern="[0-9]{10}"
-              value={form.phoneNumber}
+              value={formData.phoneNumber}
               onChange={handleChange}
               required
             />
@@ -159,7 +146,7 @@ const BasicInfo = () => {
               type="number"
               min={0}
               max={50}
-              value={form.experience}
+              value={formData.experience}
               onChange={handleChange}
               required
             />
@@ -170,7 +157,7 @@ const BasicInfo = () => {
               type="number"
               min={100}
               step={10}
-              value={form.price}
+              value={formData.price}
               onChange={handleChange}
               required
             />
@@ -189,8 +176,17 @@ const BasicInfo = () => {
               <select
                 name="category"
                 id="category"
-                value={form.category}
-                onChange={handleChange}
+                value={formData.category?._id || ""}
+                onChange={(e) => {
+                  const selectedCategory = categories.find(
+                    (item) => item._id === e.target.value,
+                  );
+
+                  setFormData((prev) => ({
+                    ...prev,
+                    category: selectedCategory,
+                  }));
+                }}
                 className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
       "
               >
@@ -224,16 +220,17 @@ const BasicInfo = () => {
               <select
                 name="state"
                 id="state"
-                value={form.state}
+                value={formData.state?._id || ''}
                 onChange={(e) => {
-                  setForm((prev) => ({
+                  const selectedState = states.find((item)=>item._id === e.target.value) 
+                  setFormData((prev) => ({
                     ...prev,
 
-                    state: e.target.value,
+                    state: selectedState,
 
-                    district: "",
+                    district: null,
 
-                    city: "",
+                    city: null,
                   }));
                 }}
                 className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
@@ -268,15 +265,16 @@ const BasicInfo = () => {
               <select
                 name="district"
                 id="district"
-                disabled={!form.state}
-                value={form.district}
+                disabled={!formData.state}
+                value={formData.district?._id || ''}
                 onChange={(e) => {
-                  setForm((prev) => ({
+                  const selectedDistrict = districts.find((item)=>item._id ===  e.target.value)
+                  setFormData((prev) => ({
                     ...prev,
 
-                    district: e.target.value,
+                    district:selectedDistrict,
 
-                    city: "",
+                    city: null,
                   }));
                 }}
                 className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
@@ -310,9 +308,15 @@ const BasicInfo = () => {
               <select
                 name="city"
                 id="city"
-                disabled={!form.district}
-                value={form.city}
-                onChange={handleChange}
+                disabled={!formData.district}
+                value={formData.city?._id ||''}
+                onChange={(e)=>{
+                  const selectedCity = cities.find((item)=>item._id === e.target.value)
+                  setFormData((prev)=>({
+                    ...prev,
+                    city:selectedCity
+                  }))
+                }}
                 className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
       "
               >
@@ -341,33 +345,17 @@ const BasicInfo = () => {
               </label>
 
               <div
-                className="
-      relative
-      border
-      rounded-lg
-      bg-white
-      transition-all duration-300
-      focus-within:border-primary
-      focus-within:ring-2
-      focus-within:ring-primary/30
+                className=" relative border rounded-lg bg-white transition-all duration-300 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30
     "
               >
                 <input
                   type="text"
                   id="village"
                   name="village"
-                  value={form.village}
+                  value={formData.village}
                   onChange={handleChange}
                   placeholder="Select your Village on map"
-                  className="
-        w-full
-        px-3
-        py-3
-        pr-36
-        rounded-lg
-        outline-none
-        border-0
-        bg-transparent
+                  className=" w-full px-3 py-3 pr-36 rounded-lg outline-none border-0 bg-transparent
       "
                 />
 
@@ -377,11 +365,17 @@ const BasicInfo = () => {
                     type="button"
                     onClick={getCurrentLocation}
                   >
-                   {form.lat ? "Location Selected ✅" : "Get Location"}
+                    {formData.lat ? "Location Selected ✅" : "Get Location"}
                   </Button>
                 </div>
               </div>
             </div>
+          </div>
+          <div className="flex justify-end items-center md:w-[80%] mx-auto mt-3">
+            <Button onClick={nextMoveForm}>
+              Next
+              <MdChevronRight size={25} />
+            </Button>
           </div>
         </form>
       </div>
