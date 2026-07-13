@@ -15,6 +15,7 @@ const Review = () => {
   const navigate = useNavigate();
   const { formData, prevMoveForm } = useOutletContext();
 
+
   const { createProviderMutation } = useCreateProviders();
   const submitProvider = () => {
     console.log(formData);
@@ -55,8 +56,10 @@ const Review = () => {
       },
     });
   };
+  
   return (
     <div className="my-4">
+      
       <h1 className="text-xl font-semibold">Review Your Details</h1>
       <p className="text-sm font-medium mb-5">
         Please review your information before submitting.
@@ -95,7 +98,7 @@ const Review = () => {
             </div>
             <div className="flex justify-between items-center">
               <h3>City</h3>
-              <p>{formData.city}</p>
+              <p>{formData.city?.name}</p>
             </div>
             <div className="flex justify-between items-center">
               <h3>Service Category</h3>
@@ -113,7 +116,7 @@ const Review = () => {
           <div className="flex justify-between items-center md:my-1 ">
             <h1 className="text-lg font-semibold ">Documents</h1>
             <Link
-              to="/user/become-provider/documents"
+              to="/user/become-provider/upload-documents"
               className="font-semibold text-primary hover:underline"
             >
               Edit

@@ -11,8 +11,8 @@ export const getProviderById = async (providerId) => {
 };
 
 
-export const createProvider = async () =>{
-        const response = await api.post('/providers')
+export const createProvider = async (formData) =>{
+        const response = await api.post('/providers',formData)
 
         return response.data
 }

@@ -20,34 +20,8 @@ const BasicInfo = () => {
     if (formData.lat === null || formData.lng === null) {
       return alert("Please select location.");
     }
-    //    createProviderMutation.mutate(
-    //   {
-    //     ...formData,
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       setFormData({
-    //         providerName: "",
-    //         phoneNumber: "",
-    //         experience: "",
-    //         price: "",
-    //         state: "",
-    //         district: "",
-    //         city: "",
-    //         village: "",
-    //         category: "",
-    //         lat: null,
-    //         lng: null,
-    //       });
+console.log(formData);
 
-    //       navigate("/user/become-provider/upload-documents");
-    //     },
-
-    //     onError: (error) => {
-    //       console.log(error);
-    //     },
-    //   }
-    // );
     nextMoveForm();
   };
 
@@ -116,7 +90,7 @@ const BasicInfo = () => {
       <div>
         <form onSubmit={submitForm}>
           <div className="flex flex-col md:flex-row md:gap-5">
-            <Input
+            <Input 
               label="Provider Name"
               id="providerName"
               placeholder="Enter your name"

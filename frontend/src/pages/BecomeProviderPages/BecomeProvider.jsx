@@ -15,12 +15,12 @@ const BecomeProvider = () => {
     phoneNumber: "",
     experience: "",
     price: "",
-    category: "",
+    category: null,
 
     state:null,
     district: null,
     city: null,
-    village: null,
+    village: '',
 
     lat: null,
     lng: null,
@@ -29,6 +29,7 @@ const BecomeProvider = () => {
     certificate: null,
     profileImage: null,
   });
+  console.log(formData);
   // steps
   const stepsArray = ["basic-info", "upload-documents", "review", "submit"];
 
