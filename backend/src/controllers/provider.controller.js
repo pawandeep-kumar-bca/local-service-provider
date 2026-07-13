@@ -42,7 +42,42 @@ async function providerProfileCreate(req, res) {
         message: "Provider profile already exists",
       });
     }
+// Validate files
+    if (
+      !req.files ||
+      !req.files.aadharCard ||
+      !req.files.certificate
+    ) {
+      return res.status(400).json({
+        message: "Aadhar Card and Certificate are required",
+      });
+    }
 
+    // Upload Aadhar
+    const aadharCardData = await uploadImage(
+      req.files.aadharCard[0],
+      `${userId}-${Date.now()}-aadharCard`,
+      "providers/documents"
+    );
+
+    // Upload Certificate
+    const certificateData = await uploadImage(
+      req.files.certificate[0],
+      `${userId}-${Date.now()}-certificate`,
+      "providers/documents"
+    );
+
+    // Upload Profile Image (Optional)
+    let profileImageData = null;
+
+    if (req.files.profileImage) {
+      profileImageData = await uploadImage(
+        req.files.profileImage[0],
+        `${userId}-${Date.now()}-profileImage`,
+        "providers/profile"
+      );
+    }
+    // Create Provider
     const provider = await providerModel.create({
       providerName,
       phoneNumber,
@@ -50,16 +85,37 @@ async function providerProfileCreate(req, res) {
       experience,
       userId,
       categories,
+
       location: {
         state,
         district,
         city,
         village,
-
         type: "Point",
         coordinates: [Number(lng), Number(lat)],
       },
+
+      documents: {
+        aadharCard: {
+          url: aadharCardData.url,
+          fileId: aadharCardData.fileId,
+        },
+        certificate: {
+          url: certificateData.url,
+          fileId: certificateData.fileId,
+        },
+      },
+
+      profileImage: profileImageData
+        ? {
+            url: profileImageData.url,
+            fileId: profileImageData.fileId,
+          }
+        : null,
+
+      status: "pending",
     });
+
 
     return res.status(201).json({
       message: "Provider profile created successfully",

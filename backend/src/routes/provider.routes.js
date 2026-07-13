@@ -7,11 +7,16 @@ const validateObjectIdMiddleware = require("../middlewares/validateObjectId.midd
 const roleBased = require('../middlewares/role.middleware')
 const router = express.Router();
 
-router.post( 
+router.post(
   "/",
-  authMiddleware.tokenVerify, 
+  authMiddleware.tokenVerify,
+  upload.fields([
+    { name: "profileImage", maxCount: 1 },
+    { name: "aadharCard", maxCount: 1 },
+    { name: "certificate", maxCount: 1 },
+  ]),
   providerValidator.providerValidator,
-  providerControllers.providerProfileCreate,
+  providerControllers.providerProfileCreate
 );
 
 // GET    /api/v1/providers/me
