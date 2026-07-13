@@ -19,7 +19,7 @@ async function providerProfileCreate(req, res) {
       lat,
       lng,
     } = req.body;
-
+    
     const userId = req.user.id;
 
     // validate location
@@ -42,12 +42,8 @@ async function providerProfileCreate(req, res) {
         message: "Provider profile already exists",
       });
     }
-// Validate files
-    if (
-      !req.files ||
-      !req.files.aadharCard ||
-      !req.files.certificate
-    ) {
+    // Validate files
+    if (!req.files || !req.files.aadharCard || !req.files.certificate) {
       return res.status(400).json({
         message: "Aadhar Card and Certificate are required",
       });
@@ -57,14 +53,14 @@ async function providerProfileCreate(req, res) {
     const aadharCardData = await uploadImage(
       req.files.aadharCard[0],
       `${userId}-${Date.now()}-aadharCard`,
-      "providers/documents"
+      "Providers/Documents/Aadhar Cards",
     );
 
     // Upload Certificate
     const certificateData = await uploadImage(
       req.files.certificate[0],
       `${userId}-${Date.now()}-certificate`,
-      "providers/documents"
+      "Providers/Documents/Certificates",
     );
 
     // Upload Profile Image (Optional)
@@ -74,7 +70,7 @@ async function providerProfileCreate(req, res) {
       profileImageData = await uploadImage(
         req.files.profileImage[0],
         `${userId}-${Date.now()}-profileImage`,
-        "providers/profile"
+        "Providers/Profile Images",
       );
     }
     // Create Provider
@@ -113,9 +109,8 @@ async function providerProfileCreate(req, res) {
           }
         : null,
 
-      status: "pending",
+      status: "Pending",
     });
-
 
     return res.status(201).json({
       message: "Provider profile created successfully",

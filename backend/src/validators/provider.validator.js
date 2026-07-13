@@ -67,7 +67,7 @@ const providerUpdateValidator = [
   body("price").optional().isNumeric().withMessage("Price must be a number"),
 
   body("experience")
-    .optional()
+    .optional() 
     .isNumeric()
     .withMessage("Experience must be a number"),
 
