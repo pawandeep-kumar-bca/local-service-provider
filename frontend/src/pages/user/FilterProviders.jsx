@@ -102,7 +102,7 @@ const FilterProviders = ({ url, setFilters }) => {
           >
             {category.icon && (
               <img
-                src={category.icon}
+                src={category.icon.url}
                 alt={category.name}
                 className="w-5 h-5"
               />

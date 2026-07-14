@@ -29,7 +29,6 @@ const BecomeProvider = () => {
     certificate: null,
     profileImage: null,
   });
-  console.log(formData);
   // steps
   const stepsArray = ["basic-info", "upload-documents", "review", "submit"];
 

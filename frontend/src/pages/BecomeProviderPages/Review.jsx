@@ -18,8 +18,7 @@ const Review = () => {
 
   const { createProviderMutation } = useCreateProviders();
   const submitProvider = () => {
-    console.log(formData);
-
+    
     const form = new FormData();
 
     form.append("providerName", formData.providerName);
