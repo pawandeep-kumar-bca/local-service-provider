@@ -9,7 +9,7 @@ const routes = express.Router();
 routes.post(
   "/",
   providerMiddleware.tokenVerify,
-  upload.fields([{ name: "Icon", maxCount: 1 }]),
+  upload.fields([{ name: "icon", maxCount: 1 }]),
   roleBased("admin"),
   categoryValidator,
 

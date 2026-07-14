@@ -1,28 +1,37 @@
+const uploadImage = require("../config/imagekit");
 const categoryModel = require("../models/category.model");
 
 async function createCategory(req, res) {
   try {
-    const { name, description, icon, status } = req.body;
-    if (name !== undefined) {
-      return res.status(400).json({ message: "category name is required" });
-    }
+    const { name, description, backgroundColor,status } = req.body;
+    
     const categoryNameExists = await categoryModel.findOne({ name });
 
     if (categoryNameExists) {
       return res.status(409).json({ message: "Category already exists" });
     }
+    if(!req.files || !req.files.icon){
+      return res.status(400).json({
+        message:'Icon is required'
+      })
+    }
+
+    const icon = await uploadImage(
+      req.files.icon[0],
+      `${name}-${Date.now()}-icon`,
+      'Categories/Icon'
+    )
     const category = await categoryModel.create({
       name,
       description,
+      backgroundColor,
       icon,
       status: status || "Active",
     });
     return res.status(201).json({
+      status:true,
       message: "category created successfully",
-      name: category.name,
-      description: category.description,
-      icon: category.icon,
-      status: category.status,
+      category
     });
   } catch (err) {
     console.error("Category create error:", err);

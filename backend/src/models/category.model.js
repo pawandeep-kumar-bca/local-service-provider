@@ -8,10 +8,18 @@ const categorySchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     description: {
       type: String,
       trim: true,
     },
+    
     icon: {
       type: String,
       required:true
@@ -19,7 +27,6 @@ const categorySchema = new mongoose.Schema(
     backgroundColor: {
       type: String,
       default: "#EEF2FF",
-      required:true
     },
     status: {
       type: String,

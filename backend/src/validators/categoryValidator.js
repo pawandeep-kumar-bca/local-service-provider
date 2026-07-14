@@ -6,19 +6,15 @@ async function ResponseWithCategoryValidator(req, res, next) {
       success: false,
       errors: errors.array(),
     });
-    next();
+    
   }
+  next();
 }
 const categoryValidator = [
   body("name").trim().notEmpty().withMessage("Category name is required"),
+  body("slug").trim().notEmpty().withMessage("Slug name is required"),
 
   body("description").optional().trim(),
-
-  body("icon")
-    .notEmpty()
-    .withMessage("Category icon is required")
-    .isURL()
-    .withMessage("Invalid icon URL"),
 
   body("backgroundColor")
     .optional()
