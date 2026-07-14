@@ -12,8 +12,6 @@ async function ResponseWithCategoryValidator(req, res, next) {
 }
 const categoryValidator = [
   body("name").trim().notEmpty().withMessage("Category name is required"),
-  body("slug").trim().notEmpty().withMessage("Slug name is required"),
-
   body("description").optional().trim(),
 
   body("backgroundColor")

@@ -3,35 +3,38 @@ const categoryModel = require("../models/category.model");
 
 async function createCategory(req, res) {
   try {
-    const { name, description, backgroundColor,status } = req.body;
-    
-    const categoryNameExists = await categoryModel.findOne({ name });
+    const { name, description, backgroundColor, status, sortOrder } = req.body;
+
+    const categoryNameExists = await categoryModel.findOne({ name: { $regex: `^${name.trim()}$`, $options: "i" }, });
 
     if (categoryNameExists) {
       return res.status(409).json({ message: "Category already exists" });
     }
-    if(!req.files || !req.files.icon){
+    const slug = name.trim().toLowerCase().replace(/\s+/g, "-");
+    if (!req.files || !req.files.icon) {
       return res.status(400).json({
-        message:'Icon is required'
-      })
+        message: "Icon is required",
+      });
     }
 
     const icon = await uploadImage(
       req.files.icon[0],
       `${name}-${Date.now()}-icon`,
-      'Categories/Icon'
-    )
+      "Categories/Icon",
+    );
     const category = await categoryModel.create({
       name,
       description,
       backgroundColor,
       icon,
+      slug,
+      sortOrder,
       status: status || "Active",
     });
     return res.status(201).json({
-      status:true,
+      status: true,
       message: "category created successfully",
-      category
+      category,
     });
   } catch (err) {
     console.error("Category create error:", err);
@@ -66,7 +69,7 @@ async function getCategory(req, res) {
     console.error("getCategory error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
-} 
+}
 
 async function updateCategory(req, res) {
   try {

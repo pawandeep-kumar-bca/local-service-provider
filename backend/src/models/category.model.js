@@ -19,10 +19,16 @@ const categorySchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    
+
     icon: {
-      type: String,
-      required:true
+      url: {
+        type: String,
+        required: true,
+      },
+      fileId: {
+        type: String,
+        required: true,
+      },
     },
     backgroundColor: {
       type: String,
@@ -32,6 +38,10 @@ const categorySchema = new mongoose.Schema(
       type: String,
       enum: ["Active", "Inactive"],
       default: "Active",
+    },
+    sortOrder: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true },

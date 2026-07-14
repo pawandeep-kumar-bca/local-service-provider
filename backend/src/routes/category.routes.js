@@ -4,6 +4,7 @@ const providerMiddleware = require("../middlewares/auth.middleware");
 const roleBased = require("../middlewares/role.middleware");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
 const { categoryValidator } = require("../validators/categoryValidator");
+const upload = require("../middlewares/upload.middleware");
 const routes = express.Router();
 
 routes.post(
