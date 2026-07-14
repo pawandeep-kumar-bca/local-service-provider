@@ -53,12 +53,6 @@ const providerValidator = [
 ];
 
 const providerUpdateValidator = [
-  body("providerName")
-    .trim()
-    .optional()
-    .isLength({ min: 3, max: 50 })
-    .withMessage("Provider name must be between 3 and 50 characters"),
-
   body("phoneNumber")
     .optional()
     .isMobilePhone("en-IN")

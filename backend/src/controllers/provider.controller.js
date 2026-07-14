@@ -7,7 +7,6 @@ const { default: mongoose } = require("mongoose");
 async function providerProfileCreate(req, res) {
   try {
     const {
-      providerName,
       phoneNumber,
       price,
       experience,
@@ -75,7 +74,7 @@ async function providerProfileCreate(req, res) {
     }
     // Create Provider
     const provider = await providerModel.create({
-      providerName,
+     
       phoneNumber,
       price,
       experience,

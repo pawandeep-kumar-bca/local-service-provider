@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const providerSchema = new mongoose.Schema(
   {
-    providerName: {
-      type: String,
-      required: true,
-    },
 
     phoneNumber: {
       type: String,
@@ -92,6 +88,17 @@ const providerSchema = new mongoose.Schema(
     },
 
     location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+
+      coordinates: {
+        type: [Number],
+        required: true, // [longitude, latitude]
+      },
+
       state: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "State",
@@ -113,17 +120,7 @@ const providerSchema = new mongoose.Schema(
       village: {
         type: String,
         required: true,
-      },
-
-      type: {
-        type: String,
-        enum: ["Point"],
-        default: "Point",
-      },
-
-      coordinates: {
-        type: [Number],
-        required: true,
+        trim: true,
       },
     },
 

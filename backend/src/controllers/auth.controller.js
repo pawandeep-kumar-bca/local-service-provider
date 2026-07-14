@@ -116,14 +116,14 @@ async function loginUser(req, res) {
     const accessToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_ACCESS_SECRET,
-      { expiresIn: "10m" },
+      { expiresIn: "30d" },
     );
 
     // ✅ refresh token
     const refreshToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_REFRESH_SECRET,
-      { expiresIn: "7d" },
+      { expiresIn: "35d" },
     );
     const hashedToken = crypto
       .createHash("sha256")
