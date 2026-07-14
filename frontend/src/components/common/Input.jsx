@@ -35,8 +35,7 @@ const Input = ({
           name={id}
           placeholder={placeholder}
           type={isPassword && showPassword ? "text" : type}
-          className={`w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl
-focus:ring focus:ring-blue-500 focus:outline-none bg-white ${className}`}
+          className={`w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white ${className}`}
           {...props}
         />
 

@@ -10,7 +10,7 @@ const FilterProviders = ({ url, setFilters }) => {
   const categories = data?.categories || [];
 
   const base =
-    "whitespace-nowrap flex gap-2 items-center border shrink-0 transition-all duration-300 mb-2 px-5 py-2 rounded-xl font-semibold";
+    "whitespace-nowrap flex gap-2 items-center border shrink-0 transition-all duration-300 mb-2 px-5 py-2 hover:bg-blue-200 hover:border-blue-300 hover:text-blue-600 rounded-xl font-semibold";
 
   const active = "bg-blue-200 border-blue-300 text-blue-600";
   const notActive = "border-muted border text-black";
@@ -94,7 +94,7 @@ const FilterProviders = ({ url, setFilters }) => {
         {categories.map((category) => (
           <NavLink
             key={category._id}
-            to={`/${url}/${category.name.replace(/\s+/g, "-")}`}
+            to={`/${url}/${category.slug}`}
             onClick={() => handleCategory(category._id)}
             className={({ isActive }) =>
               `${base} ${isActive ? active : notActive}`
@@ -104,7 +104,7 @@ const FilterProviders = ({ url, setFilters }) => {
               <img
                 src={category.icon.url}
                 alt={category.name}
-                className="w-5 h-5"
+                className="w-8 h-8"
               />
             )}
 

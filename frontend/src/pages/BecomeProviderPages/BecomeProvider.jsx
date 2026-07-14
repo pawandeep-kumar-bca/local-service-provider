@@ -11,7 +11,6 @@ const BecomeProvider = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [formData, setFormData] = useState({
-    providerName: "",
     phoneNumber: "",
     experience: "",
     price: "",
@@ -22,8 +21,8 @@ const BecomeProvider = () => {
     city: null,
     village: '',
 
-    lat: null,
-    lng: null,
+    lat:'',
+    lng: '',
 
     aadharCard: null,
     certificate: null,

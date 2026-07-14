@@ -1,5 +1,6 @@
 import React from "react";
 import Input from "../../components/common/Input";
+import { FaLocationArrow } from "react-icons/fa6";
 import Button from "../../components/common/Button";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useCategories } from "../../hooks/useCategories";
@@ -7,11 +8,9 @@ import { useStates } from "../../hooks/useStates";
 import { useDistrict } from "../../hooks/useDistricts";
 import { useCity } from "../../hooks/useCity";
 import { useOutletContext } from "react-router-dom";
-import { MdChevronRight } from "react-icons/md";
+import { MdChevronRight, MdMyLocation } from "react-icons/md";
 
 const BasicInfo = () => {
- 
-
   const { data, isLoading } = useCategories();
   const { formData, setFormData, nextMoveForm } = useOutletContext();
   const submitForm = (e) => {
@@ -32,7 +31,6 @@ const BasicInfo = () => {
   );
 
   const districts = getDistrict?.AllDistricts;
-  
 
   const { data: getCities, isLoading: getCitiesIsLoading } = useCity(
     formData.district?._id,
@@ -69,8 +67,7 @@ const BasicInfo = () => {
       },
     );
   };
- 
- 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -88,15 +85,6 @@ const BasicInfo = () => {
       <div>
         <form onSubmit={submitForm}>
           <div className="flex flex-col md:flex-row md:gap-5">
-            <Input 
-              label="Provider Name"
-              id="providerName"
-              placeholder="Enter your name"
-              type="text"
-              value={formData.providerName}
-              onChange={handleChange}
-              required
-            />
             <Input
               label="Phone Number"
               id="phoneNumber"
@@ -108,9 +96,6 @@ const BasicInfo = () => {
               onChange={handleChange}
               required
             />
-          </div>
-
-          <div className="flex flex-col md:flex-row md:gap-5">
             <Input
               label="Experience (Years)"
               id="experience"
@@ -122,6 +107,9 @@ const BasicInfo = () => {
               onChange={handleChange}
               required
             />
+          </div>
+
+          <div className="flex flex-col md:flex-row md:gap-5">
             <Input
               label="Price (Per Hour)"
               id="price"
@@ -133,14 +121,11 @@ const BasicInfo = () => {
               onChange={handleChange}
               required
             />
-          </div>
-
-          <div className="flex flex-col md:flex-row md:gap-5 items-center mb-3">
             {/* Service Category */}
             <div className="flex flex-col w-full relative">
               <label
                 htmlFor="serviceCategory"
-                className="block mb-2 font-medium text-lg md:text-sm text-text"
+                className="block mb-2 font-medium text-lg md:text-sm"
               >
                 Service Category <span className="text-red-500">*</span>
               </label>
@@ -159,7 +144,7 @@ const BasicInfo = () => {
                     category: selectedCategory,
                   }));
                 }}
-                className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
+                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  appearance-none
       "
               >
                 <option value="" disabled className="bg-muted text-white">
@@ -179,12 +164,14 @@ const BasicInfo = () => {
                 )}
               </select>
             </div>
+          </div>
+          <div className="flex flex-col md:flex-row md:gap-5 mb-4">
             {/* State */}
 
-            <div className="flex flex-col w-full relative">
+            <div className="flex flex-col w-full">
               <label
                 htmlFor="state"
-                className="block mb-2 font-medium text-lg md:text-sm text-text"
+                className="block mb-2 font-medium text-lg md:text-sm"
               >
                 State <span className="text-red-500">*</span>
               </label>
@@ -192,9 +179,11 @@ const BasicInfo = () => {
               <select
                 name="state"
                 id="state"
-                value={formData.state?._id || ''}
+                value={formData.state?._id || ""}
                 onChange={(e) => {
-                  const selectedState = states.find((item)=>item._id === e.target.value) 
+                  const selectedState = states.find(
+                    (item) => item._id === e.target.value,
+                  );
                   setFormData((prev) => ({
                     ...prev,
 
@@ -205,7 +194,7 @@ const BasicInfo = () => {
                     city: null,
                   }));
                 }}
-                className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
+                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  appearance-none
       "
               >
                 <option value="" disabled className="bg-muted text-white">
@@ -223,13 +212,11 @@ const BasicInfo = () => {
                 )}
               </select>
             </div>
-          </div>
-          <div className="flex flex-col md:flex-row md:gap-5 items-center">
             {/* district */}
             <div className="flex flex-col w-full relative">
               <label
                 htmlFor="district"
-                className="block mb-2 font-medium text-lg md:text-sm text-text"
+                className="block mb-2 font-medium text-lg md:text-sm"
               >
                 District <span className="text-red-500">*</span>
               </label>
@@ -238,18 +225,20 @@ const BasicInfo = () => {
                 name="district"
                 id="district"
                 disabled={!formData.state}
-                value={formData.district?._id || ''}
+                value={formData.district?._id || ""}
                 onChange={(e) => {
-                  const selectedDistrict = districts.find((item)=>item._id ===  e.target.value)
+                  const selectedDistrict = districts.find(
+                    (item) => item._id === e.target.value,
+                  );
                   setFormData((prev) => ({
                     ...prev,
 
-                    district:selectedDistrict,
+                    district: selectedDistrict,
 
                     city: null,
                   }));
                 }}
-                className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
+                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  appearance-none
       "
               >
                 <option value="" disabled className="bg-muted text-white">
@@ -267,12 +256,14 @@ const BasicInfo = () => {
                 )}
               </select>
             </div>
+          </div>
+          <div className="flex flex-col md:flex-row md:gap-5">
             {/* City */}
 
-            <div className="flex flex-col w-full relative">
+            <div className="flex flex-col w-full">
               <label
                 htmlFor="city"
-                className="block mb-2 font-medium text-lg md:text-sm text-text"
+                className="block mb-2 font-medium text-lg md:text-sm"
               >
                 City <span className="text-red-500">*</span>
               </label>
@@ -281,15 +272,17 @@ const BasicInfo = () => {
                 name="city"
                 id="city"
                 disabled={!formData.district}
-                value={formData.city?._id ||''}
-                onChange={(e)=>{
-                  const selectedCity = cities.find((item)=>item._id === e.target.value)
-                  setFormData((prev)=>({
+                value={formData.city?._id || ""}
+                onChange={(e) => {
+                  const selectedCity = cities.find(
+                    (item) => item._id === e.target.value,
+                  );
+                  setFormData((prev) => ({
                     ...prev,
-                    city:selectedCity
-                  }))
+                    city: selectedCity,
+                  }));
                 }}
-                className=" border px-3 py-3 text-base rounded-lg w-full bg-white focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none appearance-none transition-all duration-300 text-text
+                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  appearance-none
       "
               >
                 <option value="" disabled className="bg-muted text-white">
@@ -306,45 +299,64 @@ const BasicInfo = () => {
                 )}
               </select>
             </div>
+            <Input
+              label="Village"
+              id="village"
+              placeholder="Enter your village / area name"
+              required
+              value={formData.village}
+              onChange={handleChange}
+            />
           </div>
-          <div className="mt-3 ">
-            <div>
-              <label
-                htmlFor="Village"
-                className="block mb-2 font-medium text-lg md:text-sm text-text"
-              >
-                Village <span className="text-red-500">*</span>
-              </label>
+          <div className="flex flex-col md:flex-row md:justify-between items-center bg-blue-50 p-6 md:p-4 rounded-lg mb-4">
+            <div className="flex gap-4 items-center mb-4 md:mb-0">
+              <div className="w-14 h-14 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center flex-shrink-0">
+                <MdMyLocation size={26} />
+              </div>
 
-              <div
-                className=" relative border rounded-lg bg-white transition-all duration-300 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30
-    "
-              >
-                <input
-                  type="text"
-                  id="village"
-                  name="village"
-                  value={formData.village}
-                  onChange={handleChange}
-                  placeholder="Select your Village on map"
-                  className=" w-full px-3 py-3 pr-36 rounded-lg outline-none border-0 bg-transparent
-      "
-                />
+              <div>
+                <h3 className="font-semibold text-text text-base md:text-sm">
+                  Get Current Coordinates
+                </h3>
 
-                <div className="absolute right-1 top-1">
-                  <Button
-                    color="blue"
-                    type="button"
-                    onClick={getCurrentLocation}
-                  >
-                    {formData.lat ? "Location Selected ✅" : "Get Location"}
-                  </Button>
-                </div>
+                <p className="text-slate-500 text-sm md:text-xs mt-1">
+                  Allow location access to capture your current latitude and
+                  longitude for accurate service location.
+                </p>
               </div>
             </div>
+
+            <Button
+              color="blue"
+              type="button"
+              onClick={getCurrentLocation}
+              className="w-full md:w-auto"
+            >
+              <FaLocationArrow size={16} />
+              {formData.lat ? "Coordinates Captured" : "Get Coordinates"}
+            </Button>
           </div>
-          <div className="flex justify-end items-center md:w-[80%] mx-auto mt-3">
-            <Button onClick={nextMoveForm}>
+          <div className="flex flex-col md:flex-row md:gap-5">
+            <Input
+              label="Latitude"
+              id="lat"
+              placeholder="e.g.24.24423"
+              required
+              readOnly
+              value={formData.lat}
+            />
+            <Input
+              label="Longitude"
+              id="lng"
+              readOnly
+              placeholder="e.g.86.24423"
+              required
+              value={formData.lng}
+            />
+          </div>
+
+          <div className="flex justify-end items-center mx-auto mt-3">
+            <Button onClick={nextMoveForm} className="w-full md:w-[20%]">
               Next
               <MdChevronRight size={25} />
             </Button>
