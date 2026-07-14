@@ -164,7 +164,6 @@ const CategoryList = () => {
           id,
           title,
           icon: Icon,
-          iconColor,
           bgColor,
           rating,
           reviews,
@@ -180,10 +179,12 @@ const CategoryList = () => {
             <div className="absolute top-3 right-3">
               <StatusBadge badge={status} />
             </div>
+            
             <div
               className={`w-20 h-20 flex items-center justify-center rounded-full ${bgColor}`}
             >
-              <Icon className={`${iconColor}`} size={34} />
+               <img src="https://img.icons8.com/color/48/sawing-man.png" alt="hammer" width={35} height={35}/>
+              {/* <Icon className={`${iconColor}`} size={34} /> */}
             </div>
             <h1 className="text-2xl font-bold my-3">{title}</h1>
             <div className="flex items-center gap-2">

@@ -10,8 +10,7 @@ import { useOutletContext } from "react-router-dom";
 import { MdChevronRight } from "react-icons/md";
 
 const BasicInfo = () => {
-  // const navigate = useNavigate();
-  // const { createProviderMutation } = useCreateProviders();
+ 
 
   const { data, isLoading } = useCategories();
   const { formData, setFormData, nextMoveForm } = useOutletContext();
@@ -20,7 +19,6 @@ const BasicInfo = () => {
     if (formData.lat === null || formData.lng === null) {
       return alert("Please select location.");
     }
-console.log(formData);
 
     nextMoveForm();
   };
@@ -34,7 +32,7 @@ console.log(formData);
   );
 
   const districts = getDistrict?.AllDistricts;
-  //   console.log(district?.districtId);
+  
 
   const { data: getCities, isLoading: getCitiesIsLoading } = useCity(
     formData.district?._id,

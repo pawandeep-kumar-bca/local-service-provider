@@ -5,7 +5,7 @@ import RoleRoute from "./RoleRoute";
 // User
 import UserDashboard from "../pages/user/UserDashboard";
 import MyBookingsPage from "../pages/user/MyBookingsPage";
-import SavedProviders from "../pages/user/SavedProviders";
+// import SavedProviders from "../pages/user/SavedProvi;ders"
 import PaymentHistory from "../pages/user/PaymentHistory";
 import AllReviews from "../pages/user/AllReviews";
 import Support from "../pages/user/Support";
@@ -113,7 +113,7 @@ const AppRoutes = () => {
               path="/user/category/select-provider"
               element={<SelectProviders />}
             />
-            <Route path="/user/saved-providers" element={<SavedProviders />} />
+            {/* <Route path="/user/saved-providers" element={<SavedProviders />} /> */}
             <Route path="/user/payment-history" element={<PaymentHistory />}>
               <Route index element={<PaymentList />} />
               <Route path=":status" element={<PaymentList />} />
