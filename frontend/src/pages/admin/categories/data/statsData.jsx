@@ -38,19 +38,9 @@ export const getStatsData = (stats) => [
     growthIcon: <IoMdArrowRoundDown size={20} />,
     growthColor: "text-red-500",
   },
+ 
   {
     id: 4,
-    title: "Total Services",
-    value: stats?.totalServices || 0,
-    growth: "10%",
-    icon: <MdOutlineMiscellaneousServices size={22} />,
-    iconBg: "bg-yellow-100",
-    iconColor: "text-yellow-500",
-    growthIcon: <IoMdArrowRoundUp size={20} />,
-    growthColor: "text-green-500",
-  },
-  {
-    id: 5,
     title: "Total Providers",
     value: stats?.totalProviders || 0,
     growth: "10%",

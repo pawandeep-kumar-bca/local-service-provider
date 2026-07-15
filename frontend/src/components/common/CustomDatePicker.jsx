@@ -1,19 +1,19 @@
-import { useState } from "react";
-
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { CiCalendar } from "react-icons/ci";
 
-const CustomDatePicker = () => {
-
-  const [selectedDate, setSelectedDate] = useState(null);
-
+const CustomDatePicker = ({ filters, setFilters }) => {
   return (
     <div className="relative">
       <DatePicker
-        selected={selectedDate}
-        onChange={(date) => setSelectedDate(date)}
+        value={filters.date}
+        onChange={(date) => {
+          setFilters((prev) => ({
+            ...prev,
+            date: date.toISOString().split("T")[0],
+          }));
+        }}
         placeholderText="Search by joined date..."
         dateFormat="dd/MM/yyyy"
         className="
@@ -24,7 +24,7 @@ const CustomDatePicker = () => {
           outline-none
         "
       />
-    <CiCalendar  className="absolute right-2 top-3 text-lg text-slate-500 cursor-pointer"/>
+      <CiCalendar className="absolute right-2 top-3 text-lg text-slate-500 cursor-pointer" />
     </div>
   );
 };

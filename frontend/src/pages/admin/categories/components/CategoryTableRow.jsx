@@ -1,12 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { MdOutlinePlumbing, MdOutlineEdit, MdOutlineMiscellaneousServices, MdOutlineRemoveRedEye } from "react-icons/md";
+import {
+  MdOutlinePlumbing,
+  MdOutlineEdit,
+  MdOutlineMiscellaneousServices,
+  MdOutlineRemoveRedEye,
+} from "react-icons/md";
 import { HiMiniUsers } from "react-icons/hi2";
 import { CgArrowsExchangeAltV } from "react-icons/cg";
 import { IoHomeOutline } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ActionDropdown from "../../../../components/common/admin/ActionDropdown";
-
 
 const CategoryTableRow = ({ category, onDeleteClick }) => {
   const navigate = useNavigate();
@@ -23,19 +27,22 @@ const CategoryTableRow = ({ category, onDeleteClick }) => {
       {/* category */}
       <div className="flex items-center ml-3 gap-3">
         <div
-          className="
+          className={`
             w-12 h-12 min-w-12
             rounded-lg
-            bg-blue-100
             flex items-center justify-center
-            text-blue-500
-          "
+           `}
+          style={{ backgroundColor: category.backgroundColor }}
         >
-          <MdOutlinePlumbing size={24} />
+          <img
+            src={category.icon.url}
+            alt={category.name}
+            className="h-7 w-7"
+          />
         </div>
 
         <div>
-          <h1 className="text-sm font-bold text-black/90">{category.title}</h1>
+          <h1 className="text-sm font-bold text-black/90">{category.name}</h1>
           <p className="text-sm text-muted mt-1">{category.description}</p>
         </div>
       </div>
@@ -47,7 +54,9 @@ const CategoryTableRow = ({ category, onDeleteClick }) => {
 
       {/* providers */}
       <div className="text-center">
-        <p className="text-sm font-semibold text-black/80">{category.providers}</p>
+        <p className="text-sm font-semibold text-black/80">
+          {category.providers}
+        </p>
       </div>
 
       {/* status */}
@@ -56,20 +65,32 @@ const CategoryTableRow = ({ category, onDeleteClick }) => {
           className={`
             py-1 px-3 rounded-lg text-sm border
             ${
-              category.status === "Active"
+              category.status === "active"
                 ? "text-green-500 bg-green-100 border-green-500"
                 : "text-red-500 bg-red-100 border-red-500"
             }
           `}
         >
-          {category.status}
+          {category.status.charAt(0).toUpperCase() + category.status.slice(1)}
         </span>
       </div>
 
       {/* date */}
       <div className="text-center">
-        <h3 className="text-sm font-semibold text-black/80">{category.createdDate}</h3>
-        <p className="text-sm text-muted mt-1">{category.createdTime}</p>
+        <h3 className="text-sm font-semibold text-black/80">
+          {new Date(category.createdAt).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+        </h3>
+        <p className="text-sm text-muted mt-1">
+          {new Date(category.createdAt).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}
+        </p>
       </div>
 
       {/* actions */}

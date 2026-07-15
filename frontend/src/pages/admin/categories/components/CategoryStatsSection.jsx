@@ -1,9 +1,12 @@
 import React from "react";
-import StatsCard from "../../../../components/common/admin/StatsCard";
-import { statsData } from "../data/statsData.jsx";
+import StatsCard from "../../../../components/common/admin/StatsCard.jsx";
+import { getStatsData } from "../data/statsData.jsx";
+import { useCategories } from "../../../../hooks/useCategories.js";
 const CategoryStatsSection = () => {
+  const { data } = useCategories();
+  const statsData = getStatsData(data?.stats);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2 mt-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2 mt-4 mb-6">
       {statsData.map((item) => (
         <StatsCard
           key={item.id}

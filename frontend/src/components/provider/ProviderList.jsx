@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import ProviderCard from "./ProviderCard";
 
 const ProviderList = () => {
-  // const { filters ,setTotalPages} = useOutletContext();
+  
   const context = useOutletContext();
 
   const filters = context.filters;
