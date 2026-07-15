@@ -4,7 +4,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 import { IoCheckmark } from "react-icons/io5";
-
+import { useMe } from "../../hooks/useAuth";
 import Button from "../../components/common/Button";
 
 const BecomeProvider = () => {
@@ -16,13 +16,13 @@ const BecomeProvider = () => {
     price: "",
     category: null,
 
-    state:null,
+    state: null,
     district: null,
     city: null,
-    village: '',
+    village: "",
 
-    lat:'',
-    lng: '',
+    lat: "",
+    lng: "",
 
     aadharCard: null,
     certificate: null,
@@ -30,6 +30,10 @@ const BecomeProvider = () => {
   });
   // steps
   const stepsArray = ["basic-info", "upload-documents", "review", "submit"];
+  const { data } = useMe();
+  const phoneNumber = formData.phoneNumber || data?.user?.phoneNumber || "";
+
+  const profileImage = formData.profileImage || data?.user?.profileImage;
 
   // step labels
   const stepLabels = [
@@ -56,9 +60,6 @@ const BecomeProvider = () => {
 
   // current step index
   const currentIndex = stepsArray.findIndex((step) => step === currentStep);
-
-  // next button text
-  // const nextButtonText =currentStep === "review" ? "Submit Application" : "Next";
 
   // hide buttons on submit page
   const hideButtons = currentStep === "submit";
@@ -160,31 +161,17 @@ const BecomeProvider = () => {
       {/* page content */}
       <div className="p-1 md:w-[80%] mx-auto">
         <Outlet
-          context={{ formData, setFormData, nextMoveForm, prevMoveForm,hideButtons }}
+          context={{
+            formData,
+            setFormData,
+            phoneNumber,
+            profileImage,
+            nextMoveForm,
+            prevMoveForm,
+            hideButtons,
+          }}
         />
       </div>
-
-      {/* navigation buttons */}
-      {/* {!hideButtons && (
-        <div className="flex justify-between items-center md:w-[80%] mx-auto mt-3">
-         
-          <Button
-            color="white"
-            onClick={prevMoveForm}
-            disabled={currentIndex === 0}
-          >
-            <MdChevronLeft size={25} />
-            Back
-          </Button>
-
-          
-          <Button onClick={nextMoveForm}>
-            {nextButtonText}
-
-            <MdChevronRight size={25} />
-          </Button>
-        </div>
-      )} */}
     </div>
   );
 };

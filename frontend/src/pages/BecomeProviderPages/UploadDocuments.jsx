@@ -6,17 +6,16 @@ import { useOutletContext } from "react-router-dom";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import Button from "../../components/common/Button";
 const UploadDocuments = () => {
-  const { formData, setFormData, nextMoveForm,prevMoveForm} = useOutletContext();
-
+  const { formData, setFormData, nextMoveForm, prevMoveForm, profileImage } =
+    useOutletContext();
+  const currentProfileImage = formData.profileImage || profileImage;
   const submitForm = (e) => {
-     e.preventDefault();
+    e.preventDefault();
 
-    if (!formData.profileImage) {
+    if (!currentProfileImage) {
       alert("Upload Profile Image");
-
       return;
     }
-
     if (!formData.aadharCard) {
       alert("Upload Aadhaar");
 
@@ -43,123 +42,122 @@ const UploadDocuments = () => {
       </div>
       <div>
         <form onSubmit={submitForm}>
-        <div className="flex border mb-4 items-center justify-between rounded-md p-2">
-          <div className="flex gap-3 items-center">
-            <div className="p-3 bg-blue-100 text-blue-600 rounded-lg shadow-sm">
-              <FaUserCircle size={28} />
+          <div className="flex border mb-4 items-center justify-between rounded-md p-2">
+            <div className="flex gap-3 items-center">
+              <div className="p-3 bg-blue-100 text-blue-600 rounded-lg shadow-sm">
+                <FaUserCircle size={28} />
+              </div>
+              <div className="flex-1">
+                <h1>
+                  Profile Image <span className="text-danger">*</span>
+                </h1>
+                <p className="text-sm text-text font-extralight">
+                  Upload your profile photo
+                </p>
+              </div>
             </div>
-            <div className="flex-1">
-              <h1>
-                Profile Image <span className="text-danger">*</span>
-              </h1>
-              <p className="text-sm text-text font-extralight">
-                Upload your profile photo
+            <label className="px-4 py-1 border-2 border text-primary shadow-[inset_0_0_3px_rgba(255,255,255,0.8)] rounded-md text-center cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300">
+              <p className="text-lg font-medium">
+                {currentProfileImage ? "Uploaded ✅" : "Upload"}
               </p>
-            </div>
-          </div>
-          <label className="px-4 py-1 border-2 border text-primary shadow-[inset_0_0_3px_rgba(255,255,255,0.8)] rounded-md text-center cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300">
-            <p className="text-lg font-medium">
-              {formData.profileImage ? "Uploaded ✅" : "Upload"}
-            </p>
 
-            <input
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  profileImage: e.target.files[0],
-                }))
-              }
-            />
-          </label>
-        </div>
-        <div className="flex border mb-4 items-center justify-between rounded-md p-2">
-          <div className="flex gap-3 items-center">
-            <div className="p-3 bg-green-100 text-green-600 rounded-lg shadow-sm">
-              <AiFillIdcard size={28} />
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    profileImage: e.target.files[0],
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <div className="flex border mb-4 items-center justify-between rounded-md p-2">
+            <div className="flex gap-3 items-center">
+              <div className="p-3 bg-green-100 text-green-600 rounded-lg shadow-sm">
+                <AiFillIdcard size={28} />
+              </div>
+              <div className="flex-1">
+                <h1>
+                  Aadhar Card <span className="text-danger">*</span>
+                </h1>
+                <p className="text-sm text-text font-extralight">
+                  Upload front side of your Aadhar card
+                </p>
+              </div>
             </div>
-            <div className="flex-1">
-              <h1>
-                Aadhar Card <span className="text-danger">*</span>
-              </h1>
-              <p className="text-sm text-text font-extralight">
-                Upload front side of your Aadhar card
+            <label className="px-4 py-1 border-2 border text-primary shadow-[inset_0_0_3px_rgba(255,255,255,0.8)] rounded-md text-center cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300">
+              <p className="text-lg font-medium">
+                {formData.aadharCard ? "Uploaded ✅" : "Upload"}
               </p>
-            </div>
-          </div>
-          <label className="px-4 py-1 border-2 border text-primary shadow-[inset_0_0_3px_rgba(255,255,255,0.8)] rounded-md text-center cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300">
-            <p className="text-lg font-medium">
-              {formData.aadharCard ? "Uploaded ✅" : "Upload"}
-            </p>
 
-            <input
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  aadharCard: e.target.files[0],
-                }))
-              }
-            />
-          </label>
-        </div>
-        <div className="flex border mb-4 items-center justify-between rounded-md p-2">
-          <div className="flex gap-3 items-center">
-            <div className="p-3 bg-yellow-100 text-yellow-600 shadow-sm rounded-lg">
-              <PiCertificateFill size={28} />
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    aadharCard: e.target.files[0],
+                  }))
+                }
+              />
+            </label>
+          </div>
+          <div className="flex border mb-4 items-center justify-between rounded-md p-2">
+            <div className="flex gap-3 items-center">
+              <div className="p-3 bg-yellow-100 text-yellow-600 shadow-sm rounded-lg">
+                <PiCertificateFill size={28} />
+              </div>
+              <div className="flex-1">
+                <h1>
+                  Certificate <span className="text-danger">*</span>
+                </h1>
+                <p className="text-sm text-text font-extralight">
+                  Upload your experience or skill certificate
+                </p>
+              </div>
             </div>
-            <div className="flex-1">
-              <h1>
-                Certificate <span className="text-danger">*</span>
-              </h1>
-              <p className="text-sm text-text font-extralight">
-                Upload your experience or skill certificate
+            <label className="px-4 py-1 border-2 border text-primary shadow-[inset_0_0_3px_rgba(255,255,255,0.8)] rounded-md text-center cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300">
+              <p className="text-lg font-medium">
+                {formData.certificate ? "Uploaded ✅" : "Upload"}
               </p>
-            </div>
+
+              <input
+                type="file"
+                className="hidden"
+                accept=".pdf,image/*"
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    certificate: e.target.files[0],
+                  }))
+                }
+              />
+            </label>
           </div>
-          <label className="px-4 py-1 border-2 border text-primary shadow-[inset_0_0_3px_rgba(255,255,255,0.8)] rounded-md text-center cursor-pointer flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300">
-            <p className="text-lg font-medium">
-              {formData.certificate ? "Uploaded ✅" : "Upload"}
-            </p>
+          {/* navigation buttons */}
 
-            <input
-              type="file"
-              className="hidden"
-              accept=".pdf,image/*"
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  certificate: e.target.files[0],
-                }))
-              }
-            />
-          </label>
-        </div>
- {/* navigation buttons */}
-      
-        <div className="flex justify-between items-center mx-auto gap-5 mt-6">
-          {/* back */}
-          <Button
-            color="white"
-           className="w-full md:w-[20%]"
-           onClick={prevMoveForm}
-          >
-            <MdChevronLeft size={25} />
-            Back
-          </Button>
+          <div className="flex justify-between items-center mx-auto gap-5 mt-6">
+            {/* back */}
+            <Button
+              color="white"
+              className="w-full md:w-[20%]"
+              type="button"
+              onClick={prevMoveForm}
+            >
+              <MdChevronLeft size={25} />
+              Back
+            </Button>
 
-          {/* next */}
-          <Button onClick={nextMoveForm} className="w-full md:w-[20%]">
-            Review
-
-            <MdChevronRight size={25} />
-          </Button>
-        </div>
-      
+            {/* next */}
+            <Button type="submit" className="w-full md:w-[20%]">
+              Review
+              <MdChevronRight size={25} />
+            </Button>
+          </div>
         </form>
       </div>
     </div>

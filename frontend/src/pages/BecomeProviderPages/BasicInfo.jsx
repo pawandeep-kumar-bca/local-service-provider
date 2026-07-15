@@ -2,7 +2,6 @@ import React from "react";
 import Input from "../../components/common/Input";
 import { FaLocationArrow } from "react-icons/fa6";
 import Button from "../../components/common/Button";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useCategories } from "../../hooks/useCategories";
 import { useStates } from "../../hooks/useStates";
 import { useDistrict } from "../../hooks/useDistricts";
@@ -12,10 +11,25 @@ import { MdChevronRight, MdMyLocation } from "react-icons/md";
 
 const BasicInfo = () => {
   const { data, isLoading } = useCategories();
-  const { formData, setFormData, nextMoveForm } = useOutletContext();
+  const { formData, setFormData, phoneNumber, nextMoveForm } =
+    useOutletContext();
+
   const submitForm = (e) => {
     e.preventDefault();
-    if (!formData.lat  || !formData.lng) {
+
+    if (!formData.category) {
+      return alert("Please select a service category.");
+    }
+    if (!formData.state) {
+      return alert("Please select a state.");
+    }
+    if (!formData.district) {
+      return alert("Please select a district.");
+    }
+    if (!formData.city) {
+      return alert("Please select a city.");
+    }
+    if (!formData.lat || !formData.lng) {
       return alert("Please select location.");
     }
 
@@ -70,7 +84,6 @@ const BasicInfo = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
 
@@ -92,7 +105,7 @@ const BasicInfo = () => {
               type="tel"
               maxLength={10}
               pattern="[0-9]{10}"
-              value={formData.phoneNumber}
+              value={phoneNumber}
               onChange={handleChange}
               required
             />
@@ -124,7 +137,7 @@ const BasicInfo = () => {
             {/* Service Category */}
             <div className="flex flex-col w-full relative">
               <label
-                htmlFor="serviceCategory"
+                htmlFor="category"
                 className="block mb-2 font-medium text-lg md:text-sm"
               >
                 Service Category <span className="text-red-500">*</span>
@@ -133,9 +146,10 @@ const BasicInfo = () => {
               <select
                 name="category"
                 id="category"
+                required
                 value={formData.category?._id || ""}
                 onChange={(e) => {
-                  const selectedCategory = categories.find(
+                  const selectedCategory = categories?.find(
                     (item) => item._id === e.target.value,
                   );
 
@@ -179,9 +193,10 @@ const BasicInfo = () => {
               <select
                 name="state"
                 id="state"
+                required
                 value={formData.state?._id || ""}
                 onChange={(e) => {
-                  const selectedState = states.find(
+                  const selectedState = states?.find(
                     (item) => item._id === e.target.value,
                   );
                   setFormData((prev) => ({
@@ -198,7 +213,7 @@ const BasicInfo = () => {
       "
               >
                 <option value="" disabled className="bg-muted text-white">
-                  Select City
+                  Select State
                 </option>
 
                 {getStateIsLoading ? (
@@ -206,7 +221,8 @@ const BasicInfo = () => {
                 ) : (
                   states?.map((state) => (
                     <option key={state._id} value={state._id}>
-                      {state.name.charAt(0).toUpperCase() + state.name.slice(1)}
+                      {state.name.charAt(0).toUpperCase() +
+                        state.name.slice(1)}
                     </option>
                   ))
                 )}
@@ -224,10 +240,11 @@ const BasicInfo = () => {
               <select
                 name="district"
                 id="district"
+                required
                 disabled={!formData.state}
                 value={formData.district?._id || ""}
                 onChange={(e) => {
-                  const selectedDistrict = districts.find(
+                  const selectedDistrict = districts?.find(
                     (item) => item._id === e.target.value,
                   );
                   setFormData((prev) => ({
@@ -271,10 +288,11 @@ const BasicInfo = () => {
               <select
                 name="city"
                 id="city"
+                required
                 disabled={!formData.district}
                 value={formData.city?._id || ""}
                 onChange={(e) => {
-                  const selectedCity = cities.find(
+                  const selectedCity = cities?.find(
                     (item) => item._id === e.target.value,
                   );
                   setFormData((prev) => ({
@@ -356,7 +374,7 @@ const BasicInfo = () => {
           </div>
 
           <div className="flex justify-end items-center mx-auto mt-6">
-            <Button  className="w-full md:w-[20%]">
+            <Button className="w-full md:w-[20%]">
               Next
               <MdChevronRight size={25} />
             </Button>

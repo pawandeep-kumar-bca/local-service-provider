@@ -26,10 +26,9 @@ export const useProvider = (providerId) => {
     onSuccess:()=>{
             navigate('/user/become-provider/upload-documents')
     },
-    onError:(err)=>{
-      console.log('Create provider error:',err);
-      
-    }
+    onError: (error) => {
+  console.log(error.response?.data);
+}
   })
 
   return { createProviderMutation }

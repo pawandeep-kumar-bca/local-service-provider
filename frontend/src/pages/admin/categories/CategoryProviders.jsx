@@ -240,7 +240,7 @@ const CategoryProviders = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div> 
   );
 };
 

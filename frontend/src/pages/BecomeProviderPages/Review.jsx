@@ -13,17 +13,32 @@ import { useCreateProviders } from "../../hooks/useProvider";
 import Button from "../../components/common/Button";
 const Review = () => {
   const navigate = useNavigate();
-  const { formData, prevMoveForm } = useOutletContext();
-
+  const { formData, prevMoveForm, phoneNumber } = useOutletContext();
 
   const { createProviderMutation } = useCreateProviders();
+
   const submitProvider = () => {
-    
+    // guard against missing required refs (e.g. user landed here directly via URL)
+    if (
+      !formData.category?._id ||
+      !formData.state?._id ||
+      !formData.district?._id ||
+      !formData.city?._id
+    ) {
+      alert("Please complete Basic Info before submitting.");
+      navigate("/user/become-provider/basic-info");
+      return;
+    }
+
+    if (!formData.aadharCard || !formData.certificate) {
+      alert("Please upload your documents before submitting.");
+      navigate("/user/become-provider/upload-documents");
+      return;
+    }
+
     const form = new FormData();
 
-    form.append("providerName", formData.providerName);
-
-    form.append("phoneNumber", formData.phoneNumber);
+    form.append("phoneNumber", formData.phoneNumber || phoneNumber);
 
     form.append("experience", formData.experience);
 
@@ -43,11 +58,17 @@ const Review = () => {
 
     form.append("lng", formData.lng);
 
-    form.append("aadharCard", formData.aadharCard);
+    if (formData.aadharCard instanceof File) {
+      form.append("aadharCard", formData.aadharCard);
+    }
 
-    form.append("certificate", formData.certificate);
+    if (formData.certificate instanceof File) {
+      form.append("certificate", formData.certificate);
+    }
 
-    form.append("profileImage", formData.profileImage);
+    if (formData.profileImage instanceof File) {
+      form.append("profileImage", formData.profileImage);
+    }
 
     createProviderMutation.mutate(form, {
       onSuccess: () => {
@@ -55,10 +76,9 @@ const Review = () => {
       },
     });
   };
-  
+
   return (
     <div className="my-4">
-      
       <h1 className="text-xl font-semibold">Review Your Details</h1>
       <p className="text-sm font-medium mb-5">
         Please review your information before submitting.
@@ -77,12 +97,8 @@ const Review = () => {
           </div>
           <div className="flex flex-col gap-1 mt-4">
             <div className="flex justify-between items-center">
-              <h3>Provider Name</h3>
-              <p>{formData.providerName}</p>
-            </div>
-            <div className="flex justify-between items-center">
               <h3>Provider Number</h3>
-              <p>{formData.phoneNumber}</p>
+              <p>{formData.phoneNumber || phoneNumber}</p>
             </div>
             <div className="flex justify-between items-center">
               <h3>Experience</h3>
@@ -141,7 +157,9 @@ const Review = () => {
                 </div>
                 <h3>Aadhar Card</h3>
               </div>
-              <StatusBudge badge={formData.aadharCard ? "uploaded" : "pending"} />
+              <StatusBudge
+                badge={formData.aadharCard ? "uploaded" : "pending"}
+              />
             </div>
 
             <div className="flex justify-between items-center">
@@ -161,14 +179,22 @@ const Review = () => {
       </div>
       <div className="flex justify-between items-center mx-auto mt-6 gap-5">
         {/* back */}
-        <Button color="white" onClick={prevMoveForm} className="w-full md:w-[20%]">
+        <Button
+          color="white"
+          onClick={prevMoveForm}
+          className="w-full md:w-[20%]"
+        >
           <MdChevronLeft size={25} />
           Back
         </Button>
 
         {/* next */}
-        <Button onClick={submitProvider} className="w-full md:w-[30%]">
-          Submit Application
+        <Button
+          onClick={submitProvider}
+          disabled={createProviderMutation.isLoading}
+          className="w-full md:w-[30%]"
+        >
+          {createProviderMutation.isLoading ? "Submitting..." : "Submit Application"}
           <MdChevronRight size={25} />
         </Button>
       </div>

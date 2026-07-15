@@ -1,6 +1,6 @@
 // hooks/useAuth.js
-import { useMutation } from "@tanstack/react-query";
-import { loginUser, registerUser } from "../services/authService";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getMe, loginUser, registerUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../features/authSlice";
 import { useDispatch } from "react-redux";
@@ -51,4 +51,11 @@ export const useAuth = () => {
   });
 
   return { registerMutation, loginMutation };
+};
+export const useMe = () => {
+  return useQuery({
+    queryKey: ["me"],
+    queryFn: getMe,
+  
+  });
 };
