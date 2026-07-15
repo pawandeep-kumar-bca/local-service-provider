@@ -2,12 +2,6 @@ const mongoose = require("mongoose");
 
 const providerSchema = new mongoose.Schema(
   {
-
-    phoneNumber: {
-      type: String,
-      required: true,
-    },
-
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -33,17 +27,6 @@ const providerSchema = new mongoose.Schema(
         url: String,
         fileId: String,
       },
-    },
-
-    profileImage: {
-      url: String,
-      fileId: String,
-    },
-
-    verificationStatus: {
-      type: String,
-      enum: ["verified", "not verified"],
-      default: "not verified",
     },
 
     status: {

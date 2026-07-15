@@ -1,8 +1,9 @@
 const providerModel = require("../models/provider.model");
-const uploadImage = require("../config/imagekit");
+const {uploadImage} = require("../config/imagekit");
 const imagekit = require("@imagekit/nodejs");
 const categoryModel = require("../models/category.model");
 const { default: mongoose } = require("mongoose");
+const UserModel = require("../models/User.model");
 
 async function providerProfileCreate(req, res) {
   try {
@@ -18,22 +19,23 @@ async function providerProfileCreate(req, res) {
       lat,
       lng,
     } = req.body;
-    
+
     const userId = req.user.id;
 
-    // validate location
+    // Validate Location
     if (lat === undefined || lng === undefined) {
       return res.status(400).json({
-        message: "lat and lng are required",
-      });
-    }
-    if (isNaN(lat) || isNaN(lng)) {
-      return res.status(400).json({
-        message: "lat and lng must be valid numbers",
+        message: "Latitude and Longitude are required",
       });
     }
 
-    // check provider already exists
+    if (isNaN(lat) || isNaN(lng)) {
+      return res.status(400).json({
+        message: "Latitude and Longitude must be valid numbers",
+      });
+    }
+
+    // Check Provider Already Exists
     const existingProvider = await providerModel.findOne({ userId });
 
     if (existingProvider) {
@@ -41,10 +43,20 @@ async function providerProfileCreate(req, res) {
         message: "Provider profile already exists",
       });
     }
-    // Validate files
-    if (!req.files || !req.files.aadharCard || !req.files.certificate) {
+
+    // Validate Required Documents
+    if (!req.files?.aadharCard || !req.files?.certificate) {
       return res.status(400).json({
         message: "Aadhar Card and Certificate are required",
+      });
+    }
+
+    // Find User
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
       });
     }
 
@@ -62,32 +74,66 @@ async function providerProfileCreate(req, res) {
       "Providers/Documents/Certificates",
     );
 
-    // Upload Profile Image (Optional)
-    let profileImageData = null;
+    // -----------------------------
+    // Update User Phone Number
+    // -----------------------------
 
-    if (req.files.profileImage) {
-      profileImageData = await uploadImage(
+    if (phoneNumber && phoneNumber !== user.phoneNumber) {
+      user.phoneNumber = phoneNumber;
+    }
+
+    // -----------------------------
+    // Update User Profile Image
+    // -----------------------------
+
+   if (req.files.profileImage) {
+
+    // Agar purani image hai to delete karo
+    if (user.profileImage?.fileId) {
+        await deleteImage(user.profileImage.fileId);
+    }
+
+    // Nayi image upload karo
+    const profileImageData = await uploadImage(
         req.files.profileImage[0],
         `${userId}-${Date.now()}-profileImage`,
-        "Providers/ProfileImages",
-      );
-    }
+        "Users/ProfileImages"
+    );
+
+    // User update
+    user.profileImage = {
+        url: profileImageData.url,
+        fileId: profileImageData.fileId,
+    };
+}
+
+    await user.save();
+
+    // -----------------------------
     // Create Provider
+    // -----------------------------
+
     const provider = await providerModel.create({
-     
-      phoneNumber,
-      price,
-      experience,
       userId,
+
+      price,
+
+      experience,
+
       categories,
 
       location: {
-        state,
-        district,
-        city,
-        village,
         type: "Point",
+
         coordinates: [Number(lng), Number(lat)],
+
+        state,
+
+        district,
+
+        city,
+
+        village,
       },
 
       documents: {
@@ -95,18 +141,12 @@ async function providerProfileCreate(req, res) {
           url: aadharCardData.url,
           fileId: aadharCardData.fileId,
         },
+
         certificate: {
           url: certificateData.url,
           fileId: certificateData.fileId,
         },
       },
-
-      profileImage: profileImageData
-        ? {
-            url: profileImageData.url,
-            fileId: profileImageData.fileId,
-          }
-        : null,
 
       status: "Pending",
     });
@@ -116,7 +156,7 @@ async function providerProfileCreate(req, res) {
       provider,
     });
   } catch (error) {
-    console.error("create provider error:", error);
+    console.error(error);
 
     return res.status(500).json({
       message: "Internal server error",
@@ -279,7 +319,7 @@ async function getProviders(req, res) {
       .populate("categories userId", "name fullname")
       .sort(sortOption)
       .skip(skip)
-      .limit(limit); 
+      .limit(limit);
 
     const totalProviders = await providerModel.countDocuments(filter);
     if (providers.length === 0) {

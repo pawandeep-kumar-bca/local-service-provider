@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    
+
     email: {
       type: String,
       required: true,
@@ -25,26 +25,6 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
 
-    emailVerificationExpires: {
-      type: Date,
-    },
-
-    passwordResetExpires: {
-      type: Date,
-    },
-
-    refreshToken: {
-      type: String,
-    },
-
-    emailVerificationToken: {
-      type: String,
-    },
-
-    passwordResetToken: {
-      type: String,
-    },
-
     googleId: {
       type: String,
       default: null,
@@ -52,7 +32,7 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["user", "provider", "admin"],
+      enum: ["user", "admin"],
       default: "user",
     },
 
@@ -60,8 +40,42 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+
+    profileImage: {
+      url: {
+        type: String,
+        default: "",
+      },
+      fileId: {
+        type: String,
+        default: "",
+      },
+    },
+
+   phoneNumber: {
+  type: String,
+  unique: true,
+  sparse: true,
+  default: "",
+  trim: true,
+},
+
+    refreshToken: String,
+
+    emailVerificationToken: String,
+    emailVerificationExpires: Date,
+
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  }
 );
 
 userSchema.pre("save", async function () {
@@ -72,7 +86,7 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.comparePassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
 module.exports = mongoose.model("User", userSchema);

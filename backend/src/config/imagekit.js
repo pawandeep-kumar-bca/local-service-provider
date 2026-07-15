@@ -22,5 +22,9 @@ const uploadImage = async (file, fileName, folder) => {
     throw error;
   }
 };
+const deleteImage = async (fileId) => {
+  if (!fileId) return;
 
-module.exports = uploadImage;
+  await imagekit.files.delete(fileId);
+};
+module.exports = {uploadImage,deleteImage};

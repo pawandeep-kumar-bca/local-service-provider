@@ -50,7 +50,8 @@ const getCategory = async (req, res) => {
     const {
       search,
       status,
-      sort = "newest first",
+      category,
+      sortBy = "newest first",
       page = 1,
       limit = 10,
     } = req.query;
@@ -62,7 +63,12 @@ const getCategory = async (req, res) => {
     // ==========================
 
     const filter = {};
-
+   
+    if(category && category !== 'all'){
+      filter.categories = {
+        $in:[category]
+      }
+    }
     if (search) {
       filter.name = {
         $regex: search,
@@ -73,14 +79,25 @@ const getCategory = async (req, res) => {
     if (status) {
       filter.status = status;
     }
+    if (req.query.date) {
+      const start = new Date(req.query.date);
+      start.setHours(0, 0, 0, 0);
 
+      const end = new Date(req.query.date);
+      end.setHours(23, 59, 59, 999);
+
+      filter.createdAt = {
+        $gte: start,
+        $lte: end,
+      };
+    }
     // ==========================
     // Sorting
     // ==========================
 
     let sortOption = {};
 
-    switch (sort.toLowerCase()) {
+    switch (sortBy.toLowerCase()) {
       case "newest first":
         sortOption = { createdAt: -1 };
         break;
@@ -111,7 +128,7 @@ const getCategory = async (req, res) => {
       inactiveCategories,
       totalProviders,
     ] = await Promise.all([
-      categoryModel.countDocuments(),
+      categoryModel.countDocuments(filter),
 
       categoryModel.countDocuments({
         status: "Active",

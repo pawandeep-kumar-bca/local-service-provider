@@ -11,7 +11,7 @@ const router = express.Router()
 
 router.get('/providers/pending',authMiddleware.tokenVerify,roleBased('admin'),adminController.pendingProviders)
  
-
+ 
 
 // GET /api/v1/admin/users 
 router.get('/users',authMiddleware.tokenVerify,roleBased('admin'),adminController.userLists)

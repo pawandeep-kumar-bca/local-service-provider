@@ -4,7 +4,8 @@ const authMiddleware = require("../middlewares/auth.middleware");
 const providerValidator = require("../validators/provider.validator");
 const upload = require("../middlewares/upload.middleware");
 const validateObjectIdMiddleware = require("../middlewares/validateObjectId.middleware");
-const roleBased = require('../middlewares/role.middleware')
+const roleBased = require('../middlewares/role.middleware');
+const providerMiddleware = require("../middlewares/provider.middleware");
 const router = express.Router();
 
 router.post(
@@ -20,11 +21,11 @@ router.post(
 );
 
 // GET    /api/v1/providers/me
-router.get("/me", authMiddleware.tokenVerify , roleBased("provider"), providerControllers.getProvider);
+router.get("/me", authMiddleware.tokenVerify , providerMiddleware, providerControllers.getProvider);
 
 router.put(
   "/me",
-  authMiddleware.tokenVerify, roleBased("provider"),
+  authMiddleware.tokenVerify, providerMiddleware,
   upload.fields([{ name: "profileImage", maxCount: 1 }]),
   providerValidator.providerUpdateValidator,
   providerControllers.updateProvider,
@@ -34,21 +35,18 @@ router.get("/", providerControllers.getProviders);
 
 
 
-// GET    /api/v1/providers/nearby
-router.get("/nearby",  roleBased("provider"),providerControllers.nearbySearchLocation);
+router.get("/nearby", providerControllers.nearbySearchLocation);
 
-// GET    /api/v1/providers/recommended
-router.get("/recommended", roleBased("provider"), providerControllers.recommendedProviders);
-
+router.get("/recommended", providerControllers.recommendedProviders);
 // PUT /api/v1/providers/availability
 router.put(
   "/availability",
-  authMiddleware.tokenVerify, roleBased("provider"),
+  authMiddleware.tokenVerify, providerMiddleware,
   providerControllers.availabilityProvider,
 );
 router.put(
   "/upload-documents",
-  authMiddleware.tokenVerify, roleBased("provider"),
+  authMiddleware.tokenVerify,providerMiddleware,
   upload.fields([
     { name: "aadharCard", maxCount: 1 },
     { name: "certificate", maxCount: 1 },

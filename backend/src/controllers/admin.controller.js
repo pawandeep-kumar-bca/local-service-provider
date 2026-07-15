@@ -98,8 +98,7 @@ async function userLists(req, res) {
     console.error("user list error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
-}
-
+} 
 async function bookingLists(req, res) {
   try {
     const page = parseInt(req.query.page) || 1;

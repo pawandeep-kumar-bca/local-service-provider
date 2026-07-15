@@ -2,6 +2,7 @@ const express = require("express");
 const dashboardController = require("../controllers/dashboard.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 const roleBased = require("../middlewares/role.middleware");
+const providerMiddleware = require("../middlewares/provider.middleware");
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.get(
 router.get(
   "/provider",
   authMiddleware.tokenVerify,
-  roleBased("provider"),
+providerMiddleware,
   dashboardController.providerDetails
 );
 
