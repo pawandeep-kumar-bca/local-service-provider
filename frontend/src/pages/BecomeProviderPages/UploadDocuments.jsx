@@ -141,10 +141,11 @@ const UploadDocuments = () => {
         </div>
  {/* navigation buttons */}
       
-        <div className="flex justify-between items-center md:w-[80%] mx-auto mt-3">
+        <div className="flex justify-between items-center mx-auto gap-5 mt-6">
           {/* back */}
           <Button
             color="white"
+           className="w-full md:w-[20%]"
            onClick={prevMoveForm}
           >
             <MdChevronLeft size={25} />
@@ -152,7 +153,7 @@ const UploadDocuments = () => {
           </Button>
 
           {/* next */}
-          <Button onClick={nextMoveForm}>
+          <Button onClick={nextMoveForm} className="w-full md:w-[20%]">
             Review
 
             <MdChevronRight size={25} />

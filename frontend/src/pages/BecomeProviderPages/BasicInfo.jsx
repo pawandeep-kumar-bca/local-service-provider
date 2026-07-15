@@ -15,7 +15,7 @@ const BasicInfo = () => {
   const { formData, setFormData, nextMoveForm } = useOutletContext();
   const submitForm = (e) => {
     e.preventDefault();
-    if (formData.lat === null || formData.lng === null) {
+    if (!formData.lat  || !formData.lng) {
       return alert("Please select location.");
     }
 
@@ -168,7 +168,7 @@ const BasicInfo = () => {
           <div className="flex flex-col md:flex-row md:gap-5 mb-4">
             {/* State */}
 
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full mt-4 md:mt-0">
               <label
                 htmlFor="state"
                 className="block mb-2 font-medium text-lg md:text-sm"
@@ -213,7 +213,7 @@ const BasicInfo = () => {
               </select>
             </div>
             {/* district */}
-            <div className="flex flex-col w-full relative">
+            <div className="flex flex-col w-full mt-4 md:mt-0">
               <label
                 htmlFor="district"
                 className="block mb-2 font-medium text-lg md:text-sm"
@@ -260,7 +260,7 @@ const BasicInfo = () => {
           <div className="flex flex-col md:flex-row md:gap-5">
             {/* City */}
 
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full mb-4 ">
               <label
                 htmlFor="city"
                 className="block mb-2 font-medium text-lg md:text-sm"
@@ -355,8 +355,8 @@ const BasicInfo = () => {
             />
           </div>
 
-          <div className="flex justify-end items-center mx-auto mt-3">
-            <Button onClick={nextMoveForm} className="w-full md:w-[20%]">
+          <div className="flex justify-end items-center mx-auto mt-6">
+            <Button  className="w-full md:w-[20%]">
               Next
               <MdChevronRight size={25} />
             </Button>

@@ -88,7 +88,7 @@ const FilterProviders = ({ url, setFilters }) => {
             `${base} ${isActive ? active : notActive}`
           }
         >
-          <BsGridFill size={20} /> All Services
+          <BsGridFill size={22} /> All Services
         </NavLink>
 
         {categories.map((category) => (
@@ -104,7 +104,7 @@ const FilterProviders = ({ url, setFilters }) => {
               <img
                 src={category.icon.url}
                 alt={category.name}
-                className="w-8 h-8"
+                className="w-7 h-7"
               />
             )}
 

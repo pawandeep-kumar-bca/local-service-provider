@@ -28,6 +28,7 @@ import ActionDropdown from "../../../components/common/admin/ActionDropdown";
 import ToggleSwitch from "../../../components/common/ToggleSwitch";
 import PageHeader from "../../../components/common/admin/PageHeader";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
+import { FaRegCircleXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../modals/DeleteModal";
 
@@ -60,10 +61,10 @@ const AllCategoriesList = () => {
 
     {
       id: 3,
-      title: "Hidden Categories",
+      title: "Inactive Categories",
       value: "89,543",
       growth: "18%",
-      icon: <IoEyeOffOutline size={22} />,
+      icon: <FaRegCircleXmark size={22} />,
       iconBg: "bg-red-100",
       iconColor: "text-red-500",
       growthIcon: <IoMdArrowRoundDown size={20} />,
@@ -142,10 +143,10 @@ const AllCategoriesList = () => {
       createdTime: "11:40 AM",
     },
   ];
- 
-  const navigate = useNavigate()
 
-  const [isDelete ,setIsDelete] = useState(false)
+  const navigate = useNavigate();
+
+  const [isDelete, setIsDelete] = useState(false);
   return (
     <>
       <div>
@@ -155,7 +156,7 @@ const AllCategoriesList = () => {
           title="Categories Management"
           subtitle="Create and manage all service categories."
           button={
-            <Button onClick={()=>navigate('/admin/categories/add-category')}>
+            <Button onClick={() => navigate("/admin/categories/add-category")}>
               <HiPlus size={22} />
               Add New Category
             </Button>
@@ -191,7 +192,7 @@ const AllCategoriesList = () => {
               {
                 label: "All Status",
 
-                options: ["Active", "Hidden"],
+                options: ["Active", "Inactive"],
               },
 
               {
@@ -215,7 +216,7 @@ const AllCategoriesList = () => {
             <div
               className="
                 grid
-                grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.2fr_0.5fr]
+                grid-cols-[2fr_1fr_1fr_1fr_1.2fr_0.5fr]
                 items-center
                 mt-3
                 text-sm
@@ -228,13 +229,9 @@ const AllCategoriesList = () => {
 
               <span className="text-center">Slug</span>
 
-              <span className="text-center">Services</span>
-
               <span className="text-center">Providers</span>
 
               <span className="text-center">Status</span>
-
-              <span className="text-center">Homepage</span>
 
               <span className="text-center">Created Date</span>
 
@@ -251,7 +248,7 @@ const AllCategoriesList = () => {
                   key={category.id}
                   className="
                     grid
-                    grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.2fr_0.5fr]
+                    grid-cols-[2fr_1fr_1fr_1fr_1.2fr_0.5fr]
                     items-center
                     px-3
                   "
@@ -288,14 +285,6 @@ const AllCategoriesList = () => {
                     <p className="text-sm text-muted">{category.slug}</p>
                   </div>
 
-                  {/* services */}
-
-                  <div className="text-center">
-                    <p className="text-sm font-semibold text-black/80">
-                      {category.services}
-                    </p>
-                  </div>
-
                   {/* providers */}
 
                   <div className="text-center">
@@ -322,12 +311,6 @@ const AllCategoriesList = () => {
                     </span>
                   </div>
 
-                  {/* homepage toggle */}
-
-                  <div className="flex justify-center">
-                    <ToggleSwitch enabled={category.homepage} />
-                  </div>
-
                   {/* date */}
 
                   <div className="text-center">
@@ -348,48 +331,52 @@ const AllCategoriesList = () => {
                           label: "View Category",
                           icon: <MdOutlineRemoveRedEye size={20} />,
                           onClick: () => {
-                            navigate('/admin/categories/category-details')
+                            navigate("/admin/categories/category-details");
                           },
                         },
 
                         {
                           label: "Edit Category",
                           icon: <MdOutlineEdit size={20} />,
-                          onClick: () => {navigate(
-                            '/admin/categories/edit-category'
-                          )},
+                          onClick: () => {
+                            navigate("/admin/categories/edit-category");
+                          },
                         },
-
-                       
 
                         {
                           label: "Services",
                           icon: <MdOutlineMiscellaneousServices size={20} />,
-                          onClick: () => {navigate('/admin/categories/category-services')},
+                          onClick: () => {
+                            navigate("/admin/categories/category-services");
+                          },
                         },
 
                         {
                           label: "Providers",
                           icon: <HiMiniUsers size={20} />,
-                          onClick: () => {navigate('/admin/categories/category-providers')},
+                          onClick: () => {
+                            navigate("/admin/categories/category-providers");
+                          },
                         },
                         {
                           label: "Change Status",
-                          variant:'green',
+                          variant: "green",
                           icon: <CgArrowsExchangeAltV size={20} />,
                           onClick: () => {},
                         },
                         {
                           label: "Toggle HomePage",
-                          variant:'primary',
-                          icon: <IoHomeOutline  size={20} />,
+                          variant: "primary",
+                          icon: <IoHomeOutline size={20} />,
                           onClick: () => {},
                         },
                         {
                           label: "Delete Category",
-                          variant:'danger',
+                          variant: "danger",
                           icon: <RiDeleteBin6Line size={20} />,
-                          onClick: () => {setIsDelete(true)},
+                          onClick: () => {
+                            setIsDelete(true);
+                          },
                         },
                       ]}
                     />
@@ -401,8 +388,7 @@ const AllCategoriesList = () => {
         </TableWrapper>
       </div>
 
-      
-        {isDelete  && (
+      {isDelete && (
         <DeleteModal
           open={isDelete}
           close={() => setIsDelete(false)}
@@ -410,7 +396,6 @@ const AllCategoriesList = () => {
           title="Category"
         />
       )}
-      
     </>
   );
 };

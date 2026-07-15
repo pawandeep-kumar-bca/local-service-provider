@@ -159,15 +159,15 @@ const Review = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between items-center md:w-[80%] mx-auto mt-3">
+      <div className="flex justify-between items-center mx-auto mt-6 gap-5">
         {/* back */}
-        <Button color="white" onClick={prevMoveForm}>
+        <Button color="white" onClick={prevMoveForm} className="w-full md:w-[20%]">
           <MdChevronLeft size={25} />
           Back
         </Button>
 
         {/* next */}
-        <Button onClick={submitProvider}>
+        <Button onClick={submitProvider} className="w-full md:w-[30%]">
           Submit Application
           <MdChevronRight size={25} />
         </Button>
