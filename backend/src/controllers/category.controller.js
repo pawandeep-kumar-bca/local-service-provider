@@ -1,11 +1,14 @@
 const uploadImage = require("../config/imagekit");
 const categoryModel = require("../models/category.model");
+const providerModel = require("../models/provider.model");
 
 async function createCategory(req, res) {
   try {
     const { name, description, backgroundColor, status, sortOrder } = req.body;
 
-    const categoryNameExists = await categoryModel.findOne({ name: { $regex: `^${name.trim()}$`, $options: "i" }, });
+    const categoryNameExists = await categoryModel.findOne({
+      name: { $regex: `^${name.trim()}$`, $options: "i" },
+    });
 
     if (categoryNameExists) {
       return res.status(409).json({ message: "Category already exists" });
@@ -42,34 +45,177 @@ async function createCategory(req, res) {
   }
 }
 
-async function getCategory(req, res) {
+const getCategory = async (req, res) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    const {
+      search,
+      status,
+      sort = "newest first",
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    // ==========================
+    // Filter
+    // ==========================
+
+    const filter = {};
+
+    if (search) {
+      filter.name = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    if (status) {
+      filter.status = status;
+    }
+
+    // ==========================
+    // Sorting
+    // ==========================
+
+    let sortOption = {};
+
+    switch (sort.toLowerCase()) {
+      case "newest first":
+        sortOption = { createdAt: -1 };
+        break;
+
+      case "oldest first":
+        sortOption = { createdAt: 1 };
+        break;
+
+      case "ascending order":
+        sortOption = { name: 1 };
+        break;
+
+      case "descending order":
+        sortOption = { name: -1 };
+        break;
+
+      default:
+        sortOption = { createdAt: -1 };
+    }
+
+    // ==========================
+    // Stats
+    // ==========================
+
+    const [
+      totalCategories,
+      activeCategories,
+      inactiveCategories,
+      totalProviders,
+    ] = await Promise.all([
+      categoryModel.countDocuments(),
+
+      categoryModel.countDocuments({
+        status: "Active",
+      }),
+
+      categoryModel.countDocuments({
+        status: "Inactive",
+      }),
+
+      providerModel.countDocuments({
+        status: "Approved",
+      }),
+    ]);
+
+    // ==========================
+    // Categories
+    // ==========================
 
     const categories = await categoryModel
-      .find()
+      .find(filter)
+      .sort(sortOption)
       .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 })
+      .limit(Number(limit))
       .lean();
-    if (categories.length === 0) {
+
+    if (!categories.length) {
       return res.status(200).json({
         success: true,
         message: "No categories found",
         categories: [],
       });
     }
+
+    // ==========================
+    // Provider Count Aggregation
+    // ==========================
+
+    const providerCounts = await providerModel.aggregate([
+      {
+        $match: {
+          status: "Approved",
+        },
+      },
+      {
+        $unwind: "$categories",
+      },
+      {
+        $group: {
+          _id: "$categories",
+          providers: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+
+    // Convert array to object
+
+    const providerMap = {};
+
+    providerCounts.forEach((item) => {
+      providerMap[item._id.toString()] = item.providers;
+    });
+
+    // Merge Provider Count
+
+    const categoriesWithProviders = categories.map((category) => ({
+      ...category,
+      providers: providerMap[category._id.toString()] || 0,
+    }));
+
+    // ==========================
+    // Response
+    // ==========================
+
     return res.status(200).json({
-      message: "categories fetch successfully",
-      categories,
+      success: true,
+      message: "Categories fetched successfully",
+
+      stats: {
+        totalCategories,
+        activeCategories,
+        inactiveCategories,
+        totalProviders,
+      },
+
+      categories: categoriesWithProviders,
+
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total: totalCategories,
+        totalPages: Math.ceil(totalCategories / limit),
+      },
     });
   } catch (err) {
-    console.error("getCategory error:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 async function updateCategory(req, res) {
   try {

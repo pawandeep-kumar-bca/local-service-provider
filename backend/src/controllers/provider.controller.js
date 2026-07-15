@@ -52,7 +52,7 @@ async function providerProfileCreate(req, res) {
     const aadharCardData = await uploadImage(
       req.files.aadharCard[0],
       `${userId}-${Date.now()}-aadharCard`,
-      "Providers/Documents/Aadhar Cards",
+      "Providers/Documents/AadharCards",
     );
 
     // Upload Certificate
@@ -69,7 +69,7 @@ async function providerProfileCreate(req, res) {
       profileImageData = await uploadImage(
         req.files.profileImage[0],
         `${userId}-${Date.now()}-profileImage`,
-        "Providers/Profile Images",
+        "Providers/ProfileImages",
       );
     }
     // Create Provider
@@ -279,7 +279,7 @@ async function getProviders(req, res) {
       .populate("categories", "name")
       .sort(sortOption)
       .skip(skip)
-      .limit(limit);
+      .limit(limit); 
 
     const totalProviders = await providerModel.countDocuments(filter);
     if (providers.length === 0) {
