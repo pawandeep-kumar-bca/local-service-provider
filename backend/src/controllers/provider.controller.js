@@ -276,7 +276,7 @@ async function getProviders(req, res) {
     }
     const providers = await providerModel
       .find(filter)
-      .populate("categories", "name")
+      .populate("categories userId", "name fullname")
       .sort(sortOption)
       .skip(skip)
       .limit(limit); 
