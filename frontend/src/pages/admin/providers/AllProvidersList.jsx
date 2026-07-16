@@ -471,7 +471,7 @@ const AllProvidersList = () => {
       {reviewProvider && (
         <ReviewProvider close={() => setReviewProvider(false)} />
       )}
-    </>
+    </> 
   );
 };
 
