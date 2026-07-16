@@ -4,7 +4,6 @@ import { SiCashapp } from "react-icons/si";
 import { FaHourglassStart, FaRegCircleCheck } from "react-icons/fa6";
 import { IoIosCloseCircleOutline, IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 
-// Stats cards ka data. Naya card add karna ho to bas yahan ek object push karo.
 export const statsData = [
   {
     id: 1,
