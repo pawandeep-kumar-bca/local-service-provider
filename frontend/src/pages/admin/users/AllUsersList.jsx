@@ -34,7 +34,6 @@ import { BsCash } from "react-icons/bs";
 
 const AllUsersList = () => {
   const navigate = useNavigate();
-  // stats data
 
   const statsData = [
     {
@@ -158,20 +157,10 @@ const AllUsersList = () => {
 
           <SearchFilterBar
             placeholder="Search users by name,email or phone..."
-            filters={[
-              {
-                label: "Role",
-                options: ["User", "Provider"],
-              },
-
+            options={[
               {
                 label: "Status",
-                options: ["Active", "Pending", "Blocked"],
-              },
-
-              {
-                label: "Verified",
-                options: ["Verified", "Not Verified"],
+                options: ["Verified", "Not Verified","Active","Blocked"],
               },
             ]}
           />

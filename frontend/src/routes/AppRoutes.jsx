@@ -25,7 +25,6 @@ import AllBookingsList from "../pages/admin/bookings/AllBookingsList";
 import AllCategoriesList from "../pages/admin/categories/AllCategoriesList";
 import AllPayments from "../pages/admin/payments/AllPayments";
 import AllReports from "../pages/admin/reports/AllReports";
-import Setting from "../pages/admin/Setting";
 import AuthLayout from "../layouts/AuthLayout";
 import Home from "../pages/public/Home";
 import Categories from "../pages/public/Categories";
