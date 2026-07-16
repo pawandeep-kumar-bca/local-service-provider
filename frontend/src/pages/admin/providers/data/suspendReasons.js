@@ -1,0 +1,22 @@
+
+export const suspendReasons = [
+  "Poor service quality",
+  "Late arrivals",
+  "Multiple booking cancellations",
+  "Fake service listings",
+  "Customer complaints",
+  "Unprofessional behavior",
+  "Fraudulent activity",
+  "Violation of platform guidelines",
+  "Low ratings from customers",
+  "Incomplete service delivery",
+  "Overcharging customers",
+  "Using fake documents",
+  "Inactive for long time",
+  "Suspicious account activity",
+  "Payment settlement issues",
+  "Misbehavior with customers",
+  "Safety policy violation",
+  "Temporary suspension for review",
+  "Permanent suspension by admin",
+];
