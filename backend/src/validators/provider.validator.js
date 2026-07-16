@@ -12,13 +12,6 @@ const respondWithValidationErrors = (req, res, next) => {
 };
 
 const providerValidator = [
-  body("providerName")
-    .notEmpty()
-    .withMessage("Provider name is required")
-    .isLength({ min: 3, max: 50 })
-    .withMessage("Provider name must be between 3 and 50 characters")
-    .trim(),
-
   body("phoneNumber")
     .notEmpty()
     .withMessage("Phone number is required")

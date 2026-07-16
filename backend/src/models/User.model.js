@@ -57,13 +57,13 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-   phoneNumber: {
-  type: String,
-  unique: true,
-  sparse: true,
-  default: "",
-  trim: true,
-},
+    phoneNumber: {
+      type: String,
+      unique: true,
+      sparse: true,
+      default: "",
+      trim: true,
+    },
 
     refreshToken: String,
 
@@ -75,7 +75,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 userSchema.pre("save", async function () {

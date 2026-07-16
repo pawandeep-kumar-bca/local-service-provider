@@ -244,13 +244,9 @@ async function me(req, res) {
     }
 
     return res.status(200).json({
+      success:true,
       message: "User fetched",
-      user: {
-        id: user._id,
-        fullname: user.fullname,
-        email: user.email,
-        role: user.role,
-      },
+      user
     });
   } catch (err) {
     console.error("me error:", err);

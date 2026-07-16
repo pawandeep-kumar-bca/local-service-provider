@@ -47,7 +47,7 @@ async function createCategory(req, res) {
 
 const getCategory = async (req, res) => {
   try {
-    const {
+    const { 
       search,
       status,
       category,
