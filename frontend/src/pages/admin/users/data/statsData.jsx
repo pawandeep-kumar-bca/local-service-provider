@@ -4,11 +4,11 @@ import { RiUserAddFill } from "react-icons/ri";
 import { MdVerifiedUser } from "react-icons/md";
 import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 
-export const statsData = [
+export const getStatsData = (stats) => [
   {
     id: 1,
     title: "Total Users",
-    value: "12,835",
+    value: stats?.totalUsers || 0,
     growth: "12%",
     icon: <FaUser size={22} />,
     iconBg: "bg-blue-100",
@@ -19,7 +19,7 @@ export const statsData = [
   {
     id: 2,
     title: "Active Users",
-    value: "12,345",
+    value: stats?.totalActiveUsers|| 0,
     growth: "5%",
     icon: <FaUserShield size={22} />,
     iconBg: "bg-green-100",
@@ -30,7 +30,7 @@ export const statsData = [
   {
     id: 3,
     title: "Blocked Users",
-    value: "89,543",
+    value: stats?.totalBlockedUsers|| 0,
     growth: "18%",
     icon: <FaUserLock size={22} />,
     iconBg: "bg-red-100",
@@ -41,7 +41,7 @@ export const statsData = [
   {
     id: 4,
     title: "New Users",
-    value: "24,400",
+    value: stats?.totalNewUser|| 0,
     growth: "10%",
     icon: <RiUserAddFill size={22} />,
     iconBg: "bg-purple-100",
@@ -52,7 +52,7 @@ export const statsData = [
   {
     id: 5,
     title: "Verified Users",
-    value: "24,400",
+    value: stats?.totalVerifiedUsers|| 0,
     growth: "10%",
     icon: <MdVerifiedUser size={24} />,
     iconBg: "bg-green-100",

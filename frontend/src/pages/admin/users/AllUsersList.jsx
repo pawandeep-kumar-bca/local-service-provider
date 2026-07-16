@@ -27,8 +27,7 @@ const suspendReasons = [
 ];
 
 const AllUsersList = () => {
-  // Har modal ke liye ab poora selected user store hota hai (na ki sirf boolean),
-  // taaki modal me sahi user ka context dikhaya ja sake.
+  
   const [userToDelete, setUserToDelete] = useState(null);
   const [userToSuspend, setUserToSuspend] = useState(null);
   const [userToResetPassword, setUserToResetPassword] = useState(null);
@@ -53,7 +52,7 @@ const AllUsersList = () => {
           title="User"
         />
       )}
-
+ 
       {userToSuspend && (
         <SuspendModal
           open={!!userToSuspend}

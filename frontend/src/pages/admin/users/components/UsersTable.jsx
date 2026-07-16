@@ -1,20 +1,73 @@
-import React from "react";
+import React, { useState } from "react";
 import SearchFilterBar from "../../../../components/common/admin/SearchFilterBar";
 import TableWrapper from "../../../../components/common/admin/TableWrapper";
-import { users } from "../data/usersData";
+
 import UserTableHeader from "./UserTableHeader";
 import UserTableRow from "./UserTableRow";
+import { useUsers } from "../../../../hooks/useAdmin";
+import useDebounce from "../../../../hooks/useDebounce";
 
-
-const UsersTable = ({ onDeleteClick, onSuspendClick, onResetPasswordClick }) => {
+const UsersTable = ({
+  onDeleteClick,
+  onSuspendClick,
+  onResetPasswordClick,
+}) => {
+  const [filters, setFilters] = useState({
+    search: "",
+    sort: "newest first",
+    verificationStatus: "",
+    accountStatus: "",
+    date: "",
+    page: 1,
+    limit: 10,
+  });
+  const debouncedSearch = useDebounce(filters.search, 500);
+  const { data } = useUsers({ ...filters, search: debouncedSearch });
+  const users = data?.users || [];
   return (
     <TableWrapper>
       <SearchFilterBar
         placeholder="Search users by name,email or phone..."
+        filters={filters}
+        setFilters={setFilters}
         options={[
           {
-            label: "Status",
-            options: ["Verified", "Not Verified", "Active", "Blocked"],
+            value: filters.verificationStatus,
+            onChange: (value) => {
+              setFilters((prev) => ({
+                ...prev,
+                verificationStatus: value,
+              }));
+            },
+            label: "Verification Status",
+            options: ["Verified", "Not Verified"],
+          },
+          {
+            value: filters.accountStatus,
+            onChange: (value) => {
+              setFilters((prev) => ({
+                ...prev,
+                accountStatus: value,
+              }));
+            },
+            label: "Account Status",
+            options: ["Active", "Blocked"],
+          },
+          {
+            label: "Sort By",
+            value: filters.sort,
+            onChange: (value) => {
+              setFilters((prev) => ({
+                ...prev,
+                sort: value,
+              }));
+            },
+            options: [
+              "Newest First",
+              "Oldest First",
+              "Descending Order",
+              "Ascending Order",
+            ],
           },
         ]}
       />
@@ -27,7 +80,7 @@ const UsersTable = ({ onDeleteClick, onSuspendClick, onResetPasswordClick }) => 
         <div className="space-y-2 pb-3">
           {users.map((user) => (
             <UserTableRow
-              key={user.id}
+              key={user._id}
               user={user}
               onDeleteClick={onDeleteClick}
               onSuspendClick={onSuspendClick}

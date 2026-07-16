@@ -13,15 +13,21 @@ import UserInfo from "../../../../components/common/admin/UserInfo";
 import ActionDropdown from "../../../../components/common/admin/ActionDropdown";
 import StatusBudge from "../../../../components/common/StatusBadge";
 
-const UserTableRow = ({ user, onDeleteClick, onSuspendClick, onResetPasswordClick }) => {
+const UserTableRow = ({
+  user,
+  onDeleteClick,
+  onSuspendClick,
+  onResetPasswordClick,
+}) => {
   const navigate = useNavigate();
+  
 
   return (
     <div
       className="
         min-w-[1200px]
         grid
-        grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_0.7fr_0.4fr]
+        grid-cols-[1.2fr_1.2fr_1fr_1fr_1fr_1fr_0.7fr_0.4fr]
         items-center
         px-4
         py-4
@@ -34,7 +40,11 @@ const UserTableRow = ({ user, onDeleteClick, onSuspendClick, onResetPasswordClic
       "
     >
       {/* user info */}
-      <UserInfo image={user.image} name={user.name} id={user.userId} />
+      <UserInfo
+        image={user.profileImage?.url}
+        name={user.fullname}
+        id="#USR4532"
+      />
 
       {/* email */}
       <div>
@@ -43,22 +53,38 @@ const UserTableRow = ({ user, onDeleteClick, onSuspendClick, onResetPasswordClic
 
       {/* phone */}
       <div>
-        <p className="text-sm text-muted">{user.phone}</p>
+        <p className="text-sm text-muted">{user.phoneNumber}</p>
       </div>
 
       {/* status */}
       <div>
-        <StatusBudge badge={user.status} />
+        <StatusBudge badge={user.isVerified ? "verified" : "not verified"} />
+      </div>
+      <div>
+        <StatusBudge badge={user.isBlocked ? "block" : "active"} />
       </div>
 
       {/* joined date */}
-      <div>
-        <p className="text-sm text-muted">{user.joinedDate}</p>
+      <div className="text-center">
+        <h3 className="text-sm font-semibold text-black/80">
+          {new Date(user.createdAt).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+        </h3>
+        <p className="text-sm text-muted mt-1">
+          {new Date(user.createdAt).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}
+        </p>
       </div>
 
       {/* bookings */}
       <div>
-        <p className="text-sm text-muted">{user.bookings}</p>
+        <p className="text-sm text-muted">{user.totalBookings}</p>
       </div>
 
       {/* actions */}
