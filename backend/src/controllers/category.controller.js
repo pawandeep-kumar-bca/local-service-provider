@@ -139,7 +139,7 @@ const getCategory = async (req, res) => {
       }),
 
       providerModel.countDocuments({
-        status: "Approved",
+        status: "approved",
       }),
     ]);
 
@@ -169,7 +169,7 @@ const getCategory = async (req, res) => {
     const providerCounts = await providerModel.aggregate([
       {
         $match: {
-          status: "Approved",
+          status: "approved",
         },
       },
       {

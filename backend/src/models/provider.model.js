@@ -13,7 +13,10 @@ const providerSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-
+    verifiedByAdmin:{
+      type:Boolean,
+      default:false
+    },
     experience: {
       type: Number,
       required: true,
@@ -31,8 +34,8 @@ const providerSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected"],
-      default: "Pending",
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
 
     rating: {

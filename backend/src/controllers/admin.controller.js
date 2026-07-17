@@ -61,11 +61,10 @@ async function updateProviderStatus(req, res, status, verificationStatus) {
 }
 
 const pendingProvidersApproved = (req, res) =>
-  updateProviderStatus(req, res, "Approved", "verified");
+  updateProviderStatus(req, res, "approved", "verified");
 
 const pendingProvidersReject = (req, res) =>
-  updateProviderStatus(req, res, "Rejected", "not verified");
-
+  updateProviderStatus(req, res, "rejected", "not verified");
 async function userLists(req, res) {
   try {
     const {
@@ -209,6 +208,44 @@ async function userLists(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+async function getProvidersByAdmin(req, res) {
+  try {
+    const { search, date, verificationStatus,status,category } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const filters = {};
+
+     if(status){
+      filters.status = status
+     }
+    const providers = await providerModel
+      .find(filters).select('categories status createdAt  completedJobs')
+      .populate("userId", "fullname email phoneNumber profileImage isVerified")
+      .populate("categories", "name")
+      .limit(limit)
+      .skip(skip);
+
+    if (providers.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Provider not available",
+        providers: [],
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "providers fetch successfully",
+      providers,
+    });
+  } catch (err) {
+    console.error("Get Providers by admin Error:", err);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+}
+
 async function bookingLists(req, res) {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -222,8 +259,8 @@ async function bookingLists(req, res) {
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(skip)
-      .select("userId providerId bookingSlot bookingDate serviceAddress")
-      .populate("userId providerId");
+      .select("userId providerId category bookingSlot bookingDate serviceAddress")
+      .populate("userId providerId category","fullname profileImage name");
     const totalBooking = await bookingModel.countDocuments({
       bookingStatus: "completed",
     });
@@ -247,6 +284,7 @@ async function bookingLists(req, res) {
 
 module.exports = {
   pendingProviders,
+  getProvidersByAdmin,
   pendingProvidersApproved,
   pendingProvidersReject,
   userLists,

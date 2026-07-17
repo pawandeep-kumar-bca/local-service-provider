@@ -313,19 +313,19 @@ async function getProviders(req, res) {
       default:
         sortOption = { createdAt: -1 };
     }
-   const providers = await providerModel
-  .find(filter)
-  .populate("userId", "fullname profileImage")
-  .populate("categories", "name")
-  .populate("location.state", "name")
-  .populate("location.district", "name")
-  .populate("location.city", "name")
-  .select(
-    "userId categories price experience rating totalReview completedJobs availability responseTime trusted topRated location"
-  )
-  .sort(sortOption)
-  .skip(skip)
-  .limit(limit);
+    const providers = await providerModel
+      .find(filter)
+      .populate("userId", "fullname profileImage")
+      .populate("categories", "name")
+      .populate("location.state", "name")
+      .populate("location.district", "name")
+      .populate("location.city", "name")
+      .select(
+        "userId categories price experience verifiedByAdmin rating totalReview completedJobs availability responseTime trusted topRated location",
+      )
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit);
 
     const totalProviders = await providerModel.countDocuments(filter);
     if (providers.length === 0) {
@@ -346,7 +346,7 @@ async function getProviders(req, res) {
     console.error("Get providers error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
-} 
+}
 
 async function getOneProviderDetails(req, res) {
   try {
@@ -354,7 +354,12 @@ async function getOneProviderDetails(req, res) {
 
     const providerExists = await providerModel
       .findById(providerId)
-      .populate("categories");
+      .select("-documents")
+      .populate("categories") 
+      .populate("userId", "fullname profileImage")
+      .populate("location.state", "name")
+      .populate("location.district", "name")
+      .populate("location.city", "name");
     if (!providerExists) {
       return res.status(404).json({ message: "Wrong Provider Id" });
     }

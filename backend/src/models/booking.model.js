@@ -27,8 +27,8 @@ const bookingsSchema = new mongoose.Schema(
     },
     serviceType: {
       type: String,
-      enum: ["Scheduled", "Instant"],
-      default: "Scheduled",
+      enum: ["scheduled", "instant"],
+      default: "scheduled",
     },
     notes: {
       type: String,
@@ -37,14 +37,14 @@ const bookingsSchema = new mongoose.Schema(
     bookingStatus: {
       type: String,
       enum: [
-        "Pending",
-        "Accepted",
-        "In Progress",
-        "Completed",
-        "Cancelled",
-        "Rejected",
+        "pending",
+        "accepted",
+        "in progress",
+        "completed",
+        "cancelled",
+        "rejected",
       ],
-      default: "Pending",
+      default: "pending",
     },
     serviceLocation: {
       type: {
