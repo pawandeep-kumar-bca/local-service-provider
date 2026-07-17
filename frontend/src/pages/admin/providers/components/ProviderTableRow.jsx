@@ -19,6 +19,7 @@ const ProviderTableRow = ({
   onDeleteClick,
 }) => {
   const navigate = useNavigate();
+  
 
   return (
     <div
@@ -37,31 +38,31 @@ const ProviderTableRow = ({
       "
     >
       {/* provider info */}
-      <UserInfo image={provider.image} name={provider.name} id={provider.providerId} />
+      <UserInfo image={provider.userId?.profileImage?.url} name={provider.userId?.fullname} id="#PRO4564" />
 
       {/* category */}
       <div>
-        <StatusBudge category={provider.category} />
+        <StatusBudge category={provider.categories?.[0].name} />
       </div>
 
       {/* email */}
       <div>
-        <p className="text-sm text-muted">{provider.email}</p>
+        <p className="text-sm text-muted">{provider.userId?.email}</p>
       </div>
 
       {/* phone */}
       <div>
-        <p className="text-sm text-muted">{provider.phone}</p>
+        <p className="text-sm text-muted">{provider.userId?.phoneNumber}</p>
       </div>
 
       {/* status */}
       <div>
-        <StatusBudge badge={provider.status} />
+        <StatusBudge badge={provider.status.toLowerCase()} />
       </div>
 
       {/* verification */}
       <div>
-        <StatusBudge badge={provider.verification} showIcon />
+        <StatusBudge badge={provider.userId?.isVerified ?'verified' :'not verified'} showIcon />
       </div>
 
       {/* completed jobs */}
@@ -70,8 +71,21 @@ const ProviderTableRow = ({
       </div>
 
       {/* joined date */}
-      <div className="text-center">
-        <p className="text-sm text-muted">{provider.joinedDate}</p>
+   <  div className="text-center">
+        <h3 className="text-sm font-semibold text-black/80">
+          {new Date(provider.createdAt).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}
+        </h3>
+        <p className="text-sm text-muted mt-1">
+          {new Date(provider.createdAt).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}
+        </p>
       </div>
 
       {/* action dropdown */}
