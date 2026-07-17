@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SearchFilterBar from "../../../../components/common/admin/SearchFilterBar";
 import TableWrapper from "../../../../components/common/admin/TableWrapper";
 
@@ -14,14 +14,16 @@ const ProvidersTable = ({
   onSuspendClick,
   onDeleteClick,
 }) => {
-  // const [filters,setFilters] = useState({
-  //   search:"",
-  //   sort:'newest first',
+  const [filters,setFilters] = useState({
+    search:"",
+    status:'',
+    verificationStatus:'',
+    category:''
 
-  // });
-  const { data, isLoading, isError, error } = useProviders();
+  });
+  const { data } = useProviders(filters);
+  
 
-console.log({ data, isLoading, isError, error });
   
   const providers = data?.providers || [];
  
@@ -29,19 +31,42 @@ console.log({ data, isLoading, isError, error });
   return (
     <TableWrapper>
       <SearchFilterBar
-        placeholder="Search providers by name,email or phone..."
-        filters={[
+        filters={filters}
+        setFilters={setFilters}
+        placeholder="Search providers by name,email,phone or category..."
+        options={[
           {
+            value:filters.category,
+            onChange:(value)=>{
+              setFilters((prev)=>({
+                ...prev,
+                category:value
+              }))
+            },
             label: "All Category",
             options: ["Plumbing", "Cleaning"],
           },
           {
+            value:filters.status,
+            onChange:(value)=>{
+              setFilters((prev)=>({
+                ...prev,
+                status:value
+              }))
+            },
             label: "All Status",
-            options: ["Active", "Pending", "Blocked"],
+            options:["Pending", "Approved", "Rejected"],
           },
           {
-            label: "Verification",
-            options: ["Verified", "Pending"],
+             value:filters.verificationStatus,
+            onChange:(value)=>{
+              setFilters((prev)=>({
+                ...prev,
+                verificationStatus:value
+              }))
+            },
+            label: "Verification Status",
+            options: ["Verified", "Not Verified"],
           },
         ]}
       />
@@ -54,7 +79,7 @@ console.log({ data, isLoading, isError, error });
         <div className="space-y-2 pb-3">
           {providers.map((provider) => (
             <ProviderTableRow
-              key={provider.id}
+              key={provider._id}
               provider={provider}
               onServicePricingClick={onServicePricingClick}
               onReviewClick={onReviewClick}

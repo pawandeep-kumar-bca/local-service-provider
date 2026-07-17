@@ -44,7 +44,7 @@ const SearchFilterBar = ({
                 text-muted
               "
             >
-              <option value=''>
+              <option defaultChecked disabled>
                 {option.label}
               </option>
 
