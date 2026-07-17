@@ -78,12 +78,14 @@ async function userLists(req, res) {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const filters = {};
-
+    const searchFields = ["fullname", "email", "phoneNumber"];
     if (search) {
-      filters.fullname = {
-        $regex: search,
-        $options: "i",
-      };
+      filters.$or = searchFields.map((field) => ({
+        [field]: {
+          $regex: search,
+          $options: "i",
+        },
+      }));
     }
 
     if (verificationStatus === "verified") {
@@ -169,26 +171,26 @@ async function userLists(req, res) {
     // ==========================
     // Booking Count Aggregation
     // ==========================
-  const bookingCounts = await bookingModel.aggregate([
-  {
-    $group: {
-      _id: "$userId",
-      totalBookings: {
-        $sum: 1,
+    const bookingCounts = await bookingModel.aggregate([
+      {
+        $group: {
+          _id: "$userId",
+          totalBookings: {
+            $sum: 1,
+          },
+        },
       },
-    },
-  },
-]);
+    ]);
 
-const bookingMap = {};
+    const bookingMap = {};
 
-bookingCounts.forEach((item) => {
-  bookingMap[item._id.toString()] = item.totalBookings;
-});
-const usersWithBookings = users.map((user) => ({
-  ...user.toObject(),
-  totalBookings: bookingMap[user._id.toString()] || 0,
-}));
+    bookingCounts.forEach((item) => {
+      bookingMap[item._id.toString()] = item.totalBookings;
+    });
+    const usersWithBookings = users.map((user) => ({
+      ...user.toObject(),
+      totalBookings: bookingMap[user._id.toString()] || 0,
+    }));
     return res.status(200).json({
       message: "all users fetch successfully",
       users: usersWithBookings,
@@ -199,7 +201,7 @@ const usersWithBookings = users.map((user) => ({
         totalNewUser,
         totalVerifiedUsers,
       },
-      totalBookings:bookingCounts.length,
+      totalBookings: bookingCounts.length,
       currentPage: page,
     });
   } catch (err) {

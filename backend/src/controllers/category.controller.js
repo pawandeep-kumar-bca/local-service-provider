@@ -1,4 +1,4 @@
-const uploadImage = require("../config/imagekit");
+const {uploadImage} = require("../config/imagekit");
 const categoryModel = require("../models/category.model");
 const providerModel = require("../models/provider.model");
 
@@ -32,7 +32,7 @@ async function createCategory(req, res) {
       icon,
       slug,
       sortOrder,
-      status: status || "Active",
+      status: status || "active",
     });
     return res.status(201).json({
       status: true,
@@ -131,11 +131,11 @@ const getCategory = async (req, res) => {
       categoryModel.countDocuments(filter),
 
       categoryModel.countDocuments({
-        status: "Active",
+        status: "active",
       }),
 
       categoryModel.countDocuments({
-        status: "Inactive",
+        status: "inactive",
       }),
 
       providerModel.countDocuments({

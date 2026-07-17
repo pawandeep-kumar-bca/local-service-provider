@@ -1,5 +1,5 @@
 const providerModel = require("../models/provider.model");
-const {uploadImage} = require("../config/imagekit");
+const { uploadImage } = require("../config/imagekit");
 const imagekit = require("@imagekit/nodejs");
 const categoryModel = require("../models/category.model");
 const { default: mongoose } = require("mongoose");
@@ -86,26 +86,25 @@ async function providerProfileCreate(req, res) {
     // Update User Profile Image
     // -----------------------------
 
-   if (req.files.profileImage) {
-
-    // Agar purani image hai to delete karo
-    if (user.profileImage?.fileId) {
+    if (req.files.profileImage) {
+      // Agar purani image hai to delete karo
+      if (user.profileImage?.fileId) {
         await deleteImage(user.profileImage.fileId);
-    }
+      }
 
-    // Nayi image upload karo
-    const profileImageData = await uploadImage(
+      // Nayi image upload karo
+      const profileImageData = await uploadImage(
         req.files.profileImage[0],
         `${userId}-${Date.now()}-profileImage`,
-        "Users/ProfileImages"
-    );
+        "Users/ProfileImages",
+      );
 
-    // User update
-    user.profileImage = {
+      // User update
+      user.profileImage = {
         url: profileImageData.url,
         fileId: profileImageData.fileId,
-    };
-}
+      };
+    }
 
     await user.save();
 
@@ -264,19 +263,19 @@ async function getProviders(req, res) {
     }
 
     // search by provider name
-    if (search) {
-      filter.providerName = {
-        $regex: search,
-        $options: "i",
-      };
-    }
+    // if (search) {
+    //   filter.providerName = {
+    //     $regex: search,
+    //     $options: "i",
+    //   };
+    // }
     // search by city
-    if (city) {
-      filter.city = {
-        $regex: search,
-        $options: "i",
-      };
-    }
+    // if (city) {
+    //   filter.city = {
+    //     $regex: search,
+    //     $options: "i",
+    //   };
+    // }
     // Availability Filter
     if (availability) {
       filter.availability = availability;
@@ -314,12 +313,19 @@ async function getProviders(req, res) {
       default:
         sortOption = { createdAt: -1 };
     }
-    const providers = await providerModel
-      .find(filter)
-      .populate("categories userId", "name fullname")
-      .sort(sortOption)
-      .skip(skip)
-      .limit(limit);
+   const providers = await providerModel
+  .find(filter)
+  .populate("userId", "fullname profileImage")
+  .populate("categories", "name")
+  .populate("location.state", "name")
+  .populate("location.district", "name")
+  .populate("location.city", "name")
+  .select(
+    "userId categories price experience rating totalReview completedJobs availability responseTime trusted topRated location"
+  )
+  .sort(sortOption)
+  .skip(skip)
+  .limit(limit);
 
     const totalProviders = await providerModel.countDocuments(filter);
     if (providers.length === 0) {
@@ -340,7 +346,7 @@ async function getProviders(req, res) {
     console.error("Get providers error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
-}
+} 
 
 async function getOneProviderDetails(req, res) {
   try {

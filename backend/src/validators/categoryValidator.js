@@ -21,7 +21,7 @@ const categoryValidator = [
 
   body("status")
     .optional()
-    .isIn(["Active", "Inactive"])
+    .isIn(["active", "inactive"])
     .withMessage("Invalid status"),
   ResponseWithCategoryValidator,
 ];

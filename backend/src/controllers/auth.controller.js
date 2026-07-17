@@ -237,7 +237,7 @@ async function me(req, res) {
   try {
     const userId = req.user.id;
 
-    const user = await userModel.findById(userId).select("-password");
+    const user = await userModel.findById(userId).select("-password -refreshToken");
 
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
