@@ -40,9 +40,9 @@ export const useAuth = () => {
       if (data.user.role === "admin") {
         navigate("/admin/dashboard");
       } else if (data.user.role === "provider") {
-        navigate("/provider");
+        navigate("/provider/dashboard");
       } else {
-        navigate("/user");
+        navigate("/user/dashboard");
       }
     },
     onError: (error) => {

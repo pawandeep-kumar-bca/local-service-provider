@@ -35,7 +35,7 @@ export const userMenu = [
   {
     name: "Home",
     icon: <AiFillHome />,
-    path: "/user",
+    path: "/user/dashboard",
   },
   {
     name: "Our Services",

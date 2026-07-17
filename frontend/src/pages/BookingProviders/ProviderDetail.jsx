@@ -28,11 +28,11 @@ const ProviderDetail = () => {
   const provider = data?.providerExists;
 
   const {
-    providerName,
-    profileImage,
+    
+   
     price,
     experience,
-    city,
+   
     verificationStatus,
     rating,
     totalReview,
@@ -42,8 +42,8 @@ const ProviderDetail = () => {
 
 
   const profileImageUrl =
-    profileImage?.url ||
-    "https://ui-avatars.com/api/?name=" + encodeURIComponent(providerName);
+    provider.userId?.profileImage?.url ||
+    "https://ui-avatars.com/api/?name=" + encodeURIComponent(provider.userId?.fullname);
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-3 md:rounded">
       <div className="flex justify-between items-center mb-4">
@@ -63,7 +63,7 @@ const ProviderDetail = () => {
             />
 
             <div className="w-full flex flex-col gap-1 ">
-              <h1 className="md:text-2xl font-semibold">{providerName}</h1>
+              <h1 className="md:text-2xl font-semibold">{provider.userId?.fullname}</h1>
 
               <div className="flex items-center gap-2 text-yellow-500">
                 <div className="flex gap-1">
@@ -81,7 +81,7 @@ const ProviderDetail = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-around mt-3 gap-4 md:w-[50%] md:ml-8">
+          <div className="flex items-center justify-start mt-3 gap-10  md:ml-8">
             <div className="flex items-center gap-2 ">
               <IoBagCheckOutline
                 className="p-1 rounded-full text-blue-500 bg-blue-200"
@@ -101,7 +101,7 @@ const ProviderDetail = () => {
               />
 
               <div>
-                <h1 className="text-sm font-medium">{city}</h1>
+                <h1 className="text-sm font-medium">{provider.location?.village}, {provider.location?.city?.name}, {provider.location?.district?.name}, {provider.location?.state?.name}</h1>
                 <p className="text-sm text-muted">Location</p>
               </div>
             </div>
@@ -133,11 +133,11 @@ const ProviderDetail = () => {
           </Button>
         </div>
       </div>
-
+ 
       <div className="mt-3">
         <h1 className="text-xl font-bold text-text mb-2">About Me</h1>
         <p>
-          Hi, I'm <strong>{providerName}</strong>. I have{" "}
+          Hi, I'm <strong>{provider.userId?.fullname}</strong>. I have{" "}
           <strong>{experience} years</strong> of experience in{" "}
           <strong>{categories?.map((c) => c.name).join(", ")}</strong>. I
           provide reliable and professional services at affordable prices.
@@ -164,8 +164,8 @@ const ProviderDetail = () => {
 
                   <div className="border rounded-2xl p-3 transition-all duration-300 hover:border-green-400 peer-checked:border-green-500 peer-checked:bg-green-50">
                     <div className="mt-3 flex gap-5">
-                      <div className="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center">
-                        <FaTools className="text-orange-500" size={24} />
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center`} style={{backgroundColor:`${category.backgroundColor}`}}>
+                        <img src={category.icon?.url} alt={category.name} className="w-10 h-10"/>
                       </div>
 
                       <div>
