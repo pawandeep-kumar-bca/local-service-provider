@@ -12,6 +12,7 @@ async function userBookingCreate(req, res) {
       serviceAddress: { city, pinCode, village },
     } = req.body;
     const userId = req.user.id;
+    
     const provider = await providerModel.findById(providerId);
 
     if (!provider) {
