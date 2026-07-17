@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const BookingDetail = () => {
     const navigate = useNavigate()
-  const timeSlots = [
+     const timeSlots = [
     "12:00 AM - 1:00 AM",
     "1:00 AM - 2:00 AM",
     "2:00 AM - 3:00 AM",

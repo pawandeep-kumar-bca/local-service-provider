@@ -19,29 +19,12 @@ import { AiOutlineLike } from "react-icons/ai";
 const ProviderCard = ({ provider, selectedCategory }) => {
   const navigate = useNavigate();
  
-  const {
-    _id,
-    providerName,
-    profileImage,
-
-    verificationStatus,
-    rating,
-    totalReview,
-    availability,
-    completedJobs,
-    experience,
-    responseTime,
-    city,
-    location,
-    price,
-    topRated,
-    trusted,
-  } = provider;
+  
 
   // ---------------- Derived Values (API shape ke hisaab se) ----------------
   const profileImageUrl =
-    profileImage?.url ||
-    "https://ui-avatars.com/api/?name=" + encodeURIComponent(providerName);
+    provider.userId?.profileImage?.url ||
+    "https://ui-avatars.com/api/?name=" + encodeURIComponent(provider.userId?.fullname);
 
   const matchedCategory = provider.categories.find(
     (cat) => cat._id.toString() === selectedCategory,
@@ -49,31 +32,26 @@ const ProviderCard = ({ provider, selectedCategory }) => {
 
   const categoryName = matchedCategory?.name || provider.categories[0]?.name;
 
-  const isVerified = verificationStatus === "verified";
+  const isVerified = provider.verifiedByAdmin ? "verified" :'not verified';
 
-  const availabilityText = availability ? "Available Now" : "Unavailable";
+  const availabilityText = provider.availability ? "Available Now" : "Unavailable";
 
-  const cityName = city || "Unknown City";
+  
 
-  const jobsCompleted = completedJobs || 0;
+  const jobsCompleted = provider.completedJobs || 0;
 
-  const providerExperience = `${experience} Years`;
+  const providerExperience = `${provider.experience} Years`;
 
-  const response = responseTime || "N/A";
+  const response = provider.responseTime || "N/A";
 
-  const providerRating = Number(rating || 0).toFixed(1);
+  const providerRating = Number(provider.rating || 0).toFixed(1);
 
-  const reviews = totalReview || 0;
+  const reviews = provider.totalReview || 0;
 
-  const hourlyPrice = price || 0;
+  const hourlyPrice = provider.price || 0;
 
-  // location ab { type: "Point", coordinates: [lng, lat] } object hai.
-  // API address string nahi bhejta, isliye coordinates se hi display banate hain.
-  const [longitude, latitude] = location?.coordinates || [];
-  const locationText =
-    latitude != null && longitude != null
-      ? `${latitude.toFixed(3)}, ${longitude.toFixed(3)}`
-      : "Location unavailable";
+ 
+  
 
   const base =
     "py-1 px-3 rounded-full text-sm flex w-fit gap-2 items-center font-medium border";
@@ -99,7 +77,7 @@ const ProviderCard = ({ provider, selectedCategory }) => {
           <div className="w-full flex flex-col gap-1 ">
             <div className="w-full flex justify-between  items-center ">
               <h1 className="text-2xl font-semibold flex items-center">
-                {providerName}
+                {provider.userId?.fullname}
               </h1>
               <BsThreeDotsVertical className="text-2xl cursor-pointer" />
             </div>
@@ -181,8 +159,8 @@ const ProviderCard = ({ provider, selectedCategory }) => {
             <div className="flex items-center gap-2 ">
               <FaLocationDot className=" text-black" size={24} />
               <div>
-                <h3 className="font-semibold text-text text-lg">{cityName}</h3>
-                <p className="text-sm text-muted">{locationText}</p>
+                <h3 className="font-semibold text-text text-lg">500m away</h3>
+                <p className="text-sm text-muted">{provider.location?.city?.name},{provider.location?.district?.name},{provider.location?.state?.name}</p>
               </div>
             </div>
             <div>
@@ -197,7 +175,7 @@ const ProviderCard = ({ provider, selectedCategory }) => {
           <div className="flex items-center justify-between mt-1">
             <div className="w-full flex flex-col gap-5">
               <div className="flex gap-3 justify-center">
-                {topRated ? (
+                {provider.topRated ? (
                   <span className="bg-yellow-50  flex items-center gap-1 font-bold rounded-md py-2 px-5">
                     <CiStar className="text-yellow-500" size={20} />
                     <h1 className="text-yellow-500 font-semibold">Top Rated</h1>
@@ -210,7 +188,7 @@ const ProviderCard = ({ provider, selectedCategory }) => {
                     </h1>
                   </span>
                 )}
-                {trusted ? (
+                {provider.trusted ? (
                   <span className="bg-green-50 flex items-center gap-1 font-bold rounded-md py-2 px-5">
                     <AiOutlineLike className="text-green-500" size={20} />
                     <h1 className="text-text font-semibold">Trusted Pro</h1>
@@ -228,7 +206,7 @@ const ProviderCard = ({ provider, selectedCategory }) => {
                 <Button
                   fullWidth
                   color="success"
-                  onClick={() => navigate(`/user/provider-details/${_id}`)}
+                  onClick={() => navigate(`/user/provider-details/${provider._id}`)}
                 >
                   Book Now
                 </Button>
