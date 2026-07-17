@@ -1,10 +1,10 @@
 import React from "react";
 import SearchFilterBar from "../../../../components/common/admin/SearchFilterBar";
 import TableWrapper from "../../../../components/common/admin/TableWrapper";
-import { providers } from "../data/providersData";
+
 import ProviderTableHeader from "./ProviderTableHeader";
 import ProviderTableRow from "./ProviderTableRow";
-
+import { useProviders } from "../../../../hooks/useAdmin";
 
 const ProvidersTable = ({
   onServicePricingClick,
@@ -14,6 +14,18 @@ const ProvidersTable = ({
   onSuspendClick,
   onDeleteClick,
 }) => {
+  // const [filters,setFilters] = useState({
+  //   search:"",
+  //   sort:'newest first',
+
+  // });
+  const { data, isLoading, isError, error } = useProviders();
+
+console.log({ data, isLoading, isError, error });
+  
+  const providers = data?.providers || [];
+ 
+  
   return (
     <TableWrapper>
       <SearchFilterBar

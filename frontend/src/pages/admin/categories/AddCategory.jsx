@@ -18,7 +18,7 @@ const AddCategory = () => {
     description: "",
     backgroundColor: "#C5E8B7",
     sortOrder: 0,
-    status: "Active",
+    status: "active",
     icon: null,
   });
   const { createCategoryMutation } = useCategoryCreate();
@@ -135,7 +135,7 @@ const AddCategory = () => {
                   <div className="flex gap-3">
                     <label className="relative">
                       <input
-                        value="Active"
+                        value="active"
                         onChange={handelValue}
                         type="radio"
                         defaultChecked
@@ -153,7 +153,7 @@ const AddCategory = () => {
                         type="radio"
                         name="status"
                         className="hidden peer"
-                        value="Inactive"
+                        value="inactive"
                         onChange={handelValue}
                       />
 

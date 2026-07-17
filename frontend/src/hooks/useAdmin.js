@@ -1,11 +1,19 @@
 import { useQuery } from "@tanstack/react-query"
-import { getAllUserList } from "../services/adminService"
+import { getAllProvidersList, getAllUserList } from "../services/adminService"
 
 
 export const useUsers = (params = {})=>{
  return useQuery({
-    queryKey:['users',params],
+    queryKey:['admin-users',params],
     queryFn:()=>getAllUserList(params),
     enabled:true
  })
+}
+
+export const useProviders = (params = {})=>{
+   return useQuery({
+      queryKey:['providers',params],
+      queryFn:()=>getAllProvidersList(params),
+      enabled:true
+   })
 }

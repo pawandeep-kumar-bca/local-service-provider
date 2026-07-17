@@ -21,7 +21,7 @@ import AllBookings from "../pages/provider/AllBookings";
 // Admin
 import AdminDashboard from "../pages/admin/AdminDashboardPage";
 import AllUsersList from "../pages/admin/users/AllUsersList";
-// import AllProvidersList from "../pages/admin/providers/AllProvidersList";
+import AllProvidersList from "../pages/admin/providers/AllProvidersList";
 import AllCategoriesList from "../pages/admin/categories/AllCategoriesList";
 // import AllBookingsList from "../pages/admin/bookings/AllBookingsList";
 // import AllPayments from "../pages/admin/payments/AllPayments";
@@ -221,7 +221,7 @@ const AppRoutes = () => {
               <Route path="/admin/users/payment-history" element={<PaymentUserHistory />} />
               <Route path="/admin/users/active-logs" element={<ActiveLogs />} />
            <Route path="/admin/users/edit-user" element={<EditUser/>}/>
-            {/* <Route path="/admin/providers" element={<AllProvidersList />} /> */}
+            <Route path="/admin/providers" element={<AllProvidersList />} />
             <Route path="/admin/providers/view-provider-profile" element={<ViewProviderProfile/>}>
             <Route index element={<OverviewProvider/>}/>
             <Route path="documents" element={<Documents/>}/>
