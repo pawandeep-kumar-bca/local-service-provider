@@ -1,7 +1,7 @@
 import React from "react";
 import { GoDash } from "react-icons/go";
 
-const SlotTime = ({label}) => {
+const SlotTime = ({label , required=false ,className=''}) => {
   const startTimes = [
     "06:00 AM",
     "07:00 AM",
@@ -39,12 +39,12 @@ const SlotTime = ({label}) => {
     "10:00 PM",
   ];
   return (
-    <div>
+    <div className={className}>
       <label
         htmlFor="time"
         className="block mb-2 font-medium text-lg md:text-sm"
       >
-        {label}
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
 
       <div className="flex items-center gap-1">
