@@ -86,4 +86,13 @@ input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;
 }
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+}
 @import 'tailwindcss'

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaStar, FaTools } from "react-icons/fa";
 import { IoBagCheckOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
@@ -17,8 +17,11 @@ import { MdOutlineAcUnit } from "react-icons/md";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useProvider } from "../../hooks/useProvider";
 const ProviderDetail = () => {
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   const { providerId } = useParams();
   const navigate = useNavigate();
+
   const { data, isLoading, error } = useProvider(providerId);
 
   if (isLoading) return <h1>Loading...</h1>;
@@ -28,11 +31,9 @@ const ProviderDetail = () => {
   const provider = data?.providerExists;
 
   const {
-    
-   
     price,
     experience,
-   
+
     verificationStatus,
     rating,
     totalReview,
@@ -40,10 +41,11 @@ const ProviderDetail = () => {
     categories = [],
   } = provider;
 
-
   const profileImageUrl =
     provider.userId?.profileImage?.url ||
-    "https://ui-avatars.com/api/?name=" + encodeURIComponent(provider.userId?.fullname);
+    "https://ui-avatars.com/api/?name=" +
+      encodeURIComponent(provider.userId?.fullname);
+
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-3 md:rounded">
       <div className="flex justify-between items-center mb-4">
@@ -63,7 +65,9 @@ const ProviderDetail = () => {
             />
 
             <div className="w-full flex flex-col gap-1 ">
-              <h1 className="md:text-2xl font-semibold">{provider.userId?.fullname}</h1>
+              <h1 className="md:text-2xl font-semibold">
+                {provider.userId?.fullname}
+              </h1>
 
               <div className="flex items-center gap-2 text-yellow-500">
                 <div className="flex gap-1">
@@ -101,7 +105,11 @@ const ProviderDetail = () => {
               />
 
               <div>
-                <h1 className="text-sm font-medium">{provider.location?.village}, {provider.location?.city?.name}, {provider.location?.district?.name}, {provider.location?.state?.name}</h1>
+                <h1 className="text-sm font-medium">
+                  {provider.location?.village}, {provider.location?.city?.name},{" "}
+                  {provider.location?.district?.name},{" "}
+                  {provider.location?.state?.name}
+                </h1>
                 <p className="text-sm text-muted">Location</p>
               </div>
             </div>
@@ -113,9 +121,11 @@ const ProviderDetail = () => {
               />
 
               <div>
-                <h1 className="text-sm font-medium">{verificationStatus === "verified"
-  ? "Verified"
-  : "Not Verified"}</h1>
+                <h1 className="text-sm font-medium">
+                  {verificationStatus === "verified"
+                    ? "Verified"
+                    : "Not Verified"}
+                </h1>
                 <p className="text-sm text-muted">Professional</p>
               </div>
             </div>
@@ -127,13 +137,23 @@ const ProviderDetail = () => {
           </h3>
           <Button
             fullWidth
-            onClick={() => navigate(`/user/provider-details/${providerId}/booking-details`)}
+            onClick={() => {
+              if (!selectedCategory) {
+                return alert("Please select a category");
+              }
+              navigate(`/user/provider-details/${providerId}/booking-details`, {
+                state: {
+                  categoryId: selectedCategory._id,
+                  categoryName: selectedCategory.name,
+                },
+              });
+            }}
           >
             Book Now
           </Button>
         </div>
       </div>
- 
+
       <div className="mt-3">
         <h1 className="text-xl font-bold text-text mb-2">About Me</h1>
         <p>
@@ -159,13 +179,24 @@ const ProviderDetail = () => {
                     id={category._id}
                     name="service"
                     value={category.name}
+                    checked={selectedCategory?._id === category._id}
+                    onChange={() => setSelectedCategory(category)}
                     className="peer accent-green-600 absolute right-4 top-4"
                   />
 
                   <div className="border rounded-2xl p-3 transition-all duration-300 hover:border-green-400 peer-checked:border-green-500 peer-checked:bg-green-50">
                     <div className="mt-3 flex gap-5">
-                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center`} style={{backgroundColor:`${category.backgroundColor}`}}>
-                        <img src={category.icon?.url} alt={category.name} className="w-10 h-10"/>
+                      <div
+                        className={`w-14 h-14 rounded-xl flex items-center justify-center`}
+                        style={{
+                          backgroundColor: `${category.backgroundColor}`,
+                        }}
+                      >
+                        <img
+                          src={category.icon?.url}
+                          alt={category.name}
+                          className="w-10 h-10"
+                        />
                       </div>
 
                       <div>

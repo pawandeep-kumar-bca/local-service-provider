@@ -528,47 +528,6 @@ const ProviderSchedule = () => {
             <div>
 
               <h1 className="text-lg font-semibold mb-2 text-text ">Availability Settings</h1>
-              {/* <label
-                htmlFor="time"
-                className="block mb-2 font-medium text-lg md:text-sm"
-              >
-                Working Hours
-              </label>
-
-              <div className="flex items-center gap-1">
-                <select
-                  name="time"
-                  id="start-time"
-                  defaultValue=""
-                  className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
-                >
-                  <option disabled value="">
-                    Start Time
-                  </option>
-                  {startTimes.map((time, idx) => (
-                    <option key={idx} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-                <GoDash />
-
-                <select
-                  name="time"
-                  id="end-time"
-                  defaultValue=""
-                  className=" w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500 text-muted focus:outline-none bg-white"
-                >
-                  <option disabled value="">
-                    End Time
-                  </option>
-                  {endTimes.map((time, idx) => (
-                    <option key={idx} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
               <SlotTime label='Working Hours'/>
             </div>
             <div className="flex-1 mt-3 md:mt-4">

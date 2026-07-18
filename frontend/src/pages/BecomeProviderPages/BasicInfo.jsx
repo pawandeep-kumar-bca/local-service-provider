@@ -3,11 +3,11 @@ import Input from "../../components/common/Input";
 import { FaLocationArrow } from "react-icons/fa6";
 import Button from "../../components/common/Button";
 import { useCategories } from "../../hooks/useCategories";
-import { useStates } from "../../hooks/useStates";
-import { useDistrict } from "../../hooks/useDistricts";
-import { useCity } from "../../hooks/useCity";
 import { useOutletContext } from "react-router-dom";
 import { MdChevronRight, MdMyLocation } from "react-icons/md";
+import State from "../../components/common/State";
+import District from "../../components/common/District";
+import City from "../../components/common/City";
 
 const BasicInfo = () => {
   const { data, isLoading } = useCategories();
@@ -37,19 +37,6 @@ const BasicInfo = () => {
   };
 
   const categories = data?.categories;
-
-  const { data: getState, isLoading: getStateIsLoading } = useStates();
-  const states = getState?.allStates;
-  const { data: getDistrict, isLoading: getDistrictIsLoading } = useDistrict(
-    formData.state?._id,
-  );
-
-  const districts = getDistrict?.AllDistricts;
-
-  const { data: getCities, isLoading: getCitiesIsLoading } = useCity(
-    formData.district?._id,
-  );
-  const cities = getCities?.allCities;
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -181,142 +168,15 @@ const BasicInfo = () => {
           </div>
           <div className="flex flex-col md:flex-row md:gap-5 mb-4">
             {/* State */}
-
-            <div className="flex flex-col w-full mt-4 md:mt-0">
-              <label
-                htmlFor="state"
-                className="block mb-2 font-medium text-lg md:text-sm"
-              >
-                State <span className="text-red-500">*</span>
-              </label>
-
-              <select
-                name="state"
-                id="state"
-                required
-                value={formData.state?._id || ""}
-                onChange={(e) => {
-                  const selectedState = states?.find(
-                    (item) => item._id === e.target.value,
-                  );
-                  setFormData((prev) => ({
-                    ...prev,
-
-                    state: selectedState,
-
-                    district: null,
-
-                    city: null,
-                  }));
-                }}
-                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  appearance-none
-      "
-              >
-                <option value="" disabled className="bg-muted text-white">
-                  Select State
-                </option>
-
-                {getStateIsLoading ? (
-                  <option>Loading...</option>
-                ) : (
-                  states?.map((state) => (
-                    <option key={state._id} value={state._id}>
-                      {state.name.charAt(0).toUpperCase() +
-                        state.name.slice(1)}
-                    </option>
-                  ))
-                )}
-              </select>
-            </div>
-            {/* district */}
-            <div className="flex flex-col w-full mt-4 md:mt-0">
-              <label
-                htmlFor="district"
-                className="block mb-2 font-medium text-lg md:text-sm"
-              >
-                District <span className="text-red-500">*</span>
-              </label>
-
-              <select
-                name="district"
-                id="district"
-                required
-                disabled={!formData.state}
-                value={formData.district?._id || ""}
-                onChange={(e) => {
-                  const selectedDistrict = districts?.find(
-                    (item) => item._id === e.target.value,
-                  );
-                  setFormData((prev) => ({
-                    ...prev,
-
-                    district: selectedDistrict,
-
-                    city: null,
-                  }));
-                }}
-                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  appearance-none
-      "
-              >
-                <option value="" disabled className="bg-muted text-white">
-                  Select District
-                </option>
-
-                {getDistrictIsLoading ? (
-                  <option>Loading...</option>
-                ) : (
-                  districts?.map((dis) => (
-                    <option key={dis._id} value={dis._id}>
-                      {dis.name.charAt(0).toUpperCase() + dis.name.slice(1)}
-                    </option>
-                  ))
-                )}
-              </select>
-            </div>
+<State formData={formData} setFormData={setFormData}/>
+          <District formData={formData} setFormData={setFormData}/>
+        
+         
           </div>
           <div className="flex flex-col md:flex-row md:gap-5">
             {/* City */}
-
-            <div className="flex flex-col w-full mb-4 ">
-              <label
-                htmlFor="city"
-                className="block mb-2 font-medium text-lg md:text-sm"
-              >
-                City <span className="text-red-500">*</span>
-              </label>
-
-              <select
-                name="city"
-                id="city"
-                required
-                disabled={!formData.district}
-                value={formData.city?._id || ""}
-                onChange={(e) => {
-                  const selectedCity = cities?.find(
-                    (item) => item._id === e.target.value,
-                  );
-                  setFormData((prev) => ({
-                    ...prev,
-                    city: selectedCity,
-                  }));
-                }}
-                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  appearance-none
-      "
-              >
-                <option value="" disabled className="bg-muted text-white">
-                  Select City
-                </option>
-                {getCitiesIsLoading ? (
-                  <option>Loading...</option>
-                ) : (
-                  cities?.map((city) => (
-                    <option key={city._id} value={city._id}>
-                      {city.name.charAt(0).toUpperCase() + city.name.slice(1)}
-                    </option>
-                  ))
-                )}
-              </select>
-            </div>
+  <City formData={formData} setFormData={setFormData}/>
+         
             <Input
               label="Village"
               id="village"
