@@ -9,13 +9,20 @@ const providerSchema = new mongoose.Schema(
       unique: true,
     },
 
-    price: {
-      type: Number,
-      required: true,
+    pricing: {
+      priceType: {
+        type: String,
+        enum: ["fixed", "hourly"],
+        default: "hourly",
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
     },
-    verifiedByAdmin:{
-      type:Boolean,
-      default:false
+    verifiedByAdmin: {
+      type: Boolean,
+      default: false,
     },
     experience: {
       type: Number,

@@ -2,6 +2,19 @@
 const bookingsModel = require("../models/booking.model");
 const providerModel = require("../models/provider.model");
 const categoryModel = require("../models/category.model");
+const generateBookingId = require("../utils/generateBookingId");
+const UserModel = require("../models/User.model");
+// Converts "10:30 AM" / "02:00 PM" style strings into total minutes since midnight
+function parseTimeToMinutes(timeStr) {
+  const [time, meridian] = timeStr.trim().split(" ");
+  let [hours, minutes] = time.split(":").map(Number);
+ 
+  if (meridian === "PM" && hours !== 12) hours += 12;
+  if (meridian === "AM" && hours === 12) hours = 0;
+ 
+  return hours * 60 + minutes;
+}
+ 
 async function userBookingCreate(req, res) {
   try {
     const {
@@ -9,78 +22,188 @@ async function userBookingCreate(req, res) {
       categoryId,
       bookingDate,
       bookingSlot,
-      state,district,city,village,fullAddress,lat,lng
+      state,
+      district,
+      city,
+      village,
+      fullAddress,
+      landmark,
+      lat,
+      lng,
     } = req.body;
+ 
     const userId = req.user.id;
-    
-    if(lat === undefined || lng=== undefined){
-       return res.status(400).json({
+ 
+    // ---------- Basic input checks ----------
+    if (!bookingSlot || !bookingSlot.startTime || !bookingSlot.endTime) {
+      return res.status(400).json({
+        message: "bookingSlot with startTime and endTime is required",
+      });
+    }
+ 
+    if (lat === undefined || lng === undefined) {
+      return res.status(400).json({
         message: "Latitude and Longitude are required",
       });
     }
-    if(isNaN(lat) ||isNaN(lng)){
-       return res.status(400).json({
+ 
+    if (isNaN(lat) || isNaN(lng)) {
+      return res.status(400).json({
         message: "Latitude and Longitude must be valid numbers",
       });
     }
-    const provider = await providerModel.findById(providerId);
-
+ 
+    // ---------- Fetch user ----------
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+ 
+    // ---------- Fetch provider (with linked user for name/phone) ----------
+    const provider = await providerModel
+      .findById(providerId)
+      .populate("userId", "fullname phoneNumber");
+ 
     if (!provider) {
-      return res.status(404).json({ message: "provider not found" });
+      return res.status(404).json({ message: "Provider not found" });
     }
-     
-    const price = provider.price;
-    const serviceIdExist = await categoryModel.findOne({ _id: categoryId });
-
-    if (!serviceIdExist) {
-      return res.status(400).json({ message: "Category is not exist" });
+ 
+    if (provider.status !== "approved") {
+      return res.status(400).json({
+        message: "This provider is not approved yet",
+      });
     }
-    // current date (today start time)
+ 
+    if (!provider.availability) {
+      return res.status(400).json({
+        message: "Provider is currently not available",
+      });
+    }
+ 
+    // ---------- Category checks ----------
+    const categoryExist = await categoryModel.findById(categoryId);
+    if (!categoryExist) {
+      return res.status(400).json({ message: "Category does not exist" });
+    }
+ 
+    const providerOffersCategory = provider.categories.some(
+      (catId) => catId.toString() === categoryId.toString(),
+    );
+    if (!providerOffersCategory) {
+      return res.status(400).json({
+        message: "This provider does not offer the selected category",
+      });
+    }
+ 
+    // ---------- Date check ----------
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
-    // user booking date
+ 
     const userDate = new Date(bookingDate);
-
     if (userDate < today) {
       return res.status(400).json({ message: "Invalid booking date" });
     }
-    const bookingSlotAlready = await bookingsModel.findOne({
-      providerId,
-      bookingDate,
-      bookingStatus: { $ne: "Cancelled" },
-      bookingSlot: bookingSlot,
-    });
-    if (bookingSlotAlready) {
-      return res.status(409).json({ message: "booking slot already booked" });
-    }
-
+ 
+    // ---------- Slot clash check (only active statuses block a slot) ----------
+    const blockingStatuses = ["pending", "accepted", "in_progress"];
+ 
     const alreadyBooking = await bookingsModel.findOne({
       providerId,
       userId,
       bookingDate,
-      bookingSlot,
+      "bookingSlot.startTime": bookingSlot.startTime,
+      "bookingSlot.endTime": bookingSlot.endTime,
+      bookingStatus: { $in: blockingStatuses },
     });
-
     if (alreadyBooking) {
-      return res
-        .status(200)
-        .json({
-          message: "user already booking this slot this provider",
-          booking: alreadyBooking,
-        });
+      return res.status(200).json({
+        message: "You already have a booking for this slot with this provider",
+        booking: alreadyBooking,
+      });
     }
+ 
+    const bookingSlotAlready = await bookingsModel.findOne({
+      providerId,
+      bookingDate,
+      "bookingSlot.startTime": bookingSlot.startTime,
+      "bookingSlot.endTime": bookingSlot.endTime,
+      bookingStatus: { $in: blockingStatuses },
+    });
+    if (bookingSlotAlready) {
+      return res.status(409).json({ message: "This slot is already booked" });
+    }
+ 
+    // ---------- Duration + pricing ----------
+    const startMinutes = parseTimeToMinutes(bookingSlot.startTime);
+    const endMinutes = parseTimeToMinutes(bookingSlot.endTime);
+ 
+    if (endMinutes <= startMinutes) {
+      return res.status(400).json({
+        message: "End time must be after start time",
+      });
+    }
+ 
+    const durationHours = (endMinutes - startMinutes) / 60;
+ 
+    let serviceCharge = 0;
+    if (provider.pricing.priceType === "hourly") {
+      serviceCharge = provider.pricing.price * durationHours;
+    } else {
+      serviceCharge = provider.pricing.price;
+    }
+ 
+    const platformFee = (serviceCharge * 2) / 100;
+    const discount = 0;
+    const totalAmount = serviceCharge + platformFee - discount;
+ 
+    // ---------- Create booking ----------
+    const bookingId = await generateBookingId();
+ 
     const booking = await bookingsModel.create({
+      bookingId,
       providerId,
       categoryId,
       userId,
       bookingDate,
       bookingSlot,
-      
-      price,
+      pricing: {
+        serviceCharge,
+        platformFee,
+        discount,
+        totalAmount,
+      },
+      providerSnapshot: {
+        providerId: provider._id,
+        name: provider.userId.fullname,
+        phone: provider.userId.phoneNumber,
+        category: categoryExist.name,
+      },
+      userSnapshot: {
+        userId: user._id,
+        name: user.fullname,
+        phone: user.phoneNumber,
+      },
+      statusHistory: [
+        {
+          status: "pending",
+        },
+      ],
+      serviceLocation: {
+        type: "Point",
+        coordinates: [Number(lng), Number(lat)],
+      },
+      serviceAddress: {
+        state,
+        district,
+        city,
+        village,
+        landmark,
+        fullAddress,
+      },
     });
+ 
     return res.status(201).json({
-      message: "booking created successfully",
+      message: "Booking created successfully",
       booking,
     });
   } catch (err) {

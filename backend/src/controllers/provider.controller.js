@@ -115,7 +115,7 @@ async function providerProfileCreate(req, res) {
     const provider = await providerModel.create({
       userId,
 
-      price,
+      pricing: { price },
 
       experience,
 
@@ -355,7 +355,7 @@ async function getOneProviderDetails(req, res) {
     const providerExists = await providerModel
       .findById(providerId)
       .select("-documents")
-      .populate("categories") 
+      .populate("categories")
       .populate("userId", "fullname profileImage")
       .populate("location.state", "name")
       .populate("location.district", "name")
