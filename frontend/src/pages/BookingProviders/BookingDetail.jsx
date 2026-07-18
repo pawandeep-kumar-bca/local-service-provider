@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import SlotTime from "../../components/common/SlotTime";
 import State from "../../components/common/State";
 import District from "../../components/common/District";
+import City from "../../components/common/City";
 
 const BookingDetail = () => {
     const navigate = useNavigate()
@@ -46,6 +47,7 @@ const BookingDetail = () => {
           </div>
           <State formData={formData} setFormData={setFormData}/>
           <District formData={formData} setFormData={setFormData}/>
+          <City formData={formData} setFormData={setFormData}/>
         </div>
          </form>
        <div>
