@@ -10,7 +10,7 @@ import StatusBudge from "../common/StatusBadge";
 
 const ServicesList = () => {
   const [status, setStatus] = useState(false);
-
+  
   return (
     <div className="mt-5">
 

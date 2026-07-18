@@ -12,44 +12,9 @@ import { IoWalletOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import StatusBadge from "../../components/common/StatusBadge";
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const startTimes = [
-  "06:00 AM",
-  "07:00 AM",
-  "08:00 AM",
-  "09:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "12:00 PM",
-  "01:00 PM",
-  "02:00 PM",
-  "03:00 PM",
-  "04:00 PM",
-  "05:00 PM",
-  "06:00 PM",
-  "07:00 PM",
-  "08:00 PM",
-  "09:00 PM",
-];
-const endTimes = [
-  "07:00 AM",
-  "08:00 AM",
-  "09:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "12:00 PM",
-  "01:00 PM",
-  "02:00 PM",
-  "03:00 PM",
-  "04:00 PM",
-  "05:00 PM",
-  "06:00 PM",
-  "07:00 PM",
-  "08:00 PM",
-  "09:00 PM",
-  "10:00 PM",
-];
 import { BiMessageRoundedDetail } from "react-icons/bi";
-import { GoDash } from "react-icons/go";
+
+import SlotTime from "../../components/common/SlotTime";
 const ProviderSchedule = () => {
   const cardsContent = [
     {
@@ -563,7 +528,7 @@ const ProviderSchedule = () => {
             <div>
 
               <h1 className="text-lg font-semibold mb-2 text-text ">Availability Settings</h1>
-              <label
+              {/* <label
                 htmlFor="time"
                 className="block mb-2 font-medium text-lg md:text-sm"
               >
@@ -603,7 +568,8 @@ const ProviderSchedule = () => {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
+              <SlotTime label='Working Hours'/>
             </div>
             <div className="flex-1 mt-3 md:mt-4">
               <label className="block mb-2 font-medium text-lg md:text-sm">

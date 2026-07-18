@@ -9,3 +9,8 @@ export const getAllProvidersList =async (params) =>{
   const response = await api.get('/admin/providers',{params})
   return response.data
 }
+
+export const getAllCategoriesByAdmin = async (params) => {
+  const response = await api.get("/admin/categories",{params});
+  return response.data;
+};

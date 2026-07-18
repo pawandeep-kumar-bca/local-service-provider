@@ -3,8 +3,8 @@ import SearchFilterBar from "../../../../components/common/admin/SearchFilterBar
 import TableWrapper from "../../../../components/common/admin/TableWrapper";
 import CategoryTableHeader from "./CategoryTableHeader";
 import CategoryTableRow from "./CategoryTableRow";
-import { useCategories } from "../../../../hooks/useCategories";
 import useDebounce from "../../../../hooks/useDebounce";
+import { useCategoriesByAdmin } from "../../../../hooks/useAdmin";
 
 
 const CategoriesTable = ({ onDeleteClick }) => {
@@ -20,7 +20,7 @@ const CategoriesTable = ({ onDeleteClick }) => {
 
 
 const debouncedSearch = useDebounce(filters.search, 500);
-  const { data} = useCategories({...filters,search:debouncedSearch});
+  const {data} =useCategoriesByAdmin({...filters,search:debouncedSearch})
   const categories = data?.categories || [];
   return (
     <TableWrapper>
