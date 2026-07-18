@@ -33,6 +33,12 @@ router.get(
   roleBased("admin"),
   adminController.bookingLists,
 );
+router.get(
+  "/categories",
+  authMiddleware.tokenVerify,
+  roleBased("admin"),
+  adminController.getCategoryByAdmin,
+);
 // PUT  /api/v1/admin/providers/:id/approve
 router.put(
   "/providers/:id/approve",

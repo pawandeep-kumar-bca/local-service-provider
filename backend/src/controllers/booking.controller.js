@@ -6,23 +6,34 @@ async function userBookingCreate(req, res) {
   try {
     const {
       providerId,
-      serviceId,
+      categoryId,
       bookingDate,
       bookingSlot,
-      serviceAddress: { city, pinCode, village },
+      state,district,city,village,fullAddress,lat,lng
     } = req.body;
     const userId = req.user.id;
     
+    if(lat === undefined || lng=== undefined){
+       return res.status(400).json({
+        message: "Latitude and Longitude are required",
+      });
+    }
+    if(isNaN(lat) ||isNaN(lng)){
+       return res.status(400).json({
+        message: "Latitude and Longitude must be valid numbers",
+      });
+    }
     const provider = await providerModel.findById(providerId);
 
     if (!provider) {
       return res.status(404).json({ message: "provider not found" });
     }
+     
     const price = provider.price;
-    const serviceIdExist = await categoryModel.findOne({ _id: serviceId });
+    const serviceIdExist = await categoryModel.findOne({ _id: categoryId });
 
     if (!serviceIdExist) {
-      return res.status(400).json({ message: "service is not exist" });
+      return res.status(400).json({ message: "Category is not exist" });
     }
     // current date (today start time)
     const today = new Date();
@@ -61,11 +72,11 @@ async function userBookingCreate(req, res) {
     }
     const booking = await bookingsModel.create({
       providerId,
-      serviceId,
+      categoryId,
       userId,
       bookingDate,
       bookingSlot,
-      serviceAddress: { city, pinCode, village },
+      
       price,
     });
     return res.status(201).json({

@@ -6,6 +6,7 @@ const bookingsSchema = new mongoose.Schema(
       type: String,
       unique: true,
       index: true,
+      required:true
     },
 
     providerId: {
@@ -22,7 +23,7 @@ const bookingsSchema = new mongoose.Schema(
       index: true,
     },
 
-    category: {
+    categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
@@ -150,6 +151,11 @@ const bookingsSchema = new mongoose.Schema(
         type: String,
         trim: true,
       },
+      fullAddress:{
+        type:String,
+        required:true,
+        trim:true
+      }
     },
 
     pricing: {
@@ -302,9 +308,7 @@ bookingsSchema.index({
   bookingStatus: 1,
 });
 
-bookingsSchema.index({
-  userId: 1,
-});
+
 
 const bookingsModel = mongoose.model("Booking", bookingsSchema);
 

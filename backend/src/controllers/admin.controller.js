@@ -2,6 +2,7 @@ const providerModel = require("../models/provider.model");
 const userModel = require("../models/User.model");
 const bookingModel = require("../models/booking.model");
 const bookingsModel = require("../models/booking.model");
+const categoryModel = require("../models/category.model");
 async function pendingProviders(req, res) {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -245,7 +246,114 @@ async function getProvidersByAdmin(req, res) {
     });
   }
 }
+async function getProviders(req, res) {
+  try {
+    const {
+      category,
+      search,
+      city,
+      availability,
+      minRating,
+      minExperience,
+      sort = "latest",
+    } = req.query;
+    const limit = parseInt(req.query.limit) || 9;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
 
+    const filter = {};
+    // Category Filter (Multiple Categories)
+    if (category && category !== "all") {
+      filter.categories = {
+        $in: [category],
+      };
+    }
+
+    // search by provider name
+    // if (search) {
+    //   filter.providerName = {
+    //     $regex: search,
+    //     $options: "i",
+    //   };
+    // }
+    // search by city
+    // if (city) {
+    //   filter.city = {
+    //     $regex: search,
+    //     $options: "i",
+    //   };
+    // }
+    // Availability Filter
+    if (availability) {
+      filter.availability = availability;
+    }
+    // search by experience
+    if (minExperience) {
+      filter.experience = {
+        $gte: Number(minExperience),
+      };
+    }
+
+    // search by rating
+    if (minRating) {
+      filter.rating = {
+        $gte: Number(minRating),
+      };
+    }
+    // sorting
+    let sortOption = {};
+
+    switch (sort) {
+      case "rating":
+        sortOption = {
+          rating: -1,
+        };
+        break;
+      case "price-low":
+        sortOption = { price: 1 };
+        break;
+
+      case "price-high":
+        sortOption = { price: -1 };
+        break;
+
+      default:
+        sortOption = { createdAt: -1 };
+    }
+    const providers = await providerModel
+      .find(filter)
+      .populate("userId", "fullname profileImage")
+      .populate("categories", "name")
+      .populate("location.state", "name")
+      .populate("location.district", "name")
+      .populate("location.city", "name")
+      .select(
+        "userId categories price experience verifiedByAdmin rating totalReview completedJobs availability responseTime trusted topRated location",
+      )
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limit);
+
+    const totalProviders = await providerModel.countDocuments(filter);
+    if (providers.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "Providers not found", providers, totalProviders });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Provider fetch successfully",
+      providers,
+      totalProviders,
+      currentPage: page,
+      totalPages: Math.ceil(totalProviders / limit),
+    });
+  } catch (err) {
+    console.error("Get providers error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
 async function bookingLists(req, res) {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -281,7 +389,194 @@ async function bookingLists(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+async function getCategoryByAdmin(req, res) {
+  try {
+    const { 
+      search,
+      status,
+      category,
+      sortBy = "newest first",
+      page = 1,
+      limit = 10,
+    } = req.query;
 
+    const skip = (Number(page) - 1) * Number(limit);
+
+    // ==========================
+    // Filter
+    // ==========================
+
+    const filter = {};
+    
+    if(category && category !== 'all'){
+      filter.categories = {
+        $in:[category]
+      }
+    }
+    if (search) {
+      filter.name = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    if (status) {
+      filter.status = status;
+    }
+    if (req.query.date) {
+      const start = new Date(req.query.date);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(req.query.date);
+      end.setHours(23, 59, 59, 999);
+
+      filter.createdAt = {
+        $gte: start,
+        $lte: end,
+      };
+    }
+    // ==========================
+    // Sorting
+    // ==========================
+
+    let sortOption = {};
+
+    switch (sortBy.toLowerCase()) {
+      case "newest first":
+        sortOption = { createdAt: -1 };
+        break;
+
+      case "oldest first":
+        sortOption = { createdAt: 1 };
+        break;
+
+      case "ascending order":
+        sortOption = { name: 1 };
+        break;
+
+      case "descending order":
+        sortOption = { name: -1 };
+        break;
+
+      default:
+        sortOption = { createdAt: -1 };
+    }
+
+    // ==========================
+    // Stats
+    // ==========================
+
+    const [
+      totalCategories,
+      activeCategories,
+      inactiveCategories,
+      totalProviders,
+    ] = await Promise.all([
+      categoryModel.countDocuments(filter),
+
+      categoryModel.countDocuments({
+        status: "active",
+      }),
+
+      categoryModel.countDocuments({
+        status: "inactive",
+      }),
+
+      providerModel.countDocuments({
+        status: "approved",
+      }),
+    ]);
+
+    // ==========================
+    // Categories
+    // ==========================
+
+    const categories = await categoryModel
+      .find(filter)
+      .sort(sortOption)
+      .skip(skip)
+      .limit(Number(limit))
+      .lean();
+
+    if (!categories.length) {
+      return res.status(200).json({
+        success: true,
+        message: "No categories found",
+        categories: [],
+      });
+    }
+
+    // ==========================
+    // Provider Count Aggregation
+    // ==========================
+
+    const providerCounts = await providerModel.aggregate([
+      {
+        $match: {
+          status: "approved",
+        },
+      },
+      {
+        $unwind: "$categories",
+      },
+      {
+        $group: {
+          _id: "$categories",
+          providers: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+
+    // Convert array to object
+
+    const providerMap = {};
+
+    providerCounts.forEach((item) => {
+      providerMap[item._id.toString()] = item.providers;
+    });
+
+    // Merge Provider Count
+
+    const categoriesWithProviders = categories.map((category) => ({
+      ...category,
+      providers: providerMap[category._id.toString()] || 0,
+    }));
+
+    // ==========================
+    // Response
+    // ==========================
+
+    return res.status(200).json({
+      success: true,
+      message: "Categories fetched successfully",
+
+      stats: {
+        totalCategories,
+        activeCategories,
+        inactiveCategories,
+        totalProviders,
+      },
+
+      categories: categoriesWithProviders,
+
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        total: totalCategories,
+        totalPages: Math.ceil(totalCategories / limit),
+      },
+    });
+  } catch (err) {
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
 module.exports = {
   pendingProviders,
   getProvidersByAdmin,
@@ -289,4 +584,5 @@ module.exports = {
   pendingProvidersReject,
   userLists,
   bookingLists,
+  getCategoryByAdmin
 };

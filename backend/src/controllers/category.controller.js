@@ -1,4 +1,4 @@
-const {uploadImage} = require("../config/imagekit");
+const { uploadImage } = require("../config/imagekit");
 const categoryModel = require("../models/category.model");
 const providerModel = require("../models/provider.model");
 
@@ -47,101 +47,19 @@ async function createCategory(req, res) {
 
 const getCategory = async (req, res) => {
   try {
-    const { 
-      search,
-      status,
-      category,
-      sortBy = "newest first",
-      page = 1,
-      limit = 10,
-    } = req.query;
+    const { search, category, page = 1, limit = 10 } = req.query;
 
     const skip = (Number(page) - 1) * Number(limit);
 
     // ==========================
     // Filter
     // ==========================
+    
 
     const filter = {};
-   
-    if(category && category !== 'all'){
-      filter.categories = {
-        $in:[category]
-      }
+    if (category && category !== "all") {
+      filter.name = category;
     }
-    if (search) {
-      filter.name = {
-        $regex: search,
-        $options: "i",
-      };
-    }
-
-    if (status) {
-      filter.status = status;
-    }
-    if (req.query.date) {
-      const start = new Date(req.query.date);
-      start.setHours(0, 0, 0, 0);
-
-      const end = new Date(req.query.date);
-      end.setHours(23, 59, 59, 999);
-
-      filter.createdAt = {
-        $gte: start,
-        $lte: end,
-      };
-    }
-    // ==========================
-    // Sorting
-    // ==========================
-
-    let sortOption = {};
-
-    switch (sortBy.toLowerCase()) {
-      case "newest first":
-        sortOption = { createdAt: -1 };
-        break;
-
-      case "oldest first":
-        sortOption = { createdAt: 1 };
-        break;
-
-      case "ascending order":
-        sortOption = { name: 1 };
-        break;
-
-      case "descending order":
-        sortOption = { name: -1 };
-        break;
-
-      default:
-        sortOption = { createdAt: -1 };
-    }
-
-    // ==========================
-    // Stats
-    // ==========================
-
-    const [
-      totalCategories,
-      activeCategories,
-      inactiveCategories,
-      totalProviders,
-    ] = await Promise.all([
-      categoryModel.countDocuments(filter),
-
-      categoryModel.countDocuments({
-        status: "active",
-      }),
-
-      categoryModel.countDocuments({
-        status: "inactive",
-      }),
-
-      providerModel.countDocuments({
-        status: "approved",
-      }),
-    ]);
 
     // ==========================
     // Categories
@@ -149,7 +67,6 @@ const getCategory = async (req, res) => {
 
     const categories = await categoryModel
       .find(filter)
-      .sort(sortOption)
       .skip(skip)
       .limit(Number(limit))
       .lean();
@@ -207,21 +124,11 @@ const getCategory = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Categories fetched successfully",
-
-      stats: {
-        totalCategories,
-        activeCategories,
-        inactiveCategories,
-        totalProviders,
-      },
-
       categories: categoriesWithProviders,
 
       pagination: {
         page: Number(page),
         limit: Number(limit),
-        total: totalCategories,
-        totalPages: Math.ceil(totalCategories / limit),
       },
     });
   } catch (err) {
