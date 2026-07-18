@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../../components/common/Button";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import Input from "../../components/common/Input";
@@ -6,10 +6,15 @@ import { IoMdTime } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import SlotTime from "../../components/common/SlotTime";
 import State from "../../components/common/State";
+import District from "../../components/common/District";
 
 const BookingDetail = () => {
     const navigate = useNavigate()
-    
+    const [formData,setFormData] = useState({
+      state:'',
+      district:"",
+      city:''
+    })
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-4 rounded-lg">
       <div className="flex items-center  justify-between mb-3 md:w-[90%] mx-auto">
@@ -39,7 +44,8 @@ const BookingDetail = () => {
               required
             />
           </div>
-          <State/>
+          <State formData={formData} setFormData={setFormData}/>
+          <District formData={formData} setFormData={setFormData}/>
         </div>
          </form>
        <div>

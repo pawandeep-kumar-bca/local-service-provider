@@ -1,33 +1,36 @@
 import React from 'react'
-import { useStates } from '../../hooks/useStates';
+import { useDistrict } from '../../hooks/useDistricts';
 
-const State = ({formData,setFormData}) => {
-     const { data: getState, isLoading: getStateIsLoading } = useStates();
-      const states = getState?.allStates;
+const District = ({formData,setFormData}) => {
+      const { data: getDistrict, isLoading: getDistrictIsLoading } = useDistrict(
+        formData.state?._id,
+      );
+    
+      const districts = getDistrict?.AllDistricts;
+    
   return (
    <div className="flex flex-col w-full mt-4 md:mt-0">
               <label
-                htmlFor="state"
+                htmlFor="district"
                 className="block mb-2 font-medium text-lg md:text-sm"
               >
-                State <span className="text-red-500">*</span>
+                District <span className="text-red-500">*</span>
               </label>
 
               <select
-                name="state"
-                id="state"
+                name="district"
+                id="district"
                 required
-                value={formData.state?._id || ""}
+                disabled={!formData.state}
+                value={formData.district?._id || ""}
                 onChange={(e) => {
-                  const selectedState = states?.find(
+                  const selectedDistrict = districts?.find(
                     (item) => item._id === e.target.value,
                   );
                   setFormData((prev) => ({
                     ...prev,
 
-                    state: selectedState,
-
-                    district: null,
+                    district: selectedDistrict,
 
                     city: null,
                   }));
@@ -36,16 +39,15 @@ const State = ({formData,setFormData}) => {
       "
               >
                 <option value="" disabled className="bg-muted text-white">
-                  Select State
+                  Select District
                 </option>
 
-                {getStateIsLoading ? (
+                {getDistrictIsLoading ? (
                   <option>Loading...</option>
                 ) : (
-                  states?.map((state) => (
-                    <option key={state._id} value={state._id}>
-                      {state.name.charAt(0).toUpperCase() +
-                        state.name.slice(1)}
+                  districts?.map((dis) => (
+                    <option key={dis._id} value={dis._id}>
+                      {dis.name.charAt(0).toUpperCase() + dis.name.slice(1)}
                     </option>
                   ))
                 )}
@@ -54,4 +56,4 @@ const State = ({formData,setFormData}) => {
   )
 }
 
-export default State
+export default District
