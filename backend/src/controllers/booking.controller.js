@@ -1,4 +1,3 @@
-// const userModel = require("../models/User.model");
 const bookingsModel = require("../models/booking.model");
 const providerModel = require("../models/provider.model");
 const categoryModel = require("../models/category.model");
@@ -8,13 +7,13 @@ const UserModel = require("../models/User.model");
 function parseTimeToMinutes(timeStr) {
   const [time, meridian] = timeStr.trim().split(" ");
   let [hours, minutes] = time.split(":").map(Number);
- 
+
   if (meridian === "PM" && hours !== 12) hours += 12;
   if (meridian === "AM" && hours === 12) hours = 0;
- 
+
   return hours * 60 + minutes;
 }
- 
+
 async function userBookingCreate(req, res) {
   try {
     const {
@@ -28,64 +27,65 @@ async function userBookingCreate(req, res) {
       village,
       fullAddress,
       landmark,
+      notes,
       lat,
       lng,
     } = req.body;
- 
+
     const userId = req.user.id;
- 
+
     // ---------- Basic input checks ----------
     if (!bookingSlot || !bookingSlot.startTime || !bookingSlot.endTime) {
       return res.status(400).json({
         message: "bookingSlot with startTime and endTime is required",
       });
     }
- 
+
     if (lat === undefined || lng === undefined) {
       return res.status(400).json({
         message: "Latitude and Longitude are required",
       });
     }
- 
+    
     if (isNaN(lat) || isNaN(lng)) {
       return res.status(400).json({
         message: "Latitude and Longitude must be valid numbers",
       });
     }
- 
+
     // ---------- Fetch user ----------
     const user = await UserModel.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
- 
+
     // ---------- Fetch provider (with linked user for name/phone) ----------
     const provider = await providerModel
       .findById(providerId)
-      .populate("userId", "fullname phoneNumber");
- 
+      .populate("userId", "fullname phoneNumber profileImage");
+
     if (!provider) {
       return res.status(404).json({ message: "Provider not found" });
     }
- 
+
     if (provider.status !== "approved") {
       return res.status(400).json({
         message: "This provider is not approved yet",
       });
     }
- 
+
     if (!provider.availability) {
       return res.status(400).json({
         message: "Provider is currently not available",
       });
     }
- 
+
     // ---------- Category checks ----------
     const categoryExist = await categoryModel.findById(categoryId);
     if (!categoryExist) {
       return res.status(400).json({ message: "Category does not exist" });
     }
- 
+
     const providerOffersCategory = provider.categories.some(
       (catId) => catId.toString() === categoryId.toString(),
     );
@@ -94,19 +94,19 @@ async function userBookingCreate(req, res) {
         message: "This provider does not offer the selected category",
       });
     }
- 
+
     // ---------- Date check ----------
     const today = new Date();
     today.setHours(0, 0, 0, 0);
- 
+
     const userDate = new Date(bookingDate);
     if (userDate < today) {
       return res.status(400).json({ message: "Invalid booking date" });
     }
- 
+
     // ---------- Slot clash check (only active statuses block a slot) ----------
     const blockingStatuses = ["pending", "accepted", "in_progress"];
- 
+
     const alreadyBooking = await bookingsModel.findOne({
       providerId,
       userId,
@@ -121,7 +121,7 @@ async function userBookingCreate(req, res) {
         booking: alreadyBooking,
       });
     }
- 
+
     const bookingSlotAlready = await bookingsModel.findOne({
       providerId,
       bookingDate,
@@ -132,33 +132,33 @@ async function userBookingCreate(req, res) {
     if (bookingSlotAlready) {
       return res.status(409).json({ message: "This slot is already booked" });
     }
- 
+
     // ---------- Duration + pricing ----------
     const startMinutes = parseTimeToMinutes(bookingSlot.startTime);
     const endMinutes = parseTimeToMinutes(bookingSlot.endTime);
- 
+
     if (endMinutes <= startMinutes) {
       return res.status(400).json({
         message: "End time must be after start time",
       });
     }
- 
+
     const durationHours = (endMinutes - startMinutes) / 60;
- 
+
     let serviceCharge = 0;
     if (provider.pricing.priceType === "hourly") {
       serviceCharge = provider.pricing.price * durationHours;
     } else {
       serviceCharge = provider.pricing.price;
     }
- 
+
     const platformFee = (serviceCharge * 2) / 100;
     const discount = 0;
     const totalAmount = serviceCharge + platformFee - discount;
- 
+
     // ---------- Create booking ----------
     const bookingId = await generateBookingId();
- 
+
     const booking = await bookingsModel.create({
       bookingId,
       providerId,
@@ -166,6 +166,7 @@ async function userBookingCreate(req, res) {
       userId,
       bookingDate,
       bookingSlot,
+      notes,
       pricing: {
         serviceCharge,
         platformFee,
@@ -177,11 +178,19 @@ async function userBookingCreate(req, res) {
         name: provider.userId.fullname,
         phone: provider.userId.phoneNumber,
         category: categoryExist.name,
+        profileImage: { 
+          url: provider.userId.profileImage?.url || "",
+          fileId: provider.userId.profileImage?.fileId || "",
+        },
       },
       userSnapshot: {
         userId: user._id,
         name: user.fullname,
         phone: user.phoneNumber,
+        profileImage: {
+          url:user.profileImage?.url || "",
+          fileId: user.profileImage?.fileId || "",
+        },
       },
       statusHistory: [
         {
@@ -201,7 +210,7 @@ async function userBookingCreate(req, res) {
         fullAddress,
       },
     });
- 
+
     return res.status(201).json({
       message: "Booking created successfully",
       booking,

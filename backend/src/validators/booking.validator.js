@@ -27,6 +27,10 @@ const BookingValidation = [
     .withMessage("Start time is required"),
 
   body("bookingSlot.endTime").notEmpty().withMessage("End time is required"),
+ body("notes")
+  .optional({ checkFalsy: true })
+  .isLength({ min: 10, max: 100 })
+  .withMessage("Notes must be between 10 and 100 characters."),
 
   body("lat")
     .notEmpty()

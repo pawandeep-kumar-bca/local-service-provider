@@ -6,7 +6,7 @@ const bookingsSchema = new mongoose.Schema(
       type: String,
       unique: true,
       index: true,
-      required:true
+      required: true,
     },
 
     providerId: {
@@ -151,13 +151,16 @@ const bookingsSchema = new mongoose.Schema(
         type: String,
         trim: true,
       },
-      fullAddress:{
-        type:String,
-        required:true,
-        trim:true
-      }
+      fullAddress: {
+        type: String,
+        required: true,
+        trim: true,
+      },
     },
-
+    notes:{
+      type:String,
+      trim:true
+    },
     pricing: {
       serviceCharge: {
         type: Number,
@@ -215,6 +218,16 @@ const bookingsSchema = new mongoose.Schema(
       phone: String,
 
       category: String,
+      profileImage: {
+        url: {
+          type: String,
+          default: "",
+        },
+        fileId: {
+          type: String,
+          default: "",
+        },
+      },
     },
 
     userSnapshot: {
@@ -226,6 +239,16 @@ const bookingsSchema = new mongoose.Schema(
       name: String,
 
       phone: String,
+      profileImage: {
+        url: {
+          type: String,
+          default: "",
+        },
+        fileId: {
+          type: String,
+          default: "",
+        },
+      },
     },
 
     isRescheduled: {
@@ -307,8 +330,6 @@ bookingsSchema.index({
   providerId: 1,
   bookingStatus: 1,
 });
-
-
 
 const bookingsModel = mongoose.model("Booking", bookingsSchema);
 
