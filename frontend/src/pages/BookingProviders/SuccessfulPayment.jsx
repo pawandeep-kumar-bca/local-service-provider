@@ -4,11 +4,14 @@ import { MdHome, MdOutlineCurrencyRupee } from "react-icons/md";
 import Button from "../../components/common/Button";
 import { AiFillClockCircle } from "react-icons/ai";
 import { FaLocationDot } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ViewProviderBookingDetails from "./ViewProviderBookingDetails";
 const SuccessfulPayment = () => {
     const navigate = useNavigate()
-  return (
+    const {state} = useLocation()
+    const bookingData = state?.booking
+
+    return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-4 rounded-lg md:flex md:gap-3">
       {/* left side */}
       <div className="flex-1 md:shadow-[0_0_24px_rgba(0,0,0,0.24)] md:px-3 rounded-lg pb-7 pt-3">
@@ -54,12 +57,12 @@ const SuccessfulPayment = () => {
         <div className="shadow-[0_3px_25px_rgba(0,0,0,0.24)] py-6 px-7 md:py-3 mx-auto w-min rounded-2xl flex flex-col items-center">
           <p className="text-xl font-semibold mb-1">Booking ID</p>
           <h1 className="text-green-700 font-bold text-3xl md:text-2xl">
-            #BK10234
+            #{bookingData?.bookingId}
           </h1>
         </div>
         <div className="text-center mt-6 text-lg">
           <p>A confirmation email has been sent to</p>
-          <strong>aman.gupta@esx.com</strong>
+          <strong>{bookingData?.userSnapshot?.email}</strong>
         </div>
         <div className="flex items-center justify-center gap-2 mt-3 text-lg text-gray-500">
           <FaLock className="text-green-600" />
@@ -76,7 +79,7 @@ const SuccessfulPayment = () => {
       </div>
       {/* right side */}
       <div className="flex-1 hidden md:block shadow-[0_0_24px_rgba(0,0,0,0.24)] md:px-5 rounded-lg py-5">
-        <ViewProviderBookingDetails layout="col"/>
+        <ViewProviderBookingDetails layout="col" bookingData={bookingData}/>
       </div>
     </div>
   );

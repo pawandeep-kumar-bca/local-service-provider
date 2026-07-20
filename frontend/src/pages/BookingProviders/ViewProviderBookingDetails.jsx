@@ -6,7 +6,7 @@ import { MdOutlineCurrencyRupee } from "react-icons/md";
 import { IoIosArrowBack, IoMdClock } from "react-icons/io";
 import Button from "../../components/common/Button";
 
-const ViewProviderBookingDetails = ({ layout = "row" }) => {
+const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
   return (
     <div>
       {/* Header */}
@@ -14,7 +14,7 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
       <div className="flex items-center justify-between">
         <h1 className="flex items-center gap-2 text-2xl font-semibold">
           <FaCalendarAlt className="text-green-600" />
-          Booking Details
+          Booking Confirmation
         </h1>
 
         <Button color="white">
@@ -29,28 +29,32 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
 
       <div className="flex gap-2 items-center">
         <img
-          src="/assets/profile.png"
-          alt="provider"
+          src={bookingData?.providerSnapshot?.profileImage?.url}
+          alt={bookingData?.providerSnapshot?.name}
           className="w-20 h-20 rounded-full object-cover"
         />
 
         <div className="flex justify-between w-full items-center">
           <div>
-            <h1 className="text-xl font-semibold">Aman Gupta</h1>
+            <h1 className="text-xl font-semibold">
+              {bookingData?.providerSnapshot?.name}
+            </h1>
 
             <div className="flex gap-1 items-center">
               <FaStar className="text-xl text-yellow-500" />
 
-              <h3 className="text-green-600 font-bold text-xl">4.8</h3>
+              <h3 className="text-green-600 font-bold text-xl">
+                {bookingData?.providerSnapshot?.rating}
+              </h3>
 
               <h3 className="text-sm font-semibold text-muted">
-                (400 Reviews)
+                {bookingData?.providerSnapshot?.totalReview} Reviews
               </h3>
             </div>
           </div>
 
           <h3 className="bg-green-50 md:py-2 md:px-3 md:text-xl font-semibold rounded-md text-green-600 border h-min text-sm py-1 px-2">
-            Home Cleaning
+            {bookingData?.providerSnapshot?.category}
           </h3>
         </div>
       </div>
@@ -78,7 +82,8 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
             </div>
 
             <p className="text-text font-semibold text-sm md:text-lg text-right">
-              11:00 AM - 01:20PM
+              {bookingData?.bookingSlot?.startTime} -{" "}
+              {bookingData?.bookingSlot?.endTime}
             </p>
           </div>
 
@@ -91,7 +96,11 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
             </div>
 
             <p className="text-text font-semibold text-sm md:text-lg text-right">
-              21 May 2025
+              {new Date(bookingData?.bookingDate).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
             </p>
           </div>
 
@@ -104,7 +113,7 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
             </div>
 
             <p className="text-text font-semibold text-sm md:text-lg text-right">
-              2 Hours
+              {bookingData?.durationHours} Hours
             </p>
           </div>
 
@@ -116,13 +125,21 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
               <h3>Address</h3>
             </div>
 
-            <div className="text-right max-w-[180px] md:max-w-[260px]">
-              <p className="text-text font-semibold text-sm md:text-lg leading-5 md:leading-7 break-words">
-                Rajgangapur
+            <div className="text-right max-w-[260px]">
+              <p className="font-semibold">
+                {bookingData?.serviceAddressSnapshot?.fullAddress}
               </p>
 
-              <p className="text-muted text-sm md:text-base">
-                Primary School, Sultanganj
+              {bookingData?.serviceAddressSnapshot?.landmark && (
+                <p className="text-muted">
+                  {bookingData?.serviceAddressSnapshot?.landmark}
+                </p>
+              )}
+
+              <p className="text-muted">
+                {bookingData?.serviceAddressSnapshot?.city},{" "}
+                {bookingData?.serviceAddressSnapshot?.district},{" "}
+                {bookingData?.serviceAddressSnapshot?.state}
               </p>
             </div>
           </div>
@@ -136,7 +153,7 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
             </div>
 
             <p className="text-text font-semibold text-sm md:text-lg text-right">
-              UPI
+              {bookingData?.paymentMethod}
             </p>
           </div>
         </div>
@@ -160,7 +177,8 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
                 <h3 className="text-gray-500 font-medium text-lg flex items-center">
                   Price (
                   <MdOutlineCurrencyRupee />
-                  250 × 2)
+                  {bookingData?.pricing?.serviceCharge} ×{" "}
+                  {bookingData?.durationHours})
                 </h3>
 
                 <p className="font-semibold text-gray-800 text-lg flex items-center">
@@ -189,7 +207,7 @@ const ViewProviderBookingDetails = ({ layout = "row" }) => {
 
             <h2 className="flex items-center text-2xl font-bold text-green-600">
               <MdOutlineCurrencyRupee />
-              520
+              {bookingData?.pricing?.totalAmount}
             </h2>
           </div>
         </div>

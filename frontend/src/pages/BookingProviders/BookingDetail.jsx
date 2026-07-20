@@ -35,7 +35,7 @@ const BookingDetail = () => {
     lat: "",
     lng: "",
   });
-console.log(formData.startTime,formData.endTime);
+
 
   const { bookingSummaryMutation } = useBookingCreate();
  

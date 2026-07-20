@@ -61,7 +61,7 @@ const Payment = () => {
             "/user/provider-details/booking-details/payment/success-payment",
             {
               state: {
-                booking: data.data,
+                booking: data.booking,
               },
             },
           );
