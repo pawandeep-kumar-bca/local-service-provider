@@ -14,155 +14,155 @@ function parseTimeToMinutes(timeStr) {
   return hours * 60 + minutes;
 }
 
-// async function userBookingSummary(req, res) {
-//   try {
-//     const { providerId, categoryId, bookingDate, bookingSlot } = req.body;
-//     const userId = req.user.id;
-//     if (!bookingSlot || !bookingSlot.startTime || !bookingSlot.endTime) {
-//       return res.status(400).json({
-//         message: "bookingSlot with startTime and endTime is required",
-//       });
-//     }
-//     // ---------- Fetch user ----------
-//     const user = await UserModel.findById(userId);
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
+async function userBookingSummary(req, res) {
+  try {
+    const { providerId, categoryId, bookingDate, bookingSlot } = req.body;
+    const userId = req.user.id;
+    if (!bookingSlot || !bookingSlot.startTime || !bookingSlot.endTime) {
+      return res.status(400).json({
+        message: "bookingSlot with startTime and endTime is required",
+      });
+    }
+    // ---------- Fetch user ----------
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-//     // ---------- Fetch provider (with linked user for name/phone) ----------
-//     const provider = await providerModel
-//       .findById(providerId)
-//       .populate("userId", "fullname phoneNumber profileImage");
+    // ---------- Fetch provider (with linked user for name/phone) ----------
+    const provider = await providerModel
+      .findById(providerId)
+      .populate("userId", "fullname phoneNumber profileImage");
 
-//     if (!provider) {
-//       return res.status(404).json({ message: "Provider not found" });
-//     }
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
 
-//     if (provider.status !== "approved") {
-//       return res.status(400).json({
-//         message: "This provider is not approved yet",
-//       });
-//     }
+    if (provider.status !== "approved") {
+      return res.status(400).json({
+        message: "This provider is not approved yet",
+      });
+    }
 
-//     if (!provider.availability) {
-//       return res.status(400).json({
-//         message: "Provider is currently not available",
-//       });
-//     }
+    if (!provider.availability) {
+      return res.status(400).json({
+        message: "Provider is currently not available",
+      });
+    }
 
-//     // ---------- Category checks ----------
-//     const categoryExist = await categoryModel.findById(categoryId);
-//     if (!categoryExist) {
-//       return res.status(400).json({ message: "Category does not exist" });
-//     }
+    // ---------- Category checks ----------
+    const categoryExist = await categoryModel.findById(categoryId);
+    if (!categoryExist) {
+      return res.status(400).json({ message: "Category does not exist" });
+    }
 
-//     const providerOffersCategory = provider.categories.some(
-//       (catId) => catId.toString() === categoryId.toString(),
-//     );
-//     if (!providerOffersCategory) {
-//       return res.status(400).json({
-//         message: "This provider does not offer the selected category",
-//       });
-//     }
+    const providerOffersCategory = provider.categories.some(
+      (catId) => catId.toString() === categoryId.toString(),
+    );
+    if (!providerOffersCategory) {
+      return res.status(400).json({
+        message: "This provider does not offer the selected category",
+      });
+    }
 
-//     // ---------- Date check ----------
-//     const today = new Date();
-//     today.setHours(0, 0, 0, 0);
+    // ---------- Date check ----------
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-//     const userDate = new Date(bookingDate);
-//     if (userDate < today) {
-//       return res.status(400).json({ message: "Invalid booking date" });
-//     }
+    const userDate = new Date(bookingDate);
+    if (userDate < today) {
+      return res.status(400).json({ message: "Invalid booking date" });
+    }
 
-//     // ---------- Slot clash check (only active statuses block a slot) ----------
-//     const blockingStatuses = ["pending", "accepted", "in_progress"];
+    // ---------- Slot clash check (only active statuses block a slot) ----------
+    const blockingStatuses = ["pending", "accepted", "in_progress"];
 
-//     const alreadyBooking = await bookingsModel.findOne({
-//       providerId,
-//       userId,
-//       bookingDate,
-//       "bookingSlot.startTime": bookingSlot.startTime,
-//       "bookingSlot.endTime": bookingSlot.endTime,
-//       bookingStatus: { $in: blockingStatuses },
-//     });
-//     if (alreadyBooking) {
-//       return res.status(200).json({
-//         message: "You already have a booking for this slot with this provider",
-//         booking: alreadyBooking,
-//       });
-//     }
+    const alreadyBooking = await bookingsModel.findOne({
+      providerId,
+      userId,
+      bookingDate,
+      "bookingSlot.startTime": bookingSlot.startTime,
+      "bookingSlot.endTime": bookingSlot.endTime,
+      bookingStatus: { $in: blockingStatuses },
+    });
+    if (alreadyBooking) {
+      return res.status(200).json({
+        message: "You already have a booking for this slot with this provider",
+        booking: alreadyBooking,
+      });
+    }
 
-//     const bookingSlotAlready = await bookingsModel.findOne({
-//       providerId,
-//       bookingDate,
-//       "bookingSlot.startTime": bookingSlot.startTime,
-//       "bookingSlot.endTime": bookingSlot.endTime,
-//       bookingStatus: { $in: blockingStatuses },
-//     });
-//     if (bookingSlotAlready) {
-//       return res.status(409).json({ message: "This slot is already booked" });
-//     }
+    const bookingSlotAlready = await bookingsModel.findOne({
+      providerId,
+      bookingDate,
+      "bookingSlot.startTime": bookingSlot.startTime,
+      "bookingSlot.endTime": bookingSlot.endTime,
+      bookingStatus: { $in: blockingStatuses },
+    });
+    if (bookingSlotAlready) {
+      return res.status(409).json({ message: "This slot is already booked" });
+    }
 
-//     // ---------- Duration + pricing ----------
-//     const startMinutes = parseTimeToMinutes(bookingSlot.startTime);
-//     const endMinutes = parseTimeToMinutes(bookingSlot.endTime);
+    // ---------- Duration + pricing ----------
+    const startMinutes = parseTimeToMinutes(bookingSlot.startTime);
+    const endMinutes = parseTimeToMinutes(bookingSlot.endTime);
 
-//     if (endMinutes <= startMinutes) {
-//       return res.status(400).json({
-//         message: "End time must be after start time",
-//       });
-//     }
+    if (endMinutes <= startMinutes) {
+      return res.status(400).json({
+        message: "End time must be after start time",
+      });
+    }
 
-//     const durationHours = (endMinutes - startMinutes) / 60;
+    const durationHours = (endMinutes - startMinutes) / 60;
 
-//     let serviceCharge = 0;
-//     const price = provider.pricing.price
-//     if (provider.pricing.priceType === "hourly") {
-//       serviceCharge = provider.pricing.price * durationHours;
-//     } else {
-//       serviceCharge = provider.pricing.price;
-//     }
+    let serviceCharge = 0;
+    const price = provider.pricing.price
+    if (provider.pricing.priceType === "hourly") {
+      serviceCharge = provider.pricing.price * durationHours;
+    } else {
+      serviceCharge = provider.pricing.price;
+    }
 
-//     const platformFee = Number(((serviceCharge * 2) / 100).toFixed(2));
-//     const discount = 0;
-//     const totalAmount = Number(
-//       (serviceCharge + platformFee - discount).toFixed(2),
-//     );
+    const platformFee = Number(((serviceCharge * 2) / 100).toFixed(2));
+    const discount = 0;
+    const totalAmount = Number(
+      (serviceCharge + platformFee - discount).toFixed(2),
+    );
 
-//    return res.status(200).json({
-//   success: true,
-//   message: "Booking summary fetched successfully",
-//   data: {
-//     provider: {
-//       providerId: provider._id,
-//       name: provider.userId.fullname,
-//       profileImage: provider.userId.profileImage,
-//       rating: provider.rating,
-//       totalReview: provider.totalReview,
-//     },
-//     service: {
-//       categoryId: categoryExist._id,
-//       categoryName: categoryExist.name,
-//     },
-//     bookingDate,
-//     bookingSlot,
-//     durationHours,
-//     pricing: {
-//       price,
-//       serviceCharge,
-//       platformFee,
-//       discount,
-//       totalAmount,
-//     },
-//   },
-// });
-//   } catch (err) {
-//     console.error("Booking summary error", err);
-//     return res.status(500).json({
-//       message: "Internal server error",
-//     });
-//   }
-// }
+   return res.status(200).json({
+  success: true,
+  message: "Booking summary fetched successfully",
+  data: {
+    provider: {
+      providerId: provider._id,
+      name: provider.userId.fullname,
+      profileImage: provider.userId.profileImage,
+      rating: provider.rating,
+      totalReview: provider.totalReview,
+    },
+    service: {
+      categoryId: categoryExist._id,
+      categoryName: categoryExist.name,
+    },
+    bookingDate,
+    bookingSlot,
+    durationHours,
+    pricing: {
+      price,
+      serviceCharge,
+      platformFee,
+      discount,
+      totalAmount,
+    },
+  },
+});
+  } catch (err) {
+    console.error("Booking summary error", err);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+}
 async function userBookingCreate(req, res) {
   try {
     const {
