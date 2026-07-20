@@ -35,8 +35,10 @@ const BookingDetail = () => {
     lat: "",
     lng: "",
   });
+console.log(formData.startTime,formData.endTime);
 
-  const { createBookingMutation } = useBookingCreate();
+  const { bookingSummaryMutation } = useBookingCreate();
+ 
 
   const formSubmit = (e) => {
     e.preventDefault();
@@ -76,7 +78,16 @@ const BookingDetail = () => {
       },
     };
 
-    createBookingMutation.mutate(payload);
+   bookingSummaryMutation.mutate(payload, {
+  onSuccess: (data) => {
+    navigate("/user/provider-details/booking-details/payment", {
+      state: {
+        summary: data,
+        bookingPayload: payload,
+      },
+    });
+  },
+});
   };
 
   const getCurrentLocation = () => {
@@ -143,7 +154,7 @@ const BookingDetail = () => {
                 defaultValue={categoryName}
                 readOnly
                 disabled
-                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white"
+                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  disabled:bg-gray-100 cursor-not-allowed"
               />
             </div>
             <Input
@@ -261,9 +272,9 @@ const BookingDetail = () => {
             <Button
               type="submit"
               fullWidth
-              disabled={createBookingMutation.isLoading}
+              disabled={bookingSummaryMutation.isLoading}
             >
-              {createBookingMutation.isLoading
+              {bookingSummaryMutation.isLoading
                 ? "Creating booking..."
                 : "Continue to Payment"}
             </Button>

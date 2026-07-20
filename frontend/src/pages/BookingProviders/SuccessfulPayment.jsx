@@ -69,7 +69,7 @@ const SuccessfulPayment = () => {
           <Button
             color="success"
             className="  text-2xl md:text-xl md:py-2 py-3 px-10"
-           onClick={()=>navigate('/user')}>
+           onClick={()=>navigate('/user/dashboard')}>
             <MdHome className="text-3xl md:text-2xl" /> Back to Home
           </Button>
         </div>
