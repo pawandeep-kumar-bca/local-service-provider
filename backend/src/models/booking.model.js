@@ -188,9 +188,6 @@ const bookingsSchema = new mongoose.Schema(
       enum: [
         "cash_on_delivery",
         "upi",
-        "net_banking",
-        "credit_card",
-        "debit_card",
       ],
       default: "cash_on_delivery",
     },

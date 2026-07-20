@@ -10,6 +10,35 @@ function ResponseWithBookingValidation(req, res, next) {
   }
   next();
 }
+const BookingSummaryValidation = [
+  body("providerId")
+    .notEmpty()
+    .withMessage("Provider ID is required")
+    .isMongoId()
+    .withMessage("Invalid Provider ID"),
+
+  body("categoryId")
+    .notEmpty()
+    .withMessage("Category ID is required")
+    .isMongoId()
+    .withMessage("Invalid Category ID"),
+
+  body("bookingDate")
+    .notEmpty()
+    .withMessage("Booking date is required")
+    .isISO8601()
+    .withMessage("Please enter a valid booking date"),
+
+  body("bookingSlot.startTime")
+    .notEmpty()
+    .withMessage("Start time is required"),
+
+  body("bookingSlot.endTime")
+    .notEmpty()
+    .withMessage("End time is required"),
+
+  ResponseWithBookingValidation,
+];
 
 const BookingValidation = [
   body("providerId").notEmpty().withMessage("providerId is required"),
@@ -59,4 +88,4 @@ const BookingValidation = [
   ResponseWithBookingValidation,
 ];
 
-module.exports = BookingValidation;
+module.exports = {BookingValidation,BookingSummaryValidation};
