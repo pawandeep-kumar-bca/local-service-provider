@@ -16,16 +16,17 @@ import { SiPaytm, SiPhonepe } from "react-icons/si";
 
 import { RiMastercardLine, RiVisaLine } from "react-icons/ri";
 import { PiBankFill } from "react-icons/pi";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { IoMdCash } from "react-icons/io";
-import { useBookingCreate } from "../../hooks/useBooking";
+
 const Payment = () => {
-  const [selectedPayment, setSelectedPayment] = useState("Cash on Delivery");
-  const navigate = useNavigate();
+  const [selectedPayment, setSelectedPayment] = useState("cod");
+  // const navigate = useNavigate();
   const paymentMethods = [
     {
       id: "upi",
-      value: "UPI",
+      value: "upi",
+      name:"UPI",
       icons: (
         <div className="flex items-center gap-4">
           <FaGooglePay className="text-[#ED8F15]" size={28} />
@@ -36,8 +37,9 @@ const Payment = () => {
     },
 
     {
-      id: "cash",
-      value: "Cash on Delivery",
+      id: "cod",
+      value: "cod",
+      name:'Cash On Delivery',
       icons: (
         <div className="flex items-center gap-4">
           <IoMdCash className="text-green-600" size={28} />
@@ -45,28 +47,17 @@ const Payment = () => {
       ),
     },
   ];
-  const { createBookingMutation } = useBookingCreate();
+
   const { state } = useLocation();
 
-  const summary = state?.summary?.data;
+  const booking = state?.booking;
 
-  const bookingPayload = state?.bookingPayload;
+  const bookingId = state?.booking?._id;
+  console.log(bookingId);
 
   const handlePayment = () => {
     if (selectedPayment === "Cash on Delivery") {
-      // Booking create karo
-      createBookingMutation.mutate(bookingPayload, {
-        onSuccess: (data) => {
-          navigate(
-            "/user/provider-details/booking-details/payment/success-payment",
-            {
-              state: {
-                booking: data.booking,
-              },
-            },
-          );
-        },
-      });
+      console.log("Cash On Delivery");
     } else {
       // UPI Payment
       // Yahan Razorpay / PhonePe / Payment Gateway open hoga
@@ -93,19 +84,19 @@ const Payment = () => {
 
               <div className="flex items-center gap-4 p-5">
                 <img
-                  src={summary.provider?.profileImage?.url}
-                  alt={summary.provider?.name}
+                  src={booking.providerSnapshot?.profileImage?.url}
+                  alt={booking.providerSnapshot?.name}
                   className="w-16 h-16 rounded-full object-cover border"
                 />
 
                 <div>
                   <h2 className="text-2xl font-bold text-gray-800">
-                    {summary.provider?.name}
+                    {booking.providerSnapshot?.name}
                   </h2>
 
                   <div className="flex items-center gap-2 mt-1">
                     <span className="font-semibold text-lg">
-                      {summary.provider?.rating}
+                      {booking.providerSnapshot?.rating}
                     </span>
 
                     <div className="flex items-center gap-1 text-yellow-500">
@@ -117,7 +108,7 @@ const Payment = () => {
                     </div>
 
                     <span className="text-sm text-gray-500 font-medium">
-                      {summary.provider?.totalReview} Reviews
+                      {booking.providerSnapshot?.totalReview} Reviews
                     </span>
                   </div>
                 </div>
@@ -132,7 +123,7 @@ const Payment = () => {
                   <h3 className="text-gray-500 font-medium text-lg">Service</h3>
 
                   <p className="font-semibold text-gray-800 text-lg">
-                    {summary.service?.categoryName}
+                    {booking.serviceSnapshot?.categoryName}
                   </p>
                 </div>
 
@@ -142,8 +133,16 @@ const Payment = () => {
                   </h3>
 
                   <p className="font-semibold text-gray-800 text-sm text-right">
-                    {summary?.bookingDate}, {summary?.bookingSlot?.startTime} -{" "}
-                    {summary?.bookingSlot?.endTime}
+                    {new Date(booking?.bookingDate).toLocaleDateString(
+                      "en-IN",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      },
+                    )}
+                    , {booking?.bookingSlot?.startTime} -{" "}
+                    {booking?.bookingSlot?.endTime}
                   </p>
                 </div>
 
@@ -153,7 +152,7 @@ const Payment = () => {
                   </h3>
 
                   <p className="font-semibold text-gray-800 text-lg">
-                    {summary?.durationHours} Hours
+                    {booking?.durationHours} Hours
                   </p>
                 </div>
 
@@ -161,12 +160,12 @@ const Payment = () => {
                   <h3 className="text-gray-500 font-medium text-lg flex items-center">
                     Price (
                     <MdOutlineCurrencyRupee />
-                    {summary?.pricing?.price} × {summary?.durationHours})
+                    {booking?.pricing?.price} × {booking?.durationHours})
                   </h3>
 
                   <p className="font-semibold text-gray-800 text-lg flex items-center">
                     <MdOutlineCurrencyRupee />
-                    {summary?.pricing?.serviceCharge}
+                    {booking?.pricing?.serviceCharge}
                   </p>
                 </div>
 
@@ -177,7 +176,7 @@ const Payment = () => {
 
                   <p className="font-semibold text-gray-800 text-lg flex items-center">
                     <MdOutlineCurrencyRupee />
-                    {summary?.pricing?.platformFee}
+                    {booking?.pricing?.platformFee}
                   </p>
                 </div>
               </div>
@@ -193,7 +192,7 @@ const Payment = () => {
 
                 <h2 className="flex items-center text-2xl font-bold text-green-600">
                   <MdOutlineCurrencyRupee />
-                  {summary?.pricing?.totalAmount}
+                  {booking?.pricing?.totalAmount}
                 </h2>
               </div>
             </div>
@@ -229,7 +228,7 @@ const Payment = () => {
                     />
 
                     <h2 className="font-semibold text-lg text-gray-800">
-                      {method.value}
+                      {method.name}
                     </h2>
                   </div>
 
@@ -243,20 +242,14 @@ const Payment = () => {
               <FaLock className="text-green-600" />
               <p>100% Secure Payments & Encrypted Transactions</p>
             </div>
-            <Button
-              fullWidth
-              onClick={handlePayment}
-              disabled={createBookingMutation.isPending}
-            >
-              {createBookingMutation.isPending ? (
-                "Processing..."
-              ) : selectedPayment === "Cash on Delivery" ? (
+            <Button fullWidth onClick={handlePayment}>
+              {selectedPayment === "cod" ? (
                 "Book Service"
               ) : (
                 <>
                   Pay Now
                   <MdOutlineCurrencyRupee />
-                  {summary?.pricing?.totalAmount}
+                  {booking?.pricing?.totalAmount}
                 </>
               )}
             </Button>

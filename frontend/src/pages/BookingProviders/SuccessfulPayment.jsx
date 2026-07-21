@@ -10,7 +10,7 @@ const SuccessfulPayment = () => {
     const navigate = useNavigate()
     const {state} = useLocation()
     const bookingData = state?.booking
-
+    
     return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-4 rounded-lg md:flex md:gap-3">
       {/* left side */}

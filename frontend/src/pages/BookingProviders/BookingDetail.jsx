@@ -37,7 +37,7 @@ const BookingDetail = () => {
   });
 
 
-  const { bookingSummaryMutation } = useBookingCreate();
+const { createBookingMutation } = useBookingCreate();
  
 
   const formSubmit = (e) => {
@@ -77,18 +77,20 @@ const BookingDetail = () => {
         endTime: formData.endTime,
       },
     };
-
-   bookingSummaryMutation.mutate(payload, {
-  onSuccess: (data) => {
-    navigate("/user/provider-details/booking-details/payment", {
-      state: {
-        summary: data,
-        bookingPayload: payload,
-      },
-    });
-  },
-});
-  };
+ createBookingMutation.mutate(payload, {
+        onSuccess: (data) => {
+          navigate(
+            "/user/provider-details/booking-details/payment",
+            {
+              state: {
+                booking: data.booking,
+              },
+            },
+          );
+        },
+      });
+   
+  }
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -272,9 +274,9 @@ const BookingDetail = () => {
             <Button
               type="submit"
               fullWidth
-              disabled={bookingSummaryMutation.isLoading}
+              disabled={createBookingMutation.isLoading}
             >
-              {bookingSummaryMutation.isLoading
+              {createBookingMutation.isLoading
                 ? "Creating booking..."
                 : "Continue to Payment"}
             </Button>
