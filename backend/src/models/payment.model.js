@@ -36,14 +36,14 @@ const paymentSchema = new mongoose.Schema({
   razorpaySignature: String,
 
   paymentStatus: {
-    type: String,
-    enum: ['pending', 'success', 'failed', 'refunded', 'cancelled'],
-    default: 'pending'
-  },
+  type: String,
+  enum: ["pending", "success", "failed", "refunded"],
+  default: "pending",
+},
 
   paymentMethod: {
     type: String,
-    enum: ['upi', 'card', 'netBanking', 'cash']
+    enum: ['upi', 'cod']
   }
 
 }, { timestamps: true })

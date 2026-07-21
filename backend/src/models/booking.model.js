@@ -33,7 +33,9 @@ const bookingsSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-
+    durationHours: {
+      type: Number,
+    },
     bookingSlot: {
       startTime: {
         type: String,
@@ -49,11 +51,6 @@ const bookingsSchema = new mongoose.Schema(
       type: String,
       enum: ["scheduled", "instant"],
       default: "scheduled",
-    },
-
-    notes: {
-      type: String,
-      trim: true,
     },
 
     bookingStatus: {
@@ -157,9 +154,9 @@ const bookingsSchema = new mongoose.Schema(
         trim: true,
       },
     },
-    notes:{
-      type:String,
-      trim:true
+    notes: {
+      type: String,
+      trim: true,
     },
     pricing: {
       serviceCharge: {
@@ -185,11 +182,8 @@ const bookingsSchema = new mongoose.Schema(
 
     paymentMethod: {
       type: String,
-      enum: [
-        "cash_on_delivery",
-        "upi",
-      ],
-      default: "cash_on_delivery",
+      enum: ["cod", "upi"],
+      default: "cod",
     },
 
     paymentStatus: {
@@ -203,7 +197,18 @@ const bookingsSchema = new mongoose.Schema(
       orderId: String,
       transactionId: String,
     },
-
+    serviceSnapshot: {
+      categoryName: String,
+      price: Number,
+    },
+    serviceAddressSnapshot: {
+      state: String,
+      district: String,
+      city: String,
+      village: String,
+      landmark: String,
+      fullAddress: String,
+    },
     providerSnapshot: {
       providerId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -213,7 +218,8 @@ const bookingsSchema = new mongoose.Schema(
       name: String,
 
       phone: String,
-
+      rating: Number,
+      totalReview: Number,
       category: String,
       profileImage: {
         url: {
@@ -236,6 +242,7 @@ const bookingsSchema = new mongoose.Schema(
       name: String,
 
       phone: String,
+      email: String,
       profileImage: {
         url: {
           type: String,
@@ -316,7 +323,7 @@ bookingsSchema.index(
     unique: true,
   },
 );
-
+bookingsSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 // Geo Index
 bookingsSchema.index({
   serviceLocation: "2dsphere",

@@ -1,8 +1,11 @@
 const bookingsModel = require("../models/booking.model");
 const providerModel = require("../models/provider.model");
 const categoryModel = require("../models/category.model");
-const generateBookingId = require("../utils/generateBookingId");
 const UserModel = require("../models/User.model");
+const stateModel = require("../models/State.model");
+const districtModel = require("../models/district.model");
+const cityModel = require("../models/city.model");
+const generateBookingId = require("../utils/generateBookingId");
 // Converts "10:30 AM" / "02:00 PM" style strings into total minutes since midnight
 function parseTimeToMinutes(timeStr) {
   const [time, meridian] = timeStr.trim().split(" ");
@@ -116,7 +119,7 @@ async function userBookingSummary(req, res) {
     const durationHours = (endMinutes - startMinutes) / 60;
 
     let serviceCharge = 0;
-    const price = provider.pricing.price
+    const price = provider.pricing.price;
     if (provider.pricing.priceType === "hourly") {
       serviceCharge = provider.pricing.price * durationHours;
     } else {
@@ -129,33 +132,33 @@ async function userBookingSummary(req, res) {
       (serviceCharge + platformFee - discount).toFixed(2),
     );
 
-   return res.status(200).json({
-  success: true,
-  message: "Booking summary fetched successfully",
-  data: {
-    provider: {
-      providerId: provider._id,
-      name: provider.userId.fullname,
-      profileImage: provider.userId.profileImage,
-      rating: provider.rating,
-      totalReview: provider.totalReview,
-    },
-    service: {
-      categoryId: categoryExist._id,
-      categoryName: categoryExist.name,
-    },
-    bookingDate,
-    bookingSlot,
-    durationHours,
-    pricing: {
-      price,
-      serviceCharge,
-      platformFee,
-      discount,
-      totalAmount,
-    },
-  },
-});
+    return res.status(200).json({
+      success: true,
+      message: "Booking summary fetched successfully",
+      data: {
+        provider: {
+          providerId: provider._id,
+          name: provider.userId.fullname,
+          profileImage: provider.userId.profileImage,
+          rating: provider.rating,
+          totalReview: provider.totalReview,
+        },
+        service: {
+          categoryId: categoryExist._id,
+          categoryName: categoryExist.name,
+        },
+        bookingDate,
+        bookingSlot,
+        durationHours,
+        pricing: {
+          price,
+          serviceCharge,
+          platformFee,
+          discount,
+          totalAmount,
+        },
+      },
+    });
   } catch (err) {
     console.error("Booking summary error", err);
     return res.status(500).json({
@@ -244,6 +247,9 @@ async function userBookingCreate(req, res) {
       });
     }
 
+    const stateData = await stateModel.findById(state);
+    const districtData = await districtModel.findById(district);
+    const cityData = await cityModel.findById(city);
     // ---------- Date check ----------
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -316,16 +322,23 @@ async function userBookingCreate(req, res) {
       bookingDate,
       bookingSlot,
       notes,
+      durationHours,
       pricing: {
         serviceCharge,
         platformFee,
         discount,
         totalAmount,
       },
+      serviceSnapshot: {
+        categoryName: categoryExist.name,
+        price: provider.pricing.price,
+      },
       providerSnapshot: {
         providerId: provider._id,
         name: provider.userId.fullname,
         phone: provider.userId.phoneNumber,
+        rating: provider.rating,
+        totalReview: provider.totalReview,
         category: categoryExist.name,
         profileImage: {
           url: provider.userId.profileImage?.url || "",
@@ -336,6 +349,7 @@ async function userBookingCreate(req, res) {
         userId: user._id,
         name: user.fullname,
         phone: user.phoneNumber,
+        email: user.email,
         profileImage: {
           url: user.profileImage?.url || "",
           fileId: user.profileImage?.fileId || "",
@@ -354,6 +368,14 @@ async function userBookingCreate(req, res) {
         state,
         district,
         city,
+        village,
+        landmark,
+        fullAddress,
+      },
+      serviceAddressSnapshot: {
+        state: stateData.name,
+        district: districtData.name,
+        city: cityData.name,
         village,
         landmark,
         fullAddress,

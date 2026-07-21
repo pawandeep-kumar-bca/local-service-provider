@@ -1,12 +1,17 @@
-const express = require('express')
-const paymentController = require('../controllers/payment.controller')
-const authMiddleware = require('../middlewares/auth.middleware')
+const express = require("express");
+const paymentController = require("../controllers/payment.controller");
+const authMiddleware = require("../middlewares/auth.middleware");
 
-const router = express.Router()
+const router = express.Router();
 
-router.post('/create-order', authMiddleware.tokenVerify, paymentController.createOrder)
-router.post('/verify', authMiddleware.tokenVerify, paymentController.verifyPayment)
-router.post('/webhook', paymentController.razorpayWebhook)
-router.get('/history', authMiddleware.tokenVerify, paymentController.paymentHistory)
+router.post("/create-order", authMiddleware.tokenVerify, paymentController.createOrder);
+router.post("/verify", authMiddleware.tokenVerify, paymentController.verifyPayment);
+router.post("/payment-failed",authMiddleware.tokenVerify,  paymentController.markPaymentFailed);
+router.post("/webhook", express.raw({ type: "*/*" }), paymentController.razorpayWebhook);
+router.get(
+  "/history",
+  authMiddleware.tokenVerify,
+  paymentController.paymentHistory,
+);
 
-module.exports = router
+module.exports = router;
