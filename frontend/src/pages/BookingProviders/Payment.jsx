@@ -16,17 +16,21 @@ import { SiPaytm, SiPhonepe } from "react-icons/si";
 
 import { RiMastercardLine, RiVisaLine } from "react-icons/ri";
 import { PiBankFill } from "react-icons/pi";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoMdCash } from "react-icons/io";
+import { usePayment } from "../../hooks/usePayment";
+import { loadRazorpayScript } from "../../utils/loadRazorpayScript";
 
 const Payment = () => {
   const [selectedPayment, setSelectedPayment] = useState("cod");
-  // const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
   const paymentMethods = [
     {
       id: "upi",
       value: "upi",
-      name:"UPI",
+      name: "UPI",
       icons: (
         <div className="flex items-center gap-4">
           <FaGooglePay className="text-[#ED8F15]" size={28} />
@@ -35,11 +39,10 @@ const Payment = () => {
         </div>
       ),
     },
-
     {
       id: "cod",
       value: "cod",
-      name:'Cash On Delivery',
+      name: "Cash On Delivery",
       icons: (
         <div className="flex items-center gap-4">
           <IoMdCash className="text-green-600" size={28} />
@@ -49,26 +52,133 @@ const Payment = () => {
   ];
 
   const { state } = useLocation();
-
   const booking = state?.booking;
-
   const bookingId = state?.booking?._id;
-  console.log(bookingId);
+
+  const { createOrderMutation, verifyPaymentMutation, markPaymentFailedMutation } =
+    usePayment();
+
+  // ---------- Guard: no booking in state (e.g. page refreshed) ----------
+  if (!booking) {
+    return (
+      <div className="p-10 text-center text-gray-600">
+        <p>Booking details not found. Please start the booking again.</p>
+        <Button className="mt-4" onClick={() => navigate(-1)}>
+          Go Back
+        </Button>
+      </div>
+    );
+  }
+
+  const goToSuccessPage = (bookingData) => {
+    navigate("/user/provider-details/booking-details/payment/success-payment", {
+      state: {
+        booking: bookingData,
+      },
+    });
+  };
+
+  // ---------- Opens Razorpay checkout popup ----------
+  const openRazorpayCheckout = (razorpayOrder) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID, // public key only, never the secret
+      amount: razorpayOrder.amount,
+      currency: razorpayOrder.currency,
+      order_id: razorpayOrder.id,
+      name: "Local Service Provider",
+      description: booking?.serviceSnapshot?.categoryName || "Service Booking",
+
+      handler: (response) => {
+        // response contains razorpay_payment_id, razorpay_order_id, razorpay_signature
+        verifyPaymentMutation.mutate(
+          {
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+          },
+          {
+            onSuccess: (data) => {
+              goToSuccessPage(data.booking);
+            },
+            onError: () => {
+              setErrorMessage(
+                "Payment verification failed. If money was deducted, it will be refunded shortly.",
+              );
+            },
+          },
+        );
+      },
+
+      modal: {
+        ondismiss: () => {
+          // user closed the popup without completing payment
+          markPaymentFailedMutation.mutate({
+            razorpayOrderId: razorpayOrder.id,
+          });
+          setErrorMessage("Payment was cancelled. You can try again.");
+        },
+      },
+
+      prefill: {
+        name: booking?.userSnapshot?.name,
+        email: booking?.userSnapshot?.email,
+        contact: booking?.userSnapshot?.phone,
+      },
+
+      theme: {
+        color: "#16a34a",
+      },
+    };
+
+    const razorpayInstance = new window.Razorpay(options);
+    razorpayInstance.open();
+  };
+
+  const orderFunction = () => {
+    setErrorMessage("");
+
+    const payload = {
+      bookingId,
+      paymentMethod: selectedPayment,
+    };
+
+    createOrderMutation.mutate(payload, {
+      onSuccess: async (data) => {
+        if (selectedPayment === "cod") {
+          // Booking is already marked "accepted" by the backend
+          goToSuccessPage(data.booking);
+          return;
+        }
+
+        // UPI flow: load Razorpay script, then open checkout
+        const isScriptLoaded = await loadRazorpayScript();
+        if (!isScriptLoaded || !data.razorpayOrder) {
+          setErrorMessage("Unable to load payment gateway. Please try again.");
+          return;
+        }
+
+        openRazorpayCheckout(data.razorpayOrder);
+      },
+      onError: (error) => {
+        setErrorMessage(
+          error?.response?.data?.message ||
+            "Something went wrong while creating your order.",
+        );
+      },
+    });
+  };
 
   const handlePayment = () => {
-    if (selectedPayment === "Cash on Delivery") {
-      console.log("Cash On Delivery");
-    } else {
-      // UPI Payment
-      // Yahan Razorpay / PhonePe / Payment Gateway open hoga
-      console.log("Open Payment Gateway");
-    }
+    orderFunction();
   };
+
+  const isProcessing =
+    createOrderMutation.isPending || verifyPaymentMutation.isPending;
 
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-4 rounded-lg">
       <div className="flex items-center  justify-end mb-2">
-        <Button color="white">
+        <Button color="white" onClick={() => navigate(-1)}>
           <MdOutlineKeyboardArrowLeft size={24} />
           Back
         </Button>
@@ -160,7 +270,7 @@ const Payment = () => {
                   <h3 className="text-gray-500 font-medium text-lg flex items-center">
                     Price (
                     <MdOutlineCurrencyRupee />
-                    {booking?.pricing?.price} × {booking?.durationHours})
+                    {booking?.serviceSnapshot?.price} × {booking?.durationHours})
                   </h3>
 
                   <p className="font-semibold text-gray-800 text-lg flex items-center">
@@ -237,13 +347,26 @@ const Payment = () => {
               ))}
             </div>
 
+            {/* Error message */}
+            {errorMessage && (
+              <div className="mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+                {errorMessage}
+              </div>
+            )}
+
             {/* Security Note */}
             <div className="flex items-center gap-2 mt-5 text-sm text-gray-500">
               <FaLock className="text-green-600" />
               <p>100% Secure Payments & Encrypted Transactions</p>
             </div>
-            <Button fullWidth onClick={handlePayment}>
-              {selectedPayment === "cod" ? (
+            <Button
+              fullWidth
+              onClick={handlePayment}
+              disabled={isProcessing}
+            >
+              {isProcessing ? (
+                "Processing..."
+              ) : selectedPayment === "cod" ? (
                 "Book Service"
               ) : (
                 <>
