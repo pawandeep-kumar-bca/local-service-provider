@@ -15,16 +15,14 @@ import StatusBadge from "../common/StatusBadge";
 import { CiStar } from "react-icons/ci";
 import { AiOutlineLike } from "react-icons/ai";
 
-
 const ProviderCard = ({ provider, selectedCategory }) => {
   const navigate = useNavigate();
- 
-  
 
   // ---------------- Derived Values (API shape ke hisaab se) ----------------
   const profileImageUrl =
     provider.userId?.profileImage?.url ||
-    "https://ui-avatars.com/api/?name=" + encodeURIComponent(provider.userId?.fullname);
+    "https://ui-avatars.com/api/?name=" +
+      encodeURIComponent(provider.userId?.fullname);
 
   const matchedCategory = provider.categories.find(
     (cat) => cat._id.toString() === selectedCategory,
@@ -32,11 +30,11 @@ const ProviderCard = ({ provider, selectedCategory }) => {
 
   const categoryName = matchedCategory?.name || provider.categories[0]?.name;
 
-  const isVerified = provider.verifiedByAdmin ? "verified" :'not verified';
+  const isVerified = provider.verifiedByAdmin ? "verified" : "not verified";
 
-  const availabilityText = provider.availability ? "Available Now" : "Unavailable";
-
-  
+  const availabilityText = provider.availability
+    ? "Available Now"
+    : "Unavailable";
 
   const jobsCompleted = provider.completedJobs || 0;
 
@@ -48,10 +46,7 @@ const ProviderCard = ({ provider, selectedCategory }) => {
 
   const reviews = provider.totalReview || 0;
 
-  const hourlyPrice = provider.price || 0;
-
- 
-  
+  const price = provider?.pricing?.price || 0;
 
   const base =
     "py-1 px-3 rounded-full text-sm flex w-fit gap-2 items-center font-medium border";
@@ -160,14 +155,26 @@ const ProviderCard = ({ provider, selectedCategory }) => {
               <FaLocationDot className=" text-black" size={24} />
               <div>
                 <h3 className="font-semibold text-text text-lg">500m away</h3>
-                <p className="text-sm text-muted">{provider.location?.city?.name},{provider.location?.district?.name},{provider.location?.state?.name}</p>
+                <p className="text-sm text-muted">
+                  {provider.location?.city?.name},
+                  {provider.location?.district?.name},
+                  {provider.location?.state?.name}
+                </p>
               </div>
             </div>
             <div>
               <h3 className="flex items-center text-xl font-bold">
-                <MdOutlineCurrencyRupee /> {hourlyPrice}/hr
+                <MdOutlineCurrencyRupee />
+                {price}
+                {provider.pricing?.priceType === "hourly" ? "/hr" : "/fixed"}
               </h3>
-              <p className="text-muted ">Hourly Rate</p>
+              <p className="text-muted">
+                {provider.pricing?.priceType
+                  ? provider.pricing.priceType.charAt(0).toUpperCase() +
+                    provider.pricing.priceType.slice(1).toLowerCase()
+                  : ""}{" "}
+                Rate
+              </p>
             </div>
           </div>
           <div className="w-full border-t border-gray-200 my-3"></div>
@@ -206,7 +213,9 @@ const ProviderCard = ({ provider, selectedCategory }) => {
                 <Button
                   fullWidth
                   color="success"
-                  onClick={() => navigate(`/user/provider-details/${provider._id}`)}
+                  onClick={() =>
+                    navigate(`/user/provider-details/${provider._id}`)
+                  }
                 >
                   Book Now
                 </Button>
