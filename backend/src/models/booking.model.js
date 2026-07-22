@@ -200,6 +200,8 @@ const bookingsSchema = new mongoose.Schema(
     serviceSnapshot: {
       categoryName: String,
       price: Number,
+      serviceImage:String,
+      serviceBackground:String
     },
     serviceAddressSnapshot: {
       state: String,

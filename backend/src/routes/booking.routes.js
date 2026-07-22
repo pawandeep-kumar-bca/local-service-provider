@@ -2,16 +2,10 @@ const express = require("express");
 
 const bookingController = require("../controllers/booking.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
-const {BookingValidation, BookingSummaryValidation }= require("../validators/booking.validator");
+const {BookingValidation }= require("../validators/booking.validator");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
 const router = express.Router();
-// /api/bookings/summary
-router.post(
-  "/summary",
-  authMiddleware.tokenVerify,
-  BookingSummaryValidation,
-  bookingController.userBookingSummary,
-);
+
 router.post(
   "/create",
   authMiddleware.tokenVerify,

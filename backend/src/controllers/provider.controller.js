@@ -321,7 +321,7 @@ async function getProviders(req, res) {
       .populate("location.district", "name")
       .populate("location.city", "name")
       .select(
-        "userId categories price experience verifiedByAdmin rating totalReview completedJobs availability responseTime trusted topRated location",
+        "userId categories pricing experience verifiedByAdmin rating totalReview completedJobs availability responseTime trusted topRated location",
       )
       .sort(sortOption)
       .skip(skip)
