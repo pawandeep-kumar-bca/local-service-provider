@@ -15,7 +15,7 @@ router.post(
 // GET    /api/v1/bookings
 
 router.get(
-  "/",
+  "/users",
   authMiddleware.tokenVerify,
   bookingController.getUserAllBooking,
 );

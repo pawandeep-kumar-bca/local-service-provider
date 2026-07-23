@@ -175,6 +175,7 @@ async function userBookingCreate(req, res) {
       notes,
       durationHours,
       pricing: {
+        price:provider.pricing.price,
         serviceCharge,
         platformFee,
         discount,
@@ -192,7 +193,7 @@ async function userBookingCreate(req, res) {
         phone: provider.userId.phoneNumber,
         rating: provider.rating,
         totalReview: provider.totalReview,
-        category: categoryExist.name,
+        availability:provider.availability,
         profileImage: {
           url: provider.userId.profileImage?.url || "",
           fileId: provider.userId.profileImage?.fileId || "",
@@ -247,14 +248,12 @@ async function userBookingCreate(req, res) {
 
 async function getUserAllBooking(req, res) {
   try {
+    
     const userId = req.user.id;
 
     const allBookings = await bookingsModel
       .find({ userId })
-      .populate(
-        "providerId",
-        "providerName phoneNumber pricing city profileImage status rating totalReview availability",
-      );
+      .select('bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot')
     if (allBookings.length === 0) {
       return res
         .status(200)

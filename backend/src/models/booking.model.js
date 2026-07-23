@@ -9,12 +9,6 @@ const bookingsSchema = new mongoose.Schema(
       required: true,
     },
 
-    providerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Provider",
-      required: true,
-      index: true,
-    },
 
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -159,6 +153,10 @@ const bookingsSchema = new mongoose.Schema(
       trim: true,
     },
     pricing: {
+      price:{
+        type:Number,
+        required:true,
+      },
       serviceCharge: {
         type: Number,
         required: true,
@@ -218,11 +216,11 @@ const bookingsSchema = new mongoose.Schema(
       },
 
       name: String,
-
+      availability:Boolean,
       phone: String,
       rating: Number,
       totalReview: Number,
-      category: String,
+      
       profileImage: {
         url: {
           type: String,
