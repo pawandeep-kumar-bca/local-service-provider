@@ -95,30 +95,35 @@ async function registerUser(req, res) {
 async function loginUser(req, res) {
   try {
     const { email, password } = req.body;
-
+ 
     const user = await userModel.findOne({ email }).select("+password");
-
+ 
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-
+ 
     // ✅ email verification check
     if (!user.isVerified) {
       return res.status(403).json({ message: "Verify email first" });
     }
-
+ 
+    // ✅ blocked check
+    if (user.isBlocked) {
+      return res.status(403).json({ message: "Your account has been blocked" });
+    }
+ 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-
+ 
     // ✅ access token
     const accessToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_ACCESS_SECRET,
       { expiresIn: "30d" },
     );
-
+ 
     // ✅ refresh token
     const refreshToken = jwt.sign(
       { id: user._id, role: user.role },
@@ -131,14 +136,22 @@ async function loginUser(req, res) {
       .digest("hex");
     user.refreshToken = hashedToken;
     await user.save();
-
+ 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-
+ 
+    let providerStatus = null;
+    if (user.isProvider) {
+      const provider = await providerModel
+        .findOne({ userId: user._id })
+        .select("status");
+      providerStatus = provider?.status || null;
+    }
+ 
     return res.status(200).json({
       message: "Login successful",
       accessToken,
@@ -146,6 +159,8 @@ async function loginUser(req, res) {
         id: user._id,
         email: user.email,
         role: user.role,
+        isProvider: user.isProvider,
+        providerStatus,
       },
     });
   } catch (err) {
@@ -153,6 +168,7 @@ async function loginUser(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
 
 // ================= REFRESH TOKEN =================
 async function refreshToken(req, res) {

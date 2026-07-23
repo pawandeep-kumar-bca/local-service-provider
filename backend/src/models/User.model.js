@@ -36,6 +36,12 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
 
+  
+    isProvider: {
+      type: Boolean,
+      default: false,
+    },
+
     isVerified: {
       type: Boolean,
       default: false,
