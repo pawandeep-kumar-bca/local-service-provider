@@ -73,45 +73,6 @@ async function providerProfileCreate(req, res) {
       `${userId}-${Date.now()}-certificate`,
       "Providers/Documents/Certificates",
     );
-
-    // -----------------------------
-    // Update User Phone Number
-    // -----------------------------
-
-    if (phoneNumber && phoneNumber !== user.phoneNumber) {
-      user.phoneNumber = phoneNumber;
-    }
-
-    // -----------------------------
-    // Update User Profile Image
-    // -----------------------------
-
-    if (req.files.profileImage) {
-      // Agar purani image hai to delete karo
-      if (user.profileImage?.fileId) {
-        await deleteImage(user.profileImage.fileId);
-      }
-
-      // Nayi image upload karo
-      const profileImageData = await uploadImage(
-        req.files.profileImage[0],
-        `${userId}-${Date.now()}-profileImage`,
-        "Users/ProfileImages",
-      );
-
-      // User update
-      user.profileImage = {
-        url: profileImageData.url,
-        fileId: profileImageData.fileId,
-      };
-    }
-
-    await user.save();
-
-    // -----------------------------
-    // Create Provider
-    // -----------------------------
-
     const provider = await providerModel.create({
       userId,
 
@@ -123,15 +84,10 @@ async function providerProfileCreate(req, res) {
 
       location: {
         type: "Point",
-
         coordinates: [Number(lng), Number(lat)],
-
         state,
-
         district,
-
         city,
-
         village,
       },
 
@@ -140,15 +96,39 @@ async function providerProfileCreate(req, res) {
           url: aadharCardData.url,
           fileId: aadharCardData.fileId,
         },
-
         certificate: {
           url: certificateData.url,
           fileId: certificateData.fileId,
         },
       },
-
-      status: "Pending",
+      
     });
+
+  
+
+    if (phoneNumber && phoneNumber !== user.phoneNumber) {
+      user.phoneNumber = phoneNumber;
+    }
+
+    if (req.files.profileImage) {
+      if (user.profileImage?.fileId) {
+        await deleteImage(user.profileImage.fileId);
+      }
+
+      const profileImageData = await uploadImage(
+        req.files.profileImage[0],
+        `${userId}-${Date.now()}-profileImage`,
+        "Users/ProfileImages",
+      );
+
+      user.profileImage = {
+        url: profileImageData.url,
+        fileId: profileImageData.fileId,
+      };
+    }
+
+    user.isProvider = true;
+    await user.save();
 
     return res.status(201).json({
       message: "Provider profile created successfully",
