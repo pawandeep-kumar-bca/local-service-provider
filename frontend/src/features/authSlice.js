@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// 🔥 safe parse (error avoid karne ke liye)
+
 const getStoredAuth = () => {
   try {
     const data = localStorage.getItem("auth");
@@ -17,7 +17,7 @@ const savedAuth = getStoredAuth();
 const initialState = {
   user: savedAuth?.user || null,
   token: savedAuth?.accessToken || null,
-  isAuthChecked: true, // 🔥 ab default true (kyunki localStorage check ho chuka)
+  isAuthChecked: true, 
 };
 
 const authSlice = createSlice({

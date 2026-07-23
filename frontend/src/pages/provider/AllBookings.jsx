@@ -293,7 +293,7 @@ const icons = {
   TbAirConditioning,
   TbPaintFilled,
 };
-const filterBookings =  filter === 'all'? bookings:bookings.filter((booking)=>booking.status === filter)
+const filterBookings =  filter === 'all' ? bookings:bookings.filter((booking)=>booking.status === filter)
   return (
     <div>
       <div className="flex justify-between">

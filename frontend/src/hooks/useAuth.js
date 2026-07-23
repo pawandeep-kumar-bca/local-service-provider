@@ -39,7 +39,7 @@ export const useAuth = () => {
       // ✅ redirect
       if (data.user.role === "admin") {
         navigate("/admin/dashboard");
-      } else if (data.user.role === "provider") {
+      } else if (data.user.isProvider === true) {
         navigate("/provider/dashboard");
       } else {
         navigate("/user/dashboard");

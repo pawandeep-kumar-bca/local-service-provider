@@ -212,7 +212,7 @@ const {status} = useParams()
       : bookings.filter((item) => item.status === status);
   return (
     <>{(filteredBookings.length>0)?
-    (<div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+    (<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
        {filteredBookings.map((item)=>(
            <BookingProvider data={item} key={item.id}/>)
       ) }
