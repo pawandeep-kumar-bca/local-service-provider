@@ -4,6 +4,7 @@ const bookingController = require("../controllers/booking.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 const {BookingValidation }= require("../validators/booking.validator");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
+const providerMiddleware = require("../middlewares/provider.middleware");
 const router = express.Router();
 
 router.post(
@@ -15,10 +16,11 @@ router.post(
 // GET    /api/v1/bookings
 
 router.get(
-  "/users",
+  "/user",
   authMiddleware.tokenVerify,
   bookingController.getUserAllBooking,
 );
+router.get('/provider',authMiddleware.tokenVerify,providerMiddleware,bookingController.getAllProviderBooking)
 // GET    /api/v1/bookings/:id
 router.get(
   "/:id",

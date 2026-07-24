@@ -259,7 +259,31 @@ async function getUserAllBooking(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+ async function getAllProviderBooking(req,res) {
+  try{
+   const providerId = req.user.id
 
+   const allBookings = await bookingsModel.find({providerId}).select('bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType')
+
+   if(allBookings.length === 0){
+    return res.status(200).json({
+      status:true,
+      message:'bookings not found',
+      allBookings:[]
+    })
+   }
+   return res.status(200).json({
+    status:true,
+    message:'All bookings fetch successfully',
+    allBookings
+   })
+  }catch(err){
+    console.error('Get all provider booking error',err);
+    return res.status(500).json({
+      message:'Internal server error'
+    })
+  }
+ }
 async function getUserOneBooking(req, res) {
   try {
     const bookingId = req.params.id;
@@ -478,6 +502,7 @@ async function userBookingCancel(req, res) {
 module.exports = {
   userBookingCreate,
   getUserAllBooking,
+  getAllProviderBooking,
   getUserOneBooking,
   providerAcceptBooking,
   providerRejectBooking,
