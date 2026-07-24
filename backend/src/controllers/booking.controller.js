@@ -6,6 +6,7 @@ const stateModel = require("../models/State.model");
 const districtModel = require("../models/district.model");
 const cityModel = require("../models/city.model");
 const generateBookingId = require("../utils/generateBookingId");
+const{ calculatePricing }= require('../utils/calculatePricing')
 // Converts "10:30 AM" / "02:00 PM" style strings into total minutes since midnight
 function parseTimeToMinutes(timeStr) {
   const [time, meridian] = timeStr.trim().split(" ");
@@ -153,15 +154,12 @@ async function userBookingCreate(req, res) {
 
     let serviceCharge = 0;
     if (provider.pricing.priceType === "hourly") {
-      serviceCharge = provider.pricing.price * durationHours;
+      serviceCharge = Math.round(provider.pricing.price * durationHours);
     } else {
       serviceCharge = provider.pricing.price;
     }
-
-    const platformFee = (serviceCharge * 2) / 100;
     const discount = 0;
-    const totalAmount = serviceCharge + platformFee - discount;
-
+   const pricing = calculatePricing(serviceCharge,discount);
     // ---------- Create booking ----------
     const bookingId = await generateBookingId();
 
@@ -174,13 +172,7 @@ async function userBookingCreate(req, res) {
       bookingSlot,
       notes,
       durationHours,
-      pricing: {
-        price:provider.pricing.price,
-        serviceCharge,
-        platformFee,
-        discount,
-        totalAmount,
-      },
+      pricing,
       serviceSnapshot: {
         categoryName: categoryExist.name,
         price: provider.pricing.price,
@@ -267,6 +259,7 @@ async function getUserAllBooking(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+
 async function getUserOneBooking(req, res) {
   try {
     const bookingId = req.params.id;

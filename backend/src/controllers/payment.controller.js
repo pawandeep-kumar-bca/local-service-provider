@@ -41,7 +41,7 @@ async function createOrder(req, res) {
         { bookingId },
         {
           userId,
-          providerId: booking.providerId,
+          providerId: booking.providerSnapshot.providerId,
           bookingId,
           amount: booking.pricing.totalAmount, // rupees (no gateway involved)
           currency: "INR",
@@ -77,7 +77,7 @@ async function createOrder(req, res) {
       { bookingId },
       {
         userId,
-        providerId: booking.providerId,
+        providerId: booking.providerSnapshot.providerId,
         bookingId,
         amount,
         currency: "INR",
