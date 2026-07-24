@@ -2,6 +2,7 @@ const userModel = require("../models/User.model");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const providerModel = require("../models/provider.model");
 
 // ================= REGISTER =================
 async function registerUser(req, res) {
