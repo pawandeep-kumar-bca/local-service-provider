@@ -62,9 +62,8 @@ const ProviderDashboard = () => {
       <ProviderListCard />
 
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
-  
-  <div
-    className="
+        <div
+          className="
       flex-1
       md:min-h-[500px]
       bg-gradient-to-r from-white/20 to-white/40
@@ -72,12 +71,12 @@ const ProviderDashboard = () => {
       md:px-3 md:pt-4
       rounded-xl
     "
-  >
-    <ProviderBookingChart />
-  </div>
+        >
+          <ProviderBookingChart />
+        </div>
 
-  <div
-    className="
+        <div
+          className="
       flex-1
       md:min-h-[500px]
       bg-gradient-to-r from-white/20 to-white/40
@@ -85,11 +84,10 @@ const ProviderDashboard = () => {
       md:px-3 md:pt-4 pb-5
       rounded-xl
     "
-  >
-    <ProviderTodayBookings />
-  </div>
-
-</div>
+        >
+          <ProviderTodayBookings />
+        </div>
+      </div>
     </div>
   );
 };

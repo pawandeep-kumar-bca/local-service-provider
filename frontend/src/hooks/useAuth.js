@@ -24,7 +24,7 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      // 🔥 clean data store karo (sirf required fields)
+      // clean data store karo (sirf required fields)
       const authData = {
         accessToken: data.accessToken,
         user: data.user,
@@ -39,8 +39,21 @@ export const useAuth = () => {
       // ✅ redirect
       if (data.user.role === "admin") {
         navigate("/admin/dashboard");
-      } else if (data.user.isProvider === true) {
+      } else if (
+        data.user.isProvider &&
+        data.user.providerStatus === "approved"
+      ) {
         navigate("/provider/dashboard");
+      } else if (
+        data.user.isProvider &&
+        data.user.providerStatus === "pending"
+      ) {
+        navigate("/provider/application-pending"); // "under review" wala page
+      } else if (
+        data.user.isProvider &&
+        data.user.providerStatus === "rejected"
+      ) {
+        navigate("/provider/application-rejected"); // reason/reapply wala page
       } else {
         navigate("/user/dashboard");
       }
@@ -56,6 +69,5 @@ export const useMe = () => {
   return useQuery({
     queryKey: ["me"],
     queryFn: getMe,
-  
   });
 };

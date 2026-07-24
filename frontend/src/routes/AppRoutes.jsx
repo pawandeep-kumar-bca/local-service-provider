@@ -165,7 +165,7 @@ const AppRoutes = () => {
 
           {/* Provider */}
           <Route element={<RoleRoute allowedRoles={["provider"]} />}>
-            <Route path="/provider" element={<ProviderDashboard />} />
+            <Route path="/provider/dashboard" element={<ProviderDashboard />} />
             <Route path="/provider/schedule" element={<ProviderSchedule />} />
             <Route path="/provider/bookings" element={<AllBookings />} />
             <Route

@@ -5,13 +5,22 @@ import UserHeroLayout from "./UserHeroLayout";
 import { useSelector } from "react-redux";
 
 const MainLayout = () => {
- const {user} = useSelector((state)=>state.auth)
- const role = user?.role;
+  const { user } = useSelector((state) => state.auth);
+
+  const getEffectiveRole = () => {
+    if (!user) return null;
+    if (user.role === "admin") return "admin";
+    if (user.isProvider && user.providerStatus === "approved") return "provider";
+    return "user";
+  };
+
+  const role = getEffectiveRole();
+
   return (
     <div className="md:p-3 px-3 py-5">
       {/* Sidebar */}
       <div className="w-64 hidden md:flex fixed left-0 top-0 bottom-0">
-        <MenuSideBar role={role}/>
+        <MenuSideBar role={role} />
       </div>
 
       {/* Right Side */}

@@ -31,7 +31,7 @@ const ProviderDetail = () => {
   const provider = data?.providerExists;
 
   const {
-    price,
+   
     experience,
 
     verificationStatus,
@@ -133,7 +133,7 @@ const ProviderDetail = () => {
         </div>
         <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] py-4 md:px-4 px-2 rounded flex md:flex-col justify-end items-center md:gap-0 gap-6 mt-4">
           <h3 className="flex items-center text-xl font-bold mb-3 md:mx-15 ">
-            <MdOutlineCurrencyRupee /> {price}/hr
+            <MdOutlineCurrencyRupee /> {provider.pricing?.price}/hr
           </h3>
           <Button
             fullWidth
@@ -206,7 +206,7 @@ const ProviderDetail = () => {
 
                         <div className="flex items-center font-bold text-green-500">
                           <MdOutlineCurrencyRupee />
-                          {price}/Hr
+                          {provider.pricing?.price}/Hr
                         </div>
                       </div>
                     </div>

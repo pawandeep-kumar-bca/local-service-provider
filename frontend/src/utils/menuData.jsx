@@ -72,7 +72,7 @@ export const providerMenu = [
   {
     name: "Home",
     icon: <AiFillHome />,
-    path: "/provider",
+    path: "/provider/dashboard",
   },
   {
     name: "Schedule",

@@ -7,8 +7,9 @@ import Button from "../../components/common/Button";
 import StatusBadge from "../../components/common/StatusBadge";
 import { useNavigate } from "react-router-dom";
 import { BiMessageRoundedDetail } from "react-icons/bi";
-import { IoMdCall } from "react-icons/io";
+import { IoIosClose, IoMdCall } from "react-icons/io";
 import { LuDot } from "react-icons/lu";
+import { GiDuration } from "react-icons/gi";
 const BookingProvider = ({ data }) => {
   const navigate = useNavigate();
   const { name, profession, date, image, status } = data;
@@ -110,14 +111,19 @@ const BookingProvider = ({ data }) => {
             <p className="text-sm md:text-base font-medium text-gray-700">
               Vaishali Nagar, Jaipur
             </p>
-
-            <p className="text-xs text-muted mt-1">2.5 KM away from you</p>
           </div>
+          
         </div>
+        <div className="flex gap-2 items-center">
+            <GiDuration size={20} className="text-muted mt-0.5 shrink-0"/>
+             <p className="text-sm md:text-base font-medium text-gray-700">
+              2 Hours
+            </p>
+          </div>
       </div>
       <div className="w-full border-t border-gray-200 my-3"></div>
       <div className="flex justify-between items-center">
-        <span className="text-lg font-semibold">Total Amount</span>
+        <span className="text-lg font-semibold flex items-center gap-1">Total Amount <p className="text-sm">(250<IoIosClose className="inline-block" size={20}/>2)</p></span>
        <div className="text-center">
         <div >
           {/* <span className="text-xs bg-green-50 py-1 px-2 border text-green-500 border-green-200 rounded mb-1 inline-block">Online Paid</span> */}
