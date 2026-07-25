@@ -481,13 +481,13 @@ async function userBookingCancel(req, res) {
       return res.status(403).json({ message: "forbidden" });
     }
     if (
-      booking.bookingStatus !== "Pending" &&
-      booking.bookingStatus !== "Accepted"
+      booking.bookingStatus !== "pending" &&
+      booking.bookingStatus !== "accepted"
     ) {
       return res.status(400).json({ message: "Invalid booking status" });
     }
 
-    booking.bookingStatus = "Cancelled";
+    booking.bookingStatus = "cancelled";
     await booking.save();
 
     return res
