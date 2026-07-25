@@ -373,10 +373,10 @@ async function providerRejectBooking(req, res) {
     if (booking.providerId.toString() !== providerId.toString()) {
       return res.status(403).json({ message: "forbidden" });
     }
-    if (booking.bookingStatus !== "Pending") {
+    if (booking.bookingStatus !== "pending") {
       return res.status(400).json({ message: "Invalid booking status" });
     }
-    booking.bookingStatus = "Rejected";
+    booking.bookingStatus = "rejected";
     await booking.save();
 
     return res
