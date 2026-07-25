@@ -452,11 +452,11 @@ async function providerCompletedBooking(req, res) {
     if (booking.providerId.toString() !== providerId.toString()) {
       return res.status(403).json({ message: "forbidden" });
     }
-    if (booking.bookingStatus !== "Start") {
+    if (booking.bookingStatus !== "start") {
       return res.status(400).json({ message: "Invalid booking status" });
     }
 
-    booking.bookingStatus = "Completed";
+    booking.bookingStatus = "completed";
     await booking.save();
 
     return res
