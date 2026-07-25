@@ -407,7 +407,7 @@ async function providerStartBooking(req, res) {
     if (booking.providerId.toString() !== providerId.toString()) {
       return res.status(403).json({ message: "forbidden" });
     }
-    if (booking.bookingStatus !== "Accepted") {
+    if (booking.bookingStatus !== "accepted") {
       return res.status(400).json({ message: "Invalid booking status" });
     }
     const today = new Date();
@@ -421,7 +421,7 @@ async function providerStartBooking(req, res) {
         message: "Booking date is not today",
       });
     }
-    booking.bookingStatus = "Started";
+    booking.bookingStatus = "started";
     await booking.save();
 
     return res
