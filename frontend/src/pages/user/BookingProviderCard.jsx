@@ -1,7 +1,7 @@
 import React from "react";
 import { CiCalendar, CiClock2 } from "react-icons/ci";
 import { FaRegStarHalfStroke } from "react-icons/fa6";
-import { IoLocationOutline} from "react-icons/io5";
+import { IoLocationOutline } from "react-icons/io5";
 import { MdOutlinePlumbing } from "react-icons/md";
 import Button from "../../components/common/Button";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -151,9 +151,9 @@ const BookingProvider = ({ booking }) => {
         <span className="text-lg font-semibold flex items-center gap-1">
           Total Amount{" "}
           <p className="text-sm">
-            ( {booking.serviceSnapshot?.price}
-            <IoIosClose className="inline-block" size={20} />
-            {booking.durationHours})
+            {booking.providerSnapshot?.pricingType === "hourly"
+              ? `( ₹${booking.serviceSnapshot?.price} × ${booking.durationHours})`
+              : `( Fixed price )`}
           </p>
         </span>
         <div className="text-center">
@@ -200,17 +200,23 @@ const BookingProvider = ({ booking }) => {
             >
               Reschedule Booking
             </Button>
-            <Button color="success" fullWidth>
+            <Button color="danger" fullWidth>
               Cancel Booking
             </Button>
           </>
         ) : booking.bookingStatus === "in_progress" ? (
-          <Button disabled>Service In Progress</Button>
+          <Button disabled color="gray" fullWidth>
+            Service In Progress
+          </Button>
         ) : booking.bookingStatus === "completed" ? (
           booking.isReviewed ? (
-            <Button>Book Again</Button>
+            <Button color="blue" fullWidth>
+              Book Again
+            </Button>
           ) : (
-            <Button>Rate & Review</Button>
+            <Button color="purple" fullWidth>
+              Rate & Review
+            </Button>
           )
         ) : booking.bookingStatus === "cancelled" ||
           booking.bookingStatus === "rejected" ? (
