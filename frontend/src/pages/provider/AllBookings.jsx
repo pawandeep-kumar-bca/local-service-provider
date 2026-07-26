@@ -1,30 +1,10 @@
 import React, { useState } from "react";
-import { FaPaintRoller, FaRegCalendarMinus } from "react-icons/fa";
-import { IoIosChatboxes, IoMdCall } from "react-icons/io";
-import {
-  MdChevronLeft,
-  MdLocationPin,
-  MdOutlinePlumbing,
-} from "react-icons/md";
-import Button from "../../components/common/Button";
-import { PiNotePencilLight } from "react-icons/pi";
-import {
-  MdOutlineElectricalServices,
-  MdPestControl,
-  MdCleaningServices,
-  MdMiscellaneousServices,
-  MdOutlineCarpenter,
-} from "react-icons/md";
 
-import { TbAirConditioning, TbPaintFilled } from "react-icons/tb";
-import { BiMessageRoundedDetail } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
-import StatusBadge from "../../components/common/StatusBadge";
-import { LuClipboardList, LuDot } from "react-icons/lu";
-import { CiCalendar, CiLocationOn } from "react-icons/ci";
-import { IoMdCash } from "react-icons/io";
+import Button from "../../components/common/Button";
 import { useAllProviderBookings } from "../../hooks/useBooking";
 import UserCardBookings from "./UserCardBookings";
+import { MdChevronLeft } from "react-icons/md";
 const AllBookings = () => {
   const base =
     "whitespace-nowrap border shrink-0 transition-all duration-300 mb-2 px-5 py-2 rounded-xl font-semibold cursor-pointer";
