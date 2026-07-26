@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   createBooking,
+  getAllBookingsOfProvider,
   getAllBookingsOfUser,
 } from "../services/bookingService";
 
@@ -36,3 +37,14 @@ export const useAllUserBookings = () => {
     },
   });
 };
+
+export const useAllProviderBookings = ()=>{
+return useQuery({
+  queryKey:['provider-all-bookings'],
+  queryFn:getAllBookingsOfProvider,
+  onError:(err)=>{
+    console.log('Get all provider booking error:',err);
+    
+  }
+})
+}
