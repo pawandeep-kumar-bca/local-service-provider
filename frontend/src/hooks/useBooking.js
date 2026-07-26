@@ -1,6 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { createBooking } from "../services/bookingService";
+import { createBooking, getAllBookingOfUser } from "../services/bookingService";
 
 export const useBookingCreate = () => {
   const navigate = useNavigate();
@@ -24,3 +24,15 @@ export const useBookingCreate = () => {
 
   return {  createBookingMutation };
 };
+
+
+export const useAllUserBookings = ()=>{
+  return useQuery({
+  queryKey:['user-all-bookings'],
+  queryFn:getAllBookingOfUser,
+  onError:(err)=>{
+    console.log('Get all bookings of user error:',err);
+    
+  }
+})
+}
