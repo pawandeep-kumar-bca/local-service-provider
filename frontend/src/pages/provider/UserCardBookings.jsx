@@ -1,63 +1,82 @@
-import React from 'react'
+import React from "react";
+import StatusBadge from "../../components/common/StatusBadge";
+import Button from "../../components/common/Button";
+import { IoMdCall, IoMdCash } from "react-icons/io";
+import { BiMessageRoundedDetail } from "react-icons/bi";
+import { LuDot } from "react-icons/lu";
+import { CiCalendar, CiLocationOn } from "react-icons/ci";
+import { PiNotePencilLight } from "react-icons/pi";
+import { MdPayments } from "react-icons/md";
+import { FaMoneyBillWave } from "react-icons/fa6";
 
-const UserCardBookings = () => {
+const UserCardBookings = ({ booking }) => {
   return (
     <div
-                key={id}
-                className="border border-gray-200 bg-white rounded-2xl p-5
+      className="border border-gray-200 bg-white rounded-2xl p-5
     shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300"
-              >
-                {/* Top */}
-                <div className="flex justify-between items-start">
-                  <h1 className="text-lg font-bold text-text">{id}</h1>
+    >
+      {/* Top */}
+      <div className="flex justify-between items-start">
+        <h1 className="text-lg font-bold text-success">#{booking.bookingId}</h1>
 
-                  <StatusBadge badge={status} />
-                </div>
-                <p className="bg-red-50 text-red-500 px-2 py-1 text-xs font-semibold rounded mt-2 inline-block">
-                  If you are not accept your service scheduled expires in 50 min
-                </p>
-                {/* Divider */}
-                <div className="border-t border-gray-100 my-2"></div>
+        <StatusBadge badge={booking.bookingStatus} />
+      </div>
+      {booking.bookingStatus === "pending" && (
+        <p className="bg-red-50 text-red-500 px-2 py-1 text-xs font-semibold rounded mt-2 inline-block">
+          If you are not accept your service scheduled expires in 50 min
+        </p>
+      )}
+      {/* Divider */}
+      <div className="border-t border-gray-100 my-2"></div>
 
-                {/* Customer */}
-                <div className="flex justify-between items-center gap-3">
-                  <div className="flex gap-3 items-center">
-                    {/* Profile */}
-                    <div className="relative">
-                      <img
-                        src={customerImage}
-                        alt="profile"
-                        className="w-16 h-16 min-w-16 rounded-full object-cover
+      {/* Customer */}
+      <div className="flex justify-between items-center gap-3">
+        <div className="flex gap-3 items-center">
+          {/* Profile */}
+          <div className="relative">
+            <img
+              src={booking.userSnapshot?.profileImage?.url}
+              alt="profile Image"
+              className="w-16 h-16 min-w-16 rounded-full object-cover
             border-4 border-white shadow-md ring-2 ring-primary/10"
-                      />
+            />
 
-                      {/* Online Dot */}
-                      <div
-                        className="absolute bottom-1 right-1 w-4 h-4 rounded-full
+            {/* Online Dot */}
+            <div
+              className="absolute bottom-1 right-1 w-4 h-4 rounded-full
             bg-green-500 border-2 border-white"
-                      />
-                    </div>
+            />
+          </div>
 
-                    {/* Customer Info */}
-                    <div>
-                      <h1 className="text-lg md:text-xl font-semibold text-text">
-                        {customerName}
-                      </h1>
-                      {/* Payment */}
+          {/* Customer Info */}
+          <div>
+            <h1 className="text-lg md:text-xl font-semibold text-text">
+              {booking.userSnapshot?.name}
+            </h1>
+            {/* Payment */}
 
-                      <div className="flex items-center gap-1 mt-1">
-                        <span className="text-xs bg-gray-100 border-gray-300 flex items-center gap-1 py-1 px-2 rounded-sm border text-green-600">
-                          <IoMdCash size={16} /> <span>{paymentType}</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+            <div className="flex items-center gap-1 mt-2">
+              <span className="text-xs  flex items-center gap-1 py-1 px-2 rounded-sm border bg-gray-100 border-gray-300">
+                {booking.paymentMethod === "upi" ? (
+                  <MdPayments size={16} className="text-green-600   " />
+                ) : (
+                  <FaMoneyBillWave size={16} className="text-blue" />
+                )}{" "}
+                <span className="inline-block text-xs font-semibold">
+                  {booking.paymentMethod?.toUpperCase()}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
 
-                  {/* Actions */}
-                  <div className="flex gap-2">
-                    {/* Call */}
-                    <button
-                      className="
+        {/* Actions */}
+        {(booking.bookingStatus === "accepted" ||
+          booking.bookingStatus === "in_progress") && (
+          <div className="flex gap-2">
+            {/* Call */}
+            <button
+              className="
       flex items-center justify-center
       w-11 h-11 rounded-xl cursor-pointer
       bg-green-50 border border-green-300 text-green-600
@@ -65,13 +84,13 @@ const UserCardBookings = () => {
       hover:-translate-y-0.5
       transition-all duration-300
     "
-                    >
-                      <IoMdCall size={22} />
-                    </button>
+            >
+              <IoMdCall size={22} />
+            </button>
 
-                    {/* Chat */}
-                    <button
-                      className="
+            {/* Chat */}
+            <button
+              className="
       flex items-center justify-center
       w-11 h-11 rounded-xl cursor-pointer
       bg-blue-50 border border-blue-300 text-blue-600
@@ -79,107 +98,149 @@ const UserCardBookings = () => {
       hover:-translate-y-0.5
       transition-all duration-300
     "
-                    >
-                      <BiMessageRoundedDetail size={22} />
-                    </button>
-                  </div>
-                </div>
+            >
+              <BiMessageRoundedDetail size={22} />
+            </button>
+          </div>
+        )}
+      </div>
 
-                {/* Divider */}
-                <div className="border-t border-gray-100 my-2"></div>
+      {/* Divider */}
+      <div className="border-t border-gray-100 my-2"></div>
 
-                {/* Service */}
-                <div className="flex gap-3 items-center">
-                  {/* Icon */}
-                  <div
-                    className="w-16 h-16 rounded-2xl
-        bg-cyan-100 text-cyan-600
+      {/* Service */}
+      <div className="flex gap-3 items-center">
+        {/* Icon */}
+        <div
+          className="w-16 h-16 rounded-2xl
         flex items-center justify-center shrink-0"
-                  >
-                    <Icon size={28} />
-                  </div>
+          style={{
+            backgroundColor: booking.serviceSnapshot?.serviceBackground,
+          }}
+        >
+          <img
+            src={booking.serviceSnapshot?.serviceImage}
+            alt={booking.serviceSnapshot?.categoryName}
+            width={30}
+            height={30}
+          />
+        </div>
 
-                  {/* Service Info */}
-                  <div className="flex-1">
-                    <h3 className="text-lg md:text-xl font-semibold text-text">
-                      {serviceName}
-                    </h3>
+        {/* Service Info */}
+        <div className="flex-1">
+          <h3 className="text-lg md:text-xl font-semibold text-text">
+            {booking.serviceSnapshot?.categoryName}
+          </h3>
 
-                    <div className="flex items-center text-sm text-muted font-medium">
-                      <p>₹ {price}</p>
+          <div className="flex items-center text-sm text-muted font-medium">
+            <p>₹ {booking.pricing?.serviceCharge}</p>
 
-                      <span className="flex items-center">
-                        <LuDot size={20} />
-                        <p>{duration}</p>
-                      </span>
-                    </div>
+            <span className="flex items-center">
+              <LuDot size={20} />
+              <p>{booking.durationHours} hours</p>
+            </span>
+          </div>
 
-                    {/* Earnings */}
-                    <p className="text-sm text-green-600 font-semibold mt-1">
-                      You Earn ₹{earning}
-                    </p>
-                  </div>
-                </div>
+          {/* Earnings */}
+          <p className="text-sm text-green-600 font-semibold mt-1">
+            You Earn ₹ {booking.pricing?.providerPayout}
+          </p>
+        </div>
+      </div>
 
-                {/* Divider */}
-                <div className="border-t border-gray-100 my-2"></div>
+      {/* Divider */}
+      <div className="border-t border-gray-100 my-2"></div>
 
-                {/* Date & Time */}
-                <div className="flex gap-2 items-center">
-                  <CiCalendar
-                    size={22}
-                    className="text-muted mt-0.5 shrink-0"
-                  />
+      {/* Date & Time */}
+      <div className="flex gap-2 items-center">
+        <CiCalendar size={22} className="text-muted mt-0.5 shrink-0" />
 
-                  <span
-                    className="flex flex-wrap items-center
-        text-sm md:text-base font-medium text-gray-700"
-                  >
-                    <p>{serviceDate}</p>
+        <span
+          className="flex flex-wrap items-center
+        text-sm md:text-base font-semibold text-gray-600"
+        >
+          <p>
+            {new Date(booking.bookingDate).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
 
-                    <LuDot size={18} />
+          <LuDot size={18} />
 
-                    <p>
-                      {startTime} - {endTime}
-                    </p>
-                  </span>
-                </div>
+          <p>
+            {booking.bookingSlot?.startTime} - {booking.bookingSlot?.endTime}
+          </p>
+        </span>
+      </div>
 
-                {/* Address */}
-                <div className="flex gap-2 items-center mt-3">
-                  <CiLocationOn
-                    size={22}
-                    className="text-muted mt-0.5 shrink-0"
-                  />
+      {/* Address */}
+      <div className="flex gap-2 items-center mt-3">
+        <CiLocationOn size={22} className="text-muted mt-0.5 shrink-0" />
 
-                  <div>
-                    <p className="text-sm md:text-base font-medium text-gray-700">
-                      {address}
-                    </p>
+        <div>
+          <p className="text-sm md:text-base font-semibold text-gray-600">
+            {booking.serviceAddressSnapshot?.landmark &&
+              `${booking.serviceAddressSnapshot.landmark}, `}
+            {booking.serviceAddressSnapshot?.fullAddress}
+          </p>
+          <p className="text-xs md:text-sm text-gray-500">
+            {booking.serviceAddressSnapshot?.village} ,
+            {booking.serviceAddressSnapshot?.city} ,
+            {booking.serviceAddressSnapshot?.district} ,
+            {booking.serviceAddressSnapshot?.state}
+          </p>
 
-                    <p className="text-xs text-muted mt-1">{distance}</p>
-                  </div>
-                </div>
-                <div className="flex gap-2 items-center mt-3">
-                  <PiNotePencilLight
-                    size={22}
-                    className="text-muted mt-0.5 shrink-0"
-                  />
-                  <div>
-                    <p className="text-sm text-gray-700 text-semibold">Customer Note</p>
-                    <p className="text-xs text-gray-500">Please before comes in by home please call me. </p>
-                  </div>
-                </div>
-                {/* Bottom Buttons */}
-                <div className="flex  gap-3 mt-6">
-                  <Button fullWidth color="danger">
-                    Reject
-                  </Button>
+          {/* <p className="text-xs text-muted mt-1">{distance}</p> */}
+        </div>
+      </div>
+      {booking.notes && (
+        <div className="flex gap-2 items-center mt-3">
+          <PiNotePencilLight size={22} className="text-muted mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm text-gray-600 font-semibold">Customer Note</p>
+            <p className="text-xs text-gray-500">{booking.notes}</p>
+          </div>
+        </div>
+      )}
+      {/* Bottom Buttons */}
+      <div className="flex  gap-3 mt-6">
+        {booking.bookingStatus === "pending" ? (
+          <>
+            <Button fullWidth color="danger">
+              Reject
+            </Button>
+            <Button fullWidth>Accept</Button>
+          </>
+        ) : booking.bookingStatus === "accepted" ? (
+          <>
+            <Button fullWidth color="danger">
+              Cancel Booking
+            </Button>
+            <Button fullWidth color="blue">
+              Start Service
+            </Button>
+          </>
+        ) : booking.bookingStatus === "in_progress" ? (
+          <Button fullWidth color="blue">
+            Mark Completed
+          </Button>
+        ) : booking.bookingStatus === "completed" ? (
+          <Button fullWidth color="gray" disabled>
+            Completed ✅
+          </Button>
+        ) : (
+          // cancelled / rejected
+          <div className="text-sm text-gray-500">
+            {booking.bookingStatus === "cancelled"
+              ? booking.cancelReason
+              : booking.rejectReason}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
-                  <Button fullWidth>Accept</Button>
-                </div>
-              </div>
-  )
-}
-
-export default UserCardBookings
+export default UserCardBookings;
