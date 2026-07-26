@@ -1,5 +1,5 @@
 import React from 'react'
-import BookingProvider from "./BookingProvider";
+import BookingProviderCard from "./BookingProviderCard";
 import { useParams } from 'react-router-dom';
 const BookingList = () => {
     
@@ -214,7 +214,7 @@ const {status} = useParams()
     <>{(filteredBookings.length>0)?
     (<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
        {filteredBookings.map((item)=>(
-           <BookingProvider data={item} key={item.id}/>)
+           <BookingProviderCard data={item} key={item.id}/>)
       ) }
         
        </div>):(<div className="flex flex-col items-center justify-center py-16">
