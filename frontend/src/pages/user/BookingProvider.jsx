@@ -57,8 +57,7 @@ const BookingProvider = ({ data }) => {
           <button
             className="
               flex items-center justify-center w-10 h-10 
-              md:w-11 md:h-11 text-xl
- md:text-2xl rounded-xl cursor-pointer
+              md:w-11 md:h-11 text-xl md:text-2xl rounded-xl cursor-pointer
               bg-green-50 border border-green-300 text-green-600
               hover:bg-green-100
               hover:-translate-y-0.5
@@ -72,8 +71,7 @@ const BookingProvider = ({ data }) => {
             className="
               flex items-center justify-center
               w-10 h-10 
-              md:w-11 md:h-11 text-xl
- md:text-2xl rounded-xl cursor-pointer
+              md:w-11 md:h-11 text-xl md:text-2xl rounded-xl cursor-pointer
               bg-blue-50 border border-blue-300 text-blue-600
               hover:bg-blue-100
               hover:-translate-y-0.5
@@ -112,25 +110,33 @@ const BookingProvider = ({ data }) => {
               Vaishali Nagar, Jaipur
             </p>
           </div>
-          
         </div>
         <div className="flex gap-2 items-center">
-            <GiDuration size={20} className="text-muted mt-0.5 shrink-0"/>
-             <p className="text-sm md:text-base font-medium text-gray-700">
-              2 Hours
-            </p>
-          </div>
+          <GiDuration size={20} className="text-muted mt-0.5 shrink-0" />
+          <p className="text-sm md:text-base font-medium text-gray-700">
+            2 Hours
+          </p>
+        </div>
       </div>
       <div className="w-full border-t border-gray-200 my-3"></div>
       <div className="flex justify-between items-center">
-        <span className="text-lg font-semibold flex items-center gap-1">Total Amount <p className="text-sm">(250<IoIosClose className="inline-block" size={20}/>2)</p></span>
-       <div className="text-center">
-        <div >
-          {/* <span className="text-xs bg-green-50 py-1 px-2 border text-green-500 border-green-200 rounded mb-1 inline-block">Online Paid</span> */}
-          <span className="text-xs bg-blue-50 py-1 px-2 border text-blue-500 border-blue-200 rounded mb-1 inline-block md:font-semibold">Cash on Delivery</span>
+        <span className="text-lg font-semibold flex items-center gap-1">
+          Total Amount{" "}
+          <p className="text-sm">
+            (250
+            <IoIosClose className="inline-block" size={20} />
+            2)
+          </p>
+        </span>
+        <div className="text-center">
+          <div>
+            {/* <span className="text-xs bg-green-50 py-1 px-2 border text-green-500 border-green-200 rounded mb-1 inline-block">Online Paid</span> */}
+            <span className="text-xs bg-blue-50 py-1 px-2 border text-blue-500 border-blue-200 rounded mb-1 inline-block md:font-semibold">
+              Cash on Delivery
+            </span>
+          </div>
+          <span className="text-sm font-semibold text-green-600">₹ 500</span>
         </div>
-         <span className="text-sm font-semibold text-green-600">₹ 500</span>
-       </div>
       </div>
       <div className="flex gap-2 items-center w-full mb-4 mt-5">
         <Button
