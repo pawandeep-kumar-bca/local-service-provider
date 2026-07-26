@@ -6,7 +6,12 @@ export const createBooking = async (payload) => {
   return response.data;
 };
 
-export const getAllBookingOfUser = async ()=>{
+export const getAllBookingsOfUser = async ()=>{
   const response = await api.get('/bookings/user')
+  return response.data
+}
+
+export const getAllBookingsOfProvider = async ()=>{
+  const response = await api.get('/bookings/provider')
   return response.data
 }
