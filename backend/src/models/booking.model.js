@@ -219,7 +219,7 @@ const bookingsSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Provider",
       },
-
+      pricingType:String,
       name: String,
       availability: Boolean,
       phone: String,

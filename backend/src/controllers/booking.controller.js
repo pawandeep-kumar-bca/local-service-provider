@@ -6,7 +6,7 @@ const stateModel = require("../models/State.model");
 const districtModel = require("../models/district.model");
 const cityModel = require("../models/city.model");
 const generateBookingId = require("../utils/generateBookingId");
-const{ calculatePricing }= require('../utils/calculatePricing')
+const { calculatePricing } = require("../utils/calculatePricing");
 // Converts "10:30 AM" / "02:00 PM" style strings into total minutes since midnight
 function parseTimeToMinutes(timeStr) {
   const [time, meridian] = timeStr.trim().split(" ");
@@ -159,7 +159,7 @@ async function userBookingCreate(req, res) {
       serviceCharge = provider.pricing.price;
     }
     const discount = 0;
-   const pricing = calculatePricing(serviceCharge,discount);
+    const pricing = calculatePricing(serviceCharge, discount);
     // ---------- Create booking ----------
     const bookingId = await generateBookingId();
 
@@ -176,8 +176,8 @@ async function userBookingCreate(req, res) {
       serviceSnapshot: {
         categoryName: categoryExist.name,
         price: provider.pricing.price,
-        serviceImage:categoryExist.icon.url,
-        serviceBackground:categoryExist.backgroundColor
+        serviceImage: categoryExist.icon.url,
+        serviceBackground: categoryExist.backgroundColor,
       },
       providerSnapshot: {
         providerId: provider._id,
@@ -185,7 +185,8 @@ async function userBookingCreate(req, res) {
         phone: provider.userId.phoneNumber,
         rating: provider.rating,
         totalReview: provider.totalReview,
-        availability:provider.availability,
+        availability: provider.availability,
+        pricingType: provider.pricing?.priceType,
         profileImage: {
           url: provider.userId.profileImage?.url || "",
           fileId: provider.userId.profileImage?.fileId || "",
@@ -240,12 +241,13 @@ async function userBookingCreate(req, res) {
 
 async function getUserAllBooking(req, res) {
   try {
-    
     const userId = req.user.id;
 
     const allBookings = await bookingsModel
       .find({ userId })
-      .select('bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot')
+      .select(
+        "bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot serviceType",
+      );
     if (allBookings.length === 0) {
       return res
         .status(200)
@@ -259,31 +261,35 @@ async function getUserAllBooking(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
- async function getAllProviderBooking(req,res) {
-  try{
-   const providerId = req.user.id
+async function getAllProviderBooking(req, res) {
+  try {
+    const providerId = req.provider._id;
 
-   const allBookings = await bookingsModel.find({providerId}).select('bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType')
+    const allBookings = await bookingsModel
+      .find({ providerId })
+      .select(
+        "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType",
+      );
 
-   if(allBookings.length === 0){
+    if (allBookings.length === 0) {
+      return res.status(200).json({
+        status: true,
+        message: "bookings not found",
+        allBookings: [],
+      });
+    }
     return res.status(200).json({
-      status:true,
-      message:'bookings not found',
-      allBookings:[]
-    })
-   }
-   return res.status(200).json({
-    status:true,
-    message:'All bookings fetch successfully',
-    allBookings
-   })
-  }catch(err){
-    console.error('Get all provider booking error',err);
+      status: true,
+      message: "All bookings fetch successfully",
+      allBookings,
+    });
+  } catch (err) {
+    console.error("Get all provider booking error", err);
     return res.status(500).json({
-      message:'Internal server error'
-    })
+      message: "Internal server error",
+    });
   }
- }
+}
 async function getUserOneBooking(req, res) {
   try {
     const bookingId = req.params.id;

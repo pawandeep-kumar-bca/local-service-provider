@@ -53,8 +53,7 @@ async function createOrder(req, res) {
 
       booking.paymentMethod = "cod";
       booking.paymentStatus = "pending";
-      booking.bookingStatus = "accepted"; // COD booking is confirmed immediately, no gateway to wait for
-      booking.acceptedAt = new Date();
+      
       await booking.save();
 
       return res.status(201).json({
@@ -166,8 +165,7 @@ async function verifyPayment(req, res) {
 
       // NOTE: "success" — must match bookingModel.paymentStatus enum exactly
       booking.paymentStatus = "success";
-      booking.bookingStatus = "accepted"; // this is bookingStatus, "accepted" is valid there
-      booking.acceptedAt = new Date();
+     
 
       booking.payment.paymentId = razorpayPaymentId;
       booking.payment.orderId = razorpayOrderId;
@@ -268,8 +266,7 @@ async function razorpayWebhook(req, res) {
       await payment.save();
 
       booking.paymentStatus = "success";
-      booking.bookingStatus = "accepted";
-      booking.acceptedAt = new Date();
+      
 
       booking.payment.paymentId = entity.id;
       booking.payment.orderId = entity.order_id;
