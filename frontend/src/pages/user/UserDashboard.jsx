@@ -14,7 +14,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Cards from "../../components/common/Cards";
-import FilterProviders from "./FilterProviders";
+
 import { useState } from "react";
 import Button from "../../components/common/Button";
 import { MdVerifiedUser } from "react-icons/md";
@@ -149,11 +149,7 @@ const UserDashboard = () => {
                 </Link>
               </div>
 
-              <FilterProviders
-                url="user/dashboard"
-                filters={filters}
-                setFilters={setFilters}
-              />
+             
             </div>
           </>
         )}
