@@ -29,16 +29,18 @@ const reviewSchema = new mongoose.Schema(
       maxlength: 200,
       minlength: 10,
     },
-    image: {
-      url: {
-        type: String,
-        default: "",
+    images: [
+      {
+        url: {
+          type: String,
+          default: "",
+        },
+        fileId: {
+          type: String,
+          default: "",
+        },
       },
-      fileId: {
-        type: String,
-        default: "",
-      },
-    },
+    ],
   },
   { timestamps: true },
 );

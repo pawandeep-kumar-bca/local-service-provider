@@ -2,12 +2,13 @@ const express = require('express')
 const reviewController = require('../controllers/review.controller')
 const authMiddleware = require('../middlewares/auth.middleware')
 const validateObjectId = require('../middlewares/validateObjectId.middleware')
+const { imageUpload } = require('../middlewares/upload.middleware')
 const router = express.Router()
 
 
-router.post('/:bookingId',
+router.post('/create-review',
   authMiddleware.tokenVerify,
-  validateObjectId('bookingId'),
+  imageUpload.fields([{name:'ReviewImage',maxCount:5}]),
   reviewController.reviewCreate
 )
  

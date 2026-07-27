@@ -1,10 +1,11 @@
 const reviewModel = require("../models/review.model");
+const providerModel = require("../models/provider.model");
 const bookingModel = require("../models/booking.model");
+const { uploadFile } = require("../config/imagekit");
 
 async function reviewCreate(req, res) {
   try {
-    const { rating, comment } = req.body;
-    const bookingId = req.params.bookingId;
+    const { rating, comment, bookingId } = req.body;
     const userId = req.user.id;
 
     if (!rating || rating < 1 || rating > 5) {
@@ -12,12 +13,20 @@ async function reviewCreate(req, res) {
         .status(400)
         .json({ message: "Rating must be between 1 and 5" });
     }
+    const trimmedComment = comment?.trim();
+
+    if (trimmedComment && trimmedComment.length < 10) {
+      return res.status(400).json({
+        message: "Comment must be at least 10 characters",
+      });
+    }
     const booking = await bookingModel.findById(bookingId);
     if (!booking) {
       return res
         .status(404)
         .json({ message: "Booking not found", booking: [] });
     }
+
     if (booking.userId.toString() !== userId.toString()) {
       return res.status(403).json({ message: "Unauthorized" });
     }
@@ -28,20 +37,65 @@ async function reviewCreate(req, res) {
     if (reviewAlreadyExists) {
       return res.status(400).json({ message: "Review already submitted" });
     }
+    const providerId = booking.providerId;
+    const reviewImages = req.files?.images
+      ? await Promise.all(
+          req.files.images.map((image) =>
+            uploadFile(
+              image,
+              `review-${Date.now()}-${image.originalname}`,
+              "ReviewImages",
+            ),
+          ),
+        )
+      : [];
     const review = await reviewModel.create({
       userId,
       bookingId,
-      providerId: booking.providerId,
+      providerId,
       rating,
-      comment: comment?.trim(),
+      comment: trimmedComment,
+      images: reviewImages,
+    });
+    const reviewStats = await reviewModel.aggregate([
+      {
+        $match: {
+          providerId: providerId,
+        },
+      },
+      {
+        $group: {
+          _id: "$providerId",
+          averageRating: {
+            $avg: "$rating",
+          },
+          totalReviews: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+    await bookingModel.findByIdAndUpdate(bookingId, {
+      isReview: true,
+    });
+    const stats = reviewStats[0] || {
+      averageRating: 0,
+      totalReviews: 0,
+    };
+    await providerModel.findByIdAndUpdate(providerId, {
+      rating: stats.averageRating,
+      totalReview: stats.totalReviews,
     });
     return res.status(201).json({
+      success: true,
       message: "Review created successfully",
       review,
     });
   } catch (err) {
     console.error("Review create error:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 }
 
@@ -62,14 +116,12 @@ async function providerReview(req, res) {
         reviews: [],
       });
     }
-    return res
-      .status(200)
-      .json({
-        message: "provider review fetch successfully",
-        providerId,
-        totalReview: reviews.length,
-        reviews,
-      });
+    return res.status(200).json({
+      message: "provider review fetch successfully",
+      providerId,
+      totalReview: reviews.length,
+      reviews,
+    });
   } catch (err) {
     console.error("provider review error:", err);
     return res.status(500).json({ message: "Internal server error" });
