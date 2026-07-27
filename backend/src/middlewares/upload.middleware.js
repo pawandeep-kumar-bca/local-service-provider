@@ -2,44 +2,49 @@ const multer = require("multer");
 
 const storage = multer.memoryStorage();
 
-const fileFilter = (req, file, cb) => {
-  if (
-    file.fieldname === "profileImage" ||
-    file.fieldname === "icon"
-  ) {
-    const allowed = ["image/jpeg", "image/png", "image/jpg", "image/svg+xml"];
+const imageTypes = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/svg+xml",
+];
 
-    if (allowed.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Image must be jpg, png or svg"), false);
-    }
-  } else if (
-    file.fieldname === "aadharCard" ||
-    file.fieldname === "certificate"
-  ) {
-    const allowed = [
-      "image/jpeg",
-      "image/png",
-      "image/jpg",
-      "application/pdf",
-    ];
+const documentTypes = [
+  ...imageTypes,
+  "application/pdf",
+];
 
-    if (allowed.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Documents must be jpg, png or pdf"), false);
-    }
-  } else {
-    cb(new Error("Invalid file field"), false);
-  }
-};
-const upload = multer({
+// Image Upload Middleware
+const imageUpload = multer({
   storage,
   limits: {
     fileSize: 5 * 1024 * 1024,
   },
-  fileFilter,
+  fileFilter: (req, file, cb) => {
+    if (imageTypes.includes(file.mimetype)) {
+      return cb(null, true);
+    }
+
+    cb(new Error("Only JPG, PNG and SVG images are allowed"), false);
+  },
 });
 
-module.exports = upload;
+// Document Upload Middleware
+const documentUpload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+  fileFilter: (req, file, cb) => {
+    if (documentTypes.includes(file.mimetype)) {
+      return cb(null, true);
+    }
+
+    cb(new Error("Only JPG, PNG images and PDF files are allowed"), false);
+  },
+});
+
+module.exports = {
+  imageUpload,
+  documentUpload,
+};

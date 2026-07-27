@@ -4,16 +4,15 @@ const providerMiddleware = require("../middlewares/auth.middleware");
 const roleBased = require("../middlewares/role.middleware");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
 const { categoryValidator } = require("../validators/categoryValidator");
-const upload = require("../middlewares/upload.middleware");
+const { imageUpload } = require("../middlewares/upload.middleware");
 const routes = express.Router();
 
-routes.post(
+router.post(
   "/",
-  providerMiddleware.tokenVerify,
-  upload.fields([{ name: "icon", maxCount: 1 }]),
+  authMiddleware.tokenVerify,
   roleBased("admin"),
+  imageUpload.fields([{ name: "icon", maxCount: 1 }]),
   categoryValidator,
-
   adminControllers.createCategory,
 );
 routes.get("/", adminControllers.getCategory);

@@ -47,7 +47,7 @@ async function createCategory(req, res) {
 
 const getCategory = async (req, res) => {
   try {
-    const { search, category, page = 1, limit = 10 } = req.query;
+    const { search, category, page = 1, limit = 12 } = req.query;
 
     const skip = (Number(page) - 1) * Number(limit);
 

@@ -21,7 +21,7 @@ async function reviewCreate(req, res) {
     if (booking.userId.toString() !== userId.toString()) {
       return res.status(403).json({ message: "Unauthorized" });
     }
-    if (booking.bookingStatus !== "Completed") {
+    if (booking.bookingStatus !== "completed") {
       return res.status(400).json({ message: "Booking not completed" });
     }
     const reviewAlreadyExists = await reviewModel.findOne({ bookingId });

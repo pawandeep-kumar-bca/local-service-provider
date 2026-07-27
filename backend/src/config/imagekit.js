@@ -5,7 +5,8 @@ const imagekit = new ImageKit({
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
 });
 
-const uploadImage = async (file, fileName, folder) => {
+// Upload File
+const uploadFile = async (file, fileName, folder) => {
   try {
     const result = await imagekit.files.upload({
       file: await toFile(file.buffer, file.originalname),
@@ -18,13 +19,24 @@ const uploadImage = async (file, fileName, folder) => {
       fileId: result.fileId,
     };
   } catch (error) {
-    console.error("ImageKit Error:", error);
+    console.error("ImageKit Upload Error:", error);
     throw error;
   }
 };
-const deleteImage = async (fileId) => {
+
+// Delete File
+const deleteFile = async (fileId) => {
   if (!fileId) return;
 
-  await imagekit.files.delete(fileId);
+  try {
+    await imagekit.files.delete(fileId);
+  } catch (error) {
+    console.error("ImageKit Delete Error:", error);
+    throw error;
+  }
 };
-module.exports = {uploadImage,deleteImage};
+
+module.exports = {
+  uploadFile,
+  deleteFile,
+};
