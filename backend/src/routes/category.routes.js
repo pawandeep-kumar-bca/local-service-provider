@@ -5,7 +5,8 @@ const roleBased = require("../middlewares/role.middleware");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
 const { categoryValidator } = require("../validators/categoryValidator");
 const { imageUpload } = require("../middlewares/upload.middleware");
-const routes = express.Router();
+const authMiddleware = require("../middlewares/auth.middleware");
+const router = express.Router();
 
 router.post(
   "/",
@@ -15,16 +16,16 @@ router.post(
   categoryValidator,
   adminControllers.createCategory,
 );
-routes.get("/", adminControllers.getCategory);
+router.get("/", adminControllers.getCategory);
 
-routes.put(
+router.put(
   "/:id",
   providerMiddleware.tokenVerify,
   validateObjectId("id"),
   roleBased("admin"),
   adminControllers.updateCategory,
 );
-routes.delete(
+router.delete(
   "/:id",
   providerMiddleware.tokenVerify,
   validateObjectId("id"),
@@ -32,4 +33,4 @@ routes.delete(
   adminControllers.deleteCategory,
 );
 
-module.exports = routes;
+module.exports = router;
