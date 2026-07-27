@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { CiCalendar, CiClock2 } from "react-icons/ci";
 import { FaRegStarHalfStroke } from "react-icons/fa6";
 import { IoLocationOutline } from "react-icons/io5";
@@ -10,10 +10,15 @@ import { BiMessageRoundedDetail } from "react-icons/bi";
 import { IoIosClose, IoMdCall } from "react-icons/io";
 import { LuDot } from "react-icons/lu";
 import { GiDuration } from "react-icons/gi";
+import ReviewForm from "./ReviewForm";
 const BookingProvider = ({ booking }) => {
   const navigate = useNavigate();
-
+  const [openReview ,setOpenReview] = useState(null)
+  const handleReview = ()=>{
+    setOpenReview(booking)
+  }
   return (
+    <>
     <div className="bg-bg backdrop-blur-sm border border-muted bg-white hover:scale-[1.02] ease-in-out shadow-[0_5px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)] transition-all duration-300  rounded-lg p-3">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-lg font-bold text-success">#{booking.bookingId}</h1>
@@ -214,7 +219,7 @@ const BookingProvider = ({ booking }) => {
               Book Again
             </Button>
           ) : (
-            <Button color="purple" fullWidth>
+            <Button color="purple" fullWidth onClick={handleReview} >
               Rate & Review
             </Button>
           )
@@ -228,6 +233,8 @@ const BookingProvider = ({ booking }) => {
         ) : null}
       </div>
     </div>
+    {openReview && <ReviewForm booking={openReview} close={()=>setOpenReview(null)}/>}
+    </>
   );
 };
 
