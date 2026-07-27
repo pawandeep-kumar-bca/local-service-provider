@@ -3,6 +3,7 @@ const bookingModel = require("../models/booking.model");
 const razorpay = require("../config/razorpay");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
+const UserModel = require("../models/User.model");
 
 // ✅ CREATE ORDER (handles both COD and UPI)
 async function createOrder(req, res) {
@@ -53,7 +54,7 @@ async function createOrder(req, res) {
 
       booking.paymentMethod = "cod";
       booking.paymentStatus = "pending";
-      
+
       await booking.save();
 
       return res.status(201).json({
@@ -165,7 +166,6 @@ async function verifyPayment(req, res) {
 
       // NOTE: "success" — must match bookingModel.paymentStatus enum exactly
       booking.paymentStatus = "success";
-     
 
       booking.payment.paymentId = razorpayPaymentId;
       booking.payment.orderId = razorpayOrderId;
@@ -266,7 +266,6 @@ async function razorpayWebhook(req, res) {
       await payment.save();
 
       booking.paymentStatus = "success";
-      
 
       booking.payment.paymentId = entity.id;
       booking.payment.orderId = entity.order_id;
@@ -328,10 +327,57 @@ async function paymentHistory(req, res) {
   }
 }
 
+async function userPaymentHistory(req, res) {
+  try {
+    const userId = req.user.id;
+
+    const userExists = await UserModel.findById(userId);
+
+    if (!userExists) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const paymentHistory = await paymentModel
+      .find({ userId })
+      .select("providerId createdAt amount paymentStatus receipt")
+      .populate({
+        path: "providerId",
+        select: "userId",
+        populate: {
+          path: "userId",
+          select: "fullname",
+        },
+      });
+    if (paymentHistory.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No payment history found",
+        paymentHistory: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User payment history fetched successfully",
+      paymentHistory,
+    });
+  } catch (err) {
+    console.error("User payment history error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   createOrder,
   verifyPayment,
   markPaymentFailed,
   razorpayWebhook,
   paymentHistory,
+  userPaymentHistory,
 };

@@ -13,5 +13,10 @@ router.get(
   authMiddleware.tokenVerify,
   paymentController.paymentHistory,
 );
+router.get(
+  "/user/payment-history",
+  authMiddleware.tokenVerify,
+  paymentController.userPaymentHistory,
+);
 
 module.exports = router;
