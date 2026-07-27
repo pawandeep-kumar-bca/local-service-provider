@@ -5,11 +5,16 @@ const Button = ({
   color = "success",
   loading = false,
   type='submit',
+  size='sm',
   ...props
 }) => {
   const base =
-    "py-2 md:py-2 lg:py-2 px-6 md:px-4 flex items-center justify-center gap-2 font-roboto rounded-xl cursor-pointer font-medium shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-95 text-lg md:text-base whitespace-nowrap";
-
+    "py-2 flex items-center justify-center gap-2 font-roboto rounded-xl cursor-pointer font-medium shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-95 text-lg md:text-base whitespace-nowrap";
+const sizes = {
+  sm: "px-4",
+  md: "px-8",
+  lg: "px-12",
+};
   const colors = {
   success:
     "bg-green-600 text-white hover:bg-green-700",
@@ -39,7 +44,7 @@ const Button = ({
     <button
       type={type}
       disabled={loading || props.disabled}
-      className={`${base} ${width} ${
+      className={`${sizes[size]} ${base} ${width} ${
         colors[color] || colors.success
       } ${className}`}
       {...props}

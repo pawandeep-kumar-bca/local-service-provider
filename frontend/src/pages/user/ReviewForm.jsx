@@ -3,7 +3,7 @@ import Button from "../../components/common/Button";
 import { IoCameraOutline } from "react-icons/io5";
 import { useState } from "react";
 
-const ReviewForm = ({ close }) => {
+const ReviewForm = ({booking, close }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
@@ -21,7 +21,7 @@ const ReviewForm = ({ close }) => {
       >
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-2xl font-semibold mb-1">Leave a Review</h1>
+          <h1 className="text-2xl font-semibold mb-1">{booking._id}Leave a Review</h1>
           <p className="text-text">
             Your feedback helps us improve our service quality
           </p>
@@ -57,16 +57,17 @@ const ReviewForm = ({ close }) => {
               name="comment"
               placeholder="Write your comments here..."
               rows={4}
-              maxLength={500}
+              maxLength={200}
+              minLength={10}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
             <p
               className={`text-right mt-2 text-xs font-medium ${
-                comment.length >= 450 ? "text-red-500" : "text-gray-500"
+                comment.length >= 150 ? "text-red-500" : "text-gray-500"
               }`}
             >
-              {comment.length}/500
+              {comment.length}/200
             </p>
           </div>
           <div>
