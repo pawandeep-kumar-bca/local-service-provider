@@ -54,7 +54,6 @@ const getCategory = async (req, res) => {
     // ==========================
     // Filter
     // ==========================
-    
 
     const filter = {};
     if (category && category !== "all") {
@@ -83,40 +82,34 @@ const getCategory = async (req, res) => {
     // Provider Count Aggregation
     // ==========================
 
-    const providerCounts = await providerModel.aggregate([
-      {
-        $match: {
-          status: "approved",
-        },
-      },
-      {
-        $unwind: "$categories",
-      },
+    const priceStats = await providerModel.aggregate([
+      { $match: { status: "approved" } },
+      { $unwind: "$categories" },
       {
         $group: {
-          _id: "$categories",
-          providers: {
-            $sum: 1,
-          },
+          _id: "$categories.category",
+          minPrice: { $min: "$categories.pricing.price" },
+          providers: { $sum: 1 },
+          avgResponseTime: { $avg: "$responseTime" },
         },
       },
     ]);
 
-    // Convert array to object
-
     const providerMap = {};
-
-    providerCounts.forEach((item) => {
-      providerMap[item._id.toString()] = item.providers;
+    priceStats.forEach((item) => {
+      providerMap[item._id.toString()] = {
+        minPrice: item.minPrice,
+        providers: item.providers,
+        avgResponseTime:item.avgResponseTime
+      };
     });
-
-    // Merge Provider Count
 
     const categoriesWithProviders = categories.map((category) => ({
       ...category,
-      providers: providerMap[category._id.toString()] || 0,
+      providers: providerMap[category._id.toString()]?.providers || 0,
+      startingPrice: providerMap[category._id.toString()]?.minPrice || 0,
+      avgResponseTime: providerMap[category._id.toString()]?.avgResponseTime || 0,
     }));
-
     // ==========================
     // Response
     // ==========================

@@ -2,4 +2,5 @@ node_modules/
 .env
 seedData.js
 seedLocations.js
+migrate.js
 india.json

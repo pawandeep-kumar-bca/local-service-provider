@@ -1,135 +1,137 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
-const providerSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      unique: true,
-    },
+// const providerSchema = new mongoose.Schema(
+//   {
+//     userId: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "User",
+//       required: true,
+//       unique: true,
+//     },
 
-    pricing: {
-      priceType: {
-        type: String,
-        enum: ["fixed", "hourly"],
-        default: "hourly",
-      },
-      price: {
-        type: Number,
-        required: true,
-      },
-    },
-    verifiedByAdmin: {
-      type: Boolean,
-      default: false,
-    },
-    experience: {
-      type: Number,
-      required: true,
-    },
-    documents: {
-      aadharCard: {
-        url: String,
-        fileId: String,
-      },
-      certificate: {
-        url: String,
-        fileId: String,
-      },
-    },
+//     verifiedByAdmin: {
+//       type: Boolean,
+//       default: false,
+//     },
+//     experience: {
+//       type: Number,
+//       required: true,
+//     },
+//     documents: {
+//       aadharCard: {
+//         url: String,
+//         fileId: String,
+//       },
+//       certificate: {
+//         url: String,
+//         fileId: String,
+//       },
+//     },
 
-    status: {
-      type: String,
-      enum: ["pending", "approved", "rejected"],
-      default: "pending",
-    },
+//     status: {
+//       type: String,
+//       enum: ["pending", "approved", "rejected"],
+//       default: "pending",
+//     },
 
-    rating: {
-      type: Number,
-      default: 0,
-    },
+//     rating: {
+//       type: Number,
+//       default: 0,
+//     },
 
-    totalReview: {
-      type: Number,
-      default: 0,
-    },
+//     totalReview: {
+//       type: Number,
+//       default: 0,
+//     },
 
-    completedJobs: {
-      type: Number,
-      default: 0,
-    },
+//     completedJobs: {
+//       type: Number,
+//       default: 0,
+//     },
 
-    availability: {
-      type: Boolean,
-      default: true,
-    },
+//     availability: {
+//       type: Boolean,
+//       default: true,
+//     },
 
-    responseTime: {
-      type: String,
-      default: "30 mins",
-    },
+//     responseTime: {
+//       type: Number,
+//       default: 30,
+//     },
 
-    topRated: {
-      type: Boolean,
-      default: false,
-    },
+//     topRated: {
+//       type: Boolean,
+//       default: false,
+//     },
 
-    trusted: {
-      type: Boolean,
-      default: false,
-    },
+//     trusted: {
+//       type: Boolean,
+//       default: false,
+//     },
 
-    location: {
-      type: {
-        type: String,
-        enum: ["Point"],
-        default: "Point",
-      },
+//     location: {
+//       type: {
+//         type: String,
+//         enum: ["Point"],
+//         default: "Point",
+//       },
 
-      coordinates: {
-        type: [Number],
-        required: true, // [longitude, latitude]
-      },
+//       coordinates: {
+//         type: [Number],
+//         required: true, // [longitude, latitude]
+//       },
 
-      state: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "State",
-        required: true,
-      },
+//       state: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "State",
+//         required: true,
+//       },
 
-      district: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "District",
-        required: true,
-      },
+//       district: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "District",
+//         required: true,
+//       },
 
-      city: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "City",
-        required: true,
-      },
+//       city: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "City",
+//         required: true,
+//       },
 
-      village: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-    },
+//       village: {
+//         type: String,
+//         required: true,
+//         trim: true,
+//       },
+//     },
 
-    categories: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-        required: true,
-      },
-    ],
-  },
-  { timestamps: true },
-);
+//     categories: [
+//       {
+//         category: {
+//           type: mongoose.Schema.Types.ObjectId,
+//           ref: "Category",
+//           required: true,
+//         },
+//         pricing: {
+//           priceType: {
+//             type: String,
+//             enum: ["fixed", "hourly"],
+//             default: "hourly",
+//           },
+//           price: {
+//             type: Number,
+//             required: true,
+//           },
+//         },
+//       },
+//     ],
+//   },
+//   { timestamps: true },
+// );
 
-providerSchema.index({
-  location: "2dsphere",
-});
+// providerSchema.index({
+//   location: "2dsphere",
+// });
 
-module.exports = mongoose.model("Provider", providerSchema);
+// module.exports = mongoose.model("Provider", providerSchema);
