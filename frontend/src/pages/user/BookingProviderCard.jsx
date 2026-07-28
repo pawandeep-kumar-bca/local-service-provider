@@ -233,7 +233,7 @@ const BookingProvider = ({ booking }) => {
         ) : null}
       </div>
     </div>
-    {openReview && <ReviewForm booking={openReview} close={()=>setOpenReview(null)}/>}
+    {openReview && <ReviewForm booking={openReview} setOpenReview={setOpenReview}/>}
     </>
   );
 };
