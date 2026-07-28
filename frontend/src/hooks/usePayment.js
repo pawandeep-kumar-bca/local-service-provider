@@ -1,8 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   paymentCreate,
   paymentVerify,
   paymentMarkFailed,
+  userPaymentHistory,
 } from "../services/paymentService";
 
 export const usePayment = () => {
@@ -42,3 +43,14 @@ export const usePayment = () => {
     markPaymentFailedMutation,
   };
 };
+
+export const useUserPaymentHistory =()=>{
+  return useQuery({
+    queryKey:['user-payment-history'],
+    queryFn:userPaymentHistory,
+    onError:(err)=>{
+      console.error("User payment history Error",err);
+      
+    }
+  })
+}
