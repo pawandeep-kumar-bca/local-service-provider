@@ -11,7 +11,7 @@ router.post('/create-review',
   imageUpload.fields([{name:'ReviewImage',maxCount:5}]),
   reviewController.reviewCreate
 )
- 
+ router.get('/user/review-history',authMiddleware.tokenVerify,reviewController.getAllReviewOfUser)
 router.get('/provider/:providerId',
   authMiddleware.tokenVerify,
   validateObjectId('providerId'),

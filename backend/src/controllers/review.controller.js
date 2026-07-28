@@ -21,6 +21,7 @@ async function reviewCreate(req, res) {
       });
     }
     const booking = await bookingModel.findById(bookingId);
+
     if (!booking) {
       return res
         .status(404)
@@ -37,10 +38,11 @@ async function reviewCreate(req, res) {
     if (reviewAlreadyExists) {
       return res.status(400).json({ message: "Review already submitted" });
     }
-    const providerId = booking.providerId;
-    const reviewImages = req.files?.images
+    const providerId = booking.providerSnapshot?.providerId;
+    
+    const reviewImages = req.files?.ReviewImage
       ? await Promise.all(
-          req.files.images.map((image) =>
+          req.files.ReviewImage.map((image) =>
             uploadFile(
               image,
               `review-${Date.now()}-${image.originalname}`,
@@ -76,7 +78,7 @@ async function reviewCreate(req, res) {
       },
     ]);
     await bookingModel.findByIdAndUpdate(bookingId, {
-      isReview: true,
+      isReviewed: true,
     });
     const stats = reviewStats[0] || {
       averageRating: 0,
@@ -98,7 +100,47 @@ async function reviewCreate(req, res) {
       .json({ success: false, message: "Internal server error" });
   }
 }
+async function getAllReviewOfUser(req,res){
+  try{
+    const userId = req.user.id
 
+    const allReviews = await reviewModel.find({userId}).select('bookingId providerId comment rating createdAt images').populate({
+      path:'providerId',
+      select:'userId',
+      populate:{
+        path:'userId',
+        select:'fullname'
+      }
+    }).populate({
+      path:'bookingId',
+      select:'categoryId',
+      populate:{
+        path:'categoryId',
+        select:'name'
+      }
+    }).sort({createdAt:-1})
+    if(allReviews.length === 0){
+      return res.status(200).json({
+        success:true,
+        message:'No reviews found',
+        allReviews:[]
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      message:"All reviews fetched successfully",
+      allReviews,
+      totalReviews:allReviews.length
+    })
+  }catch(err){
+    console.error('get all review of user error:',err);
+    return res.status(500).json({
+      success:false,
+      message:'Internal server error'
+    })
+    
+  }
+}
 async function providerReview(req, res) {
   try {
     const providerId = req.params.providerId;
@@ -160,4 +202,5 @@ module.exports = {
   reviewCreate,
   providerReview,
   deleteReview,
+  getAllReviewOfUser
 };
