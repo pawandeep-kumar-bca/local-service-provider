@@ -6,7 +6,7 @@ import RoleRoute from "./RoleRoute";
 import UserDashboard from "../pages/user/UserDashboard";
 import MyBookingsPage from "../pages/user/MyBookingsPage";
 // import SavedProviders from "../pages/user/SavedProvi;ders"
-import PaymentHistory from "../pages/user/PaymentHistory";
+import PaymentHistoryList from "../pages/user/PaymentHistoryList";
 import AllReviews from "../pages/user/AllReviews";
 import Support from "../pages/user/Support";
 import ProfileSettings from "../pages/user/ProfileSettings";
@@ -35,7 +35,7 @@ import UserSetting from "../pages/user/UserSetting";
 import ViewAllProviders from "../pages/user/ViewAllProviders";
 import PaymentInfo from "../pages/user/PaymentInfo";
 import BookingList from "../pages/user/BookingList";
-import PaymentList from "../pages/user/PaymentList";
+// import PaymentList from "../pages/user/PaymentList";
 import OurServices from "../pages/user/OurServices";
 import ProviderDetail from "../pages/BookingProviders/ProviderDetail";
 import BecomeProvider from "../pages/BecomeProviderPages/BecomeProvider";
@@ -112,9 +112,9 @@ const AppRoutes = () => {
               element={<SelectProviders />}
             />
             {/* <Route path="/user/saved-providers" element={<SavedProviders />} /> */}
-            <Route path="/user/payment-history" element={<PaymentHistory />}>
-              <Route index element={<PaymentList />} />
-              <Route path=":status" element={<PaymentList />} />
+            <Route path="/user/payment-history" element={<PaymentHistoryList />}>
+              {/* <Route index element={<PaymentList />} />
+              <Route path=":status" element={<PaymentList />} /> */}
               <Route path="payment-info/:id" element={<PaymentInfo />} />
             </Route>
             <Route path="/user/reviews" element={<AllReviews />} />
