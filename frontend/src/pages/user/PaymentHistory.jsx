@@ -4,8 +4,7 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 
 
-const PaymentHistory = () => {
-  
+const PaymentHistory = () => {  
   const location = useLocation();
   const isLocation = location.pathname.includes("payment-info");
   const base =
@@ -92,16 +91,7 @@ const PaymentHistory = () => {
               </NavLink>
             </div>
             <div>
-              <div className="py-3 bg-slate-100 border-b border-t border-muted">
-                <ul className="grid md:grid-cols-6 grid-cols-4 text-lg md:text-xl font-semibold   justify-items-center items-center ">
-                  <li>Provider</li>
-                  <li>Date</li>
-                  <li className="hidden md:flex">Payment ID</li>
-                  <li className="md:block hidden">Status</li>
-                  <li>Amount</li>
-                  <li>Action</li>
-                </ul>
-              </div>
+             
              
             </div>
           </>
