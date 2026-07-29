@@ -233,7 +233,7 @@ async function getProviders(req, res) {
     const page = parseInt(req.query.page) || 1;
     const skip = (page - 1) * limit;
 
-    const filter = {};
+    const filter = {verifiedByAdmin:true,status:'approved' };
     // Category Filter (Multiple Categories)
     if (category && category !== "all") {
       filter.categories = {
