@@ -7,7 +7,7 @@ import UserDashboard from "../pages/user/UserDashboard";
 import MyBookingsPage from "../pages/user/MyBookingsPage";
 // import SavedProviders from "../pages/user/SavedProvi;ders"
 import PaymentHistoryList from "../pages/user/PaymentHistoryList";
-import AllReviews from "../pages/user/AllReviews";
+import ReviewList from "../pages/user/ReviewList";
 import Support from "../pages/user/Support";
 import ProfileSettings from "../pages/user/ProfileSettings";
 
@@ -117,7 +117,7 @@ const AppRoutes = () => {
               <Route path=":status" element={<PaymentList />} /> */}
               <Route path="payment-info/:id" element={<PaymentInfo />} />
             </Route>
-            <Route path="/user/reviews" element={<AllReviews />} />
+            <Route path="/user/reviews" element={<ReviewList />} />
             <Route path="/user/support" element={<Support />} />
             <Route path="/user/profile-settings" element={<ProfileSettings />}>
               {/* ✅ DEFAULT PAGE */}
