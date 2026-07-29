@@ -342,7 +342,7 @@ async function userPaymentHistory(req, res) {
 
     const paymentHistory = await paymentModel
       .find({ userId })
-      .select("providerId createdAt amount paymentStatus receipt")
+      .select("providerId createdAt amount paymentStatus paymentMethod")
       .populate({
         path: "providerId",
         select: "userId",

@@ -109,7 +109,7 @@ async function getAllReviewOfUser(req,res){
       select:'userId',
       populate:{
         path:'userId',
-        select:'fullname'
+        select:'fullname profileImage'
       }
     }).populate({
       path:'bookingId',

@@ -6,7 +6,7 @@ const { imageUpload } = require('../middlewares/upload.middleware')
 const router = express.Router()
 
 
-router.post('/create-review',
+router.post('/user/create-review',
   authMiddleware.tokenVerify,
   imageUpload.fields([{name:'ReviewImage',maxCount:5}]),
   reviewController.reviewCreate

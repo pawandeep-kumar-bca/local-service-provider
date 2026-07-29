@@ -211,17 +211,18 @@ async function userLists(req, res) {
 }
 async function getProvidersByAdmin(req, res) {
   try {
-    const { search, date, verificationStatus,status,category } = req.query;
+    const { search, date, verificationStatus, status, category } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const filters = {};
 
-     if(status){
-      filters.status = status
-     }
+    if (status) {
+      filters.status = status;
+    }
     const providers = await providerModel
-      .find(filters).select('categories status createdAt  completedJobs')
+      .find(filters)
+      .select("categories status createdAt  completedJobs")
       .populate("userId", "fullname email phoneNumber profileImage isVerified")
       .populate("categories", "name")
       .limit(limit)
@@ -361,17 +362,14 @@ async function bookingLists(req, res) {
     const skip = (page - 1) * limit;
 
     const bookings = await bookingModel
-      .find({
-        bookingStatus: "completed",
-      })
+      .find()
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(skip)
-      .select("userId providerId category bookingSlot bookingDate serviceAddress")
-      .populate("userId providerId category","fullname profileImage name");
-    const totalBooking = await bookingModel.countDocuments({
-      bookingStatus: "completed",
-    });
+      .select(
+        "bookingId userSnapshot.profileImage userSnapshot.name providerSnapshot.profileImage providerSnapshot.name  serviceSnapshot.categoryName serviceSnapshot.serviceBackground  serviceSnapshot.serviceImage pricing.totalAmount bookingDate bookingSlot bookingStatus paymentStatus",
+      );
+    const totalBooking = await bookingModel.countDocuments();
     if (bookings.length === 0) {
       return res
         .status(200)
@@ -391,7 +389,7 @@ async function bookingLists(req, res) {
 }
 async function getCategoryByAdmin(req, res) {
   try {
-    const { 
+    const {
       search,
       status,
       category,
@@ -407,11 +405,11 @@ async function getCategoryByAdmin(req, res) {
     // ==========================
 
     const filter = {};
-    
-    if(category && category !== 'all'){
+
+    if (category && category !== "all") {
       filter.categories = {
-        $in:[category]
-      }
+        $in: [category],
+      };
     }
     if (search) {
       filter.name = {
@@ -576,7 +574,7 @@ async function getCategoryByAdmin(req, res) {
       message: "Internal Server Error",
     });
   }
-};
+}
 module.exports = {
   pendingProviders,
   getProvidersByAdmin,
@@ -584,5 +582,5 @@ module.exports = {
   pendingProvidersReject,
   userLists,
   bookingLists,
-  getCategoryByAdmin
+  getCategoryByAdmin,
 };
