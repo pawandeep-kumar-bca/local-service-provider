@@ -16,6 +16,6 @@ export const paymentMarkFailed = async (payload) => {
 };
 
 export const userPaymentHistory = async ()=>{
-  const response = await api.post('/payments/user/payment-history')
+  const response = await api.get('/payments/user/payment-history')
   return response.data
 }
