@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { createReviews } from "../services/reviewService";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createReviews, getAllUserReviews } from "../services/reviewService";
 
 export const useReview = () => {
   const createReviewMutation = useMutation({
@@ -9,4 +9,14 @@ export const useReview = () => {
     },
   });
   return { createReviewMutation };
+};
+
+export const useGetAllUserReviews = () => {
+  return useQuery({
+    queryKey: ["user-reviews"],
+    queryFn: getAllUserReviews,
+    onError: (err) => {
+      console.error("Get all user reviews error:", err);
+    },
+  });
 };
