@@ -2,57 +2,66 @@ import Button from "../../components/common/Button";
 import { FaStar } from "react-icons/fa";
 import StatusBadge from "../../components/common/StatusBadge";
 import { MdDelete, MdModeEdit } from "react-icons/md";
+import Avatar from "../../components/common/Avatar";
 
-const ReviewCard = () => {
+const ReviewCard = ({ review }) => {
   return (
     <div className="rounded-lg backdrop-blur-sm border border-gray-200 bg-white hover:scale-[1.02] ease-in-out shadow-[0_5px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)] transition-all duration-300 px-2">
       <div className="py-3 px-1">
         <div className="flex justify-between items-start">
           <div className="flex gap-2 items-center">
-            <img
-              src="/assets/profile.png"
-              alt="profile"
-              className="w-[4rem] h-[4rem] rounded-full object-cover cursor-pointer"
-            />
+           <div className="h-15 w-15 rounded-full">
+            <Avatar name={review.providerId?.userId?.fullname} image={review.providerId?.userId?.profileImage?.url} bgTx='bg-gray-300 text-blue-500'/>
+           </div>
+
             <div>
               <h1 className=" font-semibold text-gray-600 mt-2">
-                Dr. Neha Sharma
+                {review.providerId?.userId?.fullname}
               </h1>
-              <p className="text-sm text-gray-500">21 May 2024</p>
+              <p className="text-sm text-gray-500">
+                {new Date(review.createdAt).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
               <div className="flex  gap-1 text-warning mt-1 text-sm">
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
+                {[1, 2, 3, 4, 5].map((item) => (
+                  <FaStar
+                    key={item}
+                    className={`${item <= review.rating ? " text-orange-500" : "text-gray-500"}`}
+                  />
+                ))}
               </div>
             </div>
           </div>
-          <StatusBadge category="cleaning" className="mr-4 mt-1" />
+          <StatusBadge
+            category={review.bookingId?.categoryId?.name}
+            className="mr-4 mt-1"
+          />
         </div>
-        <p className="text-sm text-gray-500 px-3 py-2">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
-          consequatur ipsum doloribus voluptatem perspiciatis, labore facere,
-          corporis, quibusdam vel voluptate quis. Odit delectus assumenda
-          quaerat vitae fugit aut voluptas et.
-        </p>
+        <p className="text-sm text-gray-500 px-3 py-2">{review.comment}</p>
       </div>
 
-      <div className="w-full border-t border-gray-200"></div>
-      <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide p-1">
-        {[1, 2, 3, 4, 5].map((_, index) => (
-          <div
-            key={index}
-            className="w-20 h-20 md:w-28 md:h-22 rounded-xl overflow-hidden border border-gray-200 flex-shrink-0"
-          >
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNG081EnQvNRiWAuIIfuvS2rOgk_uD60oa6AEWK5j9hfxBw4fHfDFdqt_E&s=10"
-              alt="Review"
-              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105 cursor-pointer"
-            />
+      {review.images?.length > 0 && (
+        <>
+          <div className="w-full border-t border-gray-200"></div>
+          <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide p-1">
+            {review.images?.map((img) => (
+              <div
+                key={img._id}
+                className="w-20 h-20 md:w-28 md:h-22 rounded-xl overflow-hidden border border-gray-200 flex-shrink-0"
+              >
+                <img
+                  src={img?.url}
+                  alt="Review"
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105 cursor-pointer"
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
       <div className="p-3 flex justify-end gap-3">
         <Button color="danger" size="md">
           <MdDelete size={18} /> Delete
