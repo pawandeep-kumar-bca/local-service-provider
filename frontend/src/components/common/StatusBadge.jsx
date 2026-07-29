@@ -27,13 +27,16 @@ const StatusBadge = ({
 
     pending: "bg-yellow-100 text-yellow-600 border-yellow-200",
 
+    
+    approved: "bg-blue-100 text-blue-600 border-blue-200",
     completed: "bg-blue-100 text-blue-600 border-blue-200",
-
     refund: "bg-pink-100 text-pink-600 border-pink-200",
     upcoming: "bg-pink-100 text-pink-600 border-pink-200",
     failed: "bg-red-100 text-red-600 border-red-200",
+    rejected: "bg-red-100 text-red-600 border-red-200",
 
     cancelled: "bg-red-100 text-red-600 border-red-200",
+    'not verified': "bg-red-100 text-red-600 border-red-200",
 
     uploaded: "bg-green-100 text-green-600 border-green-200",
   };

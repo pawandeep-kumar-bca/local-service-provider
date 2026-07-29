@@ -17,8 +17,10 @@ const BookingDetail = () => {
   const { state } = useLocation();
   const { providerId } = useParams();
   const categoryId = state?.categoryId;
+  console.log(categoryId);
+  
   const categoryName = state?.categoryName;
-
+  
   const [formData, setFormData] = useState({
     categoryId: categoryId || null,
     providerId: providerId || null,

@@ -16,35 +16,32 @@ import { FaFaucet } from "react-icons/fa6";
 import { MdOutlineAcUnit } from "react-icons/md";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useProvider } from "../../hooks/useProvider";
+import Avatar from "../../components/common/Avatar";
 const ProviderDetail = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-
   const { providerId } = useParams();
   const navigate = useNavigate();
 
   const { data, isLoading, error } = useProvider(providerId);
+  const provider = data?.providerExists || [];
 
-  if (isLoading) return <h1>Loading...</h1>;
-
-  if (error) return <h1>Something went wrong.</h1>;
-
-  const provider = data?.providerExists;
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const {
-   
-    experience,
-
     verificationStatus,
     rating,
     totalReview,
     availability,
     categories = [],
   } = provider;
+  const activeCategory = selectedCategory || categories?.[0];
+  
+ 
+  
+  
+  const price = activeCategory?.pricing?.price;
+  if (isLoading) return <h1>Loading...</h1>;
 
-  const profileImageUrl =
-    provider.userId?.profileImage?.url ||
-    "https://ui-avatars.com/api/?name=" +
-      encodeURIComponent(provider.userId?.fullname);
+  if (error) return <h1>Something went wrong.</h1>;
 
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-3 md:rounded">
@@ -58,12 +55,13 @@ const ProviderDetail = () => {
       <div className="flex w-full justify-between flex-col md:flex-row  md:items-center border border-muted rounded-md p-3 mt-4">
         <div className="w-full">
           <div className="flex gap-3 items-center">
-            <img
-              src={profileImageUrl}
-              alt="profile"
-              className="object-cover w-[5rem] h-[5rem] rounded-full"
-            />
-
+            <div className="w-[5rem] h-[5rem] rounded-full shrink-0">
+              <Avatar
+                name={provider.userId?.fullname}
+                image={provider.userId?.profileImage?.url}
+                className="text-3xl bg-gray-300 text-blue-500"
+              />
+            </div>
             <div className="w-full flex flex-col gap-1 ">
               <h1 className="md:text-2xl font-semibold">
                 {provider.userId?.fullname}
@@ -93,7 +91,9 @@ const ProviderDetail = () => {
               />
 
               <div>
-                <h1 className="text-sm font-medium">{experience} Years</h1>
+                <h1 className="text-sm font-medium">
+                  {provider?.experience} Years
+                </h1>
                 <p className="text-sm text-muted">Experience</p>
               </div>
             </div>
@@ -133,18 +133,17 @@ const ProviderDetail = () => {
         </div>
         <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] py-4 md:px-4 px-2 rounded flex md:flex-col justify-end items-center md:gap-0 gap-6 mt-4">
           <h3 className="flex items-center text-xl font-bold mb-3 md:mx-15 ">
-            <MdOutlineCurrencyRupee /> {provider.pricing?.price}/hr
+            <MdOutlineCurrencyRupee /> {price}
+            /hr
           </h3>
           <Button
             fullWidth
             onClick={() => {
-              if (!selectedCategory) {
-                return alert("Please select a category");
-              }
+              
               navigate(`/user/provider-details/${providerId}/booking-details`, {
                 state: {
-                  categoryId: selectedCategory._id,
-                  categoryName: selectedCategory.name,
+                  categoryId: activeCategory?.category?._id,
+                  categoryName: activeCategory?.category?.name,
                 },
               });
             }}
@@ -158,9 +157,9 @@ const ProviderDetail = () => {
         <h1 className="text-xl font-bold text-text mb-2">About Me</h1>
         <p>
           Hi, I'm <strong>{provider.userId?.fullname}</strong>. I have{" "}
-          <strong>{experience} years</strong> of experience in{" "}
-          <strong>{categories?.map((c) => c.name).join(", ")}</strong>. I
-          provide reliable and professional services at affordable prices.
+          <strong>{provider?.experience} years</strong> of experience in{" "}
+          <strong>{categories?.map((c) => c?.category.name).join(", ")}</strong>
+          . I provide reliable and professional services at affordable prices.
         </p>
       </div>
       <div className="w-full">
@@ -168,19 +167,21 @@ const ProviderDetail = () => {
           <h2 className="text-xl font-bold text-text">Select Service</h2>
           <div className="mt-4">
             <div className="mt-4 grid gird-cols-1 md:grid-cols-3 gap-3">
-              {categories?.map((category) => (
+              {categories?.map((cat) => (
                 <label
-                  key={category._id}
-                  htmlFor={category._id}
+                  key={cat._id}
+                  htmlFor={cat._id}
                   className="inline-block cursor-pointer relative"
                 >
                   <input
                     type="radio"
-                    id={category._id}
+                    id={cat._id}
                     name="service"
-                    value={category.name}
-                    checked={selectedCategory?._id === category._id}
-                    onChange={() => setSelectedCategory(category)}
+                    value={cat.name}
+                    checked={activeCategory?._id === cat._id}
+                    onChange={() => {
+                      setSelectedCategory(cat);
+                    }}
                     className="peer accent-green-600 absolute right-4 top-4"
                   />
 
@@ -189,30 +190,30 @@ const ProviderDetail = () => {
                       <div
                         className={`w-14 h-14 rounded-xl flex items-center justify-center`}
                         style={{
-                          backgroundColor: `${category.backgroundColor}`,
+                          backgroundColor: `${cat?.category?.backgroundColor}`,
                         }}
                       >
                         <img
-                          src={category.icon?.url}
-                          alt={category.name}
+                          src={cat?.category.icon?.url}
+                          alt={cat?.category.name}
                           className="w-10 h-10"
                         />
                       </div>
 
                       <div>
                         <h2 className="font-semibold text-lg capitalize">
-                          {category.name}
+                          {cat?.category.name}
                         </h2>
 
                         <div className="flex items-center font-bold text-green-500">
                           <MdOutlineCurrencyRupee />
-                          {provider.pricing?.price}/Hr
+                          {cat?.pricing?.price}/Hr
                         </div>
                       </div>
                     </div>
 
                     <p className="text-muted text-sm mt-2">
-                      {category.description}
+                      {cat?.category.description}
                     </p>
                   </div>
                 </label>

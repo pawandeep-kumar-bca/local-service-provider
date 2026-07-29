@@ -54,7 +54,7 @@ const SuccessfulPayment = () => {
           </p>
         </div>
 
-        <div className="shadow-[0_3px_25px_rgba(0,0,0,0.24)] py-6 px-7 md:py-3 mx-auto w-min rounded-2xl flex flex-col items-center">
+        <div className="shadow-[0_3px_25px_rgba(0,0,0,0.24)] py-6 px-7 md:py-3 mx-auto w-fit rounded-2xl flex flex-col items-center">
           <p className="text-xl font-semibold mb-1">Booking ID</p>
           <h1 className="text-green-700 font-bold text-3xl md:text-2xl">
             #{bookingData?.bookingId}

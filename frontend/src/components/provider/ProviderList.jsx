@@ -7,9 +7,9 @@ const ProviderList = () => {
   
   const context = useOutletContext();
 
-  const filters = context.filters;
+  
   const setTotalPages = context.setTotalPages;
-  const { data, isLoading } = useProviders(filters);
+  const { data, isLoading } = useProviders();
 
 
  
@@ -32,7 +32,7 @@ const ProviderList = () => {
           <ProviderCard
             key={provider._id}
             provider={provider}
-            selectedCategory={filters.category}
+           
           />
         ))}
       </div>

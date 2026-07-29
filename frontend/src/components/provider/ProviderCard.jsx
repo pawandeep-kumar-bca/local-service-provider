@@ -14,21 +14,13 @@ import { useNavigate } from "react-router-dom";
 import StatusBadge from "../common/StatusBadge";
 import { CiStar } from "react-icons/ci";
 import { AiOutlineLike } from "react-icons/ai";
-
-const ProviderCard = ({ provider, selectedCategory }) => {
+import Avatar from "../common/Avatar";
+const ProviderCard = ({ provider}) => {
   const navigate = useNavigate();
 
   // ---------------- Derived Values (API shape ke hisaab se) ----------------
-  const profileImageUrl =
-    provider.userId?.profileImage?.url ||
-    "https://ui-avatars.com/api/?name=" +
-      encodeURIComponent(provider.userId?.fullname);
 
-  const matchedCategory = provider.categories.find(
-    (cat) => cat._id.toString() === selectedCategory,
-  );
 
-  const categoryName = matchedCategory?.name || provider.categories[0]?.name;
 
   const isVerified = provider.verifiedByAdmin ? "verified" : "not verified";
 
@@ -46,7 +38,8 @@ const ProviderCard = ({ provider, selectedCategory }) => {
 
   const reviews = provider.totalReview || 0;
 
-  const price = provider?.pricing?.price || 0;
+  const price = provider?.categories[0]?.pricing?.price || 0;
+
 
   const base =
     "py-1 px-3 rounded-full text-sm flex w-fit gap-2 items-center font-medium border";
@@ -56,13 +49,13 @@ const ProviderCard = ({ provider, selectedCategory }) => {
       <div className="w-full bg-bg backdrop-blur-sm border border-muted bg-white hover:scale-[1.02]   ease-in-out shadow-[0_5px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)] transition-all duration-300 md:p-5 p-4 rounded-lg mt-1 ">
         <div className="flex w-full gap-3 items-center">
           <div className="relative">
-            <img
-              src={profileImageUrl}
-              alt="profile"
-              className=" w-20 h-20 min-w-20 rounded-full object-cover border-4 border-white shadow-[0_10px_25px_rgba(0, 0.15)] ring-2 ring-primary/20 flex-shrink-0
-    "
-            />
-
+            <div className="w-20 h-20 min-w-20">
+              <Avatar
+                image={provider?.userId?.profileImage?.url}
+                name={provider?.userId?.fullname}
+                className="bg-gray-300 text-3xl text-red-500"
+              />
+            </div>
             <div
               className=" absolute bottom-1 right-1 w-4 h-4 rounded-full bg-green-500 border-3 border-white shadow-sm
     "
@@ -78,7 +71,7 @@ const ProviderCard = ({ provider, selectedCategory }) => {
             </div>
 
             <div className="flex gap-2 my-2">
-              <StatusBadge category={categoryName} />
+              <StatusBadge category={provider.categories[0]?.category?.name} />
               {isVerified ? (
                 <span
                   className={`${base} bg-green-100 text-green-600 border-green-200`}
@@ -166,15 +159,9 @@ const ProviderCard = ({ provider, selectedCategory }) => {
               <h3 className="flex items-center text-xl font-bold">
                 <MdOutlineCurrencyRupee />
                 {price}
-                {provider.pricing?.priceType === "hourly" ? "/hr" : "/fixed"}
+                {provider?.categories[0]?.pricing?.priceType === "hourly" ? "/hr" : "/fixed"}
               </h3>
-              <p className="text-muted">
-                {provider.pricing?.priceType
-                  ? provider.pricing.priceType.charAt(0).toUpperCase() +
-                    provider.pricing.priceType.slice(1).toLowerCase()
-                  : ""}{" "}
-                Rate
-              </p>
+              
             </div>
           </div>
           <div className="w-full border-t border-gray-200 my-3"></div>

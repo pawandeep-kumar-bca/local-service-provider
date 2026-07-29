@@ -1,6 +1,6 @@
 import React from "react";
 
-const Avatar = ({ name, image,bgTx }) => {
+const Avatar = ({ name, image,className='' }) => {
   const initials = name
     .split(" ")
     .map((word) => word[0])
@@ -13,7 +13,7 @@ const Avatar = ({ name, image,bgTx }) => {
       className="w-full h-full rounded-full object-cover "
     />
   ) : (
-    <div className={`w-full h-full rounded-full flex items-center justify-center text-2xl font-bold ${bgTx}`}>
+    <div className={`w-full h-full rounded-full flex items-center justify-center  font-bold ${className}`}>
       {initials}
     </div>
   );

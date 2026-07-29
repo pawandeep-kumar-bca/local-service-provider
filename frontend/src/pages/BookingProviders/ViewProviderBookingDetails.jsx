@@ -48,13 +48,13 @@ const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
               </h3>
 
               <h3 className="text-sm font-semibold text-muted">
-                {bookingData?.providerSnapshot?.totalReview} Reviews
+                ({bookingData?.providerSnapshot?.totalReview} Reviews)
               </h3>
             </div>
           </div>
 
           <h3 className="bg-green-50 md:py-2 md:px-3 md:text-xl font-semibold rounded-md text-green-600 border h-min text-sm py-1 px-2">
-            {bookingData?.providerSnapshot?.category}
+            {bookingData?.serviceSnapshot?.categoryName}
           </h3>
         </div>
       </div>

@@ -10,9 +10,13 @@ const ReviewCard = ({ review }) => {
       <div className="py-3 px-1">
         <div className="flex justify-between items-start">
           <div className="flex gap-2 items-center">
-           <div className="h-15 w-15 rounded-full">
-            <Avatar name={review.providerId?.userId?.fullname} image={review.providerId?.userId?.profileImage?.url} bgTx='bg-gray-300 text-blue-500'/>
-           </div>
+            <div className="h-15 w-15 rounded-full">
+              <Avatar
+                name={review.providerId?.userId?.fullname}
+                image={review.providerId?.userId?.profileImage?.url}
+                className="bg-gray-300 text-blue-500 text-2xl"
+              />
+            </div>
 
             <div>
               <h1 className=" font-semibold text-gray-600 mt-2">
