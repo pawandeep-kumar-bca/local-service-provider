@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const providerModel = require("../models/provider.model");
+const { generateId } = require("../utils/generateId");
 
 // ================= REGISTER =================
 async function registerUser(req, res) {
@@ -15,7 +16,9 @@ async function registerUser(req, res) {
     }
     // ✅ generate verification token
     const emailVerifyToken = crypto.randomBytes(32).toString("hex");
+    const userId = await generateId('LSP-USR-','user')
     const user = await userModel.create({
+      userId,
       fullname,
       email,
       password,

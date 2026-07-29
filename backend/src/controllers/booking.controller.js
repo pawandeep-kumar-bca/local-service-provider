@@ -4,9 +4,9 @@ const categoryModel = require("../models/category.model");
 const UserModel = require("../models/User.model");
 const stateModel = require("../models/State.model");
 const districtModel = require("../models/district.model");
-const cityModel = require("../models/city.model");
-const generateBookingId = require("../utils/generateBookingId");
+
 const { calculatePricing } = require("../utils/calculatePricing");
+const { generateId } = require("../utils/generateId");
 // Converts "10:30 AM" / "02:00 PM" style strings into total minutes since midnight
 function parseTimeToMinutes(timeStr) {
   const [time, meridian] = timeStr.trim().split(" ");
@@ -161,7 +161,7 @@ async function userBookingCreate(req, res) {
     const discount = 0;
     const pricing = calculatePricing(serviceCharge, discount);
     // ---------- Create booking ----------
-    const bookingId = await generateBookingId();
+    const bookingId = await generateId('LSP-BK-','booking');
 
     const booking = await bookingsModel.create({
       bookingId,

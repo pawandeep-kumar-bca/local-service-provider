@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 
 const providerSchema = new mongoose.Schema(
   {
+    providerId: {
+      type: String,
+      unique: true,
+      index: true,
+      required: true,
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

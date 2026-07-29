@@ -4,6 +4,7 @@ const imagekit = require("@imagekit/nodejs");
 const categoryModel = require("../models/category.model");
 const { default: mongoose } = require("mongoose");
 const UserModel = require("../models/User.model");
+const { generateId } = require("../utils/generateId");
 
 async function providerProfileCreate(req, res) {
   try {
@@ -73,9 +74,10 @@ async function providerProfileCreate(req, res) {
       `${userId}-${Date.now()}-certificate`,
       "Providers/Documents/Certificates",
     );
+    const providerId = await generateId("LSP-PRO-", "provider");
     const provider = await providerModel.create({
       userId,
-
+      providerId,
       pricing: { price },
 
       experience,
@@ -101,10 +103,7 @@ async function providerProfileCreate(req, res) {
           fileId: certificateData.fileId,
         },
       },
-      
     });
-
-  
 
     if (phoneNumber && phoneNumber !== user.phoneNumber) {
       user.phoneNumber = phoneNumber;

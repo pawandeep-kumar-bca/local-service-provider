@@ -50,4 +50,4 @@ chatSchema.index({ bookingId: 1, createdAt: 1 });
 chatSchema.index({ receiverId: 1, isRead: 1 });
 chatSchema.index({ senderId: 1 });
 
-module.exports = mongoose.model("chat", chatSchema);
+module.exports = mongoose.model("Chat", chatSchema);

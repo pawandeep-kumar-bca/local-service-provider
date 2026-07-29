@@ -6,9 +6,108 @@ const mongoose = require("mongoose");
 const UserModel = require("../models/User.model");
 
 // ✅ CREATE ORDER (handles both COD and UPI)
+// async function createOrder(req, res) {
+//   try {
+//     const { bookingId, paymentMethod } = req.body; // paymentMethod: "cod" | "upi"
+//     const userId = req.user.id;
+
+//     if (!bookingId || !paymentMethod) {
+//       return res
+//         .status(400)
+//         .json({ message: "bookingId and paymentMethod are required" });
+//     }
+
+//     if (!["cod", "upi"].includes(paymentMethod)) {
+//       return res.status(400).json({ message: "Invalid paymentMethod" });
+//     }
+
+//     const booking = await bookingModel.findById(bookingId);
+//     if (!booking) {
+//       return res.status(404).json({ message: "Booking not found" });
+//     }
+
+//     if (booking.userId.toString() !== userId) {
+//       return res.status(403).json({ message: "Forbidden" });
+//     }
+
+//     // ✅ Prevent duplicate payment
+//     const existingPayment = await paymentModel.findOne({ bookingId });
+//     if (existingPayment && existingPayment.paymentStatus === "success") {
+//       return res.status(400).json({ message: "Already paid" });
+//     }
+//   const paymentId = await generateId("LSP-PAY-", "payment");
+//     // ---------------- COD FLOW ----------------
+//     if (paymentMethod === "cod") {
+//       const payment = await paymentModel.findOneAndUpdate(
+//         { bookingId },
+//         {
+//           userId,
+//           paymentId,
+//           providerId: booking.providerSnapshot.providerId,
+//           bookingId,
+//           amount: booking.pricing.totalAmount, // rupees (no gateway involved)
+//           currency: "INR",
+//           paymentMethod: "cod",
+//           paymentStatus: "pending", // stays pending till service is delivered/settled
+//         },
+//         { upsert: true, new: true },
+//       );
+
+//       booking.paymentMethod = "cod";
+//       booking.paymentStatus = "pending";
+
+//       await booking.save();
+
+//       return res.status(201).json({
+//         message: "Booking confirmed with Cash on Delivery",
+//         payment,
+//         booking,
+//       });
+//     }
+
+//     // ---------------- UPI FLOW ----------------
+//     const amount = Math.round(booking.pricing.totalAmount * 100); // paise, Razorpay expects smallest unit
+
+//     const razorpayOrder = await razorpay.orders.create({
+//       amount,
+//       currency: "INR",
+//       receipt: bookingId.toString(),
+//     });
+
+//     const payment = await paymentModel.findOneAndUpdate(
+//       { bookingId },
+//       {
+//         userId,
+//         providerId: booking.providerSnapshot.providerId,
+//         bookingId,
+//         amount,
+//         currency: "INR",
+//         razorpayOrderId: razorpayOrder.id,
+//         receipt: razorpayOrder.receipt,
+//         paymentMethod: "upi",
+//         paymentStatus: "pending",
+//       },
+//       { upsert: true, new: true },
+//     );
+
+//     booking.paymentMethod = "upi";
+//     booking.paymentStatus = "pending";
+//     booking.payment.orderId = razorpayOrder.id;
+//     await booking.save();
+
+//     return res.status(201).json({
+//       message: "Order created",
+//       payment,
+//       razorpayOrder, // frontend needs order.id + amount + currency to open checkout
+//     });
+//   } catch (err) {
+//     console.error("createOrder error:", err);
+//     return res.status(500).json({ message: "Internal server error" });
+//   }
+// }
 async function createOrder(req, res) {
   try {
-    const { bookingId, paymentMethod } = req.body; // paymentMethod: "cod" | "upi"
+    const { bookingId, paymentMethod } = req.body;
     const userId = req.user.id;
 
     if (!bookingId || !paymentMethod) {
@@ -22,6 +121,7 @@ async function createOrder(req, res) {
     }
 
     const booking = await bookingModel.findById(bookingId);
+
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
@@ -30,27 +130,36 @@ async function createOrder(req, res) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    // ✅ Prevent duplicate payment
-    const existingPayment = await paymentModel.findOne({ bookingId });
-    if (existingPayment && existingPayment.paymentStatus === "success") {
+    // Check existing payment
+    let payment = await paymentModel.findOne({ bookingId });
+
+    if (payment && payment.paymentStatus === "success") {
       return res.status(400).json({ message: "Already paid" });
     }
 
-    // ---------------- COD FLOW ----------------
+    // Create payment only once
+    if (!payment) {
+      const paymentId = await generateId("LSP-PAY-", "payment");
+
+      payment = await paymentModel.create({
+        paymentId,
+        userId,
+        providerId: booking.providerSnapshot.providerId,
+        bookingId,
+        amount: booking.pricing.totalAmount,
+        currency: "INR",
+        paymentStatus: "pending",
+      });
+    }
+
+    // ---------------- COD ----------------
     if (paymentMethod === "cod") {
-      const payment = await paymentModel.findOneAndUpdate(
-        { bookingId },
-        {
-          userId,
-          providerId: booking.providerSnapshot.providerId,
-          bookingId,
-          amount: booking.pricing.totalAmount, // rupees (no gateway involved)
-          currency: "INR",
-          paymentMethod: "cod",
-          paymentStatus: "pending", // stays pending till service is delivered/settled
-        },
-        { upsert: true, new: true },
-      );
+      payment.paymentMethod = "cod";
+      payment.amount = booking.pricing.totalAmount;
+      payment.currency = "INR";
+      payment.paymentStatus = "pending";
+
+      await payment.save();
 
       booking.paymentMethod = "cod";
       booking.paymentStatus = "pending";
@@ -64,47 +173,42 @@ async function createOrder(req, res) {
       });
     }
 
-    // ---------------- UPI FLOW ----------------
-    const amount = Math.round(booking.pricing.totalAmount * 100); // paise, Razorpay expects smallest unit
+    // ---------------- UPI ----------------
+    const amount = Math.round(booking.pricing.totalAmount * 100);
 
     const razorpayOrder = await razorpay.orders.create({
       amount,
       currency: "INR",
-      receipt: bookingId.toString(),
+      receipt: booking.bookingId, // use custom bookingId
     });
 
-    const payment = await paymentModel.findOneAndUpdate(
-      { bookingId },
-      {
-        userId,
-        providerId: booking.providerSnapshot.providerId,
-        bookingId,
-        amount,
-        currency: "INR",
-        razorpayOrderId: razorpayOrder.id,
-        receipt: razorpayOrder.receipt,
-        paymentMethod: "upi",
-        paymentStatus: "pending",
-      },
-      { upsert: true, new: true },
-    );
+    payment.paymentMethod = "upi";
+    payment.amount = amount;
+    payment.currency = "INR";
+    payment.razorpayOrderId = razorpayOrder.id;
+    payment.receipt = razorpayOrder.receipt;
+    payment.paymentStatus = "pending";
+
+    await payment.save();
 
     booking.paymentMethod = "upi";
     booking.paymentStatus = "pending";
     booking.payment.orderId = razorpayOrder.id;
+
     await booking.save();
 
     return res.status(201).json({
-      message: "Order created",
+      message: "Order created successfully",
       payment,
-      razorpayOrder, // frontend needs order.id + amount + currency to open checkout
+      razorpayOrder,
     });
   } catch (err) {
     console.error("createOrder error:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({
+      message: "Internal server error",
+    });
   }
 }
-
 // ✅ VERIFY PAYMENT (UPI only)
 async function verifyPayment(req, res) {
   try {
