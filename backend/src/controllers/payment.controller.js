@@ -4,6 +4,7 @@ const razorpay = require("../config/razorpay");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 const UserModel = require("../models/User.model");
+const { generateId } = require("../utils/generateId");
 
 // ✅ CREATE ORDER (handles both COD and UPI)
 // async function createOrder(req, res) {
@@ -126,7 +127,7 @@ async function createOrder(req, res) {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    if (booking.userId.toString() !== userId) {
+    if (booking.userSnapshot.userObjectId.toString() !== userId) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
@@ -144,7 +145,7 @@ async function createOrder(req, res) {
       payment = await paymentModel.create({
         paymentId,
         userId,
-        providerId: booking.providerSnapshot.providerId,
+        providerId: booking.providerSnapshot.providerObjectId,
         bookingId,
         amount: booking.pricing.totalAmount,
         currency: "INR",

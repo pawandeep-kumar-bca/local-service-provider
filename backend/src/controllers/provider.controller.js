@@ -295,12 +295,12 @@ async function getProviders(req, res) {
     const providers = await providerModel
       .find(filter)
       .populate("userId", "fullname profileImage")
-      .populate("categories", "name")
+      .populate("categories.category", "name")
       .populate("location.state", "name")
       .populate("location.district", "name")
       .populate("location.city", "name")
       .select(
-        "userId categories pricing experience verifiedByAdmin rating totalReview completedJobs availability responseTime trusted topRated location",
+        "userId categories experience verifiedByAdmin rating totalReview completedJobs availability responseTime trusted topRated location",
       )
       .sort(sortOption)
       .skip(skip)
@@ -334,7 +334,7 @@ async function getOneProviderDetails(req, res) {
     const providerExists = await providerModel
       .findById(providerId)
       .select("-documents")
-      .populate("categories")
+      .populate("categories.category",'icon name description backgroundColor')
       .populate("userId", "fullname profileImage")
       .populate("location.state", "name")
       .populate("location.district", "name")

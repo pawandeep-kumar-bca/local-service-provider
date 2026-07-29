@@ -4,6 +4,7 @@ const categoryModel = require("../models/category.model");
 const UserModel = require("../models/User.model");
 const stateModel = require("../models/State.model");
 const districtModel = require("../models/district.model");
+const cityModel = require("../models/city.model");
 
 const { calculatePricing } = require("../utils/calculatePricing");
 const { generateId } = require("../utils/generateId");
@@ -90,9 +91,11 @@ async function userBookingCreate(req, res) {
       return res.status(400).json({ message: "Category does not exist" });
     }
 
-    const providerOffersCategory = provider.categories.some(
-      (catId) => catId.toString() === categoryId.toString(),
+    const providerOffersCategory = provider.categories.find(
+      (catId) => catId.category.toString() === categoryId.toString(),
     );
+
+
     if (!providerOffersCategory) {
       return res.status(400).json({
         message: "This provider does not offer the selected category",
@@ -153,15 +156,19 @@ async function userBookingCreate(req, res) {
     const durationHours = (endMinutes - startMinutes) / 60;
 
     let serviceCharge = 0;
-    if (provider.pricing.priceType === "hourly") {
-      serviceCharge = Math.round(provider.pricing.price * durationHours);
+    const checkHourly = provider.categories.some(
+      (hor) => hor?.pricing?.priceType === "hourly",
+    );
+
+    if (checkHourly) {
+      serviceCharge = Math.round(providerOffersCategory.pricing.price * durationHours);
     } else {
-      serviceCharge = provider.pricing.price;
+      serviceCharge = providerOffersCategory.pricing.price;
     }
     const discount = 0;
     const pricing = calculatePricing(serviceCharge, discount);
     // ---------- Create booking ----------
-    const bookingId = await generateId('LSP-BK-','booking');
+    const bookingId = await generateId("LSP-BK-", "booking");
 
     const booking = await bookingsModel.create({
       bookingId,
@@ -174,14 +181,15 @@ async function userBookingCreate(req, res) {
       durationHours,
       pricing,
       serviceSnapshot: {
+        categoryObjectId:categoryExist._id,
         categoryName: categoryExist.name,
-        slug:categoryExist.slug,
-        price: provider.pricing.price,
+        slug: categoryExist.slug,
+        price: providerOffersCategory.pricing.price,
         serviceImage: categoryExist.icon.url,
         serviceBackground: categoryExist.backgroundColor,
       },
       providerSnapshot: {
-        providerObjectId:provider._id,
+        providerObjectId: provider._id,
         providerId: provider.providerId,
         name: provider.userId.fullname,
         phone: provider.userId.phoneNumber,
@@ -195,7 +203,7 @@ async function userBookingCreate(req, res) {
         },
       },
       userSnapshot: {
-        userObjectId:user._id,
+        userObjectId: user._id,
         userId: user.userId,
         name: user.fullname,
         phone: user.phoneNumber,
