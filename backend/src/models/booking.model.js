@@ -9,19 +9,6 @@ const bookingsSchema = new mongoose.Schema(
       required: true,
     },
 
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      index: true,
-    },
-
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-    },
-
     bookingDate: {
       type: Date,
       required: true,
@@ -171,7 +158,7 @@ const bookingsSchema = new mongoose.Schema(
         type: Number,
         required: true,
       },
-      
+
       providerCommission: {
         type: Number,
         default: 0,
@@ -179,7 +166,7 @@ const bookingsSchema = new mongoose.Schema(
 
       providerPayout: {
         type: Number,
-        default: 0, 
+        default: 0,
       },
     },
 
@@ -201,6 +188,12 @@ const bookingsSchema = new mongoose.Schema(
       transactionId: String,
     },
     serviceSnapshot: {
+      categoryObjectId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: true,
+      },
+      slug:String,
       categoryName: String,
       price: Number,
       serviceImage: String,
@@ -215,11 +208,17 @@ const bookingsSchema = new mongoose.Schema(
       fullAddress: String,
     },
     providerSnapshot: {
-      providerId: {
+      providerObjectId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Provider",
+        required: true,
       },
-      pricingType:String,
+      providerId: {
+        type: String,
+        required: true,
+      },
+
+      pricingType: String,
       name: String,
       availability: Boolean,
       phone: String,
@@ -239,9 +238,15 @@ const bookingsSchema = new mongoose.Schema(
     },
 
     userSnapshot: {
-      userId: {
+      userObjectId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        required: true,
+      },
+
+      userId: {
+        type: String,
+        required: true,
       },
 
       name: String,

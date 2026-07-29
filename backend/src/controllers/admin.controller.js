@@ -367,7 +367,7 @@ async function bookingLists(req, res) {
       .limit(limit)
       .skip(skip)
       .select(
-        "bookingId userSnapshot.profileImage userSnapshot.name providerSnapshot.profileImage providerSnapshot.name  serviceSnapshot.categoryName serviceSnapshot.serviceBackground  serviceSnapshot.serviceImage pricing.totalAmount bookingDate bookingSlot bookingStatus paymentStatus",
+        "bookingId userSnapshot.profileImage userSnapshot.name userSnapshot.userId providerSnapshot.profileImage providerSnapshot.providerId providerSnapshot.name  serviceSnapshot.categoryName serviceSnapshot.serviceBackground serviceSnapshot.slug  serviceSnapshot.serviceImage pricing.totalAmount bookingDate bookingSlot bookingStatus paymentStatus",
       );
     const totalBooking = await bookingModel.countDocuments();
     if (bookings.length === 0) {

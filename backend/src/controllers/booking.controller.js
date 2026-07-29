@@ -175,12 +175,14 @@ async function userBookingCreate(req, res) {
       pricing,
       serviceSnapshot: {
         categoryName: categoryExist.name,
+        slug:categoryExist.slug,
         price: provider.pricing.price,
         serviceImage: categoryExist.icon.url,
         serviceBackground: categoryExist.backgroundColor,
       },
       providerSnapshot: {
-        providerId: provider._id,
+        providerObjectId:provider._id,
+        providerId: provider.providerId,
         name: provider.userId.fullname,
         phone: provider.userId.phoneNumber,
         rating: provider.rating,
@@ -193,7 +195,8 @@ async function userBookingCreate(req, res) {
         },
       },
       userSnapshot: {
-        userId: user._id,
+        userObjectId:user._id,
+        userId: user.userId,
         name: user.fullname,
         phone: user.phoneNumber,
         email: user.email,
