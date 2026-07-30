@@ -14,3 +14,7 @@ export const getAllCategoriesByAdmin = async (params) => {
   const response = await api.get("/admin/categories",{params});
   return response.data;
 };
+export const getAllBookingsByAdmin= async ()=>{
+  const response = await api.get('/admin/bookings')
+  return response.data
+}
