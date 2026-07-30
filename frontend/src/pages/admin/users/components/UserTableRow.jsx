@@ -43,7 +43,7 @@ const UserTableRow = ({
       <UserInfo
         image={user.profileImage?.url}
         name={user.fullname}
-        id="#USR4532"
+        id={user.userId}
       />
 
       {/* email */}

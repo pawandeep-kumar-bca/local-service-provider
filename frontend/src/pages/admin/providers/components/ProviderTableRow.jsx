@@ -38,11 +38,11 @@ const ProviderTableRow = ({
       "
     >
       {/* provider info */}
-      <UserInfo image={provider.userId?.profileImage?.url} name={provider.userId?.fullname} id="#PRO4564" />
+      <UserInfo image={provider.userId?.profileImage?.url} name={provider.userId?.fullname} id={provider.providerId} />
 
       {/* category */}
       <div>
-        <StatusBudge category={provider.categories?.[0].name} />
+        <StatusBudge category={provider.categories?.[0].category.name} />
       </div>
 
       {/* email */}
