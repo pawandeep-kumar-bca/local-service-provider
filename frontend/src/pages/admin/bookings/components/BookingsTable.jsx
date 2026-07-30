@@ -1,9 +1,10 @@
 import React from "react";
 import SearchFilterBar from "../../../../components/common/admin/SearchFilterBar";
 import TableWrapper from "../../../../components/common/admin/TableWrapper";
-import { bookings } from "../data/bookingsData";
+
 import BookingTableHeader from "./BookingTableHeader";
 import BookingTableRow from "./BookingTableRow";
+import { useBookingsByAdmin } from "../../../../hooks/useAdmin";
 
 const BookingsTable = ({
   onEditClick,
@@ -14,6 +15,8 @@ const BookingsTable = ({
   onCancelClick,
   onRefundClick,
 }) => {
+  const { data } = useBookingsByAdmin();
+  const bookings = data?.bookings || [];
   return (
     <TableWrapper>
       <SearchFilterBar

@@ -20,8 +20,8 @@ const BookingTableHeader = () => {
       <span className="pl-9">Service</span>
       <span>Date & Time</span>
       <span>Amount</span>
-      <span className="text-center">Payment</span>
-      <span className="text-center">Status</span>
+      <span className="text-center">Payment Status</span>
+      <span className="text-center">Booking Status</span>
       <span className="text-center">Action</span>
     </div>
   );

@@ -13,7 +13,6 @@ import UserInfo from "../../../../components/common/admin/UserInfo";
 import ActionDropdown from "../../../../components/common/admin/ActionDropdown";
 import StatusBudge from "../../../../components/common/StatusBadge";
 
-
 const BookingTableRow = ({
   booking,
   onEditClick,
@@ -37,14 +36,24 @@ const BookingTableRow = ({
     >
       {/* booking id */}
       <div>
-        <h1 className="text-sm font-semibold text-blue-500">{booking.bookingId}</h1>
+        <h1 className="text-sm font-semibold text-blue-500">
+          #{booking.bookingId}
+        </h1>
       </div>
 
       {/* customer */}
-      <UserInfo image={booking.customer.image} name={booking.customer.name} id={booking.customer.id} />
+      <UserInfo
+        image={booking.userSnapshot?.profileImage?.url}
+        name={booking.userSnapshot?.name}
+        id={booking.userSnapshot?.userId}
+      />
 
       {/* provider */}
-      <UserInfo image={booking.provider.image} name={booking.provider.name} id={booking.provider.id} />
+      <UserInfo
+        image={booking.providerSnapshot?.profileImage?.url}
+        name={booking.providerSnapshot?.name}
+        id={booking.providerSnapshot?.providerId}
+      />
 
       {/* service */}
       <div className="flex items-center gap-2 ">
@@ -52,50 +61,66 @@ const BookingTableRow = ({
           className="
             w-10 h-10 min-w-10
             rounded-lg
-            bg-blue-100
             flex items-center justify-center
             text-blue-500
           "
+          style={{
+            backgroundColor: booking.serviceSnapshot?.serviceBackground,
+          }}
         >
-          <MdOutlinePlumbing size={24} />
+          <img
+            src={booking.serviceSnapshot?.serviceImage}
+            alt=""
+            width={20}
+            height={20}
+          />
         </div>
 
         <div>
-          <h1 className="text-sm font-bold text-black/90">{booking.service}</h1>
-          <p className="text-sm mt-1 text-muted">{booking.service}</p>
+          <h1 className="text-sm font-bold text-black/90">
+            {booking.serviceSnapshot?.categoryName}
+          </h1>
+          <p className="text-sm mt-1 text-muted">
+            {booking.serviceSnapshot?.slug}
+          </p>
         </div>
       </div>
 
       {/* date */}
       <div>
-        <h3 className="text-sm font-semibold text-black/80">{booking.date}</h3>
-        <p className="text-sm mt-1 text-muted">{booking.time}</p>
+        <h3 className="text-sm font-semibold text-black/80">
+          {new Date(booking.createdAt).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
+        </h3>
+        <p className="text-sm mt-1 text-muted">
+          {new Date(booking.createdAt)
+            .toLocaleTimeString("en-IN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })
+            .toUpperCase()}
+        </p>
       </div>
 
       {/* amount */}
       <div>
-        <p className="text-sm font-semibold text-black/80">{booking.amount}</p>
+        <p className="text-sm font-semibold text-black/80">
+          ₹{booking.pricing?.totalAmount}
+        </p>
       </div>
 
       {/* payment */}
       <div className="flex justify-center">
-        <span
-          className={`
-            py-1 px-3 rounded-lg text-sm border
-            ${
-              booking.payment === "Paid"
-                ? "text-green-500 bg-green-100 border-green-500"
-                : "text-yellow-500 bg-yellow-100 border-yellow-500"
-            }
-          `}
-        >
-          {booking.payment}
-        </span>
+        <StatusBudge badge={booking.paymentStatus} />
       </div>
 
       {/* booking status */}
       <div className="flex justify-center">
-        <StatusBudge badge={booking.status} />
+        <StatusBudge badge={booking.bookingStatus} />
       </div>
 
       {/* action dropdown */}

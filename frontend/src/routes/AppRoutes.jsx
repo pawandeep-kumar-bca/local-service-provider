@@ -23,7 +23,7 @@ import AdminDashboard from "../pages/admin/AdminDashboardPage";
 import AllUsersList from "../pages/admin/users/AllUsersList";
 import AllProvidersList from "../pages/admin/providers/AllProvidersList";
 import AllCategoriesList from "../pages/admin/categories/AllCategoriesList";
-// import AllBookingsList from "../pages/admin/bookings/AllBookingsList";
+import AllBookingsList from "../pages/admin/bookings/AllBookingsList";
 // import AllPayments from "../pages/admin/payments/AllPayments";
 import AllReports from "../pages/admin/reports/AllReports";
 import AuthLayout from "../layouts/AuthLayout";
@@ -231,7 +231,7 @@ const AppRoutes = () => {
             <Route path="/admin/providers/edit-provider-profile" element={<EditProviderProfile/>}/>
             <Route path="/admin/providers/job-completed" element={<JobHistoryProvider/>}/>
             <Route path="/admin/providers/earings-&-payouts" element={<EarningsAndPayout/>}/>
-            {/* <Route path="/admin/bookings" element={<AllBookingsList />} /> */}
+            <Route path="/admin/bookings" element={<AllBookingsList />} />
             <Route path="/admin/bookings/booking-details" element={<BookingDetails/>}/>
             <Route path="/admin/categories" element={<AllCategoriesList />} />
             <Route path="/admin/categories/category-details" element={<CategoryDetails />} />
