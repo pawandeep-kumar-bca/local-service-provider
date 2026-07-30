@@ -5,6 +5,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdOutlineCurrencyRupee } from "react-icons/md";
 import { IoIosArrowBack, IoMdClock } from "react-icons/io";
 import Button from "../../components/common/Button";
+import Avatar from "../../components/common/Avatar";
 
 const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
   return (
@@ -28,12 +29,13 @@ const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
       {/* Provider */}
 
       <div className="flex gap-2 items-center">
-        <img
-          src={bookingData?.providerSnapshot?.profileImage?.url}
-          alt={bookingData?.providerSnapshot?.name}
-          className="w-20 h-20 rounded-full object-cover"
-        />
-
+        <div className="w-18 h-18 rounded-full shrink-0">
+          <Avatar
+            image={bookingData?.providerSnapshot?.profileImage?.url}
+            name={bookingData?.providerSnapshot?.name}
+            className="text-3xl bg-red-200 text-black"
+          />
+        </div>
         <div className="flex justify-between w-full items-center">
           <div>
             <h1 className="text-xl font-semibold">

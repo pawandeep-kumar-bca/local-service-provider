@@ -8,6 +8,7 @@ import { CiCalendar, CiLocationOn } from "react-icons/ci";
 import { PiNotePencilLight } from "react-icons/pi";
 import { MdPayments } from "react-icons/md";
 import { FaMoneyBillWave } from "react-icons/fa6";
+import Avatar from "../../components/common/Avatar";
 
 const UserCardBookings = ({ booking }) => {
   return (
@@ -34,13 +35,16 @@ const UserCardBookings = ({ booking }) => {
         <div className="flex gap-3 items-center">
           {/* Profile */}
           <div className="relative">
-            <img
-              src={booking.userSnapshot?.profileImage?.url}
-              alt="profile Image"
-              className="w-16 h-16 min-w-16 rounded-full object-cover
+            <div
+              className="w-16 h-16 min-w-16 rounded-full 
             border-4 border-white shadow-md ring-2 ring-primary/10"
-            />
-
+            >
+              <Avatar
+                name={booking.userSnapshot?.name}
+                image={booking.userSnapshot?.profileImage?.url}
+                className="text-2xl bg-red-100 text-red-500"
+              />
+            </div>
             {/* Online Dot */}
             <div
               className="absolute bottom-1 right-1 w-4 h-4 rounded-full
@@ -60,7 +64,7 @@ const UserCardBookings = ({ booking }) => {
                 {booking.paymentMethod === "upi" ? (
                   <MdPayments size={16} className="text-green-600   " />
                 ) : (
-                  <FaMoneyBillWave size={16} className="text-blue" />
+                  <FaMoneyBillWave size={16} className="text-blue-500" />
                 )}{" "}
                 <span className="inline-block text-xs font-semibold">
                   {booking.paymentMethod?.toUpperCase()}

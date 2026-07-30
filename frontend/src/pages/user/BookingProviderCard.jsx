@@ -11,6 +11,7 @@ import { IoIosClose, IoMdCall } from "react-icons/io";
 import { LuDot } from "react-icons/lu";
 import { GiDuration } from "react-icons/gi";
 import ReviewForm from "./ReviewForm";
+import Avatar from "../../components/common/Avatar";
 const BookingProvider = ({ booking }) => {
   const navigate = useNavigate();
   const [openReview ,setOpenReview] = useState(null)
@@ -28,13 +29,10 @@ const BookingProvider = ({ booking }) => {
       <div className="flex justify-between items-center">
         <div className="flex gap-2 md:gap-3 items-center">
           <div className="relative">
-            <img
-              src={booking.providerSnapshot?.profileImage?.url}
-              alt="profile"
-              className=" w-16 h-16 min-w-16 rounded-full object-cover border-4 border-white shadow-[0_10px_25px_rgba(0, 0.15)] ring-2 ring-primary/20 flex-shrink-0
-    "
-            />
-
+            
+                <div className="w-16 h-16 min-w-16 rounded-full border-4 border-white shadow-[0_10px_25px_rgba(0, 0.15)] ring-2 ring-primary/20 flex-shrink-0">
+                 <Avatar image={booking.providerSnapshot?.profileImage?.url} name={booking.providerSnapshot?.name} className="text-3xl bg-gray-200 text-pink-500"/>
+                </div>
             {/* Online Dot */}
             <div
               className=" absolute bottom-1 right-1 w-4 h-4 rounded-full bg-green-500 border-3 border-white shadow-sm
@@ -156,7 +154,7 @@ const BookingProvider = ({ booking }) => {
         <span className="text-lg font-semibold flex items-center gap-1">
           Total Amount{" "}
           <p className="text-sm">
-            {booking.providerSnapshot?.pricingType === "hourly"
+            {booking.serviceSnapshot?.priceType === "hourly"
               ? `( ₹${booking.serviceSnapshot?.price} × ${booking.durationHours})`
               : `( Fixed price )`}
           </p>

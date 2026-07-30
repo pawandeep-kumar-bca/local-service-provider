@@ -4,6 +4,7 @@ import { MdHome, MdOutlineCurrencyRupee } from "react-icons/md";
 import Button from "../../components/common/Button";
 import { AiFillClockCircle } from "react-icons/ai";
 import { FaLocationDot } from "react-icons/fa6";
+import { HiViewGridAdd } from "react-icons/hi";
 import { useLocation, useNavigate } from "react-router-dom";
 import ViewProviderBookingDetails from "./ViewProviderBookingDetails";
 const SuccessfulPayment = () => {
@@ -68,12 +69,18 @@ const SuccessfulPayment = () => {
           <FaLock className="text-green-600" />
           <p>100% Secure Payment</p>
         </div>
-        <div className="flex justify-center mt-15 md:mt-10">
+        <div className="flex items-center flex-col gap-3 mt-15 md:mt-10">
           <Button
             color="success"
             className="  text-2xl md:text-xl md:py-2 py-3 px-10"
            onClick={()=>navigate('/user/dashboard')}>
             <MdHome className="text-3xl md:text-2xl" /> Back to Home
+          </Button>
+          <Button
+            color="blue"
+            className="  text-2xl md:text-xl md:py-2 py-3 px-10"
+           onClick={()=>navigate('/user/my-bookings')}>
+            <HiViewGridAdd className="text-3xl md:text-2xl"/>View Booking
           </Button>
         </div>
       </div>

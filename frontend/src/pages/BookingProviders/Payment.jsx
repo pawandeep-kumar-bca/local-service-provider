@@ -20,6 +20,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { IoMdCash } from "react-icons/io";
 import { usePayment } from "../../hooks/usePayment";
 import { loadRazorpayScript } from "../../utils/loadRazorpayScript";
+import Avatar from "../../components/common/Avatar";
 
 const Payment = () => {
   const [selectedPayment, setSelectedPayment] = useState("cod");
@@ -193,12 +194,10 @@ const Payment = () => {
               {/* Provider Info */}
 
               <div className="flex items-center gap-4 p-5">
-                <img
-                  src={booking.providerSnapshot?.profileImage?.url}
-                  alt={booking.providerSnapshot?.name}
-                  className="w-16 h-16 rounded-full object-cover border"
-                />
-
+               
+              <div  className="w-16 h-16 rounded-full border border-gray-300">
+                <Avatar name={booking.providerSnapshot?.name} image={booking.providerSnapshot?.profileImage?.url} className="text-2xl text-black bg-gray-200"/>
+              </div>
                 <div>
                   <h2 className="text-2xl font-bold text-gray-800">
                     {booking.providerSnapshot?.name}
