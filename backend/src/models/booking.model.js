@@ -194,6 +194,7 @@ const bookingsSchema = new mongoose.Schema(
         required: true,
       },
       slug:String,
+      priceType:String,
       categoryName: String,
       price: Number,
       serviceImage: String,

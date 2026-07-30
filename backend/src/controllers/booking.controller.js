@@ -95,13 +95,12 @@ async function userBookingCreate(req, res) {
       (catId) => catId.category.toString() === categoryId.toString(),
     );
 
-
     if (!providerOffersCategory) {
       return res.status(400).json({
         message: "This provider does not offer the selected category",
       });
     }
-
+console.log(providerOffersCategory.pricing.priceType)
     const stateData = await stateModel.findById(state);
     const districtData = await districtModel.findById(district);
     const cityData = await cityModel.findById(city);
@@ -161,7 +160,9 @@ async function userBookingCreate(req, res) {
     );
 
     if (checkHourly) {
-      serviceCharge = Math.round(providerOffersCategory.pricing.price * durationHours);
+      serviceCharge = Math.round(
+        providerOffersCategory.pricing.price * durationHours,
+      );
     } else {
       serviceCharge = providerOffersCategory.pricing.price;
     }
@@ -181,13 +182,14 @@ async function userBookingCreate(req, res) {
       durationHours,
       pricing,
       serviceSnapshot: {
-        categoryObjectId:categoryExist._id,
+        categoryObjectId: categoryExist._id,
         categoryName: categoryExist.name,
         slug: categoryExist.slug,
         price: providerOffersCategory.pricing.price,
+        priceType:providerOffersCategory.pricing.priceType,
         serviceImage: categoryExist.icon.url,
         serviceBackground: categoryExist.backgroundColor,
-      },
+      }, 
       providerSnapshot: {
         providerObjectId: provider._id,
         providerId: provider.providerId,
@@ -255,7 +257,7 @@ async function getUserAllBooking(req, res) {
     const userId = req.user.id;
 
     const allBookings = await bookingsModel
-      .find({ userId })
+      .find({ "userSnapshot.userObjectId": userId })
       .select(
         "bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot serviceType",
       );
@@ -277,7 +279,7 @@ async function getAllProviderBooking(req, res) {
     const providerId = req.provider._id;
 
     const allBookings = await bookingsModel
-      .find({ providerId })
+      .find({"providerSnapshot.providerObjectId": providerId })
       .select(
         "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType",
       );

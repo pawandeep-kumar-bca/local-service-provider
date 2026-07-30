@@ -28,6 +28,7 @@ const providerMiddleware = async (req, res, next) => {
 
     // status === "approved" from here on
 
+
     req.provider = provider;
 
     next();
