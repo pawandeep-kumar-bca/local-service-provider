@@ -2,6 +2,7 @@ const providerModel = require("../models/provider.model");
 const userModel = require("../models/User.model");
 const bookingModel = require("../models/booking.model");
 const bookingsModel = require("../models/booking.model");
+const paymentModel = require("../models/payment.model");
 const categoryModel = require("../models/category.model");
 async function pendingProviders(req, res) {
   try {
@@ -181,10 +182,9 @@ async function userLists(req, res) {
         },
       },
     ]);
-  
-   
+
     const bookingMap = {};
- 
+
     bookingCounts.forEach((item) => {
       bookingMap[item._id.toString()] = item.totalBookings;
     });
@@ -368,7 +368,7 @@ async function bookingLists(req, res) {
       .limit(limit)
       .skip(skip)
       .select(
-        "bookingId userSnapshot.profileImage userSnapshot.name userSnapshot.userId providerSnapshot.profileImage providerSnapshot.providerId providerSnapshot.name  serviceSnapshot.categoryName serviceSnapshot.serviceBackground serviceSnapshot.slug  serviceSnapshot.serviceImage pricing.totalAmount bookingDate bookingSlot bookingStatus paymentStatus",
+        "bookingId userSnapshot.profileImage userSnapshot.name userSnapshot.userId providerSnapshot.profileImage providerSnapshot.providerId providerSnapshot.name  serviceSnapshot.categoryName serviceSnapshot.serviceBackground serviceSnapshot.slug  serviceSnapshot.serviceImage pricing.totalAmount bookingDate bookingSlot bookingStatus paymentStatus createdAt",
       );
     const totalBooking = await bookingModel.countDocuments();
     if (bookings.length === 0) {
@@ -388,6 +388,7 @@ async function bookingLists(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+
 async function getCategoryByAdmin(req, res) {
   try {
     const {
@@ -576,6 +577,50 @@ async function getCategoryByAdmin(req, res) {
     });
   }
 }
+async function getPaymentsByAdmin(req, res) {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const allPayments = await paymentModel
+      .find()
+      .select(
+        "paymentId bookingId userId providerId amount paymentStatus paymentMethod createdAt",
+      )
+      .populate("userId", "fullname userId profileImage.url")
+      .populate({
+        path: "providerId",
+        select: "userId providerId",
+        populate: {
+          path: "userId",
+          select: "fullname profileImage.url",
+        },
+      })
+      .populate("bookingId", "bookingId pricing")
+      .limit(limit)
+      .skip(skip)
+      .sort({ createdAt: -1 });
+    if (allPayments.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Payment not found",
+        allPayments: [],
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "All payment fetch successfully",
+      allPayments,
+    });
+  } catch (err) {
+    console.error("Get payment by admin error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   pendingProviders,
   getProvidersByAdmin,
@@ -584,4 +629,5 @@ module.exports = {
   userLists,
   bookingLists,
   getCategoryByAdmin,
+  getPaymentsByAdmin,
 };

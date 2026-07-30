@@ -39,6 +39,12 @@ router.get(
   roleBased("admin"),
   adminController.getCategoryByAdmin,
 );
+router.get(
+  "/payments",
+  authMiddleware.tokenVerify,
+  roleBased("admin"),
+  adminController.getPaymentsByAdmin,
+);
 // PUT  /api/v1/admin/providers/:id/approve
 router.put(
   "/providers/:id/approve",
