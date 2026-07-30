@@ -19,3 +19,8 @@ export const userPaymentHistory = async ()=>{
   const response = await api.get('/payments/user/payment-history')
   return response.data
 }
+
+export const adminPayment = async ()=>{
+  const response = await api.get('/admin/payments')
+  return response.data
+}
