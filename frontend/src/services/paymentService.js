@@ -20,7 +20,7 @@ export const userPaymentHistory = async ()=>{
   return response.data
 }
 
-export const adminPayment = async ()=>{
+export const getAdminPayment = async ()=>{
   const response = await api.get('/admin/payments')
   return response.data
 }

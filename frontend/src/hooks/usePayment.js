@@ -4,6 +4,7 @@ import {
   paymentVerify,
   paymentMarkFailed,
   userPaymentHistory,
+  getAdminPayment,
 } from "../services/paymentService";
 
 export const usePayment = () => {
@@ -44,13 +45,21 @@ export const usePayment = () => {
   };
 };
 
-export const useUserPaymentHistory =()=>{
+export const useUserPaymentHistory = () => {
   return useQuery({
-    queryKey:['user-payment-history'],
-    queryFn:userPaymentHistory,
-    onError:(err)=>{
-      console.error("User payment history Error",err);
-      
-    }
-  })
-}
+    queryKey: ["user-payment-history"],
+    queryFn: userPaymentHistory,
+    onError: (err) => {
+      console.error("User payment history Error", err);
+    },
+  });
+};
+export const useAdminPayment = () => {
+  return useQuery({
+    queryKey: ["admin-payment"],
+    queryFn: getAdminPayment,
+    onError: (err) => {
+      console.error("Get admin payment error:", err);
+    },
+  });
+};
