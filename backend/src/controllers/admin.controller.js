@@ -174,16 +174,17 @@ async function userLists(req, res) {
     const bookingCounts = await bookingModel.aggregate([
       {
         $group: {
-          _id: "$userId",
+          _id: "$userSnapshot.userObjectId",
           totalBookings: {
             $sum: 1,
           },
         },
       },
     ]);
-
+  
+   
     const bookingMap = {};
-
+ 
     bookingCounts.forEach((item) => {
       bookingMap[item._id.toString()] = item.totalBookings;
     });
@@ -222,9 +223,9 @@ async function getProvidersByAdmin(req, res) {
     }
     const providers = await providerModel
       .find(filters)
-      .select("categories status createdAt  completedJobs")
+      .select("categories providerId status createdAt  completedJobs")
       .populate("userId", "fullname email phoneNumber profileImage isVerified")
-      .populate("categories", "name")
+      .populate("categories.category", "name")
       .limit(limit)
       .skip(skip);
 
