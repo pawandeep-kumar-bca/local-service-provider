@@ -40,7 +40,7 @@ const ReviewCard = ({ review }) => {
             </div>
           </div>
           <StatusBadge
-            category={review.bookingId?.categoryId?.name}
+            category={review.bookingId?.serviceSnapshot?.categoryObjectId?.name}
             className="mr-4 mt-1"
           />
         </div>
@@ -54,7 +54,7 @@ const ReviewCard = ({ review }) => {
             {review.images?.map((img) => (
               <div
                 key={img._id}
-                className="w-20 h-20 md:w-28 md:h-22 rounded-xl overflow-hidden border border-gray-200 flex-shrink-0"
+                className="w-20 h-20 md:w-[6.7rem] md:h-22 rounded-xl overflow-hidden border border-gray-200 flex-shrink-0"
               >
                 <img
                   src={img?.url}
