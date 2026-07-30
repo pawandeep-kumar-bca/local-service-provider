@@ -28,7 +28,7 @@ async function reviewCreate(req, res) {
         .json({ message: "Booking not found", booking: [] });
     }
 
-    if (booking.userId.toString() !== userId.toString()) {
+    if (booking.userSnapshot.userObjectId.toString() !== userId.toString()) {
       return res.status(403).json({ message: "Unauthorized" });
     }
     if (booking.bookingStatus !== "completed") {
@@ -38,7 +38,7 @@ async function reviewCreate(req, res) {
     if (reviewAlreadyExists) {
       return res.status(400).json({ message: "Review already submitted" });
     }
-    const providerId = booking.providerSnapshot?.providerId;
+    const providerId = booking.providerSnapshot?.providerObjectId;
     
     const reviewImages = req.files?.ReviewImage
       ? await Promise.all(
@@ -113,9 +113,9 @@ async function getAllReviewOfUser(req,res){
       }
     }).populate({
       path:'bookingId',
-      select:'categoryId',
+      select:'serviceSnapshot.categoryObjectId',
       populate:{
-        path:'categoryId',
+        path:'serviceSnapshot.categoryObjectId',
         select:'name'
       }
     }).sort({createdAt:-1})
