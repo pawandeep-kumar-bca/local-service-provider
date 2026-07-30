@@ -1,6 +1,6 @@
 import React from "react";
-import RevenueOverview from "../../../../utils/providerCharts/RevenueOverview";
-import UpiStatus from "../../../../utils/providerCharts/UpiStatus";
+import RevenueOverview from "../../../../../utils/providerCharts/RevenueOverview";
+import UpiStatus from "../../../../../utils/providerCharts/UpiStatus";
 
 const PaymentChartsSection = () => {
   return (

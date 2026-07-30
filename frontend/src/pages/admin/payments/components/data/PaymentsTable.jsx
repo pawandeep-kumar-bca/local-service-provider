@@ -1,12 +1,15 @@
 import React from "react";
-import SearchFilterBar from "../../../../components/common/admin/SearchFilterBar";
-import TableWrapper from "../../../../components/common/admin/TableWrapper";
-import { payments } from "../data/paymentsData";
+import SearchFilterBar from "../../../../../components/common/admin/SearchFilterBar";
+import TableWrapper from "../../../../../components/common/admin/TableWrapper";
+
 import PaymentTableHeader from "./PaymentTableHeader";
 import PaymentTableRow from "./PaymentTableRow";
+import { useAdminPayments } from "../../../../../hooks/usePayment";
 
 // Poori table: search/filter bar + header + saari rows.
 const PaymentsTable = ({ onDownloadInvoiceClick }) => {
+  const { data } = useAdminPayments();
+  const payments = data?.allPayments || [];
   return (
     <TableWrapper>
       <SearchFilterBar
@@ -35,7 +38,7 @@ const PaymentsTable = ({ onDownloadInvoiceClick }) => {
         <div className="space-y-2 pb-3">
           {payments.map((payment) => (
             <PaymentTableRow
-              key={payment.id}
+              key={payment._id}
               payment={payment}
               onDownloadInvoiceClick={onDownloadInvoiceClick}
             />

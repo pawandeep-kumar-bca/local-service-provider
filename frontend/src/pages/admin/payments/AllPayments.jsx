@@ -1,8 +1,8 @@
 import React from "react";
 
-import PaymentStatsSection from "./components/PaymentStatsSection";
-import PaymentChartsSection from "./components/PaymentChartsSection";
-import PaymentsTable from "./components/PaymentsTable";
+import PaymentStatsSection from "./components/data/PaymentStatsSection";
+import PaymentChartsSection from "./components/data/PaymentChartsSection";
+import PaymentsTable from "./components/data/PaymentsTable";
 
 const AllPayments = () => {
   

@@ -54,7 +54,7 @@ export const useUserPaymentHistory = () => {
     },
   });
 };
-export const useAdminPayment = () => {
+export const useAdminPayments = () => {
   return useQuery({
     queryKey: ["admin-payment"],
     queryFn: getAdminPayment,

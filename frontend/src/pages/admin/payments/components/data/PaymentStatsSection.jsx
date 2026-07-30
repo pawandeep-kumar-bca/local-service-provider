@@ -1,6 +1,6 @@
 import React from "react";
-import StatsCard from "../../../../components/common/admin/StatsCard";
-import { statsData } from "../data/statsData.jsx";
+import StatsCard from "../../../../../components/common/admin/StatsCard";
+import { statsData } from "../../data/statsData.jsx";
 
 const PaymentStatsSection = () => {
   return (

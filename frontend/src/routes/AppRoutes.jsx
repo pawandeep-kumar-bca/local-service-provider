@@ -24,7 +24,7 @@ import AllUsersList from "../pages/admin/users/AllUsersList";
 import AllProvidersList from "../pages/admin/providers/AllProvidersList";
 import AllCategoriesList from "../pages/admin/categories/AllCategoriesList";
 import AllBookingsList from "../pages/admin/bookings/AllBookingsList";
-// import AllPayments from "../pages/admin/payments/AllPayments";
+import AllPayments from "../pages/admin/payments/AllPayments";
 import AllReports from "../pages/admin/reports/AllReports";
 import AuthLayout from "../layouts/AuthLayout";
 import Home from "../pages/public/Home";
@@ -239,7 +239,7 @@ const AppRoutes = () => {
             <Route path="/admin/categories/add-category" element={<AddCategory />} />
             <Route path="/admin/categories/category-services" element={<CategoryServices/>} />
             <Route path="/admin/categories/category-providers" element={<CategoryProviders/>} />
-            {/* <Route path="/admin/payments" element={<AllPayments />} /> */}
+            <Route path="/admin/payments" element={<AllPayments />} />
             <Route path="/admin/payments/payment-details" element={<PaymentTransitionDetails />} />
             <Route path="/admin/reports" element={<AllReports />} />
             <Route path="/admin/reports/report-details" element={<ReportDetails />} />

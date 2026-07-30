@@ -1,10 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineFileDownload, MdOutlineRemoveRedEye } from "react-icons/md";
-import UserInfo from "../../../../components/common/admin/UserInfo";
-import ActionDropdown from "../../../../components/common/admin/ActionDropdown";
-import { getPaymentMethodIcon } from "../data/paymentMethodIcons.jsx";
-
+import UserInfo from "../../../../../components/common/admin/UserInfo";
+import ActionDropdown from "../../../../../components/common/admin/ActionDropdown";
+import StatusBudge from "../../../../../components/common/StatusBadge";
 
 const PaymentTableRow = ({ payment, onDownloadInvoiceClick }) => {
   const navigate = useNavigate();
@@ -17,52 +16,58 @@ const PaymentTableRow = ({ payment, onDownloadInvoiceClick }) => {
     >
       {/* transaction id */}
       <div>
-        <h1 className="text-sm font-semibold text-blue-500">{payment.transactionId}</h1>
+        <h1 className="text-sm font-semibold text-blue-500">
+          #{payment.paymentId}
+        </h1>
       </div>
 
       {/* customer */}
-      <UserInfo image={payment.customer.image} name={payment.customer.name} id={payment.customer.id} />
+      <UserInfo
+        image={payment.userId?.profileImage?.url}
+        name={payment.userId?.fullname}
+        id={payment.userId?.userId}
+      />
 
       {/* provider */}
-      <UserInfo image={payment.provider.image} name={payment.provider.name} id={payment.provider.id} />
+      <UserInfo
+        image={payment.providerId?.userId?.profileImage?.url}
+        name={payment.providerId?.userId?.fullname}
+        id={payment.providerId?.providerId}
+      />
 
       {/* payment method */}
       <div className="flex items-center justify-center gap-2">
-        {getPaymentMethodIcon(payment.paymentMethod)}
-        <p>{payment.paymentMethod}</p>
+        <StatusBudge badge={payment.paymentMethod==='upi'?'UPI':'COD'} className="text-xs"/>
+      
       </div>
 
       {/* amount */}
       <div>
-        <p className="text-sm text-center font-semibold text-black/80">{payment.amount}</p>
+        <p className="text-sm text-center font-semibold text-black/80">
+          {payment.amount}
+        </p>
       </div>
 
       {/* status */}
       <div className="flex items-center justify-center">
-        <span
-          className={`
-            py-1 px-3 rounded-lg text-sm flex items-center gap-2 border
-            ${
-              payment.status === "Paid"
-                ? "text-green-500 bg-green-100 border-green-500"
-                : "text-yellow-500 bg-yellow-100 border-yellow-500"
-            }
-          `}
-        >
-          <div
-            className={`
-              w-2 h-2 rounded-full
-              ${payment.status === "Paid" ? "bg-green-500" : "bg-yellow-500"}
-            `}
-          />
-          <p>{payment.status}</p>
-        </span>
+        <StatusBudge badge={payment.paymentStatus} />
+        
       </div>
 
       {/* date time */}
       <div className="text-center">
-        <h3 className="text-sm font-semibold text-black/80">{payment.date}</h3>
-        <p className="text-sm text-muted">{payment.time}</p>
+        <h3 className="text-sm font-semibold text-black/80">
+          {new Date(payment.createdAt).toLocaleDateString('en-IN',{
+            day:'numeric',
+            month:'long',
+            year:'numeric'
+          })}
+        </h3>
+        <p className="text-sm text-muted">{new Date(payment.createdAt).toLocaleTimeString('en-IN',{
+            hour:'2-digit',
+            minute:'2-digit',
+            hour12:true
+          }).toUpperCase()}</p>
       </div>
 
       {/* action dropdown */}
