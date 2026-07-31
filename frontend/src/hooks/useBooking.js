@@ -4,6 +4,7 @@ import {
   createBooking,
   getAllBookingsOfProvider,
   getAllBookingsOfUser,
+  getOneBookingDetails,
 } from "../services/bookingService";
 
 export const useBookingCreate = () => {
@@ -38,13 +39,22 @@ export const useAllUserBookings = () => {
   });
 };
 
-export const useAllProviderBookings = ()=>{
-return useQuery({
-  queryKey:['provider-all-bookings'],
-  queryFn:getAllBookingsOfProvider,
-  onError:(err)=>{
-    console.log('Get all provider booking error:',err);
-    
-  }
-})
-}
+export const useAllProviderBookings = () => {
+  return useQuery({
+    queryKey: ["provider-all-bookings"],
+    queryFn: getAllBookingsOfProvider,
+    onError: (err) => {
+      console.log("Get all provider booking error:", err);
+    },
+  });
+};
+
+export const useUserOneBookingDetails = (bookingId) => {
+  return useQuery({
+    queryKey: ["user-one-booking-details"],
+    queryFn: () => getOneBookingDetails(bookingId),
+    onError: (err) => {
+      console.error("Get one booking details error:", err);
+    },
+  });
+};
