@@ -16,7 +16,7 @@ const NavBar = () => {
         {/* LEFT (same as sidebar width) */}
 
         {/* RIGHT SIDE */}
-        <div className="flex flex-1 items-center justify-between pr-4 pl-1 md:px-4">
+        <div className="flex w-full  items-center justify-between pr-4 pl-1 md:px-4">
           {/* Mobile Profile */}
           <img
             src="/assets/profile.png"
@@ -25,17 +25,17 @@ const NavBar = () => {
           />
 
           {/* Search */}
-          <div className="flex items-center gap-2 border border-muted rounded-lg py-1 px-2 flex-1 md:mx-7 md:mr-4 mx-4">
+          {/* <div className="flex items-center gap-2 border border-muted rounded-lg py-1 px-2 flex-1 md:mx-7 md:mr-4 mx-4">
             <IoSearch className="text-xl" />
             <input
               type="text"
               placeholder="Search..."
               className="text-lg w-full outline-none"
             />
-          </div>
+          </div> */}
 
           {/* Right Icons */}
-          <div className="flex items-center gap-6">
+          <div className="flex w-full items-center justify-end gap-6">
             <div className="flex items-center gap-3 cursor-pointer">
               <FaLocationDot />
               <div className="flex items-center gap-2">

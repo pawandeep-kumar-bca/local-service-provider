@@ -189,7 +189,7 @@ const BookingProvider = ({ booking }) => {
             <Button
               color="success"
               fullWidth
-              onClick={() => navigate("/user/my-bookings/booking-details")}
+              onClick={() => navigate(`/user/my-bookings/${booking._id}/booking-details`)}
             >
               View
             </Button>

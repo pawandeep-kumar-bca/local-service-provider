@@ -148,7 +148,7 @@ const AppRoutes = () => {
               element={<SuccessfulPayment />}
             />
             <Route
-              path="/user/my-bookings/booking-details"
+              path="/user/my-bookings/:bookingId/booking-details"
               element={<ViewUserBooking />}
             />
             <Route
