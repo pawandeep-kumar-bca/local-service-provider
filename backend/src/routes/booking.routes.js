@@ -28,9 +28,9 @@ router.get(
 );
 // GET    /api/v1/bookings/:id
 router.get(
-  "/:id",
+  "/:bookingId",
   authMiddleware.tokenVerify,
-  validateObjectId("id"),
+  validateObjectId("bookingId"),
   bookingController.getUserOneBooking,
 );
 

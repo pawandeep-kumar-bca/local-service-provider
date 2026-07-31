@@ -19,7 +19,6 @@ function parseTimeToMinutes(timeStr) {
   return hours * 60 + minutes;
 }
 async function userBookingCreate(req, res) {
-  
   try {
     const {
       providerId,
@@ -100,7 +99,7 @@ async function userBookingCreate(req, res) {
         message: "This provider does not offer the selected category",
       });
     }
-console.log(providerOffersCategory.pricing.priceType)
+    console.log(providerOffersCategory.pricing.priceType);
     const stateData = await stateModel.findById(state);
     const districtData = await districtModel.findById(district);
     const cityData = await cityModel.findById(city);
@@ -186,10 +185,10 @@ console.log(providerOffersCategory.pricing.priceType)
         categoryName: categoryExist.name,
         slug: categoryExist.slug,
         price: providerOffersCategory.pricing.price,
-        priceType:providerOffersCategory.pricing.priceType,
+        priceType: providerOffersCategory.pricing.priceType,
         serviceImage: categoryExist.icon.url,
         serviceBackground: categoryExist.backgroundColor,
-      }, 
+      },
       providerSnapshot: {
         providerObjectId: provider._id,
         providerId: provider.providerId,
@@ -279,7 +278,7 @@ async function getAllProviderBooking(req, res) {
     const providerId = req.provider._id;
 
     const allBookings = await bookingsModel
-      .find({"providerSnapshot.providerObjectId": providerId })
+      .find({ "providerSnapshot.providerObjectId": providerId })
       .select(
         "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType",
       );
@@ -305,20 +304,22 @@ async function getAllProviderBooking(req, res) {
 }
 async function getUserOneBooking(req, res) {
   try {
-    const bookingId = req.params.id;
+    const bookingId = req.params.bookingId;
     const userId = req.user.id;
     const booking = await bookingsModel
       .findById(bookingId)
-      .populate(
-        "providerSnapshot.providerObjectId",
-        "providerName phoneNumber price city profileImage status rating totalReview availability",
+      .select(
+        "providerSnapshot userSnapshot.userObjectId serviceSnapshot.categoryName serviceSnapShot bookingSlot bookingDate durationHours serviceAddressSnapshot paymentMethod pricing",
       )
-      .populate("serviceSnapshot.categoryObjectId", "name")
       .lean();
+    
     if (!booking) {
       return res.status(404).json({ message: "booking not found" });
     }
-    if (booking.userSnapshot.userObjectId.toString() !== userId) {
+   
+    
+    
+    if (booking.userSnapshot?.userObjectId.toString() !== userId) {
       return res.status(403).json({ message: "forbidden" });
     }
     return res
