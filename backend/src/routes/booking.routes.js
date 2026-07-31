@@ -2,7 +2,7 @@ const express = require("express");
 
 const bookingController = require("../controllers/booking.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
-const {BookingValidation }= require("../validators/booking.validator");
+const { BookingValidation } = require("../validators/booking.validator");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
 const providerMiddleware = require("../middlewares/provider.middleware");
 const router = express.Router();
@@ -20,7 +20,12 @@ router.get(
   authMiddleware.tokenVerify,
   bookingController.getUserAllBooking,
 );
-router.get('/provider',authMiddleware.tokenVerify,providerMiddleware,bookingController.getAllProviderBooking)
+router.get(
+  "/provider",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  bookingController.getAllProviderBooking,
+);
 // GET    /api/v1/bookings/:id
 router.get(
   "/:id",
@@ -28,36 +33,41 @@ router.get(
   validateObjectId("id"),
   bookingController.getUserOneBooking,
 );
-// PUT    /api/v1/bookings/:id/accept
-router.put(
+
+// PATCH /api/v1/bookings/:id/accept
+router.patch(
   "/:id/accept",
   authMiddleware.tokenVerify,
   validateObjectId("id"),
   bookingController.providerAcceptBooking,
 );
-// PUT    /api/v1/bookings/:id/reject
-router.put(
+
+// PATCH /api/v1/bookings/:id/reject
+router.patch(
   "/:id/reject",
   authMiddleware.tokenVerify,
   validateObjectId("id"),
   bookingController.providerRejectBooking,
 );
-// PUT    /api/v1/bookings/:id/start
-router.put(
+
+// PATCH /api/v1/bookings/:id/start
+router.patch(
   "/:id/start",
   authMiddleware.tokenVerify,
   validateObjectId("id"),
   bookingController.providerStartBooking,
 );
-// PUT    /api/v1/bookings/:id/complete
-router.put(
+
+// PATCH /api/v1/bookings/:id/complete
+router.patch(
   "/:id/complete",
   authMiddleware.tokenVerify,
   validateObjectId("id"),
   bookingController.providerCompletedBooking,
 );
-// PUT    /api/v1/bookings/:id/cancel
-router.put(
+
+// PATCH /api/v1/bookings/:id/cancel
+router.patch(
   "/:id/cancel",
   authMiddleware.tokenVerify,
   validateObjectId("id"),

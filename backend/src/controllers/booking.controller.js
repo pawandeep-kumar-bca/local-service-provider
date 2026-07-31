@@ -18,8 +18,8 @@ function parseTimeToMinutes(timeStr) {
 
   return hours * 60 + minutes;
 }
-
 async function userBookingCreate(req, res) {
+  
   try {
     const {
       providerId,
@@ -310,15 +310,15 @@ async function getUserOneBooking(req, res) {
     const booking = await bookingsModel
       .findById(bookingId)
       .populate(
-        "providerId",
+        "providerSnapshot.providerObjectId",
         "providerName phoneNumber price city profileImage status rating totalReview availability",
       )
-      .populate("serviceId", "name")
+      .populate("serviceSnapshot.categoryObjectId", "name")
       .lean();
     if (!booking) {
       return res.status(404).json({ message: "booking not found" });
     }
-    if (booking.userId.toString() !== userId) {
+    if (booking.userSnapshot.userObjectId.toString() !== userId) {
       return res.status(403).json({ message: "forbidden" });
     }
     return res
