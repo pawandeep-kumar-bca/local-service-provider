@@ -50,11 +50,11 @@ export const useAllProviderBookings = () => {
 };
 
 export const useUserOneBookingDetails = (bookingId) => {
+  console.log(bookingId);
+
   return useQuery({
-    queryKey: ["user-one-booking-details"],
-    queryFn: () => getOneBookingDetails(bookingId),
-    onError: (err) => {
-      console.error("Get one booking details error:", err);
-    },
+    queryKey:['user-booking-details-one',bookingId],
+    queryFn:()=>getOneBookingDetails(bookingId),
+    enabled:!!bookingId
   });
 };

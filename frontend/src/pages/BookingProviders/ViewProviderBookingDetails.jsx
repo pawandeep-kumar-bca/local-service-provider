@@ -6,6 +6,7 @@ import { MdOutlineCurrencyRupee } from "react-icons/md";
 import { IoIosArrowBack, IoMdClock } from "react-icons/io";
 import Button from "../../components/common/Button";
 import Avatar from "../../components/common/Avatar";
+import StatusBadge from "../../components/common/StatusBadge";
 
 const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
   return (
@@ -154,9 +155,9 @@ const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
               <h3>Payment Method</h3>
             </div>
 
-            <p className="text-text font-semibold text-sm md:text-lg text-right">
-              {bookingData?.paymentMethod}
-            </p>
+            <StatusBadge
+              badge={`${bookingData?.paymentMethod === "upi" ? "UPI" : "COD"}`}
+            />
           </div>
         </div>
 
@@ -185,7 +186,7 @@ const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
 
                 <p className="font-semibold text-gray-800 text-lg flex items-center">
                   <MdOutlineCurrencyRupee />
-                  500
+                  {bookingData?.pricing?.serviceCharge}
                 </p>
               </div>
 
@@ -196,7 +197,7 @@ const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
 
                 <p className="font-semibold text-gray-800 text-lg flex items-center">
                   <MdOutlineCurrencyRupee />
-                  20
+                  {bookingData?.pricing?.platformFee}
                 </p>
               </div>
             </div>

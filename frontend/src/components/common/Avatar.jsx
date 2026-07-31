@@ -1,7 +1,7 @@
 import React from "react";
 
-const Avatar = ({ name, image,className='' }) => {
-  const initials = name
+const Avatar = ({ name, image, className = "" }) => {
+  const initials = (name || "")
     .split(" ")
     .map((word) => word[0])
     .join("")
@@ -13,7 +13,9 @@ const Avatar = ({ name, image,className='' }) => {
       className="w-full h-full rounded-full object-cover "
     />
   ) : (
-    <div className={`w-full h-full rounded-full flex items-center justify-center  font-bold ${className}`}>
+    <div
+      className={`w-full h-full rounded-full flex items-center justify-center  font-bold ${className}`}
+    >
       {initials}
     </div>
   );

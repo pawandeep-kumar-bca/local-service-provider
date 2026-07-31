@@ -6,6 +6,8 @@ export const getAllProviders = async (params) => {
 };
 
 export const getProviderById = async (providerId) => {
+  console.log(providerId);
+  
   const response = await api.get(`/providers/${providerId}`);
   return response.data;
 };
