@@ -3,11 +3,11 @@ import { MdBlock, MdDeleteOutline, MdLockReset, MdOutlineEdit, MdOutlineVerified
 import { NavLink, Outlet } from 'react-router-dom'
 import Button from '../../../components/common/Button'
 import StatusBadge from '../../../components/common/StatusBadge'
-import { FaAngleLeft } from 'react-icons/fa6'
+import { FaAngleLeft, FaUserSlash } from 'react-icons/fa6'
 import { RiResetLeftLine } from 'react-icons/ri'
 import ResetPasswordModal from '../modals/ResetPasswordModal'
 import DeleteModal from '../modals/DeleteModal'
-import SuspendModal from '../modals/SuspendModal'
+import ActionReasonModal from '../../../components/common/models/ActionReasonModal'
 import VerifyProviderModal from '../modals/VerifyProviderModal'
 
 const ViewProviderProfile = () => {
@@ -207,9 +207,12 @@ const ViewProviderProfile = () => {
       )}
 
       {suspendProvider && (
-        <SuspendModal
+        <ActionReasonModal
+        Icon={<FaUserSlash size={18}/>}
+        className='text-yellow-600 bg-yellow-100'
           title="Provider"
           text="Are you sure you want to suspend this provider? Provider will not able to login or access the system."
+          rightBtnColor='yellow'
           rightBtnText="Suspend Provider"
           close={() => setSuspendProvider(false)}
           open={suspendProvider}

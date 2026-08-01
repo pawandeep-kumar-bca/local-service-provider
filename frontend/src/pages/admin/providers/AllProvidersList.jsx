@@ -6,7 +6,7 @@ import { suspendReasons } from "./data/suspendReasons";
 
 import ResetPasswordModal from "../modals/ResetPasswordModal";
 import DeleteModal from "../modals/DeleteModal";
-import SuspendModal from "../modals/SuspendModal";
+import ActionReasonModal from "../../../components/common/models/ActionReasonModal";
 import VerifyProviderModal from "../modals/VerifyProviderModal";
 import ReviewProvider from "../modals/ReviewProvider";
 
@@ -52,7 +52,7 @@ const AllProvidersList = () => {
       )}
 
       {suspendProvider && (
-        <SuspendModal
+        <ActionReasonModal
           title="Suspend Provider"
           text={`Are you sure you want to suspend ${suspendProvider.name}? Provider will not able to login or access the system.`}
           rightBtnText="Suspend Provider"

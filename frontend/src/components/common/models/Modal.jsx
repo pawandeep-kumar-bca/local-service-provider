@@ -1,16 +1,16 @@
 import { IoClose } from "react-icons/io5";
-import Button from "./Button";
+import Button from "../Button";
 
 const Modal = ({
   isOpen,
   onClose,
   children,
   onConfirm,
-  showFooter = true,
+  showFooter = false,
   size = "md",
   rightBtnColor,
   rightBtnText,
-  leftBtnColor
+  leftBtnColor,
 }) => {
   if (!isOpen) return null;
 
@@ -52,20 +52,16 @@ const Modal = ({
       >
         {/* Header */}
 
-      
-          
-
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 transition-all absolute top-2  right-2 cursor-pointer"
-          >
-            <IoClose className="text-2xl" />
-          </button>
-       
+        <button
+          onClick={onClose}
+          className="p-2 rounded-full hover:bg-gray-100 transition-all absolute top-2  right-2 cursor-pointer"
+        >
+          <IoClose className="text-2xl" />
+        </button>
 
         {/* Body */}
-          
-        <div className="px-5 ">{children}</div>
+
+        <div className="px-5 w-full">{children}</div>
 
         {/* Footer */}
 
@@ -75,7 +71,9 @@ const Modal = ({
               Cancel
             </Button>
 
-            <Button onClick={onConfirm} color={rightBtnColor}>{rightBtnText}</Button>
+            <Button onClick={onConfirm} color={rightBtnColor}>
+              {rightBtnText}
+            </Button>
           </div>
         )}
       </div>

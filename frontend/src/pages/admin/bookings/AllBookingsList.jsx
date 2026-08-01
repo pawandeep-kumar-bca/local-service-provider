@@ -4,7 +4,7 @@ import BookingStatsSection from "./components/BookingStatsSection";
 import BookingsTable from "./components/BookingsTable";
 import { cancelReasons } from "./data/cancelReasons";
 
-import SuspendModal from "../modals/SuspendModal";
+import SuspendModal from "../../../components/common/models/ActionReasonModal";
 import RescheduleBooking from "../modals/RescheduleBooking";
 import EditBookingModal from "../modals/EditBookingModal";
 import RefundPaymentModal from "../modals/RefundPaymentModal";

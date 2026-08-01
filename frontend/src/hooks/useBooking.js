@@ -35,6 +35,7 @@ export const useAllUserBookings = () => {
   return useQuery({
     queryKey: ["user-all-bookings"],
     queryFn: getAllBookingsOfUser,
+    refetchInterval:10000,
     onError: (err) => {
       console.log("Get all bookings of user error:", err);
     },
@@ -45,6 +46,7 @@ export const useAllProviderBookings = () => {
   return useQuery({
     queryKey: ["provider-all-bookings"],
     queryFn: getAllBookingsOfProvider,
+    refetchInterval: 10000,
     onError: (err) => {
       console.log("Get all provider booking error:", err);
     },
@@ -66,7 +68,7 @@ export const useBookingStatus = () => {
   const bookingAcceptedMutation = useMutation({
     mutationFn: (bookingId) => acceptedBookingByProvider(bookingId),
     onSuccess: (data) => {
-      toast.success(data.message)
+      toast.success(data.message);
       queryClient.invalidateQueries({
         queryKey: ["provider-all-bookings"],
       });

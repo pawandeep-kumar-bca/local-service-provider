@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import UserStatsSection from "./components/UserStatsSection";
 import UsersTable from "./components/UsersTable";
 import DeleteModal from "../modals/DeleteModal";
-import SuspendModal from "../modals/SuspendModal";
+import ActionReasonModal from "../../../components/common/models/ActionReasonModal";
 import ResetPasswordModal from "../modals/ResetPasswordModal";
 
 const suspendReasons = [
@@ -27,7 +27,6 @@ const suspendReasons = [
 ];
 
 const AllUsersList = () => {
-  
   const [userToDelete, setUserToDelete] = useState(null);
   const [userToSuspend, setUserToSuspend] = useState(null);
   const [userToResetPassword, setUserToResetPassword] = useState(null);
@@ -52,9 +51,9 @@ const AllUsersList = () => {
           title="User"
         />
       )}
- 
+
       {userToSuspend && (
-        <SuspendModal
+        <ActionReasonModal
           open={!!userToSuspend}
           close={() => setUserToSuspend(null)}
           title="Suspend User"

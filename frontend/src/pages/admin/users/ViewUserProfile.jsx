@@ -11,7 +11,7 @@ import { useState } from "react";
 
 import { RiDeleteBin6Line } from "react-icons/ri";
 import DeleteModal from "../modals/DeleteModal";
-import SuspendModal from "../modals/SuspendModal";
+import ActionReasonModal from "../../../components/common/models/ActionReasonModal";
 import { FaAngleLeft } from "react-icons/fa";
 import ResetPasswordModal from "../modals/ResetPasswordModal";
 const ViewUserProfile = () => {
@@ -203,7 +203,7 @@ const ViewUserProfile = () => {
         />
       )}
       {isSuspend && (
-        <SuspendModal
+        <ActionReasonModal
           open={isSuspend}
           close={() => setIsSuspend(false)}
           text="Are you sure you want suspend this user? User will not be able to login or access the system."
