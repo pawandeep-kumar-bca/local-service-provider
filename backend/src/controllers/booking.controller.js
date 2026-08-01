@@ -312,13 +312,11 @@ async function getUserOneBooking(req, res) {
         "providerSnapshot userSnapshot.userObjectId serviceSnapshot.categoryName serviceSnapShot bookingSlot bookingDate durationHours serviceAddressSnapshot paymentMethod pricing",
       )
       .lean();
-    
+
     if (!booking) {
       return res.status(404).json({ message: "booking not found" });
     }
-   
-    
-    
+
     if (booking.userSnapshot?.userObjectId.toString() !== userId) {
       return res.status(403).json({ message: "forbidden" });
     }
@@ -333,21 +331,20 @@ async function getUserOneBooking(req, res) {
 
 async function providerAcceptBooking(req, res) {
   try {
-    const userId = req.user.id;
-    const bookingId = req.params.id;
-    const provider = await providerModel.findOne({
-      userId: userId,
-    });
-    if (!provider) {
-      return res.status(404).json({ message: "Provider not found" });
-    }
-    const providerId = provider._id;
+    const providerId = req.provider._id;
+    const bookingId = req.params.bookingId;
+   
 
     const booking = await bookingsModel.findById(bookingId);
+    console.log(booking);
+
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-    if (booking.providerId.toString() !== providerId.toString()) {
+    if (
+      booking.providerSnapshot?.providerObjectId.toString() !==
+      providerId.toString()
+    ) {
       return res.status(403).json({ message: "forbidden" });
     }
     if (booking.bookingStatus !== "pending") {
@@ -363,7 +360,12 @@ async function providerAcceptBooking(req, res) {
     if (bookingSlotAlready) {
       return res.status(409).json({ message: "Booking slot already booked" });
     }
-    booking.bookingStatus = "Accepted";
+    booking.bookingStatus = "accepted";
+    booking.acceptedAt = new Date();
+    booking.statusHistory.push({
+      status:'accepted',
+      changedAt:new Date()
+    })
     await booking.save();
 
     return res

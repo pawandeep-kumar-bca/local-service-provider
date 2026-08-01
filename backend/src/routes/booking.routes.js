@@ -26,7 +26,7 @@ router.get(
   providerMiddleware,
   bookingController.getAllProviderBooking,
 );
-// GET    /api/v1/bookings/:id
+// GET    /api/v1/bookings/:bookingId
 router.get(
   "/:bookingId",
   authMiddleware.tokenVerify,
@@ -34,11 +34,11 @@ router.get(
   bookingController.getUserOneBooking,
 );
 
-// PATCH /api/v1/bookings/:id/accept
+// PATCH /api/v1/bookings/:bookingId/accept
 router.patch(
-  "/:id/accept",
-  authMiddleware.tokenVerify,
-  validateObjectId("id"),
+  "/:bookingId/accept",
+  authMiddleware.tokenVerify,providerMiddleware,
+  validateObjectId("bookingId"),
   bookingController.providerAcceptBooking,
 );
 
