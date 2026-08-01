@@ -99,7 +99,7 @@ async function userBookingCreate(req, res) {
         message: "This provider does not offer the selected category",
       });
     }
-    console.log(providerOffersCategory.pricing.priceType);
+
     const stateData = await stateModel.findById(state);
     const districtData = await districtModel.findById(district);
     const cityData = await cityModel.findById(city);
@@ -250,7 +250,6 @@ async function userBookingCreate(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-
 async function getUserAllBooking(req, res) {
   try {
     const userId = req.user.id;
@@ -280,7 +279,7 @@ async function getAllProviderBooking(req, res) {
     const allBookings = await bookingsModel
       .find({ "providerSnapshot.providerObjectId": providerId })
       .select(
-        "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType",
+        "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType rejectionReason rejectionNote cancelReason",
       )
       .sort({ createdAt: -1 });
 
@@ -360,7 +359,7 @@ async function providerAcceptBooking(req, res) {
     if (bookingSlotAlready) {
       return res.status(409).json({ message: "Booking slot already booked" });
     }
-    const now = new Date()
+    const now = new Date();
     booking.bookingStatus = "accepted";
     booking.acceptedAt = now;
     booking.statusHistory.push({
@@ -382,7 +381,17 @@ async function providerRejectBooking(req, res) {
     const { reason, reasonNote } = req.body;
     const bookingId = req.params.bookingId;
     const providerId = req.provider._id;
-
+    if (!reason) {
+      return res.status(400).json({
+        message: "Reason is required!",
+      });
+    }
+    if (!reasonNote || reasonNote.length < 10 || reasonNote.length > 100) {
+      return res.status(400).json({
+        message:
+          "Reason Notes is required and its minimum 10 and maximum 100 character!",
+      });
+    }
     const booking = await bookingsModel.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
@@ -397,17 +406,7 @@ async function providerRejectBooking(req, res) {
     if (booking.bookingStatus !== "pending") {
       return res.status(400).json({ message: "Invalid booking status" });
     }
-    if (!reason) {
-      return res.status(400).json({
-        message: "Reason is required!",
-      });
-    }
-    if (!reasonNote || reasonNote.length < 10 || reasonNote.length > 100) {
-      return res.status(400).json({
-        message:
-          "Reason Notes is required and its minimum 10 and maximum 100 character!",
-      });
-    }
+
     const now = new Date();
     booking.bookingStatus = "rejected";
     booking.rejectedAt = now;
@@ -430,21 +429,18 @@ async function providerRejectBooking(req, res) {
 
 async function providerStartBooking(req, res) {
   try {
-    const userId = req.user.id;
-    const bookingId = req.params.id;
-    const provider = await providerModel.findOne({
-      userId: userId,
-    });
-    if (!provider) {
-      return res.status(404).json({ message: "Provider not found" });
-    }
-    const providerId = provider._id;
+    const bookingId = req.params.bookingId;
+    const providerId = req.provider._id;
 
     const booking = await bookingsModel.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-    if (booking.providerId.toString() !== providerId.toString()) {
+    if (
+      !booking.providerSnapshot?.providerObjectId ||
+      booking.providerSnapshot.providerObjectId.toString() !==
+        providerId.toString()
+    ) {
       return res.status(403).json({ message: "forbidden" });
     }
     if (booking.bookingStatus !== "accepted") {
@@ -456,12 +452,18 @@ async function providerStartBooking(req, res) {
     const bookingDate = new Date(booking.bookingDate);
     bookingDate.setHours(0, 0, 0, 0);
 
-    if (bookingDate.getTime() !== today.getTime()) {
+    if (today < bookingDate) {
       return res.status(400).json({
-        message: "Booking date is not today",
+        message: "Booking date has not arrived yet",
       });
     }
-    booking.bookingStatus = "started";
+    const now = new Date();
+    booking.bookingStatus = "in_progress";
+    booking.statusHistory.push({
+      status: "in_progress",
+      changedAt: now,
+    });
+    booking.startedAt = now;
     await booking.save();
 
     return res

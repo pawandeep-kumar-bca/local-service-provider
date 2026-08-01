@@ -37,7 +37,8 @@ router.get(
 // PATCH /api/v1/bookings/:bookingId/accept
 router.patch(
   "/:bookingId/accept",
-  authMiddleware.tokenVerify,providerMiddleware,
+  authMiddleware.tokenVerify,
+  providerMiddleware,
   validateObjectId("bookingId"),
   bookingController.providerAcceptBooking,
 );
@@ -45,16 +46,18 @@ router.patch(
 // PATCH /api/v1/bookings/:bookingId/reject
 router.patch(
   "/:bookingId/reject",
-  authMiddleware.tokenVerify,providerMiddleware,
-  validateObjectId("id"),
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  validateObjectId("bookingId"),
   bookingController.providerRejectBooking,
 );
 
 // PATCH /api/v1/bookings/:id/start
 router.patch(
-  "/:id/start",
+  "/:bookingId/start",
   authMiddleware.tokenVerify,
-  validateObjectId("id"),
+  providerMiddleware,
+  validateObjectId("bookingId"),
   bookingController.providerStartBooking,
 );
 
