@@ -14,10 +14,11 @@ import ActionReasonModal from "../../components/common/models/ActionReasonModal"
 
 const UserCardBookings = ({ booking }) => {
   const [rejected, setRejected] = useState(null);
-  const [formData,setFormData]= useState({
-    reason:'',
-    notes:''
-  })
+  const [cancel,setCancel] = useState(null)
+  const [formData, setFormData] = useState({
+    reason: "",
+    notes: "",
+  });
   const { bookingAcceptedMutation } = useBookingStatus();
   const handleAccept = async (bookingId) => {
     await bookingAcceptedMutation.mutateAsync(bookingId);
@@ -34,6 +35,23 @@ const UserCardBookings = ({ booking }) => {
     "Equipment or tools unavailable",
     "Other",
   ];
+const providerCancelReasons = [
+  "Personal emergency",
+  "Medical emergency",
+  "Family emergency",
+  "On leave / Vacation",
+  "Already booked for another job",
+  "Vehicle breakdown",
+  "Out of service area",
+  "Required tools or equipment unavailable",
+  "Unable to reach customer",
+  "Customer requested reschedule",
+  "Weather conditions",
+  "Health issue",
+  "Safety concerns",
+  "Provider unavailable",
+  "Other"
+];
 
   return (
     <>
@@ -258,7 +276,7 @@ const UserCardBookings = ({ booking }) => {
             </>
           ) : booking.bookingStatus === "accepted" ? (
             <>
-              <Button fullWidth color="danger">
+              <Button fullWidth color="danger" onClick={()=>setCancel(booking)} className={setCancel}>
                 Cancel Booking
               </Button>
               <Button fullWidth color="blue">
@@ -276,9 +294,29 @@ const UserCardBookings = ({ booking }) => {
           ) : (
             // cancelled / rejected
             <div className="text-sm text-gray-500">
-              {booking.bookingStatus === "cancelled"
-                ? booking.cancelReason
-                : booking.rejectReason}
+              {booking.bookingStatus === "cancelled" ? (
+                 <>
+                  <p>
+                    <strong>Reason:</strong> {booking.cancelReason}
+                  </p>
+                  {booking.cancelNote && (
+                    <p>
+                      <strong>Note:</strong> {booking.cancelNote}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p>
+                    <strong>Reason:</strong> {booking.rejectionReason}
+                  </p>
+                  {booking.rejectionNote && (
+                    <p>
+                      <strong>Note:</strong> {booking.rejectionNote}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           )}
         </div>
@@ -289,15 +327,32 @@ const UserCardBookings = ({ booking }) => {
           open={() => setRejected(booking)}
           formData={formData}
           setFormData={setFormData}
-          Icon={<MdCancel size={20} />}
+          Icon={<MdCancel size={30} />}
           className="text-red-500 bg-red-100"
           title="Reject Booking"
           text="Are you sure you want to reject this booking ? this action cannot be undone."
           reason={providerRejectReasons}
-          size='sm'
-          handlerSubmit={console.log('hello')}
+          size="sm"
+          handlerSubmit={console.log("reject booking")}
           rightBtnColor="danger"
           rightBtnText="Reject Booking"
+        />
+      )}
+       {cancel && (
+        <ActionReasonModal
+          close={() => setCancel(null)}
+          open={() => setCancel(booking)}
+          formData={formData}
+          setFormData={setFormData}
+          Icon={<MdCancel size={30} />}
+          className="text-red-500 bg-red-100"
+          title="Cancel Booking"
+          text="Are you sure you want to cancel this booking ? this action cannot be undone."
+          reason={providerCancelReasons}
+          size="sm"
+          handlerSubmit={console.log("cancel booking")}
+          rightBtnColor="danger"
+          rightBtnText="Cancel Booking"
         />
       )}
     </>

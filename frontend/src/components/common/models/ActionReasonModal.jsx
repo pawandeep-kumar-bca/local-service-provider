@@ -21,7 +21,6 @@ const ActionReasonModal = ({
     <Modal
       isOpen={open}
       onClose={close}
-      title="Delete User"
       size={size}
       children={
         <div className="flex flex-col items-center text-center">
@@ -49,10 +48,15 @@ const ActionReasonModal = ({
                   name="reason"
                   id="reason"
                   value={formData.reason}
-                  onChange={(e) => setFormData(e.target.value)}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      reason: e.target.value,
+                    }))
+                  }
                   className="border border-muted rounded-lg py-2 text-black/80 font-semibold px-2 text-sm outline-0 transition-all duration-300 focus:ring focus:ring-blue-500 w-full"
                 >
-                  {reason.map((rea) => (
+                  {reason?.map((rea) => (
                     <option key={rea} value={rea}>
                       {rea}
                     </option>
@@ -71,16 +75,21 @@ const ActionReasonModal = ({
                 </label>
                 <textarea
                   placeholder="Enter note here..."
-                  rows={2}
+                  rows={4}
                   maxLength={100}
                   minLength={10}
-                  value={formData.notes}
-                  onChange={(e) => setFormData(e.target.value)}
+                  value={formData.notes||''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      notes: e.target.value,
+                    }))
+                  }
                   name="note"
                   className="border border-muted rounded-lg py-1 px-2 text-sm w-full outline-0 transition-all text-black/80 font-semibold duration-300 focus:ring focus:ring-blue-500"
                 />
                 <p className="w-full text-right text-sm font-semibold">
-                  {formData.length === 0 ? 0 : formData.length}/100
+                  {formData.notes?.length || 0}/100
                 </p>
               </div>
             </div>
