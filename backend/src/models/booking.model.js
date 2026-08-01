@@ -193,8 +193,8 @@ const bookingsSchema = new mongoose.Schema(
         ref: "Category",
         required: true,
       },
-      slug:String,
-      priceType:String,
+      slug: String,
+      priceType: String,
       categoryName: String,
       price: Number,
       serviceImage: String,
@@ -277,11 +277,14 @@ const bookingsSchema = new mongoose.Schema(
       default: null,
     },
 
-    rejectReason: {
+    rejectionReason: {
+      type: String,
+    },
+
+    rejectionNote: {
       type: String,
       trim: true,
     },
-
     cancelReason: {
       type: String,
       trim: true,
@@ -313,6 +316,14 @@ const bookingsSchema = new mongoose.Schema(
     },
 
     cancelledAt: {
+      type: Date,
+      default: null,
+    },
+    rejectedAt: {
+      type: Date,
+      default: null,
+    },
+    inProgress: {
       type: Date,
       default: null,
     },

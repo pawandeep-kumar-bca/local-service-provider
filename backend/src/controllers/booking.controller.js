@@ -281,7 +281,8 @@ async function getAllProviderBooking(req, res) {
       .find({ "providerSnapshot.providerObjectId": providerId })
       .select(
         "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType",
-      );
+      )
+      .sort({ createdAt: -1 });
 
     if (allBookings.length === 0) {
       return res.status(200).json({
@@ -333,7 +334,6 @@ async function providerAcceptBooking(req, res) {
   try {
     const providerId = req.provider._id;
     const bookingId = req.params.bookingId;
-   
 
     const booking = await bookingsModel.findById(bookingId);
     console.log(booking);
@@ -360,12 +360,13 @@ async function providerAcceptBooking(req, res) {
     if (bookingSlotAlready) {
       return res.status(409).json({ message: "Booking slot already booked" });
     }
+    const now = new Date()
     booking.bookingStatus = "accepted";
-    booking.acceptedAt = new Date();
+    booking.acceptedAt = now;
     booking.statusHistory.push({
-      status:'accepted',
-      changedAt:new Date()
-    })
+      status: "accepted",
+      changedAt: now,
+    });
     await booking.save();
 
     return res
@@ -378,32 +379,49 @@ async function providerAcceptBooking(req, res) {
 }
 async function providerRejectBooking(req, res) {
   try {
-    const userId = req.user.id;
-    const bookingId = req.params.id;
-    const provider = await providerModel.findOne({
-      userId: userId,
-    });
-    if (!provider) {
-      return res.status(404).json({ message: "Provider not found" });
-    }
-    const providerId = provider._id;
+    const { reason, reasonNote } = req.body;
+    const bookingId = req.params.bookingId;
+    const providerId = req.provider._id;
 
     const booking = await bookingsModel.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-    if (booking.providerId.toString() !== providerId.toString()) {
+    if (
+      !booking.providerSnapshot?.providerObjectId ||
+      booking.providerSnapshot.providerObjectId.toString() !==
+        providerId.toString()
+    ) {
       return res.status(403).json({ message: "forbidden" });
     }
     if (booking.bookingStatus !== "pending") {
       return res.status(400).json({ message: "Invalid booking status" });
     }
+    if (!reason) {
+      return res.status(400).json({
+        message: "Reason is required!",
+      });
+    }
+    if (!reasonNote || reasonNote.length < 10 || reasonNote.length > 100) {
+      return res.status(400).json({
+        message:
+          "Reason Notes is required and its minimum 10 and maximum 100 character!",
+      });
+    }
+    const now = new Date();
     booking.bookingStatus = "rejected";
+    booking.rejectedAt = now;
+    booking.rejectionReason = reason;
+    booking.rejectionNote = reasonNote;
+    booking.statusHistory.push({
+      status: "rejected",
+      changedAt: now,
+    });
     await booking.save();
 
     return res
       .status(200)
-      .json({ message: "Booking Reject successfully", booking });
+      .json({ message: "Booking rejected successfully", booking });
   } catch (err) {
     console.error("booking Reject error:", err);
     return res.status(500).json({ message: "Internal server error" });

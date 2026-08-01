@@ -42,10 +42,10 @@ router.patch(
   bookingController.providerAcceptBooking,
 );
 
-// PATCH /api/v1/bookings/:id/reject
+// PATCH /api/v1/bookings/:bookingId/reject
 router.patch(
-  "/:id/reject",
-  authMiddleware.tokenVerify,
+  "/:bookingId/reject",
+  authMiddleware.tokenVerify,providerMiddleware,
   validateObjectId("id"),
   bookingController.providerRejectBooking,
 );
