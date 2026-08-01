@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   acceptedBookingByProvider,
@@ -7,6 +7,7 @@ import {
   getAllBookingsOfUser,
   getOneBookingDetails,
 } from "../services/bookingService";
+import { toast } from "react-toastify";
 
 export const useBookingCreate = () => {
   const navigate = useNavigate();
@@ -61,8 +62,15 @@ export const useUserOneBookingDetails = (bookingId) => {
 };
 
 export const useBookingStatus = () => {
+  const queryClient = useQueryClient();
   const bookingAcceptedMutation = useMutation({
     mutationFn: (bookingId) => acceptedBookingByProvider(bookingId),
+    onSuccess: (data) => {
+      toast.success(data.message)
+      queryClient.invalidateQueries({
+        queryKey: ["provider-all-bookings"],
+      });
+    },
   });
 
   return { bookingAcceptedMutation };

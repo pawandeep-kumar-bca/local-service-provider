@@ -9,8 +9,13 @@ import { PiNotePencilLight } from "react-icons/pi";
 import { MdPayments } from "react-icons/md";
 import { FaMoneyBillWave } from "react-icons/fa6";
 import Avatar from "../../components/common/Avatar";
+import { useBookingStatus } from "../../hooks/useBooking";
 
 const UserCardBookings = ({ booking }) => {
+  const {bookingAcceptedMutation} = useBookingStatus()
+  const handleAccept = async (bookingId)=>{
+       await bookingAcceptedMutation.mutateAsync(bookingId)
+  }
   return (
     <div
       className="border border-gray-200 bg-white rounded-2xl p-5
@@ -215,7 +220,7 @@ const UserCardBookings = ({ booking }) => {
             <Button fullWidth color="danger">
               Reject
             </Button>
-            <Button fullWidth>Accept</Button>
+            <Button fullWidth onClick={()=>handleAccept(booking._id)}>Accept</Button>
           </>
         ) : booking.bookingStatus === "accepted" ? (
           <>
