@@ -474,7 +474,66 @@ async function providerStartBooking(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+async function providerCancelBooking(req, res) {
+  try {
+    const { cancelReason, cancelNote } = req.body;
+    const providerId = req.provider._id;
+    const bookingId = req.params.bookingId;
+    if (!cancelReason) {
+      return res.status(400).json({
+        message: "Cancel reason is required!",
+      });
+    }
+    if (!cancelNote || cancelNote.length < 10 || cancelNote.length > 100) {
+      return res.status(400).json({
+        message: "Cancel notes is minimum 10 and maximum 100 characters.",
+      });
+    }
+    const booking = await bookingsModel.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({
+        message: "booking not found",
+      });
+    }
 
+    if (
+      !booking.providerSnapshot?.providerObjectId ||
+      booking.providerSnapshot?.providerObjectId?.toString() !==
+        providerId.toString()
+    ) {
+      return res.status(403).json({
+        message: "This booking is not your.",
+      });
+    }
+    if (booking.bookingStatus !== "accepted") {
+      return res.status(400).json({
+        message: "Booking cancelled is only accepted booking",
+      });
+    }
+    const now = new Date();
+    booking.bookingStatus = "cancelled";
+    booking.cancelNote = cancelNote;
+    booking.cancelReason = cancelReason;
+    booking.cancelledBy = "provider";
+    booking.cancelledAt = now;
+    booking.statusHistory.push({
+      status: "cancelled",
+      changedAt: now,
+    });
+    await booking.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Booking cancelled successfully!",
+      booking,
+    });
+  } catch (err) {
+    console.error("provider cancel booking error", err);
+    return res.status(500).json({
+      message: "Internal server Error",
+    });
+  }
+}
 async function providerCompletedBooking(req, res) {
   try {
     const userId = req.user.id;
@@ -548,6 +607,7 @@ module.exports = {
   getUserOneBooking,
   providerAcceptBooking,
   providerRejectBooking,
+  providerCancelBooking,
   providerStartBooking,
   providerCompletedBooking,
   userBookingCancel,

@@ -285,15 +285,6 @@ const bookingsSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    cancelReason: {
-      type: String,
-      trim: true,
-    },
-
-    providerNotes: {
-      type: String,
-      trim: true,
-    },
 
     isReviewed: {
       type: Boolean,
@@ -318,6 +309,17 @@ const bookingsSchema = new mongoose.Schema(
     cancelledAt: {
       type: Date,
       default: null,
+    },
+    cancelledBy: {
+      type: String,
+      enum: ["user", "provider", "admin"],
+    },
+    cancelReason: {
+      type: String,
+    },
+    cancelNote: {
+      type: String,
+      trim: true,
     },
     rejectedAt: {
       type: Date,

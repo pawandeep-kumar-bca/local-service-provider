@@ -52,7 +52,7 @@ router.patch(
   bookingController.providerRejectBooking,
 );
 
-// PATCH /api/v1/bookings/:id/start
+// PATCH /api/v1/bookings/:bookingId/start
 router.patch(
   "/:bookingId/start",
   authMiddleware.tokenVerify,
@@ -60,7 +60,14 @@ router.patch(
   validateObjectId("bookingId"),
   bookingController.providerStartBooking,
 );
-
+// PATCH /api/v1/bookings/:bookingId/cancel
+router.patch(
+  "/:bookingId/cancel",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  validateObjectId("bookingId"),
+  bookingController.providerCancelBooking,
+);
 // PATCH /api/v1/bookings/:id/complete
 router.patch(
   "/:id/complete",
