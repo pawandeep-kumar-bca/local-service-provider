@@ -21,3 +21,8 @@ export const getOneBookingDetails = async (bookingId) => {
 
   return response.data;
 };
+
+export const acceptedBookingByProvider = async (bookingId)=>{
+  const response = await api.patch(`/bookings/${bookingId}/accept`)
+  return response.data
+}
