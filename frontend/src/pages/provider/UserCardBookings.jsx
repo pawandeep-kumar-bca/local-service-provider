@@ -24,6 +24,7 @@ const UserCardBookings = ({ booking }) => {
     bookingAcceptedMutation,
     bookingRejectMutation,
     bookingStartMutation,
+    
   } = useBookingStatus();
   const handleAccept = async (bookingId) => {
     await bookingAcceptedMutation.mutateAsync(bookingId);
@@ -86,6 +87,9 @@ const UserCardBookings = ({ booking }) => {
       },
     });
   };
+  const startBookingHandler = async (bookingId)=>{
+
+  }
   return (
     <>
       <div
@@ -308,7 +312,7 @@ const UserCardBookings = ({ booking }) => {
             </>
           ) : booking.bookingStatus === "accepted" ? (
             <>
-              <Button fullWidth color="danger" onClick={() => setCancel(null)}>
+              <Button fullWidth color="danger" onClick={() => setCancel(booking)}>
                 Cancel Booking
               </Button>
               <Button
@@ -380,6 +384,7 @@ const UserCardBookings = ({ booking }) => {
           close={() => setCancel(null)}
           open={() => setCancel(booking)}
           formData={formData}
+          value={cancel}
           setFormData={setFormData}
           Icon={<MdCancel size={30} />}
           className="text-red-500 bg-red-100"
@@ -387,7 +392,7 @@ const UserCardBookings = ({ booking }) => {
           text="Are you sure you want to cancel this booking ? this action cannot be undone."
           reason={providerCancelReasons}
           size="sm"
-          handlerSubmit={console.log("cancel booking")}
+          handlerSubmit={startBookingHandler}
           rightBtnColor="danger"
           rightBtnText="Cancel Booking"
         />
