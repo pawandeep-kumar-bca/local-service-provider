@@ -249,11 +249,11 @@ const BookingProvider = ({ booking }) => {
               ) : (
                 <>
                   <p>
-                    <strong>Reason: </strong> 
+                    <strong>Reason: </strong>
                     {booking.rejectionReason}
                   </p>
                   <p>
-                    <strong>Notes: </strong> 
+                    <strong>Notes: </strong>
                     {booking.rejectionNote}
                   </p>
                 </>
