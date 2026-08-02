@@ -26,3 +26,8 @@ export const acceptedBookingByProvider = async (bookingId)=>{
   const response = await api.patch(`/bookings/${bookingId}/accept`)
   return response.data
 }
+
+export const rejectedBookingByProvider = async (payload)=>{
+  const response = await api.patch(`/bookings/${payload.bookingId}/reject`,payload)
+  return response.data
+}
