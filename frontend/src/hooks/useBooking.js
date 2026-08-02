@@ -7,6 +7,7 @@ import {
   getAllBookingsOfUser,
   getOneBookingDetails,
   rejectedBookingByProvider,
+  startBookingByProvider,
 } from "../services/bookingService";
 import { toast } from "react-toastify";
 
@@ -36,7 +37,7 @@ export const useAllUserBookings = () => {
   return useQuery({
     queryKey: ["user-all-bookings"],
     queryFn: getAllBookingsOfUser,
-    refetchInterval:10000,
+    refetchInterval: 10000,
     onError: (err) => {
       console.log("Get all bookings of user error:", err);
     },
@@ -76,14 +77,28 @@ export const useBookingStatus = () => {
     },
   });
   const bookingRejectMutation = useMutation({
-    mutationFn:(payload)=>rejectedBookingByProvider(payload),
-    onSuccess:(data)=>{
-      toast.success(data.message)
+    mutationFn: (payload) => rejectedBookingByProvider(payload),
+    onSuccess: (data) => {
+      toast.success(data.message);
       queryClient.invalidateQueries({
-        queryKey:["provider-all-bookings"]
-      })
-    }
-  })
-  return { bookingAcceptedMutation,bookingRejectMutation };
+        queryKey: ["provider-all-bookings"],
+      });
+    },
+  });
+  const bookingStartMutation = useMutation({
+    mutationFn: (bookingId) => startBookingByProvider(bookingId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["provider-all-bookings"],
+      });
+    },
+    onError: (err) => {
+      console.log("Start Booking Error", err);
+    },
+  });
+  return {
+    bookingAcceptedMutation,
+    bookingRejectMutation,
+    bookingStartMutation,
+  };
 };
-
