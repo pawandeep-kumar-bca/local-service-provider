@@ -6,6 +6,7 @@ import {
   getAllBookingsOfProvider,
   getAllBookingsOfUser,
   getOneBookingDetails,
+  rejectedBookingByProvider,
 } from "../services/bookingService";
 import { toast } from "react-toastify";
 
@@ -74,6 +75,15 @@ export const useBookingStatus = () => {
       });
     },
   });
-
-  return { bookingAcceptedMutation };
+  const bookingRejectMutation = useMutation({
+    mutationFn:(payload)=>rejectedBookingByProvider(payload),
+    onSuccess:(data)=>{
+      toast.success(data.message)
+      queryClient.invalidateQueries({
+        queryKey:["provider-all-bookings"]
+      })
+    }
+  })
+  return { bookingAcceptedMutation,bookingRejectMutation };
 };
+
