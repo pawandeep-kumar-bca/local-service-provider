@@ -25,6 +25,7 @@ const UserCardBookings = ({ booking }) => {
     bookingRejectMutation,
     bookingStartMutation,
     bookingCancelMutation,
+    bookingCompleteMutation,
   } = useBookingStatus();
   const handleAccept = async (bookingId) => {
     await bookingAcceptedMutation.mutateAsync(bookingId);
@@ -36,6 +37,13 @@ const UserCardBookings = ({ booking }) => {
       },
       onError: (err) => {
         toast.error(err?.response?.data?.message);
+      },
+    });
+  };
+  const handlerCompleteBooking = async (bookingId) => {
+    await bookingCompleteMutation.mutateAsync(bookingId, {
+      onSuccess: (data) => {
+        toast.success(data?.message);
       },
     });
   };
@@ -339,7 +347,11 @@ const UserCardBookings = ({ booking }) => {
               </Button>
             </>
           ) : booking.bookingStatus === "in_progress" ? (
-            <Button fullWidth color="blue">
+            <Button
+              fullWidth
+              color="blue"
+              onClick={() => handlerCompleteBooking(booking._id)}
+            >
               Mark Completed
             </Button>
           ) : booking.bookingStatus === "completed" ? (

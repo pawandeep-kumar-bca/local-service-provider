@@ -110,20 +110,21 @@ export const useBookingStatus = () => {
     },
   });
   const bookingCompleteMutation = useMutation({
-    mutationFn:(bookingId)=>completeBookingByProvider(bookingId),
-    onSuccess:()=>{
-    queryClient.invalidateQueries({
-       queryKey: ["provider-all-bookings"],
-    })
+    mutationFn: (bookingId) => completeBookingByProvider(bookingId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["provider-all-bookings"],
+      });
     },
-    onError:(err)=>{
-      toast.error(err?.response?.data?.message)
-    }
-  })
+    onError: (err) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
   return {
     bookingAcceptedMutation,
     bookingRejectMutation,
     bookingStartMutation,
-    bookingCancelMutation,bookingCompleteMutation
+    bookingCancelMutation,
+    bookingCompleteMutation,
   };
 };

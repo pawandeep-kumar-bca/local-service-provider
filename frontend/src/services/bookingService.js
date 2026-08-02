@@ -22,24 +22,30 @@ export const getOneBookingDetails = async (bookingId) => {
   return response.data;
 };
 
-export const acceptedBookingByProvider = async (bookingId)=>{
-  const response = await api.patch(`/bookings/${bookingId}/accept`)
-  return response.data
-}
+export const acceptedBookingByProvider = async (bookingId) => {
+  const response = await api.patch(`/bookings/${bookingId}/accept`);
+  return response.data;
+};
 
-export const rejectedBookingByProvider = async (payload)=>{
-  const response = await api.patch(`/bookings/${payload.bookingId}/reject`,payload)
-  return response.data
-}
-export const startBookingByProvider = async (bookingId)=>{
-  const response = await api.patch(`/bookings/${bookingId}/start`)
-  return response.data
-}
-export const cancelBookingByProvider = async (payload)=>{
-  const response = await api.patch(`/bookings/${payload.bookingId}/cancel`,payload)
-  return response.data
-}
-export const completeBookingByProvider = async (bookingId)=>{
-  const response = await api.patch(`/booking/${bookingId}/complete`)
-  return response.data
-}
+export const rejectedBookingByProvider = async (payload) => {
+  const response = await api.patch(
+    `/bookings/${payload.bookingId}/reject`,
+    payload,
+  );
+  return response.data;
+};
+export const startBookingByProvider = async (bookingId) => {
+  const response = await api.patch(`/bookings/${bookingId}/start`);
+  return response.data;
+};
+export const cancelBookingByProvider = async (payload) => {
+  const response = await api.patch(
+    `/bookings/${payload.bookingId}/cancel`,
+    payload,
+  );
+  return response.data;
+};
+export const completeBookingByProvider = async (bookingId) => {
+  const response = await api.patch(`/bookings/${bookingId}/complete`);
+  return response.data;
+};
