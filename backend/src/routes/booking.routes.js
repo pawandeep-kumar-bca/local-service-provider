@@ -70,9 +70,10 @@ router.patch(
 );
 // PATCH /api/v1/bookings/:id/complete
 router.patch(
-  "/:id/complete",
+  "/:bookingId/complete",
   authMiddleware.tokenVerify,
-  validateObjectId("id"),
+  providerMiddleware,
+  validateObjectId("bookingId"),
   bookingController.providerCompletedBooking,
 );
 

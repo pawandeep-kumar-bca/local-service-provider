@@ -257,7 +257,7 @@ async function getUserAllBooking(req, res) {
     const allBookings = await bookingsModel
       .find({ "userSnapshot.userObjectId": userId })
       .select(
-        "bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot serviceType",
+        "bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot serviceType rejectionReason rejectionNote cancelReason cancelNote",
       );
     if (allBookings.length === 0) {
       return res
@@ -279,7 +279,7 @@ async function getAllProviderBooking(req, res) {
     const allBookings = await bookingsModel
       .find({ "providerSnapshot.providerObjectId": providerId })
       .select(
-        "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType rejectionReason rejectionNote cancelReason",
+        "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType rejectionReason rejectionNote cancelReason cancelNote",
       )
       .sort({ createdAt: -1 });
 
@@ -463,7 +463,7 @@ async function providerStartBooking(req, res) {
       status: "in_progress",
       changedAt: now,
     });
-    booking.startedAt = now;
+    booking.inProgressAt = now;
     await booking.save();
 
     return res
@@ -476,15 +476,15 @@ async function providerStartBooking(req, res) {
 }
 async function providerCancelBooking(req, res) {
   try {
-    const { cancelReason, cancelNote } = req.body;
+    const { reason, reasonNote } = req.body;
     const providerId = req.provider._id;
     const bookingId = req.params.bookingId;
-    if (!cancelReason) {
+    if (!reason) {
       return res.status(400).json({
         message: "Cancel reason is required!",
       });
     }
-    if (!cancelNote || cancelNote.length < 10 || cancelNote.length > 100) {
+    if (!reasonNote || reasonNote.length < 10 || reasonNote.length > 100) {
       return res.status(400).json({
         message: "Cancel notes is minimum 10 and maximum 100 characters.",
       });
@@ -512,8 +512,8 @@ async function providerCancelBooking(req, res) {
     }
     const now = new Date();
     booking.bookingStatus = "cancelled";
-    booking.cancelNote = cancelNote;
-    booking.cancelReason = cancelReason;
+    booking.cancelNote = reason;
+    booking.cancelReason = reasonNote;
     booking.cancelledBy = "provider";
     booking.cancelledAt = now;
     booking.statusHistory.push({
@@ -536,28 +536,35 @@ async function providerCancelBooking(req, res) {
 }
 async function providerCompletedBooking(req, res) {
   try {
-    const userId = req.user.id;
-    const bookingId = req.params.id;
-    const provider = await providerModel.findOne({
-      userId: userId,
-    });
-    if (!provider) {
-      return res.status(404).json({ message: "Provider not found" });
-    }
-    const providerId = provider._id;
+    const bookingId = req.params.bookingId;
+
+    const providerId = req.provider._id;
 
     const booking = await bookingsModel.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-    if (booking.providerId.toString() !== providerId.toString()) {
+    if (
+      !booking?.providerSnapshot?.providerObjectId ||
+      booking?.providerSnapshot?.providerObjectId?.toString() !==
+        providerId.toString()
+    ) {
       return res.status(403).json({ message: "forbidden" });
     }
-    if (booking.bookingStatus !== "start") {
+
+    
+
+    if (booking.bookingStatus !== "in_progress") {
       return res.status(400).json({ message: "Invalid booking status" });
     }
-
+    const now = new Date();
     booking.bookingStatus = "completed";
+    booking.completedAt = now;
+
+    booking.statusHistory.push({
+      status: "completed",
+      changedAt: now,
+    });
     await booking.save();
 
     return res

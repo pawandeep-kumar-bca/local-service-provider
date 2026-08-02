@@ -301,6 +301,10 @@ const bookingsSchema = new mongoose.Schema(
       default: null,
     },
 
+   inProgressAt: {
+      type: Date,
+      default: null,
+    },
     completedAt: {
       type: Date,
       default: null,
@@ -325,10 +329,7 @@ const bookingsSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
-    inProgress: {
-      type: Date,
-      default: null,
-    },
+    
   },
   {
     timestamps: true,
