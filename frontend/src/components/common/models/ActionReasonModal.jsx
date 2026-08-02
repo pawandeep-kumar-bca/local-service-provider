@@ -12,7 +12,7 @@ const ActionReasonModal = ({
   reason,
   size,
   value,
-  rejectHandlerSubmit,
+  handlerBookingSubmit,
   rightBtnText,
   rightBtnColor,
   formData,
@@ -20,7 +20,7 @@ const ActionReasonModal = ({
 }) => {
   const handlerSubmit = (e) => {
     e.preventDefault();
-    rejectHandlerSubmit(value._id);
+    handlerBookingSubmit(value._id);
   };
 
   return (

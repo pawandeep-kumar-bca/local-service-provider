@@ -24,7 +24,7 @@ const UserCardBookings = ({ booking }) => {
     bookingAcceptedMutation,
     bookingRejectMutation,
     bookingStartMutation,
-    
+    bookingCancelMutation,
   } = useBookingStatus();
   const handleAccept = async (bookingId) => {
     await bookingAcceptedMutation.mutateAsync(bookingId);
@@ -78,18 +78,29 @@ const UserCardBookings = ({ booking }) => {
 
   const rejectHandlerSubmit = async (bookingId) => {
     await bookingRejectMutation.mutateAsync(data(bookingId), {
-      onSuccess: () => {
-        setRejected(null);
+      onSuccess: (data) => {
+        toast.success(data?.message);
+
         setFormData({
           reason: "",
           notes: "",
         });
+        setRejected(null);
       },
     });
   };
-  const startBookingHandler = async (bookingId)=>{
-
-  }
+  const cancelBookingHandler = async (bookingId) => {
+    await bookingCancelMutation.mutateAsync(data(bookingId), {
+      onSuccess: (data) => {
+        toast.success(data?.message);
+        setFormData({
+          reason: "",
+          notes: "",
+        });
+        setCancel(null);
+      },
+    });
+  };
   return (
     <>
       <div
@@ -312,7 +323,11 @@ const UserCardBookings = ({ booking }) => {
             </>
           ) : booking.bookingStatus === "accepted" ? (
             <>
-              <Button fullWidth color="danger" onClick={() => setCancel(booking)}>
+              <Button
+                fullWidth
+                color="danger"
+                onClick={() => setCancel(booking)}
+              >
                 Cancel Booking
               </Button>
               <Button
@@ -374,7 +389,7 @@ const UserCardBookings = ({ booking }) => {
           text="Are you sure you want to reject this booking ? this action cannot be undone."
           reason={providerRejectReasons}
           size="sm"
-          rejectHandlerSubmit={rejectHandlerSubmit}
+          handlerBookingSubmit={rejectHandlerSubmit}
           rightBtnColor="danger"
           rightBtnText="Reject Booking"
         />
@@ -392,7 +407,7 @@ const UserCardBookings = ({ booking }) => {
           text="Are you sure you want to cancel this booking ? this action cannot be undone."
           reason={providerCancelReasons}
           size="sm"
-          handlerSubmit={startBookingHandler}
+          handlerBookingSubmit={cancelBookingHandler}
           rightBtnColor="danger"
           rightBtnText="Cancel Booking"
         />
