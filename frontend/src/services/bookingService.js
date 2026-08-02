@@ -39,3 +39,7 @@ export const cancelBookingByProvider = async (payload)=>{
   const response = await api.patch(`/bookings/${payload.bookingId}/cancel`,payload)
   return response.data
 }
+export const completeBookingByProvider = async (bookingId)=>{
+  const response = await api.patch(`/booking/${bookingId}/complete`)
+  return response.data
+}

@@ -24,7 +24,7 @@ const StatusBadge = ({
     available: "bg-green-100 text-green-600 border-green-200",
     accepted: "bg-green-100 text-green-600 border-green-200",
     inactive: "bg-gray-100 text-gray-500 border-gray-200",
-
+    "in_progress":'bg-purple-100 text-purple-600 border-purple-30',
     pending: "bg-yellow-100 text-yellow-600 border-yellow-300",
 
     
