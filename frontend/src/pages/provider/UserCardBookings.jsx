@@ -14,12 +14,12 @@ import ActionReasonModal from "../../components/common/models/ActionReasonModal"
 
 const UserCardBookings = ({ booking }) => {
   const [rejected, setRejected] = useState(null);
-  const [cancel,setCancel] = useState(null)
+  const [cancel, setCancel] = useState(null);
   const [formData, setFormData] = useState({
     reason: "",
     notes: "",
   });
-  const { bookingAcceptedMutation } = useBookingStatus();
+  const { bookingAcceptedMutation, bookingRejectMutation } = useBookingStatus();
   const handleAccept = async (bookingId) => {
     await bookingAcceptedMutation.mutateAsync(bookingId);
   };
@@ -35,24 +35,43 @@ const UserCardBookings = ({ booking }) => {
     "Equipment or tools unavailable",
     "Other",
   ];
-const providerCancelReasons = [
-  "Personal emergency",
-  "Medical emergency",
-  "Family emergency",
-  "On leave / Vacation",
-  "Already booked for another job",
-  "Vehicle breakdown",
-  "Out of service area",
-  "Required tools or equipment unavailable",
-  "Unable to reach customer",
-  "Customer requested reschedule",
-  "Weather conditions",
-  "Health issue",
-  "Safety concerns",
-  "Provider unavailable",
-  "Other"
-];
+  const providerCancelReasons = [
+    "Personal emergency",
+    "Medical emergency",
+    "Family emergency",
+    "On leave / Vacation",
+    "Already booked for another job",
+    "Vehicle breakdown",
+    "Out of service area",
+    "Required tools or equipment unavailable",
+    "Unable to reach customer",
+    "Customer requested reschedule",
+    "Weather conditions",
+    "Health issue",
+    "Safety concerns",
+    "Provider unavailable",
+    "Other",
+  ];
+  const data = (bookingId) => {
+    const payload = {
+      reason: formData.reason,
+      reasonNote: formData.notes,
+      bookingId,
+    };
+    return payload;
+  };
 
+  const rejectHandlerSubmit = async (bookingId) => {
+    await bookingRejectMutation.mutateAsync(data(bookingId), {
+      onSuccess: () => {
+        setRejected(null);
+        setFormData({
+          reason: "",
+          notes: "",
+        });
+      },
+    });
+  };
   return (
     <>
       <div
@@ -266,7 +285,6 @@ const providerCancelReasons = [
                 fullWidth
                 color="danger"
                 onClick={() => setRejected(booking)}
-                close={setRejected}
               >
                 Reject
               </Button>
@@ -276,7 +294,7 @@ const providerCancelReasons = [
             </>
           ) : booking.bookingStatus === "accepted" ? (
             <>
-              <Button fullWidth color="danger" onClick={()=>setCancel(booking)} className={setCancel}>
+              <Button fullWidth color="danger" onClick={() => setCancel(null)}>
                 Cancel Booking
               </Button>
               <Button fullWidth color="blue">
@@ -295,7 +313,7 @@ const providerCancelReasons = [
             // cancelled / rejected
             <div className="text-sm text-gray-500">
               {booking.bookingStatus === "cancelled" ? (
-                 <>
+                <>
                   <p>
                     <strong>Reason:</strong> {booking.cancelReason}
                   </p>
@@ -325,6 +343,7 @@ const providerCancelReasons = [
         <ActionReasonModal
           close={() => setRejected(null)}
           open={() => setRejected(booking)}
+          value={rejected}
           formData={formData}
           setFormData={setFormData}
           Icon={<MdCancel size={30} />}
@@ -333,12 +352,12 @@ const providerCancelReasons = [
           text="Are you sure you want to reject this booking ? this action cannot be undone."
           reason={providerRejectReasons}
           size="sm"
-          handlerSubmit={console.log("reject booking")}
+          rejectHandlerSubmit={rejectHandlerSubmit}
           rightBtnColor="danger"
           rightBtnText="Reject Booking"
         />
       )}
-       {cancel && (
+      {cancel && (
         <ActionReasonModal
           close={() => setCancel(null)}
           open={() => setCancel(booking)}

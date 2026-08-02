@@ -11,12 +11,18 @@ const ActionReasonModal = ({
   text,
   reason,
   size,
-  handlerSubmit,
+  value,
+  rejectHandlerSubmit,
   rightBtnText,
   rightBtnColor,
   formData,
   setFormData,
 }) => {
+  const handlerSubmit = (e) => {
+    e.preventDefault();
+    rejectHandlerSubmit(value._id);
+  };
+
   return (
     <Modal
       isOpen={open}
@@ -78,7 +84,7 @@ const ActionReasonModal = ({
                   rows={4}
                   maxLength={100}
                   minLength={10}
-                  value={formData.notes||''}
+                  value={formData.notes || ""}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
