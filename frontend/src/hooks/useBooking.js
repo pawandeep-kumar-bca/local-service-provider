@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   acceptedBookingByProvider,
+  cancelBookingByProvider,
   createBooking,
   getAllBookingsOfProvider,
   getAllBookingsOfUser,
@@ -96,10 +97,21 @@ export const useBookingStatus = () => {
       console.log("Start Booking Error", err);
     },
   });
- 
+  const bookingCancelMutation = useMutation({
+    mutationFn: (payload) => cancelBookingByProvider(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["provider-all-bookings"],
+      });
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
   return {
     bookingAcceptedMutation,
     bookingRejectMutation,
     bookingStartMutation,
+    bookingCancelMutation,
   };
 };
