@@ -11,6 +11,7 @@ import { FaMoneyBillWave } from "react-icons/fa6";
 import Avatar from "../../components/common/Avatar";
 import { useBookingStatus } from "../../hooks/useBooking";
 import ActionReasonModal from "../../components/common/models/ActionReasonModal";
+import { toast } from "react-toastify";
 
 const UserCardBookings = ({ booking }) => {
   const [rejected, setRejected] = useState(null);
@@ -19,11 +20,24 @@ const UserCardBookings = ({ booking }) => {
     reason: "",
     notes: "",
   });
-  const { bookingAcceptedMutation, bookingRejectMutation } = useBookingStatus();
+  const {
+    bookingAcceptedMutation,
+    bookingRejectMutation,
+    bookingStartMutation,
+  } = useBookingStatus();
   const handleAccept = async (bookingId) => {
     await bookingAcceptedMutation.mutateAsync(bookingId);
   };
-
+  const handlerStartBooking = async (bookingId) => {
+    await bookingStartMutation.mutateAsync(bookingId, {
+      onSuccess: (data) => {
+        toast.success(data.message);
+      },
+      onError: (err) => {
+        toast.error(err?.response?.data?.message);
+      },
+    });
+  };
   const providerRejectReasons = [
     "Not available at the requested time",
     "Outside my service area",
@@ -297,7 +311,11 @@ const UserCardBookings = ({ booking }) => {
               <Button fullWidth color="danger" onClick={() => setCancel(null)}>
                 Cancel Booking
               </Button>
-              <Button fullWidth color="blue">
+              <Button
+                fullWidth
+                color="blue"
+                onClick={() => handlerStartBooking(booking._id)}
+              >
                 Start Service
               </Button>
             </>
