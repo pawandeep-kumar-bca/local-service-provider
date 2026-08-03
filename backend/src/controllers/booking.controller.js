@@ -367,6 +367,11 @@ async function rescheduleBooking(req, res) {
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
+    if (booking.isRescheduled) {
+      return res.status(400).json({
+        message: "This booking has already been rescheduled once.",
+      });
+    }
     const provider = await providerModel.findById(
       booking.providerSnapshot.providerObjectId,
     );
@@ -411,8 +416,19 @@ async function rescheduleBooking(req, res) {
       });
     }
 
+    if (
+      booking.bookingDate.getTime() === userDate.getTime() &&
+      booking.bookingSlot.startTime === startTime &&
+      booking.bookingSlot.endTime === endTime
+    ) {
+      return res.status(400).json({
+        message: "Please select a different date or time to reschedule.",
+      });
+    }
     const notes = rescheduleNotes?.trim();
+    const durationHours = Math.floor((enTime - stTime) / 60);
     booking.bookingDate = userDate;
+    booking.durationHours = durationHours;
     booking.bookingSlot.startTime = startTime;
     booking.bookingSlot.endTime = endTime;
     if (notes) {
