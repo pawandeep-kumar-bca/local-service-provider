@@ -12,7 +12,8 @@ import Avatar from "../../components/common/Avatar";
 import { useBookingStatus } from "../../hooks/useBooking";
 import ActionReasonModal from "../../components/common/models/ActionReasonModal";
 import { toast } from "react-toastify";
-
+import { MdClose } from "react-icons/md";
+import AnimatedStatusIcon from "../../components/common/models/AnimatedStatusIcon";
 const UserCardBookings = ({ booking }) => {
   const [rejected, setRejected] = useState(null);
   const [cancel, setCancel] = useState(null);
@@ -395,7 +396,14 @@ const UserCardBookings = ({ booking }) => {
           value={rejected}
           formData={formData}
           setFormData={setFormData}
-          Icon={<MdCancel size={30} />}
+          Icon={
+            <AnimatedStatusIcon
+              icon={MdClose}
+              gradient="from-red-500 to-red-700"
+              glowColor="bg-red-300"
+              ringColor="border-red-200"
+            />
+          }
           className="text-red-500 bg-red-100"
           title="Reject Booking"
           text="Are you sure you want to reject this booking ? this action cannot be undone."
@@ -413,8 +421,14 @@ const UserCardBookings = ({ booking }) => {
           formData={formData}
           value={cancel}
           setFormData={setFormData}
-          Icon={<MdCancel size={30} />}
-          className="text-red-500 bg-red-100"
+          Icon={
+            <AnimatedStatusIcon
+              icon={MdClose}
+              gradient="from-red-500 to-red-700"
+              glowColor="bg-red-300"
+              ringColor="border-red-200"
+            />
+          }
           title="Cancel Booking"
           text="Are you sure you want to cancel this booking ? this action cannot be undone."
           reason={providerCancelReasons}
