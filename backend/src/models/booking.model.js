@@ -58,6 +58,7 @@ const bookingsSchema = new mongoose.Schema(
             "completed",
             "cancelled",
             "rejected",
+            "rescheduled",
           ],
         },
 
@@ -270,7 +271,10 @@ const bookingsSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
+    rescheduledNotes: {
+      type: String,
+      trim:true
+    },
     rescheduledFrom: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Booking",
@@ -301,7 +305,7 @@ const bookingsSchema = new mongoose.Schema(
       default: null,
     },
 
-   inProgressAt: {
+    inProgressAt: {
       type: Date,
       default: null,
     },
@@ -329,7 +333,6 @@ const bookingsSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
-    
   },
   {
     timestamps: true,
@@ -339,7 +342,7 @@ const bookingsSchema = new mongoose.Schema(
 // Prevent same provider getting two bookings for same slot
 bookingsSchema.index(
   {
-    providerId: 1,
+    "providerSnapshot.providerObjectId": 1,
     bookingDate: 1,
     "bookingSlot.startTime": 1,
     "bookingSlot.endTime": 1,
@@ -356,7 +359,7 @@ bookingsSchema.index({
 
 // Frequently Used Indexes
 bookingsSchema.index({
-  providerId: 1,
+  "providerSnapshot.providerObjectId": 1,
   bookingStatus: 1,
 });
 

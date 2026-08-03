@@ -8,7 +8,7 @@ async function connectDB() {
         console.log('Server is connected to Database');
         
     }catch(err){
-        console.log("Database connection error",err);
+        console.log("Database connection",err);
         
     }
 }

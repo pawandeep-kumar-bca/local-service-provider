@@ -108,6 +108,7 @@ async function userBookingCreate(req, res) {
     today.setHours(0, 0, 0, 0);
 
     const userDate = new Date(bookingDate);
+
     if (userDate < today) {
       return res.status(400).json({ message: "Invalid booking date" });
     }
@@ -309,7 +310,7 @@ async function getUserOneBooking(req, res) {
     const booking = await bookingsModel
       .findById(bookingId)
       .select(
-        "providerSnapshot userSnapshot.userObjectId serviceSnapshot.categoryName serviceSnapShot bookingSlot bookingDate durationHours serviceAddressSnapshot paymentMethod pricing",
+        "bookingId providerSnapshot userSnapshot.userObjectId serviceSnapshot.categoryName serviceSnapShot bookingSlot bookingDate bookingStatus durationHours serviceAddressSnapshot paymentMethod pricing",
       )
       .lean();
 
@@ -328,7 +329,113 @@ async function getUserOneBooking(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+async function rescheduleBooking(req, res) {
+  try {
+    const { bookingDate, startTime, endTime, rescheduleNotes } = req.body;
+    const userId = req.user.id;
+    const bookingId = req.params.bookingId;
 
+    if (!bookingDate) {
+      return res.status(400).json({
+        message: "Booking date is required",
+      });
+    }
+
+    if (!startTime || !endTime) {
+      return res.status(400).json({
+        message: "Booking Slot with start and end time",
+      });
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [day, month, year] = bookingDate.split("-");
+    const userDate = new Date(`${year}/${month}/${day}`);
+
+    if (userDate < today) {
+      return res.status(400).json({ message: "Invalid booking date" });
+    }
+    const stTime = parseTimeToMinutes(startTime);
+    const enTime = parseTimeToMinutes(endTime);
+    if (enTime <= stTime) {
+      return res.status(400).json({
+        message: "End time must be after start time",
+      });
+    }
+    const booking = await bookingsModel.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+    const provider = await providerModel.findById(
+      booking.providerSnapshot.providerObjectId,
+    );
+    if (!provider) {
+      return res.status(404).json({
+        message: "provider not found",
+      });
+    }
+    if (!provider.availability) {
+      return res.status(400).json({
+        message: "provider is not available",
+      });
+    }
+    if (
+      !booking.userSnapshot?.userObjectId ||
+      booking.userSnapshot?.userObjectId.toString() !== userId.toString()
+    ) {
+      return res.status(403).json({
+        message: "forbidden",
+      });
+    }
+    const allowedStatus = ["pending", "accepted"];
+    if (!allowedStatus.includes(booking.bookingStatus)) {
+      return res.status(400).json({
+        message: "Invalid booking status",
+      });
+    }
+    const slotFull = await bookingsModel.findOne({
+      _id: { $ne: bookingId },
+      bookingStatus: {
+        $in: ["pending", "accepted", "in_progress"],
+      },
+      "providerSnapshot.providerObjectId":
+        booking.providerSnapshot.providerObjectId,
+      bookingDate: userDate,
+      "bookingSlot.startTime": startTime,
+      "bookingSlot.endTime": endTime,
+    });
+    if (slotFull) {
+      return res.status(400).json({
+        message: "this slot is already booked",
+      });
+    }
+
+    const notes = rescheduleNotes?.trim();
+    booking.bookingDate = userDate;
+    booking.bookingSlot.startTime = startTime;
+    booking.bookingSlot.endTime = endTime;
+    if (notes) {
+      booking.rescheduledNotes = notes;
+    }
+    booking.isRescheduled = true;
+
+    booking.statusHistory.push({
+      status: "rescheduled",
+      changedAt: new Date(),
+    });
+    await booking.save();
+    return res.status(200).json({
+      message: "Booking Reschedule successfully.",
+      booking,
+    });
+  } catch (err) {
+    console.error("Reschedule Booking Error:", err);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+}
 async function providerAcceptBooking(req, res) {
   try {
     const providerId = req.provider._id;
@@ -386,10 +493,10 @@ async function providerRejectBooking(req, res) {
         message: "Reject reason is required!",
       });
     }
-    const note = reasonNote?.trim()
+    const note = reasonNote?.trim();
     if (!note || note.length < 10 || note.length > 100) {
       return res.status(400).json({
-       message: "Reject notes must be between 10 and 100 characters."
+        message: "Reject notes must be between 10 and 100 characters.",
       });
     }
     const booking = await bookingsModel.findById(bookingId);
@@ -487,7 +594,7 @@ async function providerCancelBooking(req, res) {
     const note = reasonNotes?.trim();
     if (!note || note.length < 10 || note.length > 100) {
       return res.status(400).json({
-       message: "Cancel notes must be between 10 and 100 characters."
+        message: "Cancel notes must be between 10 and 100 characters.",
       });
     }
     const booking = await bookingsModel.findById(bookingId);
@@ -589,7 +696,7 @@ async function userBookingCancel(req, res) {
     const note = reasonNotes?.trim();
     if (!note || note.length < 10 || note.length > 100) {
       return res.status(400).json({
-        message: "Cancel notes must be between 10 and 100 characters."
+        message: "Cancel notes must be between 10 and 100 characters.",
       });
     }
     const booking = await bookingsModel.findById(bookingId);
@@ -633,6 +740,7 @@ module.exports = {
   getUserAllBooking,
   getAllProviderBooking,
   getUserOneBooking,
+  rescheduleBooking,
   providerAcceptBooking,
   providerRejectBooking,
   providerCancelBooking,

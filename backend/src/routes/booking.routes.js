@@ -33,6 +33,12 @@ router.get(
   validateObjectId("bookingId"),
   bookingController.getUserOneBooking,
 );
+router.patch(
+  "/:bookingId/reschedule-booking",
+  authMiddleware.tokenVerify,
+  validateObjectId("bookingId"),
+  bookingController.rescheduleBooking,
+);
 
 // PATCH /api/v1/bookings/:bookingId/accept
 router.patch(
