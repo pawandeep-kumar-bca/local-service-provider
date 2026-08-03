@@ -188,13 +188,16 @@ const BookingProvider = ({ booking }) => {
         <div className="flex gap-2 items-center w-full mb-4 mt-5">
           {booking.bookingStatus === "pending" ? (
             <>
-              <Button
+             {!booking.isRescheduled && <Button
                 color="white"
                 fullWidth
-                onClick={() => navigate("/user/my-bookings/reschedule-booking")}
+                onClick={() => navigate(`/user/my-bookings/${booking._id}/reschedule-booking`,{
+                  
+                })}
               >
-                Reschedule Booking
-              </Button>
+                Reschedule 
+              </Button>}
+             
               <Button
                 color="success"
                 fullWidth
@@ -204,18 +207,33 @@ const BookingProvider = ({ booking }) => {
               >
                 View
               </Button>
+               <Button
+                color="danger"
+                fullWidth
+                onClick={() => navigate("/user/my-bookings/reschedule-booking")}
+              >
+                Cancel 
+              </Button>
             </>
           ) : booking.bookingStatus === "accepted" ? (
             <>
-              <Button
+             {booking.isRescheduled ? <Button
                 color="white"
                 fullWidth
                 onClick={() => navigate("/user/my-bookings/reschedule-booking")}
               >
-                Reschedule Booking
-              </Button>
+                Reschedule 
+              </Button>: <Button
+                color="success"
+                fullWidth
+                onClick={() =>
+                  navigate(`/user/my-bookings/${booking._id}/booking-details`)
+                }
+              >
+                View
+              </Button>}
               <Button color="danger" fullWidth>
-                Cancel Booking
+                Cancel 
               </Button>
             </>
           ) : booking.bookingStatus === "in_progress" ? (

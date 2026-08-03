@@ -49,3 +49,8 @@ export const completeBookingByProvider = async (bookingId) => {
   const response = await api.patch(`/bookings/${bookingId}/complete`);
   return response.data;
 };
+
+export const rescheduleBookingByUser = async (payload)=>{
+const response = await api.patch(`/bookings/${payload.bookingId}/reschedule-booking`,payload)
+return response.data
+}

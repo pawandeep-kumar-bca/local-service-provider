@@ -152,7 +152,7 @@ const AppRoutes = () => {
               element={<ViewUserBooking />}
             />
             <Route
-              path="/user/my-bookings/reschedule-booking"
+              path="/user/my-bookings/:bookingId/reschedule-booking"
               element={<RescheduleBooking />}
             />
             <Route path="/user/become-provider" element={<BecomeProvider />}>
