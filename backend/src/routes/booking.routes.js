@@ -77,11 +77,11 @@ router.patch(
   bookingController.providerCompletedBooking,
 );
 
-// PATCH /api/v1/bookings/:id/cancel
+// PATCH /api/v1/bookings/:bookingId/cancel
 router.patch(
-  "/:id/cancel",
+  "/:bookingId/user/cancel",
   authMiddleware.tokenVerify,
-  validateObjectId("id"),
+  validateObjectId("bookingId"),
   bookingController.userBookingCancel,
 );
 module.exports = router;

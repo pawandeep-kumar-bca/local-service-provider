@@ -383,13 +383,13 @@ async function providerRejectBooking(req, res) {
     const providerId = req.provider._id;
     if (!reason) {
       return res.status(400).json({
-        message: "Reason is required!",
+        message: "Reject reason is required!",
       });
     }
-    if (!reasonNote || reasonNote.length < 10 || reasonNote.length > 100) {
+    const note = reasonNote?.trim()
+    if (!note || note.length < 10 || note.length > 100) {
       return res.status(400).json({
-        message:
-          "Reason Notes is required and its minimum 10 and maximum 100 character!",
+       message: "Reject notes must be between 10 and 100 characters."
       });
     }
     const booking = await bookingsModel.findById(bookingId);
@@ -411,7 +411,7 @@ async function providerRejectBooking(req, res) {
     booking.bookingStatus = "rejected";
     booking.rejectedAt = now;
     booking.rejectionReason = reason;
-    booking.rejectionNote = reasonNote;
+    booking.rejectionNote = note;
     booking.statusHistory.push({
       status: "rejected",
       changedAt: now,
@@ -484,9 +484,10 @@ async function providerCancelBooking(req, res) {
         message: "Cancel reason is required!",
       });
     }
-    if (!reasonNote || reasonNote.length < 10 || reasonNote.length > 100) {
+    const note = reasonNotes?.trim();
+    if (!note || note.length < 10 || note.length > 100) {
       return res.status(400).json({
-        message: "Cancel notes is minimum 10 and maximum 100 characters.",
+       message: "Cancel notes must be between 10 and 100 characters."
       });
     }
     const booking = await bookingsModel.findById(bookingId);
@@ -513,7 +514,7 @@ async function providerCancelBooking(req, res) {
     const now = new Date();
     booking.bookingStatus = "cancelled";
     booking.cancelNote = reason;
-    booking.cancelReason = reasonNote;
+    booking.cancelReason = note;
     booking.cancelledBy = "provider";
     booking.cancelledAt = now;
     booking.statusHistory.push({
@@ -552,8 +553,6 @@ async function providerCompletedBooking(req, res) {
       return res.status(403).json({ message: "forbidden" });
     }
 
-    
-
     if (booking.bookingStatus !== "in_progress") {
       return res.status(400).json({ message: "Invalid booking status" });
     }
@@ -578,14 +577,29 @@ async function providerCompletedBooking(req, res) {
 
 async function userBookingCancel(req, res) {
   try {
-    const userId = req.user.id;
-    const bookingId = req.params.id;
+    const { reason, reasonNotes } = req.body;
 
+    const userId = req.user.id;
+    const bookingId = req.params.bookingId;
+    if (!reason) {
+      return res.status(400).json({
+        message: "Cancel reason is Required!",
+      });
+    }
+    const note = reasonNotes?.trim();
+    if (!note || note.length < 10 || note.length > 100) {
+      return res.status(400).json({
+        message: "Cancel notes must be between 10 and 100 characters."
+      });
+    }
     const booking = await bookingsModel.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
-    if (booking.userId.toString() !== userId.toString()) {
+    if (
+      !booking.userSnapshot.userObjectId ||
+      booking.userSnapshot.userObjectId.toString() !== userId.toString()
+    ) {
       return res.status(403).json({ message: "forbidden" });
     }
     if (
@@ -594,15 +608,22 @@ async function userBookingCancel(req, res) {
     ) {
       return res.status(400).json({ message: "Invalid booking status" });
     }
-
+    const now = new Date();
     booking.bookingStatus = "cancelled";
+    booking.cancelledAt = now;
+    booking.cancelReason = reason;
+    booking.cancelNote = note;
+    booking.cancelledBy = "user";
+    booking.statusHistory.push({
+      status: "cancelled",
+      changedAt: now,
+    });
     await booking.save();
-
     return res
       .status(200)
       .json({ message: "Booking cancelled successfully", booking });
   } catch (err) {
-    console.error("booking completed error:", err);
+    console.error("Booking cancellation  error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
 }
