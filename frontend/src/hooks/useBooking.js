@@ -9,6 +9,7 @@ import {
   getAllBookingsOfUser,
   getOneBookingDetails,
   rejectedBookingByProvider,
+  rescheduleBookingByUser,
   startBookingByProvider,
 } from "../services/bookingService";
 import { toast } from "react-toastify";
@@ -128,3 +129,20 @@ export const useBookingStatus = () => {
     bookingCompleteMutation,
   };
 };
+
+export const useRescheduleBooking= ()=>{
+  const queryClient = useQueryClient()
+  const rescheduleBookingMutation = useMutation({
+    mutationFn:(payload)=>rescheduleBookingByUser(payload),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({
+        queryKey:["user-all-bookings"]
+      })
+    },
+    onError:(err)=>{
+      console.error('Reschedule booking error:',err);
+      
+    }
+  })
+  return {rescheduleBookingMutation}
+}
