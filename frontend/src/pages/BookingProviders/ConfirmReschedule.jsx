@@ -7,14 +7,16 @@ import { RiBillLine } from "react-icons/ri";
 import { IoIosWarning, IoMdTime } from "react-icons/io";
 import { CiCalendarDate } from "react-icons/ci";
 import StatusBadge from "../../components/common/StatusBadge";
-const ConfirmReschedule = ({ setOpen }) => {
+import Avatar from "../../components/common/Avatar";
+const ConfirmReschedule = ({ setOpen,data }) => {
   const navigate = useNavigate();
+  
   return (
     <div className="fixed flex items-center justify-center inset-0 bg-black/40 z-50 backdrop-blur-sm ">
       <div className="w-full h-full md:max-w-md md:h-auto bg-white shadow-[0_10px_40px_rgba(0,0,0,0.2)] animate-in zoom-in-95 fade-in duration-200 relative overflow-y-auto px-5 py-7 md:rounded-2xl">
         <button
           className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-all cursor-pointer"
-          onClick={() => setOpen(false)}
+          onClick={() => setOpen(null)}
         >
           <MdClose className="text-2xl text-gray-600" />
         </button>
@@ -64,20 +66,19 @@ const ConfirmReschedule = ({ setOpen }) => {
           </div>
 
           <div className="bg-white shadow-[0_0_20px_rgba(255,255,255,0.9),0_8px_25px_rgba(0,0,0,0.12)] rounded-lg p-3 my-4 border border-muted">
-            <div className="flex items-center">
-              <img
-                src="/assets/profile.png"
-                alt="provider"
-                className="w-20 h-20 rounded-full object-cover"
-              />
+            <div className="flex items-center gap-2">
+              
+              <div className="w-14 h-14  rounded-full shrink-0">
+                  <Avatar name={data.booking?.providerSnapshot?.name} image={data.booking?.providerSnapshot?.profileImage?.url}/>
+              </div>
               <div className="flex items-center justify-between w-full">
                 <div>
-                  <h1 className="text-lg font-semibold">Aman Gupta </h1>
+                  <h1 className="text-lg font-semibold">{data.booking?.providerSnapshot?.name} </h1>
                   <p className="text-sm font-semibold text-muted">
-                    Electrician
+                   {data.booking?.serviceSnapshot?.categoryName}
                   </p>
                 </div>
-                <StatusBadge badge="upcoming" />
+                <StatusBadge badge={data.booking?.bookingStatus} />
               </div>
             </div>
             <div className="flex flex-col gap-2 mt-3">
@@ -86,14 +87,18 @@ const ConfirmReschedule = ({ setOpen }) => {
                   <CiCalendarDate size={22} className="text-orange-500" />
                   <h1 className="text-semibold text-lg text-muted">Date</h1>
                 </div>
-                <h2 className="font-semibold">23 May 2026</h2>
+                <h2 className="font-semibold">{new Date(data.booking?.bookingDate).toLocaleDateString('en-IN',{
+                  day:'numeric',
+                  month:'long',
+                  year:'numeric'
+                })}</h2>
               </div>
               <div className="flex justify-between">
                 <div className="flex items-center gap-1">
                   <IoMdTime size={22} className="text-cyan-500" />
                   <h1 className="text-semibold text-lg text-muted">Time</h1>
                 </div>
-                <h2 className="font-semibold">01:23 PM - 03:00 PM</h2>
+                <h2 className="font-semibold">{data.booking?.bookingSlot?.startTime}- {data.booking?.bookingSlot?.endTime}</h2>
               </div>
               <div className="flex justify-between">
                 <div className="flex items-center gap-1">
@@ -103,7 +108,7 @@ const ConfirmReschedule = ({ setOpen }) => {
                     Booking ID
                   </h1>
                 </div>
-                <h2 className="font-semibold">#BKD12342</h2>
+                <h2 className="font-semibold">#{data.booking?.bookingId}</h2>
               </div>
             </div>
           </div>
@@ -113,9 +118,9 @@ const ConfirmReschedule = ({ setOpen }) => {
               fullWidth
               color="success"
               className="  text-2xl md:text-xl md:py-2 py-3 px-10"
-              onClick={() => navigate("/user")}
+              onClick={() => navigate("/user/my-bookings")}
             >
-              <MdHome className="text-3xl md:text-2xl" /> Back to Home
+              <MdHome className="text-3xl md:text-2xl" /> View Booking
             </Button>
           </div>
         </div>

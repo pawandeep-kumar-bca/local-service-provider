@@ -188,7 +188,7 @@ const BookingProvider = ({ booking }) => {
         <div className="flex gap-2 items-center w-full mb-4 mt-5">
           {booking.bookingStatus === "pending" ? (
             <>
-             {!booking.isRescheduled && <Button
+             {(!booking.isRescheduled && <Button
                 color="white"
                 fullWidth
                 onClick={() => navigate(`/user/my-bookings/${booking._id}/reschedule-booking`,{
@@ -196,7 +196,7 @@ const BookingProvider = ({ booking }) => {
                 })}
               >
                 Reschedule 
-              </Button>}
+              </Button>)}
              
               <Button
                 color="success"

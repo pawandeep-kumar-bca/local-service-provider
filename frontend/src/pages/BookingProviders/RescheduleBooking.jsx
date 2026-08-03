@@ -8,15 +8,19 @@ import { IoMdTime } from "react-icons/io";
 import { FaCalendarCheck, FaRegCalendarCheck } from "react-icons/fa";
 import ConfirmReschedule from "./ConfirmReschedule";
 import { useParams } from "react-router-dom";
-import { useUserOneBookingDetails } from "../../hooks/useBooking";
+import {
+  useRescheduleBooking,
+  useUserOneBookingDetails,
+} from "../../hooks/useBooking";
 import Avatar from "../../components/common/Avatar";
 import CustomDatePicker from "../../components/common/CustomDatePicker";
 import SlotTime from "../../components/common/SlotTime";
+import { toast } from "react-toastify";
 
 const RescheduleBooking = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(null);
   const { bookingId } = useParams();
-
+  const { rescheduleBookingMutation } = useRescheduleBooking();
   const { data } = useUserOneBookingDetails(bookingId);
 
   const booking = data?.booking;
@@ -27,7 +31,23 @@ const RescheduleBooking = () => {
     endTime: "",
     notes: "",
   });
- 
+
+  const submitRescheduleBooking = async (e) => {
+    e.preventDefault();
+    const payload = {
+      bookingId,
+      bookingDate: formData.date,
+      startTime: formData.startTime,
+      endTime: formData.endTime,
+      RescheduleNotes: formData.notes,
+    };
+    await rescheduleBookingMutation.mutateAsync(payload, {
+      onSuccess: (data) => {
+        toast.success(data?.message);
+        setOpen(data);
+      },
+    });
+  };
 
   return (
     <>
@@ -114,7 +134,7 @@ const RescheduleBooking = () => {
             </div>
           </div>
           <div>
-            <form>
+            <form onSubmit={submitRescheduleBooking}>
               <h1 className="text-xl font-semibold flex gap-2 items-center my-5">
                 <FaCalendarCheck size={24} className="text-green-500" />
                 Select New Date & Time
@@ -178,15 +198,13 @@ const RescheduleBooking = () => {
                 <Button color="gray" size="md" type="button">
                   Cancel
                 </Button>
-                <Button color="success" onClick={() => setOpen(true)}>
-                  Confirm Reschedule
-                </Button>
+                <Button color="success">Confirm Reschedule</Button>
               </div>
             </form>
           </div>
         </div>
       </div>
-      {open && <ConfirmReschedule setOpen={setOpen} />}
+      {open && <ConfirmReschedule setOpen={setOpen} data={open}/>}
     </>
   );
 };

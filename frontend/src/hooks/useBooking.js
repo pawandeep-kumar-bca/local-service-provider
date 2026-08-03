@@ -59,7 +59,7 @@ export const useAllProviderBookings = () => {
 };
 
 export const useUserOneBookingDetails = (bookingId) => {
-  console.log(bookingId);
+  
 
   return useQuery({
     queryKey: ["user-booking-details-one", bookingId],
@@ -130,19 +130,22 @@ export const useBookingStatus = () => {
   };
 };
 
-export const useRescheduleBooking= ()=>{
-  const queryClient = useQueryClient()
+export const useRescheduleBooking = () => {
+  const queryClient = useQueryClient();
   const rescheduleBookingMutation = useMutation({
-    mutationFn:(payload)=>rescheduleBookingByUser(payload),
-    onSuccess:()=>{
+    mutationFn: (payload) => rescheduleBookingByUser(payload),
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey:["user-all-bookings"]
-      })
+        queryKey: ["user-all-bookings"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["user-booking-details-one", variables.bookingId],
+      });
     },
-    onError:(err)=>{
-      console.error('Reschedule booking error:',err);
-      
-    }
-  })
-  return {rescheduleBookingMutation}
-}
+    onError: (err) => {
+      console.error("Reschedule booking error:", err);
+    },
+  });
+  return { rescheduleBookingMutation };
+};
