@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   acceptedBookingByProvider,
   cancelBookingByProvider,
+  cancelBookingByUser,
   completeBookingByProvider,
   createBooking,
   getAllBookingsOfProvider,
@@ -59,8 +60,6 @@ export const useAllProviderBookings = () => {
 };
 
 export const useUserOneBookingDetails = (bookingId) => {
-  
-
   return useQuery({
     queryKey: ["user-booking-details-one", bookingId],
     queryFn: () => getOneBookingDetails(bookingId),
@@ -147,5 +146,17 @@ export const useRescheduleBooking = () => {
       console.error("Reschedule booking error:", err);
     },
   });
-  return { rescheduleBookingMutation };
+  const cancelBookingByUserMutation = useMutation({
+    mutationFn: (payload) => cancelBookingByUser(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user-all-bookings"],
+      });
+    },
+    onError: (err) => {
+      console.error("Cancel booking by User Error:", err);
+      toast.error(err?.response?.data?.message);
+    },
+  });
+  return { rescheduleBookingMutation, cancelBookingByUserMutation };
 };
