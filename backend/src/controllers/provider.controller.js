@@ -2,7 +2,7 @@ const providerModel = require("../models/provider.model");
 const { uploadImage } = require("../config/imagekit");
 const imagekit = require("@imagekit/nodejs");
 const categoryModel = require("../models/category.model");
-const { default: mongoose } = require("mongoose");
+
 const UserModel = require("../models/User.model");
 const { generateId } = require("../utils/generateId");
 const reviewModel = require("../models/review.model");
@@ -330,13 +330,8 @@ async function getProviders(req, res) {
 
 async function getOneProviderDetails(req, res) {
   try {
-    const { categoryId } = req.query;
     const providerId = req.params.id;
-    if (!categoryId) {
-      return res.status(400).json({
-        message: "Category is required",
-      });
-    }
+
     const providerExists = await providerModel
       .findById(providerId)
       .select("-documents")
@@ -348,93 +343,13 @@ async function getOneProviderDetails(req, res) {
     if (!providerExists) {
       return res.status(404).json({ message: "Provider not found" });
     }
-    const reviews = await reviewModel
-      .find({
-        providerId: providerId,
-        "serviceSnapshot.categoryObjectId": categoryId,
-      })
-      .populate("userId", "fullname profileImage")
-      .sort({ createdAt: -1 })
-      .limit(3);
-    const reviewSummary = await reviewModel.aggregate([
-      {
-        $match: {
-          providerId: new mongoose.Types.ObjectId(providerId),
-          "serviceSnapshot.categoryObjectId": new mongoose.Types.ObjectId(
-            categoryId,
-          ),
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          averageRating: {
-            $round: [{ $avg: "$rating" }, 1],
-          },
-          totalReviews: {
-            $sum: 1,
-          },
-          fiveStar: {
-            $sum: {
-              $cond: [{ $eq: ["$rating", 5] }, 1, 0],
-            },
-          },
-          fourStar: {
-            $sum: {
-              $cond: [
-                {
-                  $eq: ["$rating", 4],
-                },
-                1,
-                0,
-              ],
-            },
-          },
-          threeStar: {
-            $sum: {
-              $cond: [
-                {
-                  $eq: ["$rating", 3],
-                },
-                1,
-                0,
-              ],
-            },
-          },
-          twoStar: {
-            $sum: {
-              $cond: [
-                {
-                  $eq: ["$rating", 2],
-                },
-                1,
-                0,
-              ],
-            },
-          },
-          oneStar: {
-            $sum: {
-              $cond: [{ $eq: ["$rating", 1] }, 1, 0],
-            },
-          },
-        },
-      },
-    ]);
-    const summary = reviewSummary[0] || {
-  averageRating: 0,
-  totalReviews: 0,
-  fiveStar: 0,
-  fourStar: 0,
-  threeStar: 0,
-  twoStar: 0,
-  oneStar: 0,
-};
+    
+
     return res.status(200).json({
       success: true,
       message: "provider details fetch successfully",
       providerExists,
-      reviews,
-     reviewSummary: summary,
+   
     });
   } catch (err) {
     console.error("One Provider details error:", err);

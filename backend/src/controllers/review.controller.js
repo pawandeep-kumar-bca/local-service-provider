@@ -3,7 +3,7 @@ const providerModel = require("../models/provider.model");
 const bookingModel = require("../models/booking.model");
 const { uploadFile } = require("../config/imagekit");
 const categoryModel = require("../models/category.model");
-
+const { mongoose } = require("mongoose");
 async function reviewCreate(req, res) {
   try {
     const { rating, comment, bookingId } = req.body;
@@ -212,7 +212,118 @@ async function providerReview(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+async function getProviderReviews(req, res) {
+  try {
+    const { categoryId } = req.query;
+    const providerId = req.params.providerId;
+    if (!categoryId) {
+      return res.status(400).json({
+        message: "Category Id is required",
+      });
+    }
+    const provider = await providerModel.findById(providerId);
+    if (!provider) {
+      return res.status(404).json({
+        message: "Provider Not Found",
+      });
+    }
+    const [reviews, reviewSummary] = await Promise.all([
+      reviewModel
+        .find({
+          providerId,
+          "serviceSnapshot.categoryObjectId": categoryId,
+        })
+        .populate("userId", "fullname profileImage")
+        .sort({ createdAt: -1 })
+        .limit(3),
 
+      reviewModel.aggregate([
+        {
+          $match: {
+            providerId: new mongoose.Types.ObjectId(providerId),
+            "serviceSnapshot.categoryObjectId": new mongoose.Types.ObjectId(
+              categoryId,
+            ),
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            averageRating: {
+              $avg: "$rating",
+            },
+            totalReviews: {
+              $sum: 1,
+            },
+            fiveStar: {
+              $sum: {
+                $cond: [{ $eq: ["$rating", 5] }, 1, 0],
+              },
+            },
+            fourStar: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ["$rating", 4],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+            threeStar: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ["$rating", 3],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+            twoStar: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ["$rating", 2],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+            oneStar: {
+              $sum: {
+                $cond: [{ $eq: ["$rating", 1] }, 1, 0],
+              },
+            },
+          },
+        },
+      ]),
+    ]);
+
+    const summary = reviewSummary[0] || {
+      averageRating: 0,
+      totalReviews: 0,
+      fiveStar: 0,
+      fourStar: 0,
+      threeStar: 0,
+      twoStar: 0,
+      oneStar: 0,
+    };
+    return res.status(200).json({
+      message: "Provider reviews fetch successfully",
+      reviews,
+      summary,
+    });
+  } catch (err) {
+    console.error("Get provider reviews for user Error:", err);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+}
 async function deleteReview(req, res) {
   try {
     const reviewId = req.params.id;
@@ -244,6 +355,7 @@ async function deleteReview(req, res) {
 module.exports = {
   reviewCreate,
   providerReview,
+  getProviderReviews,
   deleteReview,
   getAllReviewOfUser,
 };
