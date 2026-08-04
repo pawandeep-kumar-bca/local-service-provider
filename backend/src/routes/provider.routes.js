@@ -6,6 +6,7 @@ const { documentUpload } = require("../middlewares/upload.middleware");
 const validateObjectIdMiddleware = require("../middlewares/validateObjectId.middleware");
 const roleBased = require("../middlewares/role.middleware");
 const providerMiddleware = require("../middlewares/provider.middleware");
+const validateObjectId = require("../middlewares/validateObjectId.middleware");
 const router = express.Router();
 
 router.post(
@@ -38,6 +39,7 @@ router.put(
 );
 // GET /api/v1/providers
 router.get("/", providerControllers.getProviders);
+router.get("/:slug", providerControllers.getSelectProviderByCategory);
 
 router.get("/nearby", providerControllers.nearbySearchLocation);
 

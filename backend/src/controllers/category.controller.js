@@ -48,8 +48,8 @@ async function createCategory(req, res) {
 async function getCategoryTabs(req, res) {
   try {
     const categories = await categoryModel
-      .find({ status: "active" }) // agar status field hai
-      .select("_id name icon.url")
+      .find({ status: "active" }) 
+      .select("_id name icon.url slug")
       .sort({ sortOrder: 1 });
 
     return res.status(200).json({
@@ -68,7 +68,7 @@ async function getCategoryTabs(req, res) {
 }
 const getCategory = async (req, res) => {
   try {
-    const { search, category, page = 1, limit = 20 } = req.query;
+    const { search, category, page = 1, limit = 8 } = req.query;
 
     const skip = (Number(page) - 1) * Number(limit);
 
@@ -78,7 +78,7 @@ const getCategory = async (req, res) => {
 
     const filter = {};
     if (category && category !== "all") {
-      filter.name = category;
+      filter.slug = category;
     }
 
     // ==========================

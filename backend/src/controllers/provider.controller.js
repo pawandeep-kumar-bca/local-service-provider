@@ -343,13 +343,11 @@ async function getOneProviderDetails(req, res) {
     if (!providerExists) {
       return res.status(404).json({ message: "Provider not found" });
     }
-    
 
     return res.status(200).json({
       success: true,
       message: "provider details fetch successfully",
       providerExists,
-   
     });
   } catch (err) {
     console.error("One Provider details error:", err);
@@ -357,6 +355,80 @@ async function getOneProviderDetails(req, res) {
   }
 }
 
+async function getSelectProviderByCategory(req, res) {
+  try {
+    const slug = req.params.slug;
+
+    if (!slug) {
+      return res.status(400).json({
+        message: "slug is required!",
+      });
+    }
+    const category = await categoryModel.findOne({ slug });
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
+    const providers = await providerModel.aggregate([
+      {
+        $match: {
+          status: "approved",
+          verifiedByAdmin: true,
+        },
+      },
+      {
+        $unwind: "$categories",
+      },
+      {
+        $match: {
+          "categories.category": category._id,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          _id: 1,
+          providerName: "$user.fullname",
+          profileImage: "$user.profileImage.url",
+          experience: 1,
+          rating: 1,
+          totalReview: 1,
+          availability: 1,
+          pricing: "$categories.pricing.price",
+        },
+      },
+      {
+        $sort: {
+          pricing: 1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Providers fetched  successfully",
+      providers,
+    });
+  } catch (err) {
+    console.error("Get select provider by category error:", err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+}
 async function nearbySearchLocation(req, res) {
   try {
     let { lat, lng, radius } = req.query;
@@ -551,8 +623,9 @@ module.exports = {
   updateProvider,
   getProviders,
   getOneProviderDetails,
+  uploadProviderDocuments,
+  getSelectProviderByCategory,
   nearbySearchLocation,
   recommendedProviders,
   availabilityProvider,
-  uploadProviderDocuments,
 };
