@@ -170,15 +170,14 @@ async function userBookingCreate(req, res) {
     const pricing = calculatePricing(serviceCharge, discount);
     // ---------- Create booking ----------
     const bookingId = await generateId("LSP-BK-", "booking");
-
-    const booking = await bookingsModel.create({
+    const bookingNotes = notes?.trim();
+    const bookingData = {
       bookingId,
       providerId,
       categoryId,
       userId,
       bookingDate,
       bookingSlot,
-      notes,
       durationHours,
       pricing,
       serviceSnapshot: {
@@ -240,7 +239,11 @@ async function userBookingCreate(req, res) {
         landmark,
         fullAddress,
       },
-    });
+    };
+    if (bookingNotes) {
+      bookingData.notes = bookingNotes;
+    }
+    const booking = await bookingsModel.create(bookingData);
 
     return res.status(201).json({
       message: "Booking created successfully",
@@ -258,7 +261,7 @@ async function getUserAllBooking(req, res) {
     const allBookings = await bookingsModel
       .find({ "userSnapshot.userObjectId": userId })
       .select(
-        "bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot serviceType rejectionReason rejectionNote cancelReason cancelNote",
+        "bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot serviceType rejectionReason rejectionNote cancelReason cancelNote isRescheduled",
       );
     if (allBookings.length === 0) {
       return res
@@ -350,8 +353,7 @@ async function rescheduleBooking(req, res) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const [day, month, year] = bookingDate.split("-");
-    const userDate = new Date(`${year}/${month}/${day}`);
+    const userDate = new Date(bookingDate);
 
     if (userDate < today) {
       return res.status(400).json({ message: "Invalid booking date" });
@@ -757,7 +759,7 @@ module.exports = {
   getAllProviderBooking,
   getUserOneBooking,
   rescheduleBooking,
-  providerAcceptBooking,
+  providerAcceptBooking, 
   providerRejectBooking,
   providerCancelBooking,
   providerStartBooking,
