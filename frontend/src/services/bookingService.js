@@ -54,3 +54,8 @@ export const rescheduleBookingByUser = async (payload)=>{
 const response = await api.patch(`/bookings/${payload.bookingId}/reschedule-booking`,payload)
 return response.data
 }
+
+export const cancelBookingByUser =async (payload)=>{
+  const response = await api.patch(`/booking/${payload.bookingId}/user/cancel`)
+  return response.data
+}
