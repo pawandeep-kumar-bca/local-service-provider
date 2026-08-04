@@ -36,7 +36,7 @@ const ActionReasonModal = ({
                 htmlFor="reason"
                 className="text-sm font-semibold text-text"
               >
-                Reason for {title.split(" ")[0]}
+                Reason for {title.split(" ")[0] }
                 <span className="text-xs text-red-500 font-semibold">
                   {" "}
                   (required)

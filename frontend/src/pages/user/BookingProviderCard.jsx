@@ -12,11 +12,39 @@ import { LuDot } from "react-icons/lu";
 import { GiDuration } from "react-icons/gi";
 import ReviewForm from "./ReviewForm";
 import Avatar from "../../components/common/Avatar";
+import ActionReasonModal from "../../components/common/models/ActionReasonModal";
+import AnimatedStatusIcon from "../../components/common/models/AnimatedStatusIcon";
+import { MdClose } from "react-icons/md";
+import ActionSuccessModal from "../../components/common/models/ActionSuccessModal";
 const BookingProvider = ({ booking }) => {
   const navigate = useNavigate();
   const [openReview, setOpenReview] = useState(null);
+  const [cancelBooking, setCancelBooking] = useState(null);
+  const [successCancel, setSuccessCancel] = useState(null);
+  const [formData, setFormData] = useState({
+    reason: "",
+    notes: "",
+  });
+  const USER_BOOKING_CANCEL_REASONS = [
+    "Change of plans",
+    "Booked by mistake",
+    "Found another service provider",
+    "Provider is taking too long to respond",
+    "Need to change the booking date",
+    "Service is no longer required",
+    "Price is too high",
+    "Location is no longer convenient",
+    "Personal emergency",
+    "Other",
+  ];
   const handleReview = () => {
     setOpenReview(booking);
+  };
+  const handlerCancelBooking = () => {
+    setCancelBooking(booking);
+  };
+  const handlerBookingSubmit = () => {
+    setSuccessCancel(booking);
   };
   return (
     <>
@@ -188,16 +216,21 @@ const BookingProvider = ({ booking }) => {
         <div className="flex gap-2 items-center w-full mb-4 mt-5">
           {booking.bookingStatus === "pending" ? (
             <>
-             {(!booking.isRescheduled && <Button
-                color="white"
-                fullWidth
-                onClick={() => navigate(`/user/my-bookings/${booking._id}/reschedule-booking`,{
-                  
-                })}
-              >
-                Reschedule 
-              </Button>)}
-             
+              {!booking.isRescheduled && (
+                <Button
+                  color="white"
+                  fullWidth
+                  onClick={() =>
+                    navigate(
+                      `/user/my-bookings/${booking._id}/reschedule-booking`,
+                      {},
+                    )
+                  }
+                >
+                  Reschedule
+                </Button>
+              )}
+
               <Button
                 color="success"
                 fullWidth
@@ -207,33 +240,35 @@ const BookingProvider = ({ booking }) => {
               >
                 View
               </Button>
-               <Button
-                color="danger"
-                fullWidth
-                onClick={() => navigate("/user/my-bookings/reschedule-booking")}
-              >
-                Cancel 
+              <Button color="danger" fullWidth onClick={handlerCancelBooking}>
+                Cancel
               </Button>
             </>
           ) : booking.bookingStatus === "accepted" ? (
             <>
-             {booking.isRescheduled ? <Button
-                color="white"
-                fullWidth
-                onClick={() => navigate("/user/my-bookings/reschedule-booking")}
-              >
-                Reschedule 
-              </Button>: <Button
-                color="success"
-                fullWidth
-                onClick={() =>
-                  navigate(`/user/my-bookings/${booking._id}/booking-details`)
-                }
-              >
-                View
-              </Button>}
+              {booking.isRescheduled ? (
+                <Button
+                  color="white"
+                  fullWidth
+                  onClick={() =>
+                    navigate("/user/my-bookings/reschedule-booking")
+                  }
+                >
+                  Reschedule
+                </Button>
+              ) : (
+                <Button
+                  color="success"
+                  fullWidth
+                  onClick={() =>
+                    navigate(`/user/my-bookings/${booking._id}/booking-details`)
+                  }
+                >
+                  View
+                </Button>
+              )}
               <Button color="danger" fullWidth>
-                Cancel 
+                Cancel
               </Button>
             </>
           ) : booking.bookingStatus === "in_progress" ? (
@@ -282,6 +317,42 @@ const BookingProvider = ({ booking }) => {
       </div>
       {openReview && (
         <ReviewForm booking={openReview} setOpenReview={setOpenReview} />
+      )}
+
+      {cancelBooking && (
+        <ActionReasonModal
+          open={cancelBooking}
+          close={() => setCancelBooking(null)}
+          Icon={<AnimatedStatusIcon icon={MdClose} />}
+          title="Cancel Booking"
+          text="Are you sure you want to cancel this booking? Once cancelled you can book again anytime. "
+          reason={USER_BOOKING_CANCEL_REASONS}
+          size="md"
+          value={cancelBooking}
+          rightBtnColor="danger"
+          rightBtnText="Cancel Booking"
+          setFormData={setFormData}
+          formData={formData}
+          handlerBookingSubmit={handlerBookingSubmit}
+        />
+      )}
+
+      {successCancel && (
+        <ActionSuccessModal
+          open={successCancel}
+          close={() => setSuccessCancel(null)}
+          Icon={<AnimatedStatusIcon icon={MdClose} />}
+          booking={booking}
+          title="Booking Cancelled"
+          highlightText="Successfully!"
+          description="Your booking has been cancelled successfully."
+          leftButtonText="Back to My Bookings"
+          rightButtonText="Book Again"
+          leftButtonColor="blue"
+          rightButtonColor="success"
+          onLeftClick={() => navigate("/user/my-bookings")}
+          onRightClick={() => navigate("/user/dashboard")}
+        />
       )}
     </>
   );

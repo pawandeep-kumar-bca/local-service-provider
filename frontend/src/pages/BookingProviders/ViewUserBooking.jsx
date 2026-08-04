@@ -2,7 +2,7 @@ import ViewProviderBookingDetails from "./ViewProviderBookingDetails";
 import Button from "../../components/common/Button";
 import { useState } from "react";
 import CancelConfirmedBooking from "./CancelConfirmedBooking";
-import CancelBooking from "./CancelBooking";
+import CancelBooking from "../../components/common/models/ActionSuccessModal";
 import { useUserOneBookingDetails } from "../../hooks/useBooking";
 import { useParams } from "react-router-dom";
 

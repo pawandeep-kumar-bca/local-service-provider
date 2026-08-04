@@ -4,14 +4,16 @@ import Button from "../../components/common/Button";
 import StatusBadge from "../../components/common/StatusBadge";
 import { RiBillLine } from "react-icons/ri";
 import { CiCalendarDate } from "react-icons/ci";
-import CancelBooking from "./CancelBooking";
+import CancelBooking from "../../components/common/models/ActionSuccessModal";
 const CancelConfirmedBooking = ({ setCancel }) => {
-  
   return (
     <>
       <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
         <div className="w-full h-full md:w-full md:h-auto md:max-w-md bg-white shadow-[0_10px_40px_rgba(0,0,0,0.2)] animate-in zoom-in-95 fade-in duration-200 relative overflow-y-auto px-5 py-7 md:rounded-2xl">
-          <button className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-all cursor-pointer" onClick={() => setCancel(null)}>
+          <button
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-all cursor-pointer"
+            onClick={() => setCancel(null)}
+          >
             <MdClose className="text-2xl text-gray-600" />
           </button>
           <div>
@@ -104,14 +106,17 @@ const CancelConfirmedBooking = ({ setCancel }) => {
               <Button color="white" fullWidth onClick={() => setCancel(null)}>
                 No, Go Back
               </Button>
-              <Button color="danger" fullWidth onClick={() => setCancel("success")}>
+              <Button
+                color="danger"
+                fullWidth
+                onClick={() => setCancel("success")}
+              >
                 Yes, Cancel Booking
               </Button>
             </div>
           </div>
         </div>
       </div>
-      
     </>
   );
 };
