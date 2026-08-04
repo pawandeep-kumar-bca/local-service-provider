@@ -235,7 +235,7 @@ async function getProviderReviews(req, res) {
         })
         .populate("userId", "fullname profileImage")
         .sort({ createdAt: -1 })
-        .limit(3),
+        .limit(2),
 
       reviewModel.aggregate([
         {
@@ -312,6 +312,13 @@ async function getProviderReviews(req, res) {
       twoStar: 0,
       oneStar: 0,
     };
+    if(summary.totalReviews >0){
+     summary.fiveStarPercentage = Number((summary.fiveStar/summary.totalReviews)*100).toFixed(0)
+     summary.fourStarPercentage = Number((summary.fourStar/summary.totalReviews)*100).toFixed(0)
+     summary.threeStarPercentage = Number((summary.threeStar/summary.totalReviews)*100).toFixed(0)
+     summary.twoStarPercentage = Number((summary.twoStar/summary.totalReviews)*100).toFixed(0)
+     summary.oneStarPercentage = Number((summary.oneStar/summary.totalReviews)*100).toFixed(0)
+    }
     return res.status(200).json({
       message: "Provider reviews fetch successfully",
       reviews,
