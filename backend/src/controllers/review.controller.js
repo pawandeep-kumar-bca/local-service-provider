@@ -39,7 +39,11 @@ async function reviewCreate(req, res) {
       return res.status(400).json({ message: "Review already submitted" });
     }
     const providerId = booking.providerSnapshot?.providerObjectId;
-    
+    if (!providerId) {
+      return res.status(400).json({
+        message: "Provider not found in booking",
+      });
+    }
     const reviewImages = req.files?.ReviewImage
       ? await Promise.all(
           req.files.ReviewImage.map((image) =>
@@ -58,6 +62,11 @@ async function reviewCreate(req, res) {
       rating,
       comment: trimmedComment,
       images: reviewImages,
+      serviceSnapshot: {
+        categoryObjectId: booking?.serviceSnapshot?.categoryObjectId,
+        categoryName: booking?.serviceSnapshot?.categoryName,
+        priceType: booking?.serviceSnapshot?.priceType,
+      },
     });
     const reviewStats = await reviewModel.aggregate([
       {
@@ -100,45 +109,49 @@ async function reviewCreate(req, res) {
       .json({ success: false, message: "Internal server error" });
   }
 }
-async function getAllReviewOfUser(req,res){
-  try{
-    const userId = req.user.id
+async function getAllReviewOfUser(req, res) {
+  try {
+    const userId = req.user.id;
 
-    const allReviews = await reviewModel.find({userId}).select('bookingId providerId comment rating createdAt images').populate({
-      path:'providerId',
-      select:'userId',
-      populate:{
-        path:'userId',
-        select:'fullname profileImage'
-      }
-    }).populate({
-      path:'bookingId',
-      select:'serviceSnapshot.categoryObjectId',
-      populate:{
-        path:'serviceSnapshot.categoryObjectId',
-        select:'name'
-      }
-    }).sort({createdAt:-1})
-    if(allReviews.length === 0){
-      return res.status(200).json({
-        success:true,
-        message:'No reviews found',
-        allReviews:[]
+    const allReviews = await reviewModel
+      .find({ userId })
+      .select("bookingId providerId comment rating createdAt images")
+      .populate({
+        path: "providerId",
+        select: "userId",
+        populate: {
+          path: "userId",
+          select: "fullname profileImage",
+        },
       })
+      .populate({
+        path: "bookingId",
+        select: "serviceSnapshot.categoryObjectId",
+        populate: {
+          path: "serviceSnapshot.categoryObjectId",
+          select: "name",
+        },
+      })
+      .sort({ createdAt: -1 });
+    if (allReviews.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No reviews found",
+        allReviews: [],
+      });
     }
     return res.status(200).json({
-      success:true,
-      message:"All reviews fetched successfully",
+      success: true,
+      message: "All reviews fetched successfully",
       allReviews,
-      totalReviews:allReviews.length
-    })
-  }catch(err){
-    console.error('get all review of user error:',err);
+      totalReviews: allReviews.length,
+    });
+  } catch (err) {
+    console.error("get all review of user error:", err);
     return res.status(500).json({
-      success:false,
-      message:'Internal server error'
-    })
-    
+      success: false,
+      message: "Internal server error",
+    });
   }
 }
 async function providerReview(req, res) {
@@ -202,5 +215,5 @@ module.exports = {
   reviewCreate,
   providerReview,
   deleteReview,
-  getAllReviewOfUser
+  getAllReviewOfUser,
 };

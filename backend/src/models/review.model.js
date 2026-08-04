@@ -41,6 +41,15 @@ const reviewSchema = new mongoose.Schema(
         },
       },
     ],
+    serviceSnapshot: {
+      categoryObjectId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: true,
+      },
+      categoryName: String,
+      priceType: String,
+    },
   },
   { timestamps: true },
 );
