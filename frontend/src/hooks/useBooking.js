@@ -146,7 +146,12 @@ export const useRescheduleBooking = () => {
       console.error("Reschedule booking error:", err);
     },
   });
-  const cancelBookingByUserMutation = useMutation({
+
+  return { rescheduleBookingMutation };
+};
+export const useCancelBookingByUser=()=>{
+  const queryClient = useQueryClient()
+    const cancelBookingByUserMutation = useMutation({
     mutationFn: (payload) => cancelBookingByUser(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -158,5 +163,5 @@ export const useRescheduleBooking = () => {
       toast.error(err?.response?.data?.message);
     },
   });
-  return { rescheduleBookingMutation, cancelBookingByUserMutation };
-};
+  return {cancelBookingByUserMutation}
+}

@@ -36,7 +36,6 @@ const ActionSuccessModal = ({
         </button>
 
         {/* Heading */}
-        <h1 className="mb-7 text-center text-2xl font-bold">{title}</h1>
 
         {/* Animated Icon */}
         {Icon}
