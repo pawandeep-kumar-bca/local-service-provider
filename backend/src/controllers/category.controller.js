@@ -45,6 +45,27 @@ async function createCategory(req, res) {
   }
 }
 
+async function getCategoryTabs(req, res) {
+  try {
+    const categories = await categoryModel
+      .find({ status: "active" }) // agar status field hai
+      .select("_id name icon.url")
+      .sort({ sortOrder: 1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Categories fetched successfully",
+      categories,
+    });
+  } catch (err) {
+    console.error("Get Category Tabs Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 const getCategory = async (req, res) => {
   try {
     const { search, category, page = 1, limit = 20 } = req.query;
@@ -100,7 +121,7 @@ const getCategory = async (req, res) => {
       providerMap[item._id.toString()] = {
         minPrice: item.minPrice,
         providers: item.providers,
-        avgResponseTime:item.avgResponseTime
+        avgResponseTime: item.avgResponseTime,
       };
     });
 
@@ -108,7 +129,8 @@ const getCategory = async (req, res) => {
       ...category,
       providers: providerMap[category._id.toString()]?.providers || 0,
       startingPrice: providerMap[category._id.toString()]?.minPrice || 0,
-      avgResponseTime: providerMap[category._id.toString()]?.avgResponseTime || 0,
+      avgResponseTime:
+        providerMap[category._id.toString()]?.avgResponseTime || 0,
     }));
     // ==========================
     // Response
@@ -214,6 +236,7 @@ async function deleteCategory(req, res) {
 module.exports = {
   createCategory,
   getCategory,
+  getCategoryTabs,
   updateCategory,
   deleteCategory,
 };

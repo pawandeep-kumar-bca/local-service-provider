@@ -17,6 +17,7 @@ router.post(
   adminControllers.createCategory,
 );
 router.get("/", adminControllers.getCategory);
+router.get("/tabs", adminControllers.getCategoryTabs);
 
 router.put(
   "/:id",
