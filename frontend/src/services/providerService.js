@@ -1,20 +1,18 @@
 import api from "./api";
 
 export const getAllProviders = async (params) => {
-  const response = await api.get("/providers",{params});
+  const response = await api.get("/providers", { params });
   return response.data;
 };
 
 export const getProviderById = async (providerId) => {
-  console.log(providerId);
-  
-  const response = await api.get(`/providers/${providerId}`);
+  const response = await api.get(`/providers/${providerId}`,);
+
   return response.data;
 };
 
+export const createProvider = async (formData) => {
+  const response = await api.post("/providers", formData);
 
-export const createProvider = async (formData) =>{
-        const response = await api.post('/providers',formData)
-
-        return response.data
-}
+  return response.data;
+};
