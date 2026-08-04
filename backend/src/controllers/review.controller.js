@@ -66,6 +66,9 @@ async function reviewCreate(req, res) {
         categoryObjectId: booking?.serviceSnapshot?.categoryObjectId,
         categoryName: booking?.serviceSnapshot?.categoryName,
         priceType: booking?.serviceSnapshot?.priceType,
+        price: booking?.serviceSnapshot?.price,
+        serviceImage: booking?.serviceSnapshot?.serviceImage,
+        serviceBackground: booking?.serviceSnapshot?.serviceBackground,
       },
     });
     const reviewStats = await reviewModel.aggregate([
