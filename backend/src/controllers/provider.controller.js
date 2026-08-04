@@ -333,14 +333,14 @@ async function getOneProviderDetails(req, res) {
 
     const providerExists = await providerModel
       .findById(providerId)
-      .select("-documents")
+      .select("-documents") 
       .populate("categories.category",'icon name description backgroundColor')
       .populate("userId", "fullname profileImage")
       .populate("location.state", "name")
       .populate("location.district", "name")
       .populate("location.city", "name");
     if (!providerExists) {
-      return res.status(404).json({ message: "Wrong Provider Id" });
+      return res.status(404).json({ message: "Provider not found" });
     }
     return res.status(200).json({
       success: true,

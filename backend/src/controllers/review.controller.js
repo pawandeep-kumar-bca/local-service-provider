@@ -2,6 +2,7 @@ const reviewModel = require("../models/review.model");
 const providerModel = require("../models/provider.model");
 const bookingModel = require("../models/booking.model");
 const { uploadFile } = require("../config/imagekit");
+const categoryModel = require("../models/category.model");
 
 async function reviewCreate(req, res) {
   try {
@@ -44,6 +45,12 @@ async function reviewCreate(req, res) {
         message: "Provider not found in booking",
       });
     }
+    const categoryId = booking.serviceSnapshot?.categoryObjectId;
+    if (!categoryId) {
+      return res.status(400).json({
+        message: "category not found in booking",
+      });
+    }
     const reviewImages = req.files?.ReviewImage
       ? await Promise.all(
           req.files.ReviewImage.map((image) =>
@@ -71,34 +78,54 @@ async function reviewCreate(req, res) {
         serviceBackground: booking?.serviceSnapshot?.serviceBackground,
       },
     });
-    const reviewStats = await reviewModel.aggregate([
-      {
-        $match: {
-          providerId: providerId,
+    const [reviewStats, reviewCategory] = await Promise.all([
+      reviewModel.aggregate([
+        {
+          $match: { providerId },
         },
-      },
-      {
-        $group: {
-          _id: "$providerId",
-          averageRating: {
-            $avg: "$rating",
-          },
-          totalReviews: {
-            $sum: 1,
+        {
+          $group: {
+            _id: "$providerId",
+            averageRating: { $avg: "$rating" },
+            totalReviews: { $sum: 1 },
           },
         },
-      },
+      ]),
+
+      reviewModel.aggregate([
+        {
+          $match: {
+            "serviceSnapshot.categoryObjectId": categoryId,
+          },
+        },
+        {
+          $group: {
+            _id: "$serviceSnapshot.categoryObjectId",
+            averageRating: { $avg: "$rating" },
+            totalReviews: { $sum: 1 },
+          },
+        },
+      ]),
     ]);
     await bookingModel.findByIdAndUpdate(bookingId, {
       isReviewed: true,
     });
-    const stats = reviewStats[0] || {
+    const providerStats = reviewStats[0] || {
+      averageRating: 0,
+      totalReviews: 0,
+    };
+
+    const categoryStats = reviewCategory[0] || {
       averageRating: 0,
       totalReviews: 0,
     };
     await providerModel.findByIdAndUpdate(providerId, {
-      rating: stats.averageRating,
-      totalReview: stats.totalReviews,
+      rating: Number(providerStats.averageRating.toFixed(1)),
+      totalReview: providerStats.totalReviews,
+    });
+    await categoryModel.findByIdAndUpdate(categoryId, {
+      average_rating: Number(categoryStats.averageRating.toFixed(1)),
+      total_reviews: categoryStats.totalReviews,
     });
     return res.status(201).json({
       success: true,
