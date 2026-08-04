@@ -7,7 +7,7 @@ import { CiCalendar, CiCalendarDate } from "react-icons/ci";
 import { IoMdTime } from "react-icons/io";
 import { FaCalendarCheck, FaRegCalendarCheck } from "react-icons/fa";
 import ConfirmReschedule from "./ConfirmReschedule";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useRescheduleBooking,
   useUserOneBookingDetails,
@@ -15,11 +15,11 @@ import {
 import Avatar from "../../components/common/Avatar";
 import CustomDatePicker from "../../components/common/CustomDatePicker";
 import SlotTime from "../../components/common/SlotTime";
-import { toast } from "react-toastify";
 
 const RescheduleBooking = () => {
   const [open, setOpen] = useState(null);
   const { bookingId } = useParams();
+  const navigate = useNavigate()
   const { rescheduleBookingMutation } = useRescheduleBooking();
   const { data } = useUserOneBookingDetails(bookingId);
 
@@ -43,7 +43,6 @@ const RescheduleBooking = () => {
     };
     await rescheduleBookingMutation.mutateAsync(payload, {
       onSuccess: (data) => {
-        toast.success(data?.message);
         setOpen(data);
       },
     });
@@ -195,7 +194,7 @@ const RescheduleBooking = () => {
                 />
               </div>
               <div className="flex flex-col md:flex-row justify-end  gap-3 md:gap-7 mt-5 md:mt-4">
-                <Button color="gray" size="md" type="button">
+                <Button color="gray" size="md" type="button" onClick={()=>navigate(-1)}>
                   Cancel
                 </Button>
                 <Button color="success">Confirm Reschedule</Button>
@@ -204,7 +203,7 @@ const RescheduleBooking = () => {
           </div>
         </div>
       </div>
-      {open && <ConfirmReschedule setOpen={setOpen} data={open}/>}
+      {open && <ConfirmReschedule setOpen={setOpen} data={open} />}
     </>
   );
 };

@@ -10,6 +10,7 @@ import District from "../../components/common/District";
 import City from "../../components/common/City";
 import { FaLocationArrow } from "react-icons/fa";
 import { useBookingCreate } from "../../hooks/useBooking";
+import CustomDatePicker from "../../components/common/CustomDatePicker";
 
 const BookingDetail = () => {
   const navigate = useNavigate();
@@ -18,9 +19,9 @@ const BookingDetail = () => {
   const { providerId } = useParams();
   const categoryId = state?.categoryId;
   console.log(categoryId);
-  
+
   const categoryName = state?.categoryName;
-  
+
   const [formData, setFormData] = useState({
     categoryId: categoryId || null,
     providerId: providerId || null,
@@ -30,7 +31,7 @@ const BookingDetail = () => {
     village: "",
     notes: "",
     fullAddress: "",
-    bookingDate: "",
+    date: "",
     landmark: "",
     startTime: "",
     endTime: "",
@@ -38,9 +39,7 @@ const BookingDetail = () => {
     lng: "",
   });
 
-
-const { createBookingMutation } = useBookingCreate();
- 
+  const { createBookingMutation } = useBookingCreate();
 
   const formSubmit = (e) => {
     e.preventDefault();
@@ -73,26 +72,22 @@ const { createBookingMutation } = useBookingCreate();
       fullAddress: formData.fullAddress,
       lat: formData.lat,
       lng: formData.lng,
-      bookingDate: formData.bookingDate,
+      bookingDate: formData.date,
       bookingSlot: {
         startTime: formData.startTime,
         endTime: formData.endTime,
       },
     };
- createBookingMutation.mutate(payload, {
-        onSuccess: (data) => {
-          navigate(
-            "/user/provider-details/booking-details/payment",
-            {
-              state: {
-                booking: data.booking,
-              },
-            },
-          );
-        },
-      });
-   
-  }
+    createBookingMutation.mutate(payload, {
+      onSuccess: (data) => {
+        navigate("/user/provider-details/booking-details/payment", {
+          state: {
+            booking: data.booking,
+          },
+        });
+      },
+    });
+  };
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -161,15 +156,16 @@ const { createBookingMutation } = useBookingCreate();
                 className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  disabled:bg-gray-100 cursor-not-allowed"
               />
             </div>
-            <Input
-              id="bookingDate"
-              name="bookingDate"
-              type="date"
-              label="Date"
-              required
-              value={formData.bookingDate}
-              onChange={handlerChange}
-            />
+            <div className="flex-1 w-full">
+              <label className="font-medium text-lg md:text-sm mb-2 block">
+                Date <span className="text-red-500">*</span>
+              </label>
+              <CustomDatePicker
+                filters={formData}
+                setFilters={setFormData}
+                placeHolder="E.g.- 13/07/2025"
+              />
+            </div>
             <SlotTime
               label="Slot Time"
               required
@@ -272,7 +268,6 @@ const { createBookingMutation } = useBookingCreate();
             </p>
           </div>
           <div className="mt-4 mb-5 flex md:w-[30%] mx-auto">
-           
             <Button
               type="submit"
               fullWidth

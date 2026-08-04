@@ -20,7 +20,7 @@ import { useCancelBookingByUser } from "../../hooks/useBooking";
 
 const BookingProvider = ({ booking }) => {
   const navigate = useNavigate();
-  
+
   const [openReview, setOpenReview] = useState(null);
   const [cancelBooking, setCancelBooking] = useState(null);
   const [successCancel, setSuccessCancel] = useState(null);
@@ -29,7 +29,7 @@ const BookingProvider = ({ booking }) => {
     notes: "",
   });
   console.log(formData);
-  
+
   const { cancelBookingByUserMutation } = useCancelBookingByUser();
   const USER_BOOKING_CANCEL_REASONS = [
     "Change of plans",
@@ -49,15 +49,14 @@ const BookingProvider = ({ booking }) => {
   const handlerCancelBooking = () => {
     setCancelBooking(booking);
   };
-  const handlerBookingSubmit =async (bookingId) => {
+  const handlerBookingSubmit = async (bookingId) => {
     const payload = {
       reason: formData.reason,
       reasonNotes: formData.notes,
       bookingId,
     };
-    
-    
-  await  cancelBookingByUserMutation.mutateAsync(payload, {
+
+    await cancelBookingByUserMutation.mutateAsync(payload, {
       onSuccess: (data) => {
         setSuccessCancel(data?.booking);
         setCancelBooking(null);
@@ -241,7 +240,6 @@ const BookingProvider = ({ booking }) => {
                   onClick={() =>
                     navigate(
                       `/user/my-bookings/${booking._id}/reschedule-booking`,
-                      {},
                     )
                   }
                 >
@@ -264,12 +262,14 @@ const BookingProvider = ({ booking }) => {
             </>
           ) : booking.bookingStatus === "accepted" ? (
             <>
-              {booking.isRescheduled ? (
+              {!booking.isRescheduled ? (
                 <Button
                   color="white"
                   fullWidth
                   onClick={() =>
-                    navigate("/user/my-bookings/reschedule-booking")
+                    navigate(
+                      `/user/my-bookings/${booking._id}/reschedule-booking`,
+                    )
                   }
                 >
                   Reschedule
