@@ -2,11 +2,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { NavLink } from "react-router-dom";
-import { useCategories } from "../../hooks/useCategories";
+
 import { BsGridFill } from "react-icons/bs";
+import { useCategoriesTabs } from "../../hooks/useCategories";
 
 const FilterCategories = ({url,setFilters}) => {
-  const { data, isLoading } = useCategories();
+  const { data, isLoading } = useCategoriesTabs() ;
   
     const categories = data?.categories || [];
   
@@ -96,7 +97,7 @@ const FilterCategories = ({url,setFilters}) => {
             <NavLink
               key={category._id}
               to={`/${url}/${category.slug}`}
-              onClick={() => handleCategory(category.name)}
+              onClick={() => handleCategory(category.slug)}
               className={({ isActive }) =>
                 `${base} ${isActive ? active : notActive}`
               }
