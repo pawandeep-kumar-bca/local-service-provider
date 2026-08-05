@@ -5,6 +5,7 @@ const authMiddleware = require('../middlewares/auth.middleware')
 const router = express.Router()
 
 router.get('/profile',authMiddleware.tokenVerify,userController.getUserProfile)
+router.post("/reverse-geocode", userController.reverseGeocode);
 
 router.put('/profile',authMiddleware.tokenVerify,userController.updateUserProfile)
 router.put('/change-password',authMiddleware.tokenVerify,userController.changePassword)

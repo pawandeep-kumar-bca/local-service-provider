@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const userModel = require("../models/User.model");
 
 async function getUserProfile(req, res) {
@@ -114,8 +115,52 @@ async function changePassword(req, res) {
     });
   }
 }
+async function reverseGeocode(req, res) {
+  try {
+    const { latitude, longitude } = req.body;
+    const lat = Number(latitude);
+    const lon = Number(longitude);
+    if (lat === undefined || lon === undefined) {
+      return res.status(400).json({
+        message: "Latitude and Longitude are required",
+      });
+    }
+
+    if (isNaN(lat) || isNaN(lon)) {
+      return res.status(400).json({
+        message: "Latitude and Longitude must be valid numbers",
+      });
+    }
+    const response = await axios.get(process.env.REVERSEGEOCODE_API, {
+      params: {
+        format: "jsonv2",
+        lat: lat,
+        lon: lon,
+      },
+      headers: {
+        "User-Agent": "LocalServiceProvider/1.0",
+      },
+    });
+    if (!response.data.address) {
+      return res.status(404).json({
+        message: "Address not found",
+      });
+    }
+    const address = response.data.address;
+    return res.status(200).json({
+      message: "fetch successfully!",
+      address,
+    });
+  } catch (err) {
+    console.error("Reverse Geocode location error:", err);
+    return res.status(500).json({
+      message: "Internal server Error",
+    });
+  }
+}
 module.exports = {
   getUserProfile,
   updateUserProfile,
   changePassword,
+  reverseGeocode,
 };

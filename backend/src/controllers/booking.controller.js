@@ -265,7 +265,7 @@ async function userBookingCreate(req, res) {
 async function getUserAllBooking(req, res) {
   try {
     const { status } = req.query;
-    console.log(status);
+  
 
     const userId = req.user.id;
     const now = new Date();
