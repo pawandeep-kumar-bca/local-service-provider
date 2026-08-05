@@ -488,13 +488,13 @@ async function recommendedProviders(req, res) {
   try {
     const providers = await providerModel
       .find({
-        rating: { $gte: 4 }, // rating >= 4
-        totalReview: { $gte: 10 }, // reviews >= 10
-        status: "Approved",
-        verificationStatus: "verified",
+        rating: { $gte: 4 },
+        totalReview: { $gte: 10 },
+        status: "approved",
+        verifiedByAdmin: true,
         availability: true,
       })
-      .sort({ rating: -1, totalReview: -1 }) // highest rating first
+      .sort({ rating: -1, totalReview: -1 })
       .lean();
 
     if (providers.length === 0) {

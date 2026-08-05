@@ -48,7 +48,7 @@ async function createCategory(req, res) {
 async function getCategoryTabs(req, res) {
   try {
     const categories = await categoryModel
-      .find({ status: "active" }) 
+      .find({ status: "active" })
       .select("_id name icon.url slug")
       .sort({ sortOrder: 1 });
 
@@ -155,7 +155,82 @@ const getCategory = async (req, res) => {
     });
   }
 };
+async function getCategoryForPopular(req, res) {
+  try {
+    const limit = Number(req.query.limit) || 6;
+    const page = Number(req.query.page) || 1;
+    const skip = (page - 1) * limit;
+    const popularCategories = await providerModel.aggregate([
+      {
+        $match: {
+          status: "approved",
+        },
+      },
+      {
+        $unwind: "$categories",
+      },
+      {
+        $group: {
+          _id: "$categories.category",
+          providers: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $match: {
+          "category.status": "active",
+        },
+      },
+      {
+        $unwind: "$category",
+      },
+      {
+        $project: {
+          _id: "$category._id",
+          categoryName: "$category.name",
+          categorySlug: "$category.slug",
+          bgColor: "$category.backgroundColor",
+          categoryIcon: "$category.icon.url",
+          providers: 1,
+        },
+      },
+      {
+        $sort: {
+          providers: -1,
+        },
+      },
+      {
+        $limit: limit,
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: limit,
+      },
+    ]);
 
+    return res.status(200).json({
+      success: true,
+      message: "Categories for popular  fetched successfully",
+      popularCategories,
+    });
+  } catch (err) {
+    console.error("Get category for popular error:", err);
+    return res.status(500).json({
+      message: "Internal server Error",
+    });
+  }
+}
 async function updateCategory(req, res) {
   try {
     const { name, description, icon, status } = req.body;
@@ -237,6 +312,7 @@ module.exports = {
   createCategory,
   getCategory,
   getCategoryTabs,
+  getCategoryForPopular,
   updateCategory,
   deleteCategory,
 };

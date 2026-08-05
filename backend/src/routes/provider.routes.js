@@ -39,7 +39,6 @@ router.put(
 );
 // GET /api/v1/providers
 router.get("/", providerControllers.getProviders);
-router.get("/:slug", providerControllers.getSelectProviderByCategory);
 
 router.get("/nearby", providerControllers.nearbySearchLocation);
 
@@ -63,6 +62,7 @@ router.put(
   providerControllers.uploadProviderDocuments,
 );
 // GET /api/v1/providers/:id
+router.get("/category/:slug", providerControllers.getSelectProviderByCategory);
 router.get(
   "/:id",
   validateObjectIdMiddleware("id"),

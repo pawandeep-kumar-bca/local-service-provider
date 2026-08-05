@@ -1,5 +1,5 @@
 const express = require("express");
-const adminControllers = require("../controllers/category.controller");
+const categoriesControllers = require("../controllers/category.controller");
 const providerMiddleware = require("../middlewares/auth.middleware");
 const roleBased = require("../middlewares/role.middleware");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
@@ -14,24 +14,25 @@ router.post(
   roleBased("admin"),
   imageUpload.fields([{ name: "icon", maxCount: 1 }]),
   categoryValidator,
-  adminControllers.createCategory,
+  categoriesControllers.createCategory,
 );
-router.get("/", adminControllers.getCategory);
-router.get("/tabs", adminControllers.getCategoryTabs);
+router.get("/", categoriesControllers.getCategory);
+router.get("/tabs", categoriesControllers.getCategoryTabs);
+router.get('/popular',categoriesControllers.getCategoryForPopular)
 
 router.put(
   "/:id",
   providerMiddleware.tokenVerify,
   validateObjectId("id"),
   roleBased("admin"),
-  adminControllers.updateCategory,
+  categoriesControllers.updateCategory,
 );
 router.delete(
   "/:id",
   providerMiddleware.tokenVerify,
   validateObjectId("id"),
   roleBased("admin"),
-  adminControllers.deleteCategory,
+  categoriesControllers.deleteCategory,
 );
 
 module.exports = router;
