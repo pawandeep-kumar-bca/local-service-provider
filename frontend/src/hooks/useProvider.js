@@ -3,6 +3,7 @@ import {
   createProvider,
   getAllProviders,
   getProviderById,
+  getSelectProviderByCategory,
 } from "../services/providerService";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +21,13 @@ export const useProvider = (providerId) => {
     enabled: !!providerId,
   });
 };
-
+export const useSelectProviderByCategory = (slug) => {
+  return useQuery({
+    queryKey: ["select-provider", slug],
+    queryFn: () => getSelectProviderByCategory(slug),
+    enabled: !!slug,
+  });
+};
 export const useCreateProviders = () => {
   const navigate = useNavigate();
 
