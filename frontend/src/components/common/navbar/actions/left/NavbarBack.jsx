@@ -7,7 +7,7 @@ const NavbarBack = () => {
   return (
     <button
       onClick={() => navigate(-1)}
-      className="p-2 rounded-lg hover:bg-gray-100 transition"
+      className="p-2 rounded-lg block md:hidden hover:bg-gray-100 transition"
     >
       <IoArrowBack className="text-2xl" />
     </button>

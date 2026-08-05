@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
-import NotificationDrawer from "../../notification/NotificationDrawer";
+import NotificationDrawer from "../../../notification/NotificationDrawer";
 const Notification = () => {
   const [openNotification, setOpenNotification] = useState(false);
   return (
