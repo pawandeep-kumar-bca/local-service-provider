@@ -1,9 +1,9 @@
 import React from "react";
 import Avatar from "../../../Avatar";
 
-const Profile = () => {
+const Profile = ({ className = "" }) => {
   return (
-    <div className="w-12 h-12">
+    <div className={`w-12 h-12 ${className}`}>
       <Avatar
         className="text-black bg-gray-200 font-bold text-xl cursor-pointer"
         name="PawanDeep Kumar"

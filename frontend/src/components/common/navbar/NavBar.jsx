@@ -1,11 +1,7 @@
-import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 
-import { navbarConfig } from "./config/userNavbar";
+import { userNavbarConfig } from "./config/userNavbar";
 import { navbarRegistry } from "./registry";
-
-import MenuSideBar from "../MenuSideBar";
 
 const defaultPage = {
   title: "",
@@ -15,17 +11,28 @@ const defaultPage = {
 };
 
 const NavBar = () => {
-  const [openMenuBar, setOpenMenuBar] = useState(false);
-
   const { pathname } = useLocation();
-  const { user } = useSelector((state) => state.auth);
-
-  const role = user?.role;
 
   const currentPage =
-    navbarConfig.find((item) => item.matcher(pathname)) || defaultPage;
-  
-   
+    userNavbarConfig.find((item) => item.matcher(pathname)) || defaultPage;
+
+  const getVisibilityClass = (showOn) => {
+    if (!showOn) return "";
+
+    if (showOn.includes("mobile") && showOn.includes("desktop")) {
+      return "";
+    }
+
+    if (showOn.includes("mobile")) {
+      return "md:hidden";
+    }
+
+    if (showOn.includes("desktop")) {
+      return "hidden md:flex";
+    }
+
+    return "";
+  };
   const renderSection = (items = []) =>
     items.map((item, index) => {
       const Component = navbarRegistry[item.component];
@@ -34,48 +41,33 @@ const NavBar = () => {
 
       return (
         <Component
-          key={`${item.component}-${index}`}
+          key={index}
           {...item}
           title={currentPage.title}
-          role={role}
-          openMenuBar={openMenuBar}
-          setOpenMenuBar={setOpenMenuBar}
+          className={getVisibilityClass(item.showOn)}
         />
       );
     });
-// ===============================
-//This is called Composition Pattern (Eg:left,center,right)
-// ===============================
+  // ===============================
+  //This is called Composition Pattern (Eg:left,center,right)
+  // ===============================
   return (
-    <>
-      <header className="w-full h-[5.3rem] bg-bg flex items-center justify-between px-4">
+    <header className="h-[5.3rem] flex items-center bg-bg px-3">
+      {/* LEFT */}
+      <div className="flex flex-1 items-center gap-3">
+        {renderSection(currentPage.left)}
+      </div>
 
-        {/* LEFT */}
-        <div className="flex items-center gap-3 min-w-fit">
-          {renderSection(currentPage.left)}
-        </div>
+      {/* CENTER */}
+      <div className="flex flex-1 justify-center">
+        {renderSection(currentPage.center)}
+      </div>
 
-        {/* CENTER */}
-        <div className="flex-1 flex justify-center px-6">
-          {renderSection(currentPage.center)}
-        </div>
-
-        {/* RIGHT */}
-        <div className="flex items-center gap-4 min-w-fit">
-          {renderSection(currentPage.right)}
-        </div>
-
-      </header>
-
-      {openMenuBar && (
-        <div className="fixed inset-0 z-50 bg-white md:hidden">
-          <MenuSideBar
-            role={role}
-            onItemClick={() => setOpenMenuBar(false)}
-          />
-        </div>
-      )}
-    </>
+      {/* RIGHT */}
+      <div className="flex flex-1 justify-end items-center gap-4">
+        {renderSection(currentPage.right)}
+      </div>
+    </header>
   );
 };
 

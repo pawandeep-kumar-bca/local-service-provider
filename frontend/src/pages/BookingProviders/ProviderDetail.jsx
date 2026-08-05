@@ -49,8 +49,7 @@ const ProviderDetail = () => {
 
   return (
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-3 md:rounded">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Provider Details</h1>
+      <div className="flex justify-end items-center mb-4">
         <Button color="white" type="button" onClick={() => navigate(-1)}>
           <MdOutlineKeyboardArrowLeft size={24} />
           Back

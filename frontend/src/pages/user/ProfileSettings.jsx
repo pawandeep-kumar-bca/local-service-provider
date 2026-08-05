@@ -12,7 +12,6 @@ const ProfileSettings = () => {
     <div>
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="md:w-[80%] shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] p-4 rounded">
-          <h1 className="text-xl font-semibold text-text">Profile Settings</h1>
           <p className="text-muted text-sm font-semibold">Manage your personal information and account settings.</p>
           <div className="flex gap-6 border-b  mt-4 md:justify-center gap-20 md:text-lg text-sm font-medium">
             <NavLink

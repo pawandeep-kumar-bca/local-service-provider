@@ -18,11 +18,10 @@ const MyBookingsPage = () => {
   ];
   return (
     <div>
-      <h1 className="mb-4 text-xl font-semibold ">My Bookings</h1>
 
       <div className="relative">
-        <div className="mb-5 overflow-hidden sticky top-21 bg-white z-40 pb-5 md:pb-0 pt-3 md:pt-0">
-          <ul className="flex gap-3  font-semibold md:p-4 overflow-x-auto scrollbar-hide">
+        <div className="mb-3 overflow-hidden sticky top-21 bg-white z-40 pb-5 md:pb-0 pt-3 md:pt-0">
+          <ul className="flex gap-3  font-semibold md:pt-3  overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
               key={tab}

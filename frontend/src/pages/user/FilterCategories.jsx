@@ -72,7 +72,7 @@ const FilterCategories = ({url,setFilters}) => {
         {showLeft && (
           <button
             onClick={scrollLeft}
-            className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow justify-center items-center z-20"
+            className="hidden cursor-pointer lg:flex absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow justify-center items-center z-20"
           >
             <MdKeyboardArrowLeft size={24} />
           </button>
@@ -120,7 +120,7 @@ const FilterCategories = ({url,setFilters}) => {
         {showRight && (
           <button
             onClick={scrollRight}
-            className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow justify-center items-center z-20"
+            className="hidden cursor-pointer lg:flex absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow justify-center items-center z-20"
           >
             <MdKeyboardArrowRight size={24} />
           </button>

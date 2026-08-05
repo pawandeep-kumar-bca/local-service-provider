@@ -13,7 +13,6 @@ const OurServices = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Our Services</h1>
 
       <FilterCategories
         url="user/our-services"

@@ -9,16 +9,13 @@ import Avatar from "../../components/common/Avatar";
 import StatusBadge from "../../components/common/StatusBadge";
 
 const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
+  console.log(bookingData);
+  
   return (
     <div>
       {/* Header */}
 
-      <div className="flex items-center justify-between">
-        <h1 className="flex items-center gap-2 text-2xl font-semibold">
-          <FaCalendarAlt className="text-green-600" />
-          Booking Confirmation
-        </h1>
-
+      <div className="flex items-center justify-end">
         <Button color="white">
           <IoIosArrowBack />
           Back
@@ -85,7 +82,7 @@ const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
             </div>
 
            <p>
-              {new Date(bookingData.bookingSlot?.startTime)
+              {new Date(bookingData?.bookingSlot?.startTime)
                 .toLocaleTimeString("en-IN", {
                   hour: "2-digit",
                   minute: "2-digit",
@@ -93,7 +90,7 @@ const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
                 })
                 .toUpperCase()}{" "}
               -{" "}
-              {new Date(bookingData.bookingSlot?.endTime)
+              {new Date(bookingData?.bookingSlot?.endTime)
                 .toLocaleTimeString("en-IN", {
                   hour: "2-digit",
                   minute: "2-digit",
