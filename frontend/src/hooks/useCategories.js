@@ -1,7 +1,7 @@
 // hooks/categoryHooks.js
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createCategory, getAllCategories, getAllCategoriesForTabs } from "../services/categoryService";
+import { createCategory, getAllCategories, getAllCategoriesForTabs, getAllPopularCategories } from "../services/categoryService";
 import { useNavigate } from "react-router-dom";
 export const useCategoryCreate = () => {
   const navigate = useNavigate();
@@ -24,7 +24,13 @@ export const useCategories = (params = {}) => {
      enabled: true,  
   });
 };
-
+export const useCategoriesPopular = (pagination = {}){
+  return useQuery({
+    queryKey:['popular-categories',pagination],
+    queryFn:()=>getAllPopularCategories(pagination),
+    enabled:true
+  })
+}
 export const useCategoriesTabs = ()=>{
   return useQuery({
     queryKey:['categories-tabs'],
