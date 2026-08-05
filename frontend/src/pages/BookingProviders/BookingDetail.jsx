@@ -40,7 +40,7 @@ const BookingDetail = () => {
   });
 
   const { createBookingMutation } = useBookingCreate();
-
+console.log(formData.date)
   const formSubmit = (e) => {
     e.preventDefault();
 

@@ -37,14 +37,10 @@ export const useBookingCreate = () => {
   return { createBookingMutation };
 };
 
-export const useAllUserBookings = () => {
+export const useAllUserBookings = (status) => {
   return useQuery({
-    queryKey: ["user-all-bookings"],
-    queryFn: getAllBookingsOfUser,
-    refetchInterval: 10000,
-    onError: (err) => {
-      console.log("Get all bookings of user error:", err);
-    },
+    queryKey: ["user-all-bookings", status],
+    queryFn: () => getAllBookingsOfUser(status),
   });
 };
 

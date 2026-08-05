@@ -84,9 +84,22 @@ const ViewProviderBookingDetails = ({ layout = "row", bookingData }) => {
               <h3>Time</h3>
             </div>
 
-            <p className="text-text font-semibold text-sm md:text-lg text-right">
-              {bookingData?.bookingSlot?.startTime} -{" "}
-              {bookingData?.bookingSlot?.endTime}
+           <p>
+              {new Date(bookingData.bookingSlot?.startTime)
+                .toLocaleTimeString("en-IN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })
+                .toUpperCase()}{" "}
+              -{" "}
+              {new Date(bookingData.bookingSlot?.endTime)
+                .toLocaleTimeString("en-IN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })
+                .toUpperCase()}
             </p>
           </div>
 

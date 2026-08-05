@@ -171,8 +171,23 @@ const BookingProvider = ({ booking }) => {
               <LuDot size={18} />
 
               <p>
-                {booking.bookingSlot?.startTime} -{" "}
-                {booking.bookingSlot?.endTime}
+                {new Date(booking.bookingSlot?.startTime).toLocaleTimeString(
+                  "en-IN",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  },
+                ).toUpperCase()}{" "}
+                -{" "}
+                {new Date(booking.bookingSlot?.endTime).toLocaleTimeString(
+                  "en-IN",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  },
+                ).toUpperCase()}
               </p>
             </span>
           </div>
