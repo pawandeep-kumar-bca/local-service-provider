@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/common/NavBar";
+import Navbar from "../components/common/navbar/NavBar";
 import MenuSideBar from "../components/common/MenuSideBar";
 import UserHeroLayout from "./UserHeroLayout";
 import { useSelector } from "react-redux";
@@ -10,7 +10,8 @@ const MainLayout = () => {
   const getEffectiveRole = () => {
     if (!user) return null;
     if (user.role === "admin") return "admin";
-    if (user.isProvider && user.providerStatus === "approved") return "provider";
+    if (user.isProvider && user.providerStatus === "approved")
+      return "provider";
     return "user";
   };
 
@@ -32,7 +33,6 @@ const MainLayout = () => {
 
         {/* Content */}
         <div className="pt-20">
-          {/* 🔥 Yaha route ka content render hoga */}
           <Outlet />
         </div>
       </div>

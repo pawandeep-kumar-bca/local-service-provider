@@ -4,7 +4,6 @@ import {
   FaStar,
   FaWallet,
 } from "react-icons/fa";
-import Navbar from "../../components/common/NavBar";
 import ProviderCard from "../../components/provider/ProviderCard";
 import {
   Link,
