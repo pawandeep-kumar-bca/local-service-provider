@@ -237,6 +237,7 @@ const BookingProvider = ({ booking }) => {
                 <Button
                   color="white"
                   fullWidth
+                  type="button"
                   onClick={() =>
                     navigate(
                       `/user/my-bookings/${booking._id}/reschedule-booking`,
@@ -250,13 +251,19 @@ const BookingProvider = ({ booking }) => {
               <Button
                 color="success"
                 fullWidth
+                type="button"
                 onClick={() =>
                   navigate(`/user/my-bookings/${booking._id}/booking-details`)
                 }
               >
                 View
               </Button>
-              <Button color="danger" fullWidth onClick={handlerCancelBooking}>
+              <Button
+                color="danger"
+                type="button"
+                fullWidth
+                onClick={handlerCancelBooking}
+              >
                 Cancel
               </Button>
             </>
@@ -266,6 +273,7 @@ const BookingProvider = ({ booking }) => {
                 <Button
                   color="white"
                   fullWidth
+                  type="button"
                   onClick={() =>
                     navigate(
                       `/user/my-bookings/${booking._id}/reschedule-booking`,
@@ -278,6 +286,7 @@ const BookingProvider = ({ booking }) => {
                 <Button
                   color="success"
                   fullWidth
+                  type="button"
                   onClick={() =>
                     navigate(`/user/my-bookings/${booking._id}/booking-details`)
                   }
@@ -285,7 +294,12 @@ const BookingProvider = ({ booking }) => {
                   View
                 </Button>
               )}
-              <Button color="danger" fullWidth>
+              <Button
+                color="danger"
+                type="button"
+                fullWidth
+                onClick={handlerCancelBooking}
+              >
                 Cancel
               </Button>
             </>
@@ -295,11 +309,16 @@ const BookingProvider = ({ booking }) => {
             </Button>
           ) : booking.bookingStatus === "completed" ? (
             booking.isReviewed ? (
-              <Button color="blue" fullWidth>
+              <Button color="blue" type="button" fullWidth>
                 Book Again
               </Button>
             ) : (
-              <Button color="purple" fullWidth onClick={handleReview}>
+              <Button
+                color="purple"
+                fullWidth
+                type="button"
+                onClick={handleReview}
+              >
                 Rate & Review
               </Button>
             )

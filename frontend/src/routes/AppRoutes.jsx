@@ -81,6 +81,7 @@ import ReportDetails from "../pages/admin/reports/ReportDetails";
 
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage'
 import ProviderList from "../components/provider/ProviderList";
+import SelectProvidersList from "../pages/user/SelectProvidersList";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -108,8 +109,8 @@ const AppRoutes = () => {
               <Route path=":status" element={<BookingList />} />
             </Route>
             <Route
-              path="/user/category/:categoryId/select-provider"
-              element={<SelectProviders />}
+              path="/user/category/:slug/select-provider"
+              element={<SelectProvidersList />}
             />
             {/* <Route path="/user/saved-providers" element={<SavedProviders />} /> */}
             <Route path="/user/payment-history" element={<PaymentHistoryList />}>

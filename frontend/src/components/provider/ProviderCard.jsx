@@ -200,6 +200,7 @@ const ProviderCard = ({ provider}) => {
                 <Button
                   fullWidth
                   color="success"
+                  type="button"
                   onClick={() =>
                     navigate(`/user/provider-details/${provider._id}`)
                   }
