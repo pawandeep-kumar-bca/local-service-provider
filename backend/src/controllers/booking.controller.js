@@ -8,15 +8,19 @@ const cityModel = require("../models/city.model");
 
 const { calculatePricing } = require("../utils/calculatePricing");
 const { generateId } = require("../utils/generateId");
-// Converts "10:30 AM" / "02:00 PM" style strings into total minutes since midnight
-function parseTimeToMinutes(timeStr) {
+
+function convertSlotToDate(bookingDate, timeStr) {
+  const date = new Date(bookingDate);
+
   const [time, meridian] = timeStr.trim().split(" ");
   let [hours, minutes] = time.split(":").map(Number);
 
   if (meridian === "PM" && hours !== 12) hours += 12;
   if (meridian === "AM" && hours === 12) hours = 0;
 
-  return hours * 60 + minutes;
+  date.setHours(hours, minutes, 0, 0);
+
+  return date;
 }
 async function userBookingCreate(req, res) {
   try {
@@ -100,9 +104,11 @@ async function userBookingCreate(req, res) {
       });
     }
 
-    const stateData = await stateModel.findById(state);
-    const districtData = await districtModel.findById(district);
-    const cityData = await cityModel.findById(city);
+    const [stateData, districtData, cityData] = await Promise.all([
+      stateModel.findById(state),
+      districtModel.findById(district),
+      cityModel.findById(city),
+    ]);
     // ---------- Date check ----------
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -112,16 +118,21 @@ async function userBookingCreate(req, res) {
     if (userDate < today) {
       return res.status(400).json({ message: "Invalid booking date" });
     }
+    const bookingStartTime = convertSlotToDate(
+      bookingDate,
+      bookingSlot.startTime,
+    );
 
+    const bookingEndTime = convertSlotToDate(bookingDate, bookingSlot.endTime);
     // ---------- Slot clash check (only active statuses block a slot) ----------
     const blockingStatuses = ["pending", "accepted", "in_progress"];
 
     const alreadyBooking = await bookingsModel.findOne({
-      providerId,
-      userId,
-      bookingDate,
-      "bookingSlot.startTime": bookingSlot.startTime,
-      "bookingSlot.endTime": bookingSlot.endTime,
+      "providerSnapshot.providerObjectId": providerId,
+      "userSnapshot.userObjectId": userId,
+      bookingDate: userDate,
+      "bookingSlot.startTime": bookingStartTime,
+      "bookingSlot.endTime": bookingEndTime,
       bookingStatus: { $in: blockingStatuses },
     });
     if (alreadyBooking) {
@@ -132,10 +143,10 @@ async function userBookingCreate(req, res) {
     }
 
     const bookingSlotAlready = await bookingsModel.findOne({
-      providerId,
-      bookingDate,
-      "bookingSlot.startTime": bookingSlot.startTime,
-      "bookingSlot.endTime": bookingSlot.endTime,
+      "providerSnapshot.providerObjectId": providerId,
+      bookingDate: userDate,
+      "bookingSlot.startTime": bookingStartTime,
+      "bookingSlot.endTime": bookingEndTime,
       bookingStatus: { $in: blockingStatuses },
     });
     if (bookingSlotAlready) {
@@ -143,17 +154,14 @@ async function userBookingCreate(req, res) {
     }
 
     // ---------- Duration + pricing ----------
-    const startMinutes = parseTimeToMinutes(bookingSlot.startTime);
-    const endMinutes = parseTimeToMinutes(bookingSlot.endTime);
-
-    if (endMinutes <= startMinutes) {
+    if (bookingEndTime <= bookingStartTime) {
       return res.status(400).json({
         message: "End time must be after start time",
       });
     }
 
-    const durationHours = (endMinutes - startMinutes) / 60;
-
+    const durationHours =
+      (bookingEndTime - bookingStartTime) / (1000 * 60 * 60);
     let serviceCharge = 0;
     const checkHourly = provider.categories.some(
       (hor) => hor?.pricing?.priceType === "hourly",
@@ -173,11 +181,11 @@ async function userBookingCreate(req, res) {
     const bookingNotes = notes?.trim();
     const bookingData = {
       bookingId,
-      providerId,
-      categoryId,
-      userId,
       bookingDate,
-      bookingSlot,
+      bookingSlot: {
+        startTime: bookingStartTime,
+        endTime: bookingEndTime,
+      },
       durationHours,
       pricing,
       serviceSnapshot: {
@@ -256,10 +264,35 @@ async function userBookingCreate(req, res) {
 }
 async function getUserAllBooking(req, res) {
   try {
-    const userId = req.user.id;
+    const { status } = req.query;
+    console.log(status);
 
+    const userId = req.user.id;
+    const now = new Date();
+
+    const filter = { "userSnapshot.userObjectId": userId };
+    if (status && status !== "all") {
+      if (status === "upcoming") {
+        filter.bookingStatus = {
+          $in: ["pending", "accepted"],
+        };
+        filter["bookingSlot.startTime"] = {
+          $gt: now,
+        };
+      } else if (status === "in progress") {
+        filter["bookingSlot.startTime"] = {
+          $lte: now,
+        };
+
+        filter["bookingSlot.endTime"] = {
+          $gte: now,
+        };
+      } else {
+        filter.bookingStatus = status;
+      }
+    }
     const allBookings = await bookingsModel
-      .find({ "userSnapshot.userObjectId": userId })
+      .find(filter)
       .select(
         "bookingId providerSnapshot serviceAddressSnapshot paymentStatus paymentMethod pricing bookingSlot durationHours bookingDate bookingStatus isReviewed serviceSnapshot serviceType rejectionReason rejectionNote cancelReason cancelNote isRescheduled",
       );
@@ -358,9 +391,10 @@ async function rescheduleBooking(req, res) {
     if (userDate < today) {
       return res.status(400).json({ message: "Invalid booking date" });
     }
-    const stTime = parseTimeToMinutes(startTime);
-    const enTime = parseTimeToMinutes(endTime);
-    if (enTime <= stTime) {
+    const bookingStartTime = convertSlotToDate(bookingDate, startTime);
+    const bookingEndTime = convertSlotToDate(bookingDate, endTime);
+
+    if (bookingEndTime <= bookingStartTime) {
       return res.status(400).json({
         message: "End time must be after start time",
       });
@@ -409,8 +443,8 @@ async function rescheduleBooking(req, res) {
       "providerSnapshot.providerObjectId":
         booking.providerSnapshot.providerObjectId,
       bookingDate: userDate,
-      "bookingSlot.startTime": startTime,
-      "bookingSlot.endTime": endTime,
+      "bookingSlot.startTime": bookingStartTime,
+      "bookingSlot.endTime": bookingEndTime,
     });
     if (slotFull) {
       return res.status(400).json({
@@ -420,19 +454,20 @@ async function rescheduleBooking(req, res) {
 
     if (
       booking.bookingDate.getTime() === userDate.getTime() &&
-      booking.bookingSlot.startTime === startTime &&
-      booking.bookingSlot.endTime === endTime
+      booking.bookingSlot.startTime.getTime() === bookingStartTime.getTime() &&
+      booking.bookingSlot.endTime.getTime() === bookingEndTime.getTime()
     ) {
       return res.status(400).json({
         message: "Please select a different date or time to reschedule.",
       });
     }
     const notes = rescheduleNotes?.trim();
-    const durationHours = Math.floor((enTime - stTime) / 60);
+    const durationHours =
+      (bookingEndTime - bookingStartTime) / (1000 * 60 * 60);
     booking.bookingDate = userDate;
     booking.durationHours = durationHours;
-    booking.bookingSlot.startTime = startTime;
-    booking.bookingSlot.endTime = endTime;
+    booking.bookingSlot.startTime = bookingStartTime;
+    booking.bookingSlot.endTime = bookingEndTime;
     if (notes) {
       booking.rescheduledNotes = notes;
     }
@@ -759,7 +794,7 @@ module.exports = {
   getAllProviderBooking,
   getUserOneBooking,
   rescheduleBooking,
-  providerAcceptBooking, 
+  providerAcceptBooking,
   providerRejectBooking,
   providerCancelBooking,
   providerStartBooking,

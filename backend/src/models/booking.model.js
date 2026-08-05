@@ -18,11 +18,11 @@ const bookingsSchema = new mongoose.Schema(
     },
     bookingSlot: {
       startTime: {
-        type: String,
+        type: Date,
         required: true,
       },
       endTime: {
-        type: String,
+        type: Date,
         required: true,
       },
     },
