@@ -16,8 +16,8 @@ export const useProviders = (params = {}) => {
 export const useProvider = (providerId) => {
   return useQuery({
     queryKey: ["provider", providerId],
-    queryFn: () => getProviderById( providerId),
-    enabled: !!providerId 
+    queryFn: () => getProviderById(providerId),
+    enabled: !!providerId,
   });
 };
 

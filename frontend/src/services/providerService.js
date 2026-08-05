@@ -6,7 +6,7 @@ export const getAllProviders = async (params) => {
 };
 
 export const getProviderById = async (providerId) => {
-  const response = await api.get(`/providers/${providerId}`,);
+  const response = await api.get(`/providers/${providerId}`);
 
   return response.data;
 };
@@ -16,3 +16,8 @@ export const createProvider = async (formData) => {
 
   return response.data;
 };
+
+export const getSelectProviderByCategory = async (slug)=>{
+  const response = await api.get(`/providers/category/${slug}`)
+  return response.data
+}

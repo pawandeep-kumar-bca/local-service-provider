@@ -108,7 +108,7 @@ const AppRoutes = () => {
               <Route path=":status" element={<BookingList />} />
             </Route>
             <Route
-              path="/user/category/select-provider"
+              path="/user/category/:categoryId/select-provider"
               element={<SelectProviders />}
             />
             {/* <Route path="/user/saved-providers" element={<SavedProviders />} /> */}
