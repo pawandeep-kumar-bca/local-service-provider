@@ -1,7 +1,12 @@
 // hooks/categoryHooks.js
 
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { createCategory, getAllCategories, getAllCategoriesForTabs, getAllPopularCategories } from "../services/categoryService";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  createCategory,
+  getAllCategories,
+  getAllCategoriesForTabs,
+  getAllPopularCategories,
+} from "../services/categoryService";
 import { useNavigate } from "react-router-dom";
 export const useCategoryCreate = () => {
   const navigate = useNavigate();
@@ -21,20 +26,30 @@ export const useCategories = (params = {}) => {
   return useQuery({
     queryKey: ["categories", params],
     queryFn: () => getAllCategories(params),
-     enabled: true,  
+    enabled: true,
   });
 };
-export const useCategoriesPopular = (pagination = {}){
+
+export const useCategoriesPopular = () => {
+  return useInfiniteQuery({
+    queryKey: ["popular-categories"],
+
+    queryFn: ({ pageParam = 1 }) =>
+      getAllPopularCategories({ page: pageParam, limit: 5 }),
+
+    initialPageParam: 1,
+
+    getNextPageParam: (lastPage) => {
+      return lastPage.pagination.hasMore
+        ? lastPage.pagination.page + 1
+        : undefined;
+    },
+  });
+};
+export const useCategoriesTabs = () => {
   return useQuery({
-    queryKey:['popular-categories',pagination],
-    queryFn:()=>getAllPopularCategories(pagination),
-    enabled:true
-  })
-}
-export const useCategoriesTabs = ()=>{
-  return useQuery({
-    queryKey:['categories-tabs'],
-    queryFn:getAllCategoriesForTabs,
-    enabled:true
-  })
-}
+    queryKey: ["categories-tabs"],
+    queryFn: getAllCategoriesForTabs,
+    enabled: true,
+  });
+};

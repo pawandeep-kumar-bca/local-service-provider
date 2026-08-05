@@ -1,24 +1,39 @@
 import React from "react";
 import PopularCategoryCard from "./PopularCategoryCard";
-import { Link } from "react-router-dom";
+import { useCategoriesPopular } from "../../hooks/useCategories";
+
 const PopularCategoriesSection = () => {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useCategoriesPopular();
+
+  const categories = data?.pages.flatMap((page) => page.categories) || [];
+
   return (
-    <div>
-      <div className="flex justify-between items-center">
+    <section className="mb-8">
+      <div className="flex items-center justify-between mb-5">
         <h1 className="text-2xl font-bold">Popular Categories</h1>
-        <Link to="all-providers" className="text-primary font-semibold">
-          View All
-        </Link>
+
+        {hasNextPage && (
+          <button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="text-primary font-semibold hover:underline disabled:opacity-50"
+          >
+            {isFetchingNextPage ? "Loading..." : "See More"}
+          </button>
+        )}
       </div>
-      <div className="grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mt-5">
-        <PopularCategoryCard />
-        <PopularCategoryCard />
-        <PopularCategoryCard />
-        <PopularCategoryCard />
-        <PopularCategoryCard />
-        <PopularCategoryCard />
-      </div>
-    </div>
+
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="grid grid-cols-5 gap-4">
+          {categories.map((category) => (
+            <PopularCategoryCard key={category._id} category={category} />
+          ))}
+        </div>
+      )}
+    </section>
   );
 };
 

@@ -1,26 +1,34 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const PopularCategoryCard = () => {
+const PopularCategoryCard = ({ category }) => {
   const navigate = useNavigate();
+
   return (
     <button
       type="button"
-      onClick={() => navigate(`/user/category/cleaning/select-provider`)}
-      className="border border-gray-300 rounded-lg p-2 flex gap-2 items-center cursor-pointer hover:scale-[1.04] hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
-      style={{
-        backgroundColor: "white",
-      }}
+      onClick={() =>
+        navigate(`/user/category/${category?.categorySlug}/select-provider`)
+      }
+      className="w-full min-h-24  border border-gray-200 rounded-2xl bg-gray-50 p-4 flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/40 cursor-pointer"
     >
-      <img
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCHRyhC91TKl3jk4oRlKoyv0Ue2amVebyNSYLZ_GD9Eg&s=10"
-        alt="plumbing"
-        className="w-12 h-12 object-contain"
-      />
-      <div>
-        <span className="text-lg font-bold">Cleaning</span>
-        <p className="text-sm text-gray-500 font-semibold mt-[0.5]">
-          120 Providers
+      {/* Icon */}
+      <div
+        className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+        style={{ backgroundColor: category?.bgColor }}
+      >
+        <img
+          src={category?.categoryIcon}
+          alt={category?.categoryName}
+          className="w-9 h-9 object-contain"
+        />
+      </div>
+      <div className="flex flex-col">
+        <h3 className="text-base font-semibold">{category?.categoryName}</h3>
+
+        <p className="text-sm text-gray-500">
+          {category?.providers}{" "}
+          {category.providers.length === 1 ? "Provider" : "Providers"}
         </p>
       </div>
     </button>
