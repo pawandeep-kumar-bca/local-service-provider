@@ -1,6 +1,11 @@
 // hooks/useAuth.js
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getMe, loginUser, registerUser } from "../services/authService";
+import {
+  getAddressToReverseGeocode,
+  getMe,
+  loginUser,
+  registerUser,
+} from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../features/authSlice";
 import { useDispatch } from "react-redux";
@@ -70,4 +75,13 @@ export const useMe = () => {
     queryKey: ["me"],
     queryFn: getMe,
   });
+};
+export const useAddressToReverseGeocode = () => {
+  const addressToReverseGeocodeMutation = useMutation({
+    mutationFn: getAddressToReverseGeocode,
+    onError: (err) => {
+      console.error("get Address To Reverse Geocode Error:", err);
+    },
+  });
+  return { addressToReverseGeocodeMutation };
 };

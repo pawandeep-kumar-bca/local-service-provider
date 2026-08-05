@@ -14,3 +14,7 @@ export const getMe = async () => {
   const response = await api.get("/auth/me");
   return response.data;
 };
+export const getAddressToReverseGeocode= async (payload)=>{
+  const response= await api.post('/users/reverse-geocode',payload)
+  return response.data
+}
