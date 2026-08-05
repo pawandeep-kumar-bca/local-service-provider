@@ -23,6 +23,7 @@ import { GoClock } from "react-icons/go";
 import { LuLock } from "react-icons/lu";
 import { FaHandshakeAngle, FaUserGroup } from "react-icons/fa6";
 import { useMe } from "../../hooks/useAuth";
+import PopularCategoriesSection from "./PopularCategoriesSection";
 const UserDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -141,7 +142,10 @@ const UserDashboard = () => {
                 
               </div>
             </div>
-            <div className="md:px-3 mt-6 sticky top-21 bg-white z-[999]">
+            
+            <div className="md:px-3 mt-6">
+               <PopularCategoriesSection/>
+
               <div className="flex justify-between items-center pb-1">
                 <h1 className="text-2xl font-bold">Providers</h1>
                 <Link to="all-providers" className="text-primary font-semibold">
@@ -151,6 +155,7 @@ const UserDashboard = () => {
 
              
             </div>
+           
           </>
         )}
         <Outlet
