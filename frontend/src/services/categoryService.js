@@ -13,4 +13,7 @@ export const getAllCategoriesForTabs = async ()=>{
   const response = await api.get('/categories/tabs')
   return response.data
 }
-
+export const getAllPopularCategories = async (pagination)=>{
+  const response = await api.get('/categories/popular',{pagination})
+  return response.data
+}

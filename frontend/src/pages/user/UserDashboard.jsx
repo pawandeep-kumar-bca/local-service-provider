@@ -146,12 +146,7 @@ const UserDashboard = () => {
             <div className="md:px-3 mt-6">
                <PopularCategoriesSection/>
 
-              <div className="flex justify-between items-center pb-1">
-                <h1 className="text-2xl font-bold">Providers</h1>
-                <Link to="all-providers" className="text-primary font-semibold">
-                  View All
-                </Link>
-              </div>
+              
 
              
             </div>
