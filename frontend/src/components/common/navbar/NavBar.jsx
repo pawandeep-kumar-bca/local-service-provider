@@ -64,7 +64,7 @@ const NavBar = () => {
       </div>
 
       {/* RIGHT */}
-      <div className="flex flex-1 justify-end items-center gap-4">
+      <div className="flex flex-1 justify-end items-center gap-6">
         {renderSection(currentPage.right)}
       </div>
     </header>

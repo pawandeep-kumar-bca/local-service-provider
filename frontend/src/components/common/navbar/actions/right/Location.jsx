@@ -8,18 +8,31 @@ const Location = () => {
   const [address, setAddress] = useState(
     JSON.parse(localStorage.getItem("location") || "{}"),
   );
+
   const { addressToReverseGeocodeMutation } = useAddressToReverseGeocode();
   const selectCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-
+        
         await addressToReverseGeocodeMutation.mutateAsync(
           { latitude, longitude },
           {
             onSuccess: (data) => {
-              localStorage.setItem("location", JSON.stringify(data.address));
-              setAddress(data.address);
+              
+              
+              const locationData = {
+                latitude,
+                longitude,
+                state: data.location.state.name,
+                district: data.location.district.name,
+                city: data.location.city.name,
+                locality: data.location.locality,
+              };
+
+              localStorage.setItem("location", JSON.stringify(locationData));
+
+              setAddress(locationData);
               setOpen(false);
             },
           },
@@ -41,13 +54,16 @@ const Location = () => {
         <div className="flex items-center gap-1">
           <CiLocationArrow1 className="text-lg" />
           <h1 className="text-sm font-bold">
-            {address?.state_district || address?.state}
+            {address?.district||address?.state_district || address?.state || "Your Location"}
           </h1>
         </div>
 
         <div className="flex items-end gap-2">
           <p className="text-sm text-gray-600">
-            {address?.city || address?.town || address?.village}
+            {address?.city ||
+              address?.town ||
+              address?.village ||
+              "Click to select"}
           </p>
           <IoIosArrowDown className="text-lg font-bold text-black" />
         </div>

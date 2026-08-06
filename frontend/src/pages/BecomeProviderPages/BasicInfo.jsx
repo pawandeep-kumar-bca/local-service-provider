@@ -8,7 +8,7 @@ import { MdChevronRight, MdMyLocation } from "react-icons/md";
 import State from "../../components/common/State";
 import District from "../../components/common/District";
 import City from "../../components/common/City";
-
+import { useAddressToReverseGeocode } from "../../hooks/useAuth";
 const BasicInfo = () => {
   const { data, isLoading } = useCategories();
   const { formData, setFormData, phoneNumber, nextMoveForm } =
@@ -37,7 +37,7 @@ const BasicInfo = () => {
   };
 
   const categories = data?.categories;
-
+  const { addressToReverseGeocodeMutation } = useAddressToReverseGeocode();
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser.");
@@ -45,21 +45,36 @@ const BasicInfo = () => {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
+      async (position) => {
+        try {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
 
-        setFormData((prev) => ({
-          ...prev,
+          const data = await addressToReverseGeocodeMutation.mutateAsync({
+            latitude,
+            longitude,
+          });
 
-          lat: latitude,
+          setFormData((prev) => ({
+            ...prev,
 
-          lng: longitude,
-        }));
+            lat: data.location.latitude,
+            lng: data.location.longitude,
+
+            state: data.location.state,
+            district: data.location.district,
+            city: data.location.city,
+
+            locality: data.location.locality,
+          }));
+        } catch (err) {
+          console.error(err);
+          alert("Unable to fetch location.");
+        }
       },
       (error) => {
-        console.log(error);
-        alert("Unable to get your location.");
+        console.error(error);
+        alert("Location permission denied.");
       },
       {
         enableHighAccuracy: true,
@@ -168,21 +183,19 @@ const BasicInfo = () => {
           </div>
           <div className="flex flex-col md:flex-row md:gap-5 mb-4">
             {/* State */}
-<State formData={formData} setFormData={setFormData}/>
-          <District formData={formData} setFormData={setFormData}/>
-        
-         
+            <State formData={formData} setFormData={setFormData} />
+            <District formData={formData} setFormData={setFormData} />
           </div>
           <div className="flex flex-col md:flex-row md:gap-5">
             {/* City */}
-  <City formData={formData} setFormData={setFormData}/>
-         
+            <City formData={formData} setFormData={setFormData} />
+
             <Input
-              label="Village"
-              id="village"
-              placeholder="Enter your village / area name"
+              label="Locality"
+              id="locality"
+              placeholder="Enter your locality/area /village  name"
               required
-              value={formData.village}
+              value={formData.locality}
               onChange={handleChange}
             />
           </div>

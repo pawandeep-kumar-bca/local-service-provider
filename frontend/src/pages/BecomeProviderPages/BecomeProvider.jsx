@@ -19,7 +19,7 @@ const BecomeProvider = () => {
     state: null,
     district: null,
     city: null,
-    village: "",
+    locality: "",
 
     lat: "",
     lng: "",
