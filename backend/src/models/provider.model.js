@@ -105,7 +105,7 @@ const providerSchema = new mongoose.Schema(
         required: true,
       },
 
-      village: {
+      locality: {
         type: String,
         required: true,
         trim: true,

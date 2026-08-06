@@ -35,7 +35,7 @@ const providerValidator = [
   ,
   body("district").notEmpty().withMessage("District is required"),
   body("city").notEmpty().withMessage("city is required"),
-  body("village")
+  body("locality")
     .notEmpty()
     .withMessage("Village is required")
     .isLength({ min: 3 })

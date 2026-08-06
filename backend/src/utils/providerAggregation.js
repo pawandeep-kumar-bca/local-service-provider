@@ -91,7 +91,7 @@ const buildHomeProviderPipeline = () => [
 
       distanceInKm: 1,
 
-      village: "$location.village",
+      locality: "$location.locality",
       city: "$city.name",
       district: "$district.name",
       state: "$state.name",
@@ -150,7 +150,7 @@ const buildCategoryProviderPipeline = (categoryId) => [
 
       distanceInKm: 1,
 
-      village: "$location.village",
+      locality: "$location.locality",
       city: "$city.name",
       district: "$district.name",
       state: "$state.name",

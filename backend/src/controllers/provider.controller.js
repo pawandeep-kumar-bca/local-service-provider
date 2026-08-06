@@ -21,7 +21,7 @@ async function providerProfileCreate(req, res) {
       categories,
       district,
       city,
-      village,
+      locality,
       lat,
       lng,
     } = req.body;
@@ -95,7 +95,7 @@ async function providerProfileCreate(req, res) {
         state,
         district,
         city,
-        village,
+        locality,
       },
 
       documents: {
