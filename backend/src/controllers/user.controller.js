@@ -124,7 +124,7 @@ async function reverseGeocode(req, res) {
       return res.status(400).json({
         message: "Latitude and Longitude are required",
       });
-    }
+    } 
 
     if (isNaN(lat) || isNaN(lon)) {
       return res.status(400).json({

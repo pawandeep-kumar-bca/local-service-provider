@@ -6,6 +6,7 @@ const categoryModel = require("../models/category.model");
 const UserModel = require("../models/User.model");
 const { generateId } = require("../utils/generateId");
 const reviewModel = require("../models/review.model");
+const { default: mongoose } = require("mongoose");
 
 async function providerProfileCreate(req, res) {
   try {
@@ -431,37 +432,176 @@ async function getSelectProviderByCategory(req, res) {
 }
 async function nearbySearchLocation(req, res) {
   try {
-    let { lat, lng, radius } = req.query;
+    let { lat, lng, radius, categoryId } = req.query;
 
     // validation
-    if (lat === undefined || lng === undefined || radius === undefined) {
+    if (
+      lat === undefined ||
+      lng === undefined ||
+      radius === undefined ||
+      categoryId === undefined
+    ) {
       return res.status(400).json({
-        message: "lat, lng and radius are required",
+        message: "lat, lng  radius and categoryId are required",
       });
     }
-
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({
+        message: "Invalid categoryId",
+      });
+    }
     // convert string → number
     lat = Number(lat);
     lng = Number(lng);
     radius = Number(radius);
 
-    // convert km → meters
     const distance = radius * 1000;
-
     // geo search
-    const providers = await providerModel.find({
-      location: {
-        $near: {
-          $geometry: {
+    const providers = await providerModel.aggregate([
+      {
+        $geoNear: {
+          near: {
             type: "Point",
             coordinates: [lng, lat],
           },
-          $maxDistance: distance,
+          distanceField: "distance",
+          maxDistance: distance,
+          spherical: true,
+          query: {
+            status: "approved",
+            verifiedByAdmin: true,
+            availability: true,
+          },
         },
       },
-    });
 
-    // if no providers
+      {
+        $unwind: "$categories",
+      },
+
+      {
+        $match: {
+          "categories.category": new mongoose.Types.ObjectId(categoryId),
+        },
+      },
+
+      {
+        $lookup: {
+          from: "users",
+          let: { userId: "$userId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$_id", "$userId"],
+                },
+              },
+            },
+            {
+              $project: {
+                fullname: 1,
+                "profileImage.url": 1,
+              },
+            },
+            {
+              as: "user",
+            },
+          ],
+        },
+      },
+
+      {
+        $unwind: "$user",
+      },
+
+      {
+        $lookup: {
+          from: "categories",
+          let: { categoryId: "categories.category" },
+         pipeline:[
+          {
+            $match:{
+              $expr:{
+                $eq:['$_id','$categoryId']
+              }
+            }
+          },{
+            $project:{
+              name:1
+            }
+          }
+         ],
+         as:'category'
+        },
+      },
+
+      {
+        $unwind: "$category",
+      },
+
+      // Distance km me
+      {
+        $addFields: {
+          distanceInKm: {
+            $round: [
+              {
+                $divide: ["$distance", 1000],
+              },
+              1,
+            ],
+          },
+        },
+      },
+
+      // Final response
+      {
+        $project: {
+          _id: 1,
+          providerId: 1,
+
+          fullName: "$user.fullname",
+          profileImage: "$user.profileImage.url",
+
+          verified: "$verifiedByAdmin",
+          availability: 1,
+
+          rating: 1,
+          totalReview: 1,
+
+          completedJobs: 1,
+          experience: 1,
+          responseTime: 1,
+
+          topRated: 1,
+          trusted: 1,
+
+          distanceInKm: 1,
+
+          village: "$location.village",
+
+          category: {
+            _id: "$category._id",
+            name: "$category.name",
+          },
+
+          pricing: {
+            priceType: "$categories.pricing.priceType",
+            price: "$categories.pricing.price",
+          },
+
+          createdAt: 1,
+        },
+      },
+
+      {
+        $sort: {
+          distanceInKm: 1,
+          rating: -1,
+          totalReview: -1,
+        },
+      },
+    ]);
+
     if (providers.length === 0) {
       return res.status(200).json({
         message: "No providers found nearby",
@@ -469,7 +609,6 @@ async function nearbySearchLocation(req, res) {
       });
     }
 
-    // success
     return res.status(200).json({
       message: "Nearby providers found",
       totalProviders: providers.length,
