@@ -3,6 +3,7 @@ import {
   createProvider,
   getAllProviders,
   getProviderById,
+  getRecommendedProviders,
   getSelectProviderByCategory,
 } from "../services/providerService";
 import { useNavigate } from "react-router-dom";
@@ -43,3 +44,9 @@ export const useCreateProviders = () => {
 
   return { createProviderMutation };
 };
+ export const useRecommendedProviders = (slug)=>{
+  return useQuery({
+    queryKey:['recommended-providers',slug],
+    queryFn:()=>getRecommendedProviders({slug})
+  })
+ }
