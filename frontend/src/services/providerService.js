@@ -21,3 +21,11 @@ export const getSelectProviderByCategory = async (slug)=>{
   const response = await api.get(`/providers/category/${slug}`)
   return response.data
 }
+export const getRecommendedProviders=async ({slug})=>{
+  const response = await api.get('/providers/recommended',{
+    params:{
+      slug
+    }
+  })
+  return response.data
+}
