@@ -6,8 +6,11 @@ const categoryModel = require("../models/category.model");
 const UserModel = require("../models/User.model");
 const { generateId } = require("../utils/generateId");
 const reviewModel = require("../models/review.model");
-const { default: mongoose } = require("mongoose");
-
+const { mongoose } = require("mongoose");
+const {
+  buildHomeProviderPipeline,
+  buildCategoryProviderPipeline,
+} = require("../utils/providerAggregation.js");
 async function providerProfileCreate(req, res) {
   try {
     const {
@@ -430,167 +433,28 @@ async function getSelectProviderByCategory(req, res) {
     });
   }
 }
-const buildProviderPipeline = (categoryId) => [
-  {
-    $unwind: "$categories",
-  },
-  {
-    $match: {
-      "categories.category": new mongoose.Types.ObjectId(categoryId),
-    },
-  },
-  {
-    $lookup: {
-      from: "users",
-      let: {
-        userId: "$userId",
-      },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $eq: ["$_id", "$$userId"],
-            },
-          },
-        },
-        {
-          $project: {
-            fullname: 1,
-            "profileImage.url": 1,
-          },
-        },
-      ],
-      as: "user",
-    },
-  },
-  {
-    $unwind: "$user",
-  },
-  {
-    $lookup: {
-      from: "categories",
-      let: {
-        categoryId: "$categories.category",
-      },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $eq: ["$_id", "$$categoryId"],
-            },
-          },
-        },
-        {
-          $project: {
-            name: 1,
-          },
-        },
-      ],
-      as: "category",
-    },
-  },
-  {
-    $unwind: "$category",
-  },
-  {
-    $lookup: {
-      from: "states",
-      localField: "location.state",
-      foreignField: "_id",
-      as: "state",
-    },
-  },
-  {
-    $unwind: "$state",
-  },
-  {
-    $lookup: {
-      from: "districts",
-      localField: "location.district",
-      foreignField: "_id",
-      as: "district",
-    },
-  },
-  {
-    $unwind: "$district",
-  },
-  {
-    $lookup: {
-      from: "cities",
-      localField: "location.city",
-      foreignField: "_id",
-      as: "city",
-    },
-  },
-  {
-    $unwind: "$city",
-  },
-  {
-    $project: {
-      _id: 1,
-      providerId: 1,
 
-      fullName: "$user.fullname",
-      profileImage: "$user.profileImage.url",
-
-      verified: "$verifiedByAdmin",
-      availability: 1,
-
-      rating: 1,
-      totalReview: 1,
-
-      completedJobs: 1,
-      experience: 1,
-      responseTime: 1,
-
-      topRated: 1,
-      trusted: 1,
-
-      village: "$location.village",
-
-      state: "$state.name",
-      district: "$district.name",
-      city: "$city.name",
-
-      category: "$category.name",
-
-      pricing: {
-        priceType: "$categories.pricing.priceType",
-        price: "$categories.pricing.price",
-      },
-
-      createdAt: 1,
-    },
-  },
-];
 async function nearbySearchLocation(req, res) {
   try {
     let { lat, lng, radius, categoryId } = req.query;
 
-    // validation
-    if (
-      lat === undefined ||
-      lng === undefined ||
-      radius === undefined ||
-      categoryId === undefined
-    ) {
+    if (lat === undefined || lng === undefined || radius === undefined) {
       return res.status(400).json({
-        message: "lat, lng  radius and categoryId are required",
+        message: "lat, lng and radius are required",
       });
     }
-    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+    if (categoryId && !mongoose.Types.ObjectId.isValid(categoryId)) {
       return res.status(400).json({
         message: "Invalid categoryId",
       });
     }
-    // convert string → number
+
     lat = Number(lat);
     lng = Number(lng);
     radius = Number(radius);
 
     const distance = radius * 1000;
-    // geo search
-    const providers = await providerModel.aggregate([
+    const pipeline = [
       {
         $geoNear: {
           near: {
@@ -607,29 +471,30 @@ async function nearbySearchLocation(req, res) {
           },
         },
       },
-
-      ...buildProviderPipeline(categoryId),
-
+    ];
+    pipeline.push(
       {
         $addFields: {
           distanceInKm: {
-            $round: [
-              {
-                $divide: ["$distance", 1000],
-              },
-              1,
-            ],
+            $round: [{ $divide: ["$distance", 1000] }, 1],
           },
         },
       },
-
       {
         $sort: {
+          distanceInKm: 1,
           rating: -1,
           totalReview: -1,
         },
       },
-    ]);
+    );
+    if (categoryId) {
+      pipeline.push(...buildCategoryProviderPipeline(categoryId));
+    } else {
+      pipeline.push(...buildHomeProviderPipeline());
+    }
+
+    const providers = await providerModel.aggregate(pipeline);
     if (providers.length === 0) {
       return res.status(200).json({
         message: "No providers found nearby",
@@ -653,18 +518,24 @@ async function nearbySearchLocation(req, res) {
 
 async function recommendedProviders(req, res) {
   try {
-    const { categoryId } = req.query;
-    if (!categoryId) {
-      return res.status(400).json({
-        message: "categoryId is required",
-      });
+    const slug = req.params.slug;
+
+    let categoryId = null;
+
+    if (slug) {
+      const category = await categoryModel.findOne({ slug });
+
+      if (!category) {
+        return res.status(404).json({
+          success: false,
+          message: "Category not found",
+        });
+      }
+
+      categoryId = category._id;
     }
-    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
-      return res.status(400).json({
-        message: "Invalid categoryId",
-      });
-    }
-    const providers = await providerModel.aggregate([
+
+    const pipeline = [
       {
         $match: {
           status: "approved",
@@ -674,17 +545,23 @@ async function recommendedProviders(req, res) {
           totalReview: { $gte: 10 },
         },
       },
+    ];
 
-      ...buildProviderPipeline(categoryId),
+    if (categoryId) {
+      pipeline.push(...buildCategoryProviderPipeline(categoryId));
+    } else {
+      pipeline.push(...buildHomeProviderPipeline());
+    }
 
-      {
-        $sort: {
-          rating: -1,
-          totalReview: -1,
-          completedJobs: -1,
-        },
+    pipeline.push({
+      $sort: {
+        rating: -1,
+        totalReview: -1,
+        completedJobs: -1,
       },
-    ]);
+    });
+
+    const providers = await providerModel.aggregate(pipeline);
 
     if (providers.length === 0) {
       return res.status(200).json({
@@ -699,7 +576,7 @@ async function recommendedProviders(req, res) {
       providers,
     });
   } catch (err) {
-    console.error("recommended provider error:", err);
+    console.error("Recommended provider error:", err);
 
     return res.status(500).json({
       message: "Internal server error",
