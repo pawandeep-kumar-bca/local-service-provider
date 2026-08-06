@@ -430,6 +430,139 @@ async function getSelectProviderByCategory(req, res) {
     });
   }
 }
+const buildProviderPipeline = (categoryId) => [
+  {
+    $unwind: "$categories",
+  },
+  {
+    $match: {
+      "categories.category": new mongoose.Types.ObjectId(categoryId),
+    },
+  },
+  {
+    $lookup: {
+      from: "users",
+      let: {
+        userId: "$userId",
+      },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $eq: ["$_id", "$$userId"],
+            },
+          },
+        },
+        {
+          $project: {
+            fullname: 1,
+            "profileImage.url": 1,
+          },
+        },
+      ],
+      as: "user",
+    },
+  },
+  {
+    $unwind: "$user",
+  },
+  {
+    $lookup: {
+      from: "categories",
+      let: {
+        categoryId: "$categories.category",
+      },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $eq: ["$_id", "$$categoryId"],
+            },
+          },
+        },
+        {
+          $project: {
+            name: 1,
+          },
+        },
+      ],
+      as: "category",
+    },
+  },
+  {
+    $unwind: "$category",
+  },
+  {
+    $lookup: {
+      from: "states",
+      localField: "location.state",
+      foreignField: "_id",
+      as: "state",
+    },
+  },
+  {
+    $unwind: "$state",
+  },
+  {
+    $lookup: {
+      from: "districts",
+      localField: "location.district",
+      foreignField: "_id",
+      as: "district",
+    },
+  },
+  {
+    $unwind: "$district",
+  },
+  {
+    $lookup: {
+      from: "cities",
+      localField: "location.city",
+      foreignField: "_id",
+      as: "city",
+    },
+  },
+  {
+    $unwind: "$city",
+  },
+  {
+    $project: {
+      _id: 1,
+      providerId: 1,
+
+      fullName: "$user.fullname",
+      profileImage: "$user.profileImage.url",
+
+      verified: "$verifiedByAdmin",
+      availability: 1,
+
+      rating: 1,
+      totalReview: 1,
+
+      completedJobs: 1,
+      experience: 1,
+      responseTime: 1,
+
+      topRated: 1,
+      trusted: 1,
+
+      village: "$location.village",
+
+      state: "$state.name",
+      district: "$district.name",
+      city: "$city.name",
+
+      category: "$category.name",
+
+      pricing: {
+        priceType: "$categories.pricing.priceType",
+        price: "$categories.pricing.price",
+      },
+
+      createdAt: 1,
+    },
+  },
+];
 async function nearbySearchLocation(req, res) {
   try {
     let { lat, lng, radius, categoryId } = req.query;
@@ -475,71 +608,8 @@ async function nearbySearchLocation(req, res) {
         },
       },
 
-      {
-        $unwind: "$categories",
-      },
+      ...buildProviderPipeline(categoryId),
 
-      {
-        $match: {
-          "categories.category": new mongoose.Types.ObjectId(categoryId),
-        },
-      },
-
-      {
-        $lookup: {
-          from: "users",
-          let: { userId: "$userId" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $eq: ["$_id", "$userId"],
-                },
-              },
-            },
-            {
-              $project: {
-                fullname: 1,
-                "profileImage.url": 1,
-              },
-            },
-            {
-              as: "user",
-            },
-          ],
-        },
-      },
-
-      {
-        $unwind: "$user",
-      },
-
-      {
-        $lookup: {
-          from: "categories",
-          let: { categoryId: "categories.category" },
-         pipeline:[
-          {
-            $match:{
-              $expr:{
-                $eq:['$_id','$categoryId']
-              }
-            }
-          },{
-            $project:{
-              name:1
-            }
-          }
-         ],
-         as:'category'
-        },
-      },
-
-      {
-        $unwind: "$category",
-      },
-
-      // Distance km me
       {
         $addFields: {
           distanceInKm: {
@@ -553,55 +623,13 @@ async function nearbySearchLocation(req, res) {
         },
       },
 
-      // Final response
-      {
-        $project: {
-          _id: 1,
-          providerId: 1,
-
-          fullName: "$user.fullname",
-          profileImage: "$user.profileImage.url",
-
-          verified: "$verifiedByAdmin",
-          availability: 1,
-
-          rating: 1,
-          totalReview: 1,
-
-          completedJobs: 1,
-          experience: 1,
-          responseTime: 1,
-
-          topRated: 1,
-          trusted: 1,
-
-          distanceInKm: 1,
-
-          village: "$location.village",
-
-          category: {
-            _id: "$category._id",
-            name: "$category.name",
-          },
-
-          pricing: {
-            priceType: "$categories.pricing.priceType",
-            price: "$categories.pricing.price",
-          },
-
-          createdAt: 1,
-        },
-      },
-
       {
         $sort: {
-          distanceInKm: 1,
           rating: -1,
           totalReview: -1,
         },
       },
     ]);
-
     if (providers.length === 0) {
       return res.status(200).json({
         message: "No providers found nearby",
@@ -625,16 +653,38 @@ async function nearbySearchLocation(req, res) {
 
 async function recommendedProviders(req, res) {
   try {
-    const providers = await providerModel
-      .find({
-        rating: { $gte: 4 },
-        totalReview: { $gte: 10 },
-        status: "approved",
-        verifiedByAdmin: true,
-        availability: true,
-      })
-      .sort({ rating: -1, totalReview: -1 })
-      .lean();
+    const { categoryId } = req.query;
+    if (!categoryId) {
+      return res.status(400).json({
+        message: "categoryId is required",
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({
+        message: "Invalid categoryId",
+      });
+    }
+    const providers = await providerModel.aggregate([
+      {
+        $match: {
+          status: "approved",
+          verifiedByAdmin: true,
+          availability: true,
+          rating: { $gte: 4 },
+          totalReview: { $gte: 10 },
+        },
+      },
+
+      ...buildProviderPipeline(categoryId),
+
+      {
+        $sort: {
+          rating: -1,
+          totalReview: -1,
+          completedJobs: -1,
+        },
+      },
+    ]);
 
     if (providers.length === 0) {
       return res.status(200).json({
