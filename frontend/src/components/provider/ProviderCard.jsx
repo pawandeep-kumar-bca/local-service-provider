@@ -15,14 +15,8 @@ import StatusBadge from "../common/StatusBadge";
 import { CiStar } from "react-icons/ci";
 import { AiOutlineLike } from "react-icons/ai";
 import Avatar from "../common/Avatar";
-const ProviderCard = ({ provider}) => {
+const ProviderCard = ({ provider }) => {
   const navigate = useNavigate();
-
-  // ---------------- Derived Values (API shape ke hisaab se) ----------------
-
-
-
-  const isVerified = provider.verifiedByAdmin ? "verified" : "not verified";
 
   const availabilityText = provider.availability
     ? "Available Now"
@@ -38,8 +32,7 @@ const ProviderCard = ({ provider}) => {
 
   const reviews = provider.totalReview || 0;
 
-  const price = provider?.categories[0]?.pricing?.price || 0;
-
+  const price = provider?.categories?.[0]?.pricing?.price || 0;
 
   const base =
     "py-1 px-3 rounded-full text-sm flex w-fit gap-2 items-center font-medium border";
@@ -51,8 +44,8 @@ const ProviderCard = ({ provider}) => {
           <div className="relative">
             <div className="w-20 h-20 min-w-20">
               <Avatar
-                image={provider?.userId?.profileImage?.url}
-                name={provider?.userId?.fullname}
+                image={provider?.profileImage}
+                name={provider?.fullName}
                 className="bg-gray-300 text-3xl text-red-500"
               />
             </div>
@@ -65,14 +58,14 @@ const ProviderCard = ({ provider}) => {
           <div className="w-full flex flex-col gap-1 ">
             <div className="w-full flex justify-between  items-center ">
               <h1 className="text-2xl font-semibold flex items-center">
-                {provider.userId?.fullname}
+                {provider?.fullName}
               </h1>
               <BsThreeDotsVertical className="text-2xl cursor-pointer" />
             </div>
 
             <div className="flex gap-2 my-2">
-              <StatusBadge category={provider.categories[0]?.category?.name} />
-              {isVerified ? (
+              <StatusBadge category={provider?.categories?.[0]?.name} />
+              {provider?.verified ? (
                 <span
                   className={`${base} bg-green-100 text-green-600 border-green-200`}
                 >
@@ -92,7 +85,7 @@ const ProviderCard = ({ provider}) => {
               <div className="flex items-center gap-2 ">
                 <FaStar className="text-yellow-500" />
                 <h2 className="text-lg font-bold">{providerRating}</h2>
-                <h2 className="text-muted text-sm">{reviews} Reviews</h2>
+                <h2 className="text-muted text-sm">({reviews} Reviews)</h2>
               </div>
               <div className="flex items-center gap-1 font-semibold text-success">
                 <IoShieldCheckmarkOutline />
@@ -147,11 +140,11 @@ const ProviderCard = ({ provider}) => {
             <div className="flex items-center gap-2 ">
               <FaLocationDot className=" text-black" size={24} />
               <div>
-                <h3 className="font-semibold text-text text-lg">500m away</h3>
+                {provider?.distanceInKm && (
+                  <h3 className="font-semibold text-text text-lg">500m away</h3>
+                )}
                 <p className="text-sm text-muted">
-                  {provider.location?.city?.name},
-                  {provider.location?.district?.name},
-                  {provider.location?.state?.name}
+                  {provider?.city},{provider?.district},{provider?.state}
                 </p>
               </div>
             </div>
@@ -159,9 +152,10 @@ const ProviderCard = ({ provider}) => {
               <h3 className="flex items-center text-xl font-bold">
                 <MdOutlineCurrencyRupee />
                 {price}
-                {provider?.categories[0]?.pricing?.priceType === "hourly" ? "/hr" : "/fixed"}
+                {provider?.categories?.[0]?.pricing?.priceType === "hourly"
+                  ? "/hr"
+                  : "/fixed"}
               </h3>
-              
             </div>
           </div>
           <div className="w-full border-t border-gray-200 my-3"></div>

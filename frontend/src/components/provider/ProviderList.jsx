@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useProviders } from "../../hooks/useProvider";
+import {  useRecommendedProviders } from "../../hooks/useProvider";
 import { useOutletContext } from "react-router-dom";
 import ProviderCard from "./ProviderCard";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ const ProviderList = () => {
 
   
   const setTotalPages = context.setTotalPages;
-  const { data, isLoading } = useProviders();
+  const { data, isLoading } = useRecommendedProviders()
 
 
  
@@ -28,7 +28,7 @@ const ProviderList = () => {
   return (
     <div className="max-w-7xl mx-auto md:px-4 md:py-6">
       <div className="flex justify-between items-center pb-5">
-                <h1 className="text-2xl font-bold">Providers</h1>
+                <h1 className="text-2xl font-bold">Top Rated Providers For You</h1>
                 <Link to="all-providers" className="text-primary font-semibold">
                   View All
                 </Link>
