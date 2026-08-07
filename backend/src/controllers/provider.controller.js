@@ -471,8 +471,6 @@ async function nearbySearchLocation(req, res) {
           },
         },
       },
-    ];
-    pipeline.push(
       {
         $addFields: {
           distanceInKm: {
@@ -480,19 +478,21 @@ async function nearbySearchLocation(req, res) {
           },
         },
       },
-      {
-        $sort: {
-          distanceInKm: 1,
-          rating: -1,
-          totalReview: -1,
-        },
-      },
-    );
+    ];
+
     if (categoryId) {
       pipeline.push(...buildCategoryProviderPipeline(categoryId));
     } else {
       pipeline.push(...buildHomeProviderPipeline());
     }
+
+    pipeline.push({
+      $sort: {
+        distanceInKm: 1,
+        rating: -1,
+        totalReview: -1,
+      },
+    });
 
     const providers = await providerModel.aggregate(pipeline);
     if (providers.length === 0) {
@@ -518,7 +518,10 @@ async function nearbySearchLocation(req, res) {
 
 async function recommendedProviders(req, res) {
   try {
-    const slug = req.params.slug;
+    const limit = Number(req.query.limit) || 6;
+    const page = Number(req.query.page) || 1;
+    const skip = (page - 1) * limit;
+    const { slug } = req.query;
 
     let categoryId = null;
 
@@ -553,27 +556,54 @@ async function recommendedProviders(req, res) {
       pipeline.push(...buildHomeProviderPipeline());
     }
 
-    pipeline.push({
-      $sort: {
-        rating: -1,
-        totalReview: -1,
-        completedJobs: -1,
+    pipeline.push(
+      {
+        $sort: {
+          rating: -1,
+          totalReview: -1,
+          completedJobs: -1,
+        },
       },
-    });
+      {
+        $facet: {
+          providers: [
+            {
+              $skip: skip,
+            },
+            {
+              $limit: limit,
+            },
+          ],
+          totalCount: [
+            {
+              $count: "total",
+            },
+          ],
+        },
+      },
+    );
 
-    const providers = await providerModel.aggregate(pipeline);
-
-    if (providers.length === 0) {
+    const result = await providerModel.aggregate(pipeline);
+if (result.length === 0) {
       return res.status(200).json({
         message: "No recommended providers found",
         providers: [],
       });
     }
+    const providers = result[0]?.providers || [];
+    
+    const totalProviders = result[0]?.totalCount?.[0]?.total || 0;
 
     return res.status(200).json({
-      message: "Recommended providers fetched successfully",
-      totalProviders: providers.length,
+      success: true,
       providers,
+      pagination: {
+        page,
+        limit,
+        total: totalProviders,
+        totalPages: Math.ceil(totalProviders / limit),
+        hasMore: page * limit < totalProviders,
+      },
     });
   } catch (err) {
     console.error("Recommended provider error:", err);

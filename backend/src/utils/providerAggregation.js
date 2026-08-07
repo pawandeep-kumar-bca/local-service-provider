@@ -68,7 +68,14 @@ const commonPipeline = [
 
 const buildHomeProviderPipeline = () => [
   ...commonPipeline,
-
+  {
+    $lookup: {
+      from: "categories",
+      localField: "categories.category",
+      foreignField: "_id",
+      as: "categoryDetails",
+    },
+  },
   {
     $project: {
       _id: 1,
@@ -76,7 +83,7 @@ const buildHomeProviderPipeline = () => [
 
       fullName: "$user.fullname",
       profileImage: "$user.profileImage.url",
-
+      
       verified: "$verifiedByAdmin",
       availability: 1,
 
@@ -96,7 +103,42 @@ const buildHomeProviderPipeline = () => [
       district: "$district.name",
       state: "$state.name",
 
-      categories: "$categories",
+      categories: {
+        $map: {
+          input: "$categories",
+          as: "cat",
+          in: {
+            _id: "$$cat.category",
+
+            name: {
+              $let: {
+                vars: {
+                  matchedCategory: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$categoryDetails",
+                          as: "detail",
+                          cond: {
+                            $eq: ["$$detail._id", "$$cat.category"],
+                          },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+                in: "$$matchedCategory.name",
+              },
+            },
+
+            pricing: {
+              priceType: "$$cat.pricing.priceType",
+              price: "$$cat.pricing.price",
+            },
+          },
+        },
+      },
 
       createdAt: 1,
     },
