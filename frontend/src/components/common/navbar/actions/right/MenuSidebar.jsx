@@ -10,7 +10,7 @@ const MenuSidebar = () => {
   return (
     <>
       <div className="block md:hidden" onClick={() => setOpenMenuBar(true)}>
-        <IoMenu />
+        <IoMenu size={26}/>
       </div>
 
       {openMenuBar && (

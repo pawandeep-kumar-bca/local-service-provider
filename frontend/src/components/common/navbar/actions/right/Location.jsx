@@ -14,13 +14,11 @@ const Location = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        
+
         await addressToReverseGeocodeMutation.mutateAsync(
           { latitude, longitude },
           {
             onSuccess: (data) => {
-              
-              
               const locationData = {
                 latitude,
                 longitude,
@@ -40,7 +38,23 @@ const Location = () => {
       },
       (error) => {
         console.error(error);
-        alert("Location access denied.");
+        switch (error.code) {
+          case error.POSITION_UNAVAILABLE:
+            alert("Location unavailable");
+            break;
+          case error.PERMISSION_DENIED:
+            alert("Permission Denied");
+            break;
+
+          
+
+          case error.TIMEOUT:
+            alert("Location timeout");
+            break;
+
+          default:
+            alert(error.message);
+        }
       },
     );
   };
@@ -52,20 +66,23 @@ const Location = () => {
         onClick={() => setOpen((prev) => !prev)}
       >
         <div className="flex items-center gap-1">
-          <CiLocationArrow1 className="text-lg" />
-          <h1 className="text-sm font-bold">
-            {address?.district||address?.state_district || address?.state || "Your Location"}
+          <CiLocationArrow1 className="text-sm md:text-lg" />
+          <h1 className="text-xs md:text-sm font-bold">
+            {address?.district ||
+              address?.state_district ||
+              address?.state ||
+              "Your Location"}
           </h1>
         </div>
 
         <div className="flex items-end gap-2">
-          <p className="text-sm text-gray-600">
+          <p className="text-xs md:text-sm text-gray-600">
             {address?.city ||
               address?.town ||
               address?.village ||
               "Click to select"}
           </p>
-          <IoIosArrowDown className="text-lg font-bold text-black" />
+          <IoIosArrowDown className="text-sm md:text-lg font-bold text-black" />
         </div>
       </div>
       {open && (

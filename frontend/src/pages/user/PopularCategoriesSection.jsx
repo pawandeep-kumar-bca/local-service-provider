@@ -27,7 +27,7 @@ const PopularCategoriesSection = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-5 overflow-hidden gap-4">
           {categories.map((category) => (
             <PopularCategoryCard key={category._id} category={category} />
           ))}

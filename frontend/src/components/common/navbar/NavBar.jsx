@@ -12,7 +12,6 @@ const defaultPage = {
 
 const NavBar = () => {
   const { pathname } = useLocation();
-
   const currentPage =
     userNavbarConfig.find((item) => item.matcher(pathname)) || defaultPage;
 
@@ -52,19 +51,17 @@ const NavBar = () => {
   //This is called Composition Pattern (Eg:left,center,right)
   // ===============================
   return (
-    <header className="h-[5.3rem] flex items-center bg-bg px-3">
+    <header className="flex justify-between bg-bg px-2  items-center h-18">
       {/* LEFT */}
-      <div className="flex flex-1 items-center gap-3">
+      <div className="flex items-center gap-4">
         {renderSection(currentPage.left)}
       </div>
 
-      {/* CENTER */}
-      <div className="flex flex-1 justify-center">
+      <div className="hidden md:flex flex-1 justify-center">
         {renderSection(currentPage.center)}
       </div>
 
-      {/* RIGHT */}
-      <div className="flex flex-1 justify-end items-center gap-6">
+      <div className="flex justify-end items-center gap-6">
         {renderSection(currentPage.right)}
       </div>
     </header>

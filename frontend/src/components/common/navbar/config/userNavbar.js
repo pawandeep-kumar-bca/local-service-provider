@@ -20,6 +20,7 @@
 // ===============================
 
 const dashboardNavbar = {
+  
   left: [
     {
       component: "profile",
@@ -27,12 +28,12 @@ const dashboardNavbar = {
     },
     {
       component: "title",
-      
+      showOn: ["mobile"],
+      hideOnDashboard: true,
     },
   ],
 
   center: [
-
     {
       component: "search",
       placeholder: "Search services or providers...",
