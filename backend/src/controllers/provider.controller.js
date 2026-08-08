@@ -515,98 +515,272 @@ async function nearbySearchLocation(req, res) {
     });
   }
 }
+//   try {
+//     const limit = Number(req.query.limit) || 6;
+//     const page = Number(req.query.page) || 1;
+//     const skip = (page - 1) * limit;
+//     const { slug } = req.query;
 
+//     let categoryId = null;
+
+//     if (slug) {
+//       const category = await categoryModel.findOne({ slug });
+
+//       if (!category) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "Category not found",
+//         });
+//       }
+
+//       categoryId = category._id;
+//     }
+
+//     const pipeline = [
+//       {
+//         $match: {
+//           status: "approved",
+//           verifiedByAdmin: true,
+//           availability: true,
+//           rating: { $gte: 4 },
+//           totalReview: { $gte: 10 },
+//         },
+//       },
+//     ];
+
+//     if (categoryId) {
+//       pipeline.push(...buildCategoryProviderPipeline(categoryId));
+//     } else {
+//       pipeline.push(...buildHomeProviderPipeline());
+//     }
+
+//     pipeline.push(
+//       {
+//         $sort: {
+//           rating: -1,
+//           totalReview: -1,
+//           completedJobs: -1,
+//         },
+//       },
+//       {
+//         $facet: {
+//           providers: [
+//             {
+//               $skip: skip,
+//             },
+//             {
+//               $limit: limit,
+//             },
+//           ],
+//           totalCount: [
+//             {
+//               $count: "total",
+//             },
+//           ],
+//         },
+//       },
+//     );
+
+//     const result = await providerModel.aggregate(pipeline);
+// if (result.length === 0) {
+//       return res.status(200).json({
+//         message: "No recommended providers found",
+//         providers: [],
+//       });
+//     }
+//     const providers = result[0]?.providers || [];
+
+//     const totalProviders = result[0]?.totalCount?.[0]?.total || 0;
+
+//     return res.status(200).json({
+//       success: true,
+//       providers,
+//       pagination: {
+//         page,
+//         limit,
+//         total: totalProviders,
+//         totalPages: Math.ceil(totalProviders / limit),
+//         hasMore: page * limit < totalProviders,
+//       },
+//     });
+//   } catch (err) {
+//     console.error("Recommended provider error:", err);
+
+//     return res.status(500).json({
+//       message: "Internal server error",
+//     });
+//   }
 async function recommendedProviders(req, res) {
   try {
-    const limit = Number(req.query.limit) || 6;
-    const page = Number(req.query.page) || 1;
-    const skip = (page - 1) * limit;
-    const { slug } = req.query;
+    let {
+      rating,
+      availability,
+      trusted,
+      experience,
+      slug,
+      minPrice,
+      maxPrice,
+      sortBy,
+    } = req.query;
 
+    // Always required filters
+    const filter = {
+      status: "approved",
+      verifiedByAdmin: true,
+    };
+    const sort = {};
     let categoryId = null;
+    // Rating filter
+    if (rating !== undefined) {
+      rating = Number(rating);
 
+      filter.rating = {
+        $gte: rating,
+      };
+    }
+    if (sortBy === "rating-high") {
+      sort.rating = -1;
+    }
+    if (sortBy === "rating-low") {
+      sort.rating = 1;
+    }
+    if (sortBy === "experience-high") {
+      sort.experience = -1;
+    }
+    if (sortBy === "experience-low") {
+      sort.experience = 1;
+    }
+
+    // Availability filter
+    if (availability !== undefined) {
+      availability = availability === "true";
+
+      filter.availability = availability;
+    }
+
+    // Trusted filter
+    if (trusted !== undefined) {
+      trusted = trusted === "true";
+
+      filter.trusted = trusted;
+    }
+
+    // Experience filter
+    if (experience !== undefined) {
+      experience = Number(experience);
+
+      filter.experience = {
+        $gte: experience,
+      };
+    }
+
+    // Category filter
     if (slug) {
       const category = await categoryModel.findOne({ slug });
 
       if (!category) {
         return res.status(404).json({
-          success: false,
           message: "Category not found",
         });
       }
 
       categoryId = category._id;
+
+      if (minPrice !== undefined || maxPrice !== undefined) {
+        const priceFilter = {};
+
+        if (minPrice !== undefined) {
+          priceFilter.$gte = Number(minPrice);
+        }
+
+        if (maxPrice !== undefined) {
+          priceFilter.$lte = Number(maxPrice);
+        }
+
+        filter.categories = {
+          $elemMatch: {
+            category: categoryId,
+            "pricing.price": priceFilter,
+          },
+        };
+      } else {
+        filter["categories.category"] = categoryId;
+      }
     }
 
+    console.log("Final Filter:", filter);
+    console.log("Final sort:", sort);
     const pipeline = [
       {
-        $match: {
-          status: "approved",
-          verifiedByAdmin: true,
-          availability: true,
-          rating: { $gte: 4 },
-          totalReview: { $gte: 10 },
-        },
+        $match: filter,
       },
     ];
 
-    if (categoryId) {
-      pipeline.push(...buildCategoryProviderPipeline(categoryId));
-    } else {
-      pipeline.push(...buildHomeProviderPipeline());
+    if ((sortBy === "price-low" || sortBy === "price-high") && categoryId) {
+      pipeline.push({
+        $set: {
+          categoryPrice: {
+            $arrayElemAt: [
+              {
+                $map: {
+                  input: {
+                    $filter: {
+                      input: "$categories",
+                      as: "category",
+                      cond: {
+                        $eq: ["$$category.category", categoryId],
+                      },
+                    },
+                  },
+                  as: "category",
+                  in: "$$category.pricing.price",
+                },
+              },
+            ],
+          },
+        },
+      });
     }
 
-    pipeline.push(
-      {
+    if (sortBy === "price-low") {
+      pipeline.push({
         $sort: {
-          rating: -1,
-          totalReview: -1,
-          completedJobs: -1,
+          categoryPrice: 1,
         },
-      },
-      {
-        $facet: {
-          providers: [
-            {
-              $skip: skip,
-            },
-            {
-              $limit: limit,
-            },
-          ],
-          totalCount: [
-            {
-              $count: "total",
-            },
-          ],
-        },
-      },
-    );
+      });
+    }
 
-    const result = await providerModel.aggregate(pipeline);
-if (result.length === 0) {
-      return res.status(200).json({
-        message: "No recommended providers found",
+    if (sortBy === "price-high") {
+      pipeline.push({
+        $sort: {
+          categoryPrice: -1,
+        },
+      });
+    }
+    if (Object.keys(sort).length > 0) {
+      pipeline.push({
+        $sort: sort,
+      });
+    }
+    console.log(pipeline);
+
+    const providers = await providerModel.aggregate(pipeline);
+
+    if (providers.length === 0) {
+      return res.status(404).json({
+        message: "Provider not found",
         providers: [],
       });
     }
-    const providers = result[0]?.providers || [];
-    
-    const totalProviders = result[0]?.totalCount?.[0]?.total || 0;
 
     return res.status(200).json({
       success: true,
+      message: "Providers fetched successfully",
+      totalProviders: providers.length,
       providers,
-      pagination: {
-        page,
-        limit,
-        total: totalProviders,
-        totalPages: Math.ceil(totalProviders / limit),
-        hasMore: page * limit < totalProviders,
-      },
     });
   } catch (err) {
-    console.error("Recommended provider error:", err);
+    console.error("Recommended providers error:", err);
 
     return res.status(500).json({
       message: "Internal server error",
