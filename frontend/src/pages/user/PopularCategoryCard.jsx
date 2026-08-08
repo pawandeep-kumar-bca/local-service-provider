@@ -10,7 +10,7 @@ const PopularCategoryCard = ({ category }) => {
       onClick={() =>
         navigate(`/user/category/${category?.categorySlug}/select-provider`)
       }
-      className="w-full min-h-24  border border-gray-200 rounded-2xl bg-gray-50 p-4 flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/40 cursor-pointer"
+      className="min-w-fit min-h-24  border border-gray-200 rounded-2xl bg-gray-50 py-3 px-4 flex flex-col md:flex-row  items-center  gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/40 cursor-pointer"
     >
       {/* Icon */}
       <div
@@ -23,6 +23,7 @@ const PopularCategoryCard = ({ category }) => {
           className="w-9 h-9 object-contain"
         />
       </div>
+
       <div className="flex flex-col">
         <h3 className="text-base font-semibold">{category?.categoryName}</h3>
 
