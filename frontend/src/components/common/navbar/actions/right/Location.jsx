@@ -11,6 +11,7 @@ const Location = () => {
 
   const { addressToReverseGeocodeMutation } = useAddressToReverseGeocode();
   const selectCurrentLocation = () => {
+    console.log(window.isSecureContext);
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
