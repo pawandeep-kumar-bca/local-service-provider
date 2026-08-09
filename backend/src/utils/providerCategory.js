@@ -37,16 +37,12 @@ async function getCategoryBySlug(slug, categoryModel) {
 function buildCategoryFilter({ categoryId, minPrice, maxPrice }) {
   const filter = {};
 
-  if (!categoryId) {
-    if (minPrice !== undefined || maxPrice !== undefined) {
-      throw new Error("Category is required for price filter");
-    }
-
-    return filter;
+  // Category selected hai
+  if (categoryId) {
+    filter["categories.category"] = categoryId;
   }
 
-  filter["categories.category"] = categoryId;
-
+  // Price filter
   if (minPrice !== undefined || maxPrice !== undefined) {
     const priceFilter = {};
 
@@ -70,20 +66,24 @@ function buildCategoryFilter({ categoryId, minPrice, maxPrice }) {
       priceFilter.$lte = max;
     }
 
-    if (
-      minPrice !== undefined &&
-      maxPrice !== undefined &&
-      Number(minPrice) > Number(maxPrice)
-    ) {
-      throw new Error("minPrice cannot be greater than maxPrice");
+    // Category selected hai
+    if (categoryId) {
+      filter.categories = {
+        $elemMatch: {
+          category: categoryId,
+          "pricing.price": priceFilter,
+        },
+      };
     }
 
-    filter.categories = {
-      $elemMatch: {
-        category: categoryId,
-        "pricing.price": priceFilter,
-      },
-    };
+    // Category selected nahi hai
+    else {
+      filter.categories = {
+        $elemMatch: {
+          "pricing.price": priceFilter,
+        },
+      };
+    }
   }
 
   return filter;

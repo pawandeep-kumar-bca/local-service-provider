@@ -580,13 +580,12 @@ async function nearbySearchLocation(req, res) {
 
     // CATEGORY PRICE
 
-    addCategoryPriceStage(pipeline, validCategoryId, hasPriceSort);
-
+    addCategoryPriceStage(pipeline, validCategoryId);
     // SORT
 
     addSortStage(pipeline, sortObject);
 
-    addProviderLookups(pipeline, validCategoryId);
+    addProviderLookups(pipeline);
     // PROJECT
 
     addProviderProjectStage(pipeline, {
@@ -633,9 +632,9 @@ async function nearbySearchLocation(req, res) {
   } catch (err) {
     console.error("Nearby provider error:", err);
 
-    return res.status(400).json({
+    return res.status(500).json({
       success: false,
-      message: err.message,
+      message: "Internal server error",
     });
   }
 }
@@ -704,13 +703,12 @@ async function recommendedProviders(req, res) {
 
     // CATEGORY PRICE
 
-    addCategoryPriceStage(pipeline, categoryId, hasPriceSort);
-
+    addCategoryPriceStage(pipeline, categoryId);
     // SORT
 
     addSortStage(pipeline, sortObject);
 
-    addProviderLookups(pipeline, categoryId);
+    addProviderLookups(pipeline);
 
     // PROJECT
 
@@ -756,9 +754,9 @@ async function recommendedProviders(req, res) {
   } catch (err) {
     console.error("Recommended providers error:", err);
 
-    return res.status(400).json({
+    return res.status(500).json({
       success: false,
-      message: err.message,
+      message: "Internal server error",
     });
   }
 }

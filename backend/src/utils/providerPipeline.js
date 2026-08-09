@@ -1,36 +1,54 @@
 function addSelectedCategoryStage(pipeline, categoryId) {
-  if (!categoryId) {
+  if (categoryId) {
+    pipeline.push({
+      $set: {
+        selectedCategory: {
+          $arrayElemAt: [
+            {
+              $filter: {
+                input: "$categories",
+                as: "category",
+                cond: {
+                  $eq: ["$$category.category", categoryId],
+                },
+              },
+            },
+            0,
+          ],
+        },
+      },
+    });
+
     return;
   }
 
+  // Category select nahi hai
+  // First category select karo
   pipeline.push({
     $set: {
       selectedCategory: {
-        $arrayElemAt: [
-          {
-            $filter: {
-              input: "$categories",
-              as: "category",
-              cond: {
-                $eq: ["$$category.category", categoryId],
-              },
-            },
-          },
-          0,
-        ],
+        $arrayElemAt: ["$categories", 0],
       },
     },
   });
 }
 
-function addCategoryPriceStage(pipeline, categoryId, required = false) {
-  if (!categoryId || !required) {
+function addCategoryPriceStage(pipeline, categoryId) {
+  if (categoryId) {
+    pipeline.push({
+      $set: {
+        categoryPrice: "$selectedCategory.pricing.price",
+      },
+    });
+
     return;
   }
 
   pipeline.push({
     $set: {
-      categoryPrice: "$selectedCategory.pricing.price",
+      categoryPrice: {
+        $arrayElemAt: ["$categories.pricing.price", 0],
+      },
     },
   });
 }
@@ -50,12 +68,15 @@ function addProviderProjectStage(pipeline, { includeDistance = false } = {}) {
     providerId: 1,
 
     providerName: "$user.fullname",
-
     profileImage: "$user.profileImage.url",
 
     rating: 1,
     totalReview: 1,
     experience: 1,
+    verifiedByAdmin: 1,
+    completedJobs: 1,
+    responseTime: 1,
+
     availability: 1,
     trusted: 1,
     topRated: 1,
@@ -63,16 +84,24 @@ function addProviderProjectStage(pipeline, { includeDistance = false } = {}) {
     locality: "$location.locality",
 
     state: "$state.name",
-
     district: "$district.name",
-
     city: "$city.name",
 
     location: 1,
 
-    categoryName: "$category.name",
+   
 
-    categoryPrice: 1,
+    category: {
+      id: "$selectedCategory.category",
+
+      name: "$category.name",
+
+      pricing: {
+        priceType: "$selectedCategory.pricing.priceType",
+
+        price: "$selectedCategory.pricing.price",
+      },
+    },
   };
 
   if (includeDistance) {
@@ -117,10 +146,8 @@ function addProviderLookups(pipeline, categoryId = null) {
     {
       $unwind: "$user",
     },
-  );
 
-  // STATE
-  pipeline.push(
+    // STATE
     {
       $lookup: {
         from: "states",
@@ -132,10 +159,8 @@ function addProviderLookups(pipeline, categoryId = null) {
     {
       $unwind: "$state",
     },
-  );
 
-  // DISTRICT
-  pipeline.push(
+    // DISTRICT
     {
       $lookup: {
         from: "districts",
@@ -147,10 +172,8 @@ function addProviderLookups(pipeline, categoryId = null) {
     {
       $unwind: "$district",
     },
-  );
 
-  // CITY
-  pipeline.push(
+    // CITY
     {
       $lookup: {
         from: "cities",
@@ -162,24 +185,20 @@ function addProviderLookups(pipeline, categoryId = null) {
     {
       $unwind: "$city",
     },
-  );
 
-  // CATEGORY
-  if (categoryId) {
-    pipeline.push(
-      {
-        $lookup: {
-          from: "categories",
-          localField: "selectedCategory.category",
-          foreignField: "_id",
-          as: "category",
-        },
+    // SELECTED CATEGORY
+    {
+      $lookup: {
+        from: "categories",
+        localField: "selectedCategory.category",
+        foreignField: "_id",
+        as: "category",
       },
-      {
-        $unwind: "$category",
-      },
-    );
-  }
+    },
+    {
+      $unwind: "$category",
+    },
+  );
 }
 module.exports = {
   addSelectedCategoryStage,
