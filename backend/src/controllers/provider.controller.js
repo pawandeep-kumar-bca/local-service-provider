@@ -12,6 +12,20 @@ const {
   buildCategoryProviderPipeline,
 } = require("../utils/providerAggregation.js");
 const { selectFields } = require("express-validator/lib/field-selection.js");
+const { getPagination, buildPaginationResponse } = require("../utils/providerPagination.js");
+const { buildProviderFilter } = require("../utils/providerFilter.js");
+const {
+  getCategoryBySlug,
+  buildCategoryFilter,
+  getCategoryId,
+} = require("../utils/providerCategory.js");
+const { buildProviderSort } = require("../utils/providerSort.js");
+const {
+  addSelectedCategoryStage,
+  addCategoryPriceStage,
+  addSortStage,
+} = require("../utils/providerPipeline.js");
+const { getFacetResult } = require("../utils/providerResponse.js");
 async function providerProfileCreate(req, res) {
   try {
     const {
@@ -437,7 +451,7 @@ async function getSelectProviderByCategory(req, res) {
 
 async function nearbySearchLocation(req, res) {
   try {
-    let {
+    const {
       lat,
       lng,
       radius,
@@ -451,26 +465,19 @@ async function nearbySearchLocation(req, res) {
       sort = [],
     } = req.query;
 
-    // =====================================================
+    
     // PAGINATION
-    // =====================================================
+    
 
-    const page = Math.max(
-      Number(req.query.page) || 1,
-      1,
-    );
+    const {
+      page,
+      limit,
+      skip,
+    } = getPagination(req.query);
 
-    const limit = Math.min(
-      Math.max(Number(req.query.limit) || 6, 1),
-      50,
-    );
-
-    const skip = (page - 1) * limit;
-
-    // =====================================================
+   
     // LOCATION VALIDATION
-    // =====================================================
-
+   
     if (
       lat === undefined ||
       lng === undefined ||
@@ -478,18 +485,19 @@ async function nearbySearchLocation(req, res) {
     ) {
       return res.status(400).json({
         success: false,
-        message: "lat, lng and radius are required",
+        message:
+          "lat, lng and radius are required",
       });
     }
 
-    lat = Number(lat);
-    lng = Number(lng);
-    radius = Number(radius);
+    const latitude = Number(lat);
+    const longitude = Number(lng);
+    const searchRadius = Number(radius);
 
     if (
-      Number.isNaN(lat) ||
-      Number.isNaN(lng) ||
-      Number.isNaN(radius)
+      Number.isNaN(latitude) ||
+      Number.isNaN(longitude) ||
+      Number.isNaN(searchRadius)
     ) {
       return res.status(400).json({
         success: false,
@@ -498,340 +506,79 @@ async function nearbySearchLocation(req, res) {
       });
     }
 
-    if (lat < -90 || lat > 90) {
+    if (
+      latitude < -90 ||
+      latitude > 90
+    ) {
       return res.status(400).json({
         success: false,
         message: "Invalid latitude",
       });
     }
 
-    if (lng < -180 || lng > 180) {
+    if (
+      longitude < -180 ||
+      longitude > 180
+    ) {
       return res.status(400).json({
         success: false,
         message: "Invalid longitude",
       });
     }
 
-    if (radius <= 0) {
+    if (searchRadius <= 0) {
       return res.status(400).json({
         success: false,
-        message: "Radius must be greater than 0",
+        message:
+          "Radius must be greater than 0",
       });
     }
 
-    // =====================================================
-    // CATEGORY VALIDATION
-    // =====================================================
+    
+    // COMMON PROVIDER FILTER
+    
 
-    if (categoryId) {
-      if (!mongoose.Types.ObjectId.isValid(categoryId)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid categoryId",
-        });
-      }
+    const filter = buildProviderFilter({
+      rating,
+      experience,
+      availability,
+      trusted,
+    });
 
-      const category = await categoryModel.findById(
+   
+    // CATEGORY
+  
+
+    const validCategoryId =
+      await getCategoryId(
         categoryId,
+        categoryModel,
       );
 
-      if (!category) {
-        return res.status(404).json({
-          success: false,
-          message: "Category not found",
-        });
-      }
+    const categoryFilter =
+      buildCategoryFilter({
+        categoryId: validCategoryId,
+        minPrice,
+        maxPrice,
+      });
 
-      categoryId = new mongoose.Types.ObjectId(
-        categoryId,
-      );
-    }
-
-    // =====================================================
-    // BASE FILTER
-    // =====================================================
-
-    const queryFilter = {
-      status: "approved",
-      verifiedByAdmin: true,
-    };
-
-    // =====================================================
-    // RATING FILTER
-    // =====================================================
-
-    if (rating !== undefined) {
-      rating = Number(rating);
-
-      if (
-        Number.isNaN(rating) ||
-        rating < 0 ||
-        rating > 5
-      ) {
-        return res.status(400).json({
-          success: false,
-          message: "Rating must be between 0 and 5",
-        });
-      }
-
-      queryFilter.rating = {
-        $gte: rating,
-      };
-    }
-
-    // =====================================================
-    // EXPERIENCE FILTER
-    // =====================================================
-
-    if (experience !== undefined) {
-      experience = Number(experience);
-
-      if (
-        Number.isNaN(experience) ||
-        experience < 0
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Experience must be a valid number",
-        });
-      }
-
-      queryFilter.experience = {
-        $gte: experience,
-      };
-    }
-
-    // =====================================================
-    // AVAILABILITY FILTER
-    // =====================================================
-
-    if (availability !== undefined) {
-      if (
-        availability !== "true" &&
-        availability !== "false"
-      ) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid availability",
-        });
-      }
-
-      queryFilter.availability =
-        availability === "true";
-    }
-
-    // =====================================================
-    // TRUSTED FILTER
-    // =====================================================
-
-    if (trusted !== undefined) {
-      if (
-        trusted !== "true" &&
-        trusted !== "false"
-      ) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid trusted",
-        });
-      }
-
-      queryFilter.trusted =
-        trusted === "true";
-    }
-
-    // =====================================================
-    // CATEGORY FILTER
-    // =====================================================
-
-    if (categoryId) {
-      queryFilter["categories.category"] =
-        categoryId;
-    }
-
-    // =====================================================
-    // PRICE FILTER
-    // =====================================================
-
-    if (
-      minPrice !== undefined ||
-      maxPrice !== undefined
-    ) {
-      if (!categoryId) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Category is required for price filter",
-        });
-      }
-
-      const priceFilter = {};
-
-      if (minPrice !== undefined) {
-        minPrice = Number(minPrice);
-
-        if (
-          Number.isNaN(minPrice) ||
-          minPrice < 0
-        ) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid minPrice",
-          });
-        }
-
-        priceFilter.$gte = minPrice;
-      }
-
-      if (maxPrice !== undefined) {
-        maxPrice = Number(maxPrice);
-
-        if (
-          Number.isNaN(maxPrice) ||
-          maxPrice < 0
-        ) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid maxPrice",
-          });
-        }
-
-        priceFilter.$lte = maxPrice;
-      }
-
-      if (
-        minPrice !== undefined &&
-        maxPrice !== undefined &&
-        minPrice > maxPrice
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "minPrice cannot be greater than maxPrice",
-        });
-      }
-
-      queryFilter.categories = {
-        $elemMatch: {
-          category: categoryId,
-          "pricing.price": priceFilter,
-        },
-      };
-    }
-
-    // =====================================================
-    // SORT OPTIONS
-    // =====================================================
-
-    const sortOptions = Array.isArray(sort)
-      ? sort
-      : [sort].filter(Boolean);
-
-    // =====================================================
-    // SORT HELPER
-    // =====================================================
-
-    function getSortField(sortOption) {
-      switch (sortOption) {
-        case "rating-high":
-          return {
-            field: "rating",
-            order: -1,
-          };
-
-        case "rating-low":
-          return {
-            field: "rating",
-            order: 1,
-          };
-
-        case "experience-high":
-          return {
-            field: "experience",
-            order: -1,
-          };
-
-        case "experience-low":
-          return {
-            field: "experience",
-            order: 1,
-          };
-
-        case "price-high":
-          return {
-            field: "categoryPrice",
-            order: -1,
-          };
-
-        case "price-low":
-          return {
-            field: "categoryPrice",
-            order: 1,
-          };
-
-        case "distance-near":
-          return {
-            field: "distance",
-            order: 1,
-          };
-
-        case "distance-far":
-          return {
-            field: "distance",
-            order: -1,
-          };
-
-        default:
-          return null;
-      }
-    }
-
-    // =====================================================
-    // BUILD SORT
-    // =====================================================
-
-    const sortObject = {};
-    const usedSortFields = new Set();
-
-    for (const sortOption of sortOptions) {
-      const sortField =
-        getSortField(sortOption);
-
-      if (!sortField) {
-        return res.status(400).json({
-          success: false,
-          message:
-            `Invalid sort option: ${sortOption}`,
-        });
-      }
-
-      if (
-        usedSortFields.has(sortField.field)
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            `Cannot sort ${sortField.field} multiple times`,
-        });
-      }
-
-      usedSortFields.add(sortField.field);
-
-      sortObject[sortField.field] =
-        sortField.order;
-    }
-
-    // =====================================================
-    // PRICE SORT CHECK
-    // =====================================================
-
-    const hasPriceSort = sortOptions.some(
-      (option) =>
-        option === "price-low" ||
-        option === "price-high",
+    Object.assign(
+      filter,
+      categoryFilter,
     );
 
-    if (hasPriceSort && !categoryId) {
+    
+    // SORT
+
+    const {
+      sortObject,
+      hasPriceSort,
+    } = buildProviderSort(sort);
+
+    if (
+      hasPriceSort &&
+      !validCategoryId
+    ) {
       return res.status(400).json({
         success: false,
         message:
@@ -839,18 +586,20 @@ async function nearbySearchLocation(req, res) {
       });
     }
 
-    // =====================================================
     // GEO NEAR
-    // =====================================================
 
-    const distance = radius * 1000;
+    const distance =
+      searchRadius * 1000;
 
     const pipeline = [
       {
         $geoNear: {
           near: {
             type: "Point",
-            coordinates: [lng, lat],
+            coordinates: [
+              longitude,
+              latitude,
+            ],
           },
 
           key: "location",
@@ -861,70 +610,34 @@ async function nearbySearchLocation(req, res) {
 
           spherical: true,
 
-          query: queryFilter,
+          query: filter,
         },
       },
     ];
 
-    // =====================================================
     // SELECTED CATEGORY
-    // =====================================================
 
-    if (categoryId) {
-      pipeline.push({
-        $set: {
-          selectedCategory: {
-            $arrayElemAt: [
-              {
-                $filter: {
-                  input: "$categories",
+    addSelectedCategoryStage(
+      pipeline,
+      validCategoryId,
+    );
 
-                  as: "category",
-
-                  cond: {
-                    $eq: [
-                      "$$category.category",
-                      categoryId,
-                    ],
-                  },
-                },
-              },
-
-              0,
-            ],
-          },
-        },
-      });
-    }
-
-    // =====================================================
     // CATEGORY PRICE
-    // =====================================================
 
-    if (categoryId) {
-      pipeline.push({
-        $set: {
-          categoryPrice:
-            "$selectedCategory.pricing.price",
-        },
-      });
-    }
+    addCategoryPriceStage(
+      pipeline,
+      validCategoryId,
+      hasPriceSort,
+    );
 
-    // =====================================================
     // SORT
-    // =====================================================
 
-    if (
-      Object.keys(sortObject).length > 0
-    ) {
-      pipeline.push({
-        $sort: sortObject,
-      });
-    }
+    addSortStage(
+      pipeline,
+      sortObject,
+    );
 
-    // =====================================================
     // USER LOOKUP
-    // =====================================================
 
     pipeline.push(
       {
@@ -935,15 +648,12 @@ async function nearbySearchLocation(req, res) {
           as: "user",
         },
       },
-
       {
         $unwind: "$user",
       },
     );
 
-    // =====================================================
     // STATE LOOKUP
-    // =====================================================
 
     pipeline.push(
       {
@@ -954,15 +664,12 @@ async function nearbySearchLocation(req, res) {
           as: "state",
         },
       },
-
       {
         $unwind: "$state",
       },
     );
 
-    // =====================================================
     // DISTRICT LOOKUP
-    // =====================================================
 
     pipeline.push(
       {
@@ -973,15 +680,12 @@ async function nearbySearchLocation(req, res) {
           as: "district",
         },
       },
-
       {
         $unwind: "$district",
       },
     );
 
-    // =====================================================
     // CITY LOOKUP
-    // =====================================================
 
     pipeline.push(
       {
@@ -992,17 +696,14 @@ async function nearbySearchLocation(req, res) {
           as: "city",
         },
       },
-
       {
         $unwind: "$city",
       },
     );
 
-    // =====================================================
     // CATEGORY LOOKUP
-    // =====================================================
 
-    if (categoryId) {
+    if (validCategoryId) {
       pipeline.push(
         {
           $lookup: {
@@ -1013,21 +714,17 @@ async function nearbySearchLocation(req, res) {
             as: "category",
           },
         },
-
         {
           $unwind: "$category",
         },
       );
     }
 
-    // =====================================================
     // PROJECT
-    // =====================================================
 
     pipeline.push({
       $project: {
         _id: 1,
-
         providerId: 1,
 
         providerName:
@@ -1037,30 +734,23 @@ async function nearbySearchLocation(req, res) {
           "$user.profileImage.url",
 
         rating: 1,
-
         totalReview: 1,
-
         experience: 1,
-
         availability: 1,
-
         trusted: 1,
-
         topRated: 1,
-
-        completedJobs: 1,
-
-        responseTime: 1,
 
         locality:
           "$location.locality",
 
-        state: "$state.name",
+        state:
+          "$state.name",
 
         district:
           "$district.name",
 
-        city: "$city.name",
+        city:
+          "$city.name",
 
         location: 1,
 
@@ -1073,9 +763,7 @@ async function nearbySearchLocation(req, res) {
       },
     });
 
-    // =====================================================
-    // PAGINATION + TOTAL COUNT
-    // =====================================================
+    // PAGINATION + COUNT
 
     pipeline.push({
       $facet: {
@@ -1083,7 +771,6 @@ async function nearbySearchLocation(req, res) {
           {
             $skip: skip,
           },
-
           {
             $limit: limit,
           },
@@ -1097,34 +784,26 @@ async function nearbySearchLocation(req, res) {
       },
     });
 
-    // =====================================================
-    // EXECUTE PIPELINE
-    // =====================================================
+    // EXECUTE
 
     const result =
       await providerModel.aggregate(
         pipeline,
       );
 
-    const providers =
-      result[0]?.providers || [];
+    const {
+      providers,
+      total,
+    } = getFacetResult(result);
 
-    const totalProviders =
-      result[0]?.totalCount?.[0]?.total || 0;
+    
 
-    // =====================================================
-    // NO PROVIDERS
-    // =====================================================
-
-    if (totalProviders === 0) {
+    if (total === 0) {
       return res.status(200).json({
         success: true,
-
         message:
           "No providers found nearby",
-
         providers: [],
-
         pagination: {
           page,
           limit,
@@ -1135,20 +814,7 @@ async function nearbySearchLocation(req, res) {
       });
     }
 
-    // =====================================================
-    // PAGINATION
-    // =====================================================
-
-    const totalPages = Math.ceil(
-      totalProviders / limit,
-    );
-
-    const hasMore =
-      page < totalPages;
-
-    // =====================================================
-    // RESPONSE
-    // =====================================================
+   
 
     return res.status(200).json({
       success: true,
@@ -1158,13 +824,12 @@ async function nearbySearchLocation(req, res) {
 
       providers,
 
-      pagination: {
-        page,
-        limit,
-        total: totalProviders,
-        totalPages,
-        hasMore,
-      },
+      pagination:
+        buildPaginationResponse({
+          page,
+          limit,
+          total,
+        }),
     });
   } catch (err) {
     console.error(
@@ -1172,10 +837,9 @@ async function nearbySearchLocation(req, res) {
       err,
     );
 
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
-      message:
-        "Internal server error",
+      message: err.message,
     });
   }
 }
@@ -1184,270 +848,53 @@ async function recommendedProviders(req, res) {
   try {
     const {
       rating,
+      experience,
       availability,
       trusted,
-      experience,
       slug,
       minPrice,
       maxPrice,
-      sort1,
-      sort2,
-      sort3,
+      sort = [],
     } = req.query;
 
-    // =====================================================
     // PAGINATION
-    // =====================================================
 
-    const page = Math.max(Number(req.query.page) || 1, 1);
+    const { page, limit, skip } = getPagination(req.query);
 
-    const limit = Math.min(Math.max(Number(req.query.limit) || 6, 1), 50);
+    // COMMON PROVIDER FILTER
 
-    const skip = (page - 1) * limit;
+    const filter = buildProviderFilter({
+      rating,
+      experience,
+      availability,
+      trusted,
+    });
 
-    // =====================================================
-    // SORT OPTIONS
-    // =====================================================
+    // CATEGORY
 
-    const sortOptions = [sort1, sort2, sort3].filter(Boolean);
+    const categoryId = await getCategoryBySlug(slug, categoryModel);
 
-    // =====================================================
-    // FILTER
-    // =====================================================
+    const categoryFilter = buildCategoryFilter({
+      categoryId,
+      minPrice,
+      maxPrice,
+    });
 
-    const filter = {
-      status: "approved",
-      verifiedByAdmin: true,
-    };
+    Object.assign(filter, categoryFilter);
 
-    let categoryId = null;
+    // SORT
 
-    // =====================================================
-    // RATING FILTER
-    // =====================================================
+    const { sortObject, hasPriceSort } = buildProviderSort(sort);
 
-    if (rating !== undefined) {
-      const ratingValue = Number(rating);
-
-      if (Number.isNaN(ratingValue)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid rating.",
-        });
-      }
-
-      filter.rating = {
-        $gte: ratingValue,
-      };
-    }
-
-    // =====================================================
-    // AVAILABILITY FILTER
-    // =====================================================
-
-    if (availability !== undefined) {
-      if (availability !== "true" && availability !== "false") {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid availability value.",
-        });
-      }
-
-      filter.availability = availability === "true";
-    }
-
-    // =====================================================
-    // TRUSTED FILTER
-    // =====================================================
-
-    if (trusted !== undefined) {
-      if (trusted !== "true" && trusted !== "false") {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid trusted value.",
-        });
-      }
-
-      filter.trusted = trusted === "true";
-    }
-
-    // =====================================================
-    // EXPERIENCE FILTER
-    // =====================================================
-
-    if (experience !== undefined) {
-      const experienceValue = Number(experience);
-
-      if (Number.isNaN(experienceValue)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid experience.",
-        });
-      }
-
-      filter.experience = {
-        $gte: experienceValue,
-      };
-    }
-
-    // =====================================================
-    // CATEGORY + PRICE FILTER
-    // =====================================================
-
-    if (slug) {
-      const category = await categoryModel.findOne({
-        slug,
-      });
-
-      if (!category) {
-        return res.status(404).json({
-          success: false,
-          message: "Category not found.",
-        });
-      }
-
-      categoryId = category._id;
-
-      // -----------------------------------------------
-      // PRICE RANGE
-      // -----------------------------------------------
-
-      if (minPrice !== undefined || maxPrice !== undefined) {
-        const priceFilter = {};
-
-        if (minPrice !== undefined) {
-          const min = Number(minPrice);
-
-          if (Number.isNaN(min)) {
-            return res.status(400).json({
-              success: false,
-              message: "Invalid minPrice.",
-            });
-          }
-
-          priceFilter.$gte = min;
-        }
-
-        if (maxPrice !== undefined) {
-          const max = Number(maxPrice);
-
-          if (Number.isNaN(max)) {
-            return res.status(400).json({
-              success: false,
-              message: "Invalid maxPrice.",
-            });
-          }
-
-          priceFilter.$lte = max;
-        }
-
-        filter.categories = {
-          $elemMatch: {
-            category: categoryId,
-            "pricing.price": priceFilter,
-          },
-        };
-      } else {
-        filter["categories.category"] = categoryId;
-      }
-    }
-
-    // =====================================================
-    // SORT HELPER
-    // =====================================================
-
-    function getSortField(sortOption) {
-      switch (sortOption) {
-        case "rating-high":
-          return {
-            field: "rating",
-            order: -1,
-          };
-
-        case "rating-low":
-          return {
-            field: "rating",
-            order: 1,
-          };
-
-        case "experience-high":
-          return {
-            field: "experience",
-            order: -1,
-          };
-
-        case "experience-low":
-          return {
-            field: "experience",
-            order: 1,
-          };
-
-        case "price-low":
-          return {
-            field: "categoryPrice",
-            order: 1,
-          };
-
-        case "price-high":
-          return {
-            field: "categoryPrice",
-            order: -1,
-          };
-
-        default:
-          return null;
-      }
-    }
-
-    // =====================================================
-    // BUILD SORT
-    // =====================================================
-
-    const sort = {};
-    const usedSortFields = new Set();
-
-    for (const sortOption of sortOptions) {
-      const sortField = getSortField(sortOption);
-
-      // Invalid sort
-      if (!sortField) {
-        return res.status(400).json({
-          success: false,
-          message: `Invalid sort option: ${sortOption}`,
-        });
-      }
-
-      // Same field cannot be sorted twice
-      if (usedSortFields.has(sortField.field)) {
-        return res.status(400).json({
-          success: false,
-          message: `Cannot sort ${sortField.field} multiple times.`,
-        });
-      }
-
-      usedSortFields.add(sortField.field);
-
-      sort[sortField.field] = sortField.order;
-    }
-
-    // =====================================================
-    // CHECK PRICE SORT
-    // =====================================================
-
-    const hasPriceSort = sortOptions.some(
-      (sortOption) => sortOption === "price-low" || sortOption === "price-high",
-    );
-
+    // Price sorting requires category
     if (hasPriceSort && !categoryId) {
       return res.status(400).json({
         success: false,
-        message: "Category is required for price sorting.",
+        message: "Category is required for price sorting",
       });
     }
 
-    // =====================================================
-    // BASE PIPELINE
-    // =====================================================
+    // PIPELINE
 
     const pipeline = [
       {
@@ -1455,208 +902,148 @@ async function recommendedProviders(req, res) {
       },
     ];
 
-    // =====================================================
     // SELECTED CATEGORY
-    // =====================================================
+
+    addSelectedCategoryStage(pipeline, categoryId);
+
+    // CATEGORY PRICE
+
+    addCategoryPriceStage(pipeline, categoryId, hasPriceSort);
+
+    // SORT
+
+    addSortStage(pipeline, sortObject);
+
+    // USER LOOKUP
+
+    pipeline.push(
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+    );
+
+    // STATE LOOKUP
+
+    pipeline.push(
+      {
+        $lookup: {
+          from: "states",
+          localField: "location.state",
+          foreignField: "_id",
+          as: "state",
+        },
+      },
+      {
+        $unwind: "$state",
+      },
+    );
+
+    // DISTRICT LOOKUP
+
+    pipeline.push(
+      {
+        $lookup: {
+          from: "districts",
+          localField: "location.district",
+          foreignField: "_id",
+          as: "district",
+        },
+      },
+      {
+        $unwind: "$district",
+      },
+    );
+
+    // CITY LOOKUP
+
+    pipeline.push(
+      {
+        $lookup: {
+          from: "cities",
+          localField: "location.city",
+          foreignField: "_id",
+          as: "city",
+        },
+      },
+      {
+        $unwind: "$city",
+      },
+    );
+
+    // CATEGORY LOOKUP
 
     if (categoryId) {
-      pipeline.push({
-        $set: {
-          selectedCategory: {
-            $arrayElemAt: [
-              {
-                $filter: {
-                  input: "$categories",
-                  as: "category",
-                  cond: {
-                    $eq: ["$$category.category", categoryId],
-                  },
-                },
-              },
-              0,
-            ],
+      pipeline.push(
+        {
+          $lookup: {
+            from: "categories",
+            localField: "selectedCategory.category",
+            foreignField: "_id",
+            as: "category",
           },
         },
-      });
-    }
-
-    // =====================================================
-    // CATEGORY PRICE
-    // =====================================================
-
-    if (hasPriceSort && categoryId) {
-      pipeline.push({
-        $set: {
-          categoryPrice: "$selectedCategory.pricing.price",
+        {
+          $unwind: "$category",
         },
-      });
+      );
     }
 
-    // =====================================================
-    // SORT
-    // =====================================================
+    // PROJECT
 
-    if (Object.keys(sort).length > 0) {
-      pipeline.push({
-        $sort: sort,
-      });
-    }
+    pipeline.push({
+      $project: {
+        _id: 1,
+        providerId: 1,
 
-    // =====================================================
-    // FACET
-    // =====================================================
+        providerName: "$user.fullname",
+
+        profileImage: "$user.profileImage.url",
+
+        rating: 1,
+        totalReview: 1,
+        experience: 1,
+        availability: 1,
+        trusted: 1,
+        topRated: 1,
+
+        locality: "$location.locality",
+
+        state: "$state.name",
+
+        district: "$district.name",
+
+        city: "$city.name",
+
+        location: 1,
+
+        categoryName: "$category.name",
+
+        categoryPrice: 1,
+      },
+    });
+
+    
+    // PAGINATION + COUNT
+
 
     pipeline.push({
       $facet: {
-        // -----------------------------------------------
-        // PROVIDERS
-        // -----------------------------------------------
-
         providers: [
           {
             $skip: skip,
           },
-
           {
             $limit: limit,
           },
-
-          // =============================================
-          // USER LOOKUP
-          // =============================================
-
-          {
-            $lookup: {
-              from: "users",
-              localField: "userId",
-              foreignField: "_id",
-              as: "user",
-            },
-          },
-
-          {
-            $unwind: "$user",
-          },
-
-          // =============================================
-          // STATE LOOKUP
-          // =============================================
-
-          {
-            $lookup: {
-              from: "states",
-              localField: "location.state",
-              foreignField: "_id",
-              as: "state",
-            },
-          },
-
-          {
-            $unwind: "$state",
-          },
-
-          // =============================================
-          // DISTRICT LOOKUP
-          // =============================================
-
-          {
-            $lookup: {
-              from: "districts",
-              localField: "location.district",
-              foreignField: "_id",
-              as: "district",
-            },
-          },
-
-          {
-            $unwind: "$district",
-          },
-
-          // =============================================
-          // CITY LOOKUP
-          // =============================================
-
-          {
-            $lookup: {
-              from: "cities",
-              localField: "location.city",
-              foreignField: "_id",
-              as: "city",
-            },
-          },
-
-          {
-            $unwind: "$city",
-          },
-
-          // =============================================
-          // CATEGORY LOOKUP
-          // =============================================
-
-          ...(categoryId
-            ? [
-                {
-                  $lookup: {
-                    from: "categories",
-                    localField: "selectedCategory.category",
-                    foreignField: "_id",
-                    as: "category",
-                  },
-                },
-
-                {
-                  $unwind: "$category",
-                },
-              ]
-            : []),
-
-          // =============================================
-          // FINAL PROJECT
-          // =============================================
-
-          {
-            $project: {
-              _id: 1,
-              providerId: 1,
-
-              providerName: "$user.fullname",
-
-              profileImage: "$user.profileImage.url",
-
-              state: "$state.name",
-
-              district: "$district.name",
-
-              city: "$city.name",
-
-              locality: "$location.locality",
-
-              rating: 1,
-
-              totalReview: 1,
-
-              experience: 1,
-
-              availability: 1,
-
-              trusted: 1,
-
-              topRated: 1,
-
-              ...(categoryId
-                ? {
-                    categoryName: "$category.name",
-
-                    categoryPrice: 1,
-                  }
-                : {}),
-            },
-          },
         ],
-
-        // -----------------------------------------------
-        // TOTAL COUNT
-        // -----------------------------------------------
 
         totalCount: [
           {
@@ -1666,163 +1053,57 @@ async function recommendedProviders(req, res) {
       },
     });
 
-    // =====================================================
-    // EXECUTE AGGREGATION
-    // =====================================================
+   
+    // EXECUTE
+  
 
     const result = await providerModel.aggregate(pipeline);
 
-    // =====================================================
-    // RESULT
-    // =====================================================
+    const { providers, total } = getFacetResult(result);
 
-    const providers = result[0]?.providers || [];
-
-    const total = result[0]?.totalCount?.[0]?.total || 0;
-
-    // =====================================================
+   
     // NO PROVIDERS
-    // =====================================================
+   
 
     if (total === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Provider not found.",
+      return res.status(200).json({
+        success: true,
+        message: "No providers found",
         providers: [],
+        pagination: {
+          page,
+          limit,
+          total: 0,
+          totalPages: 0,
+          hasMore: false,
+        },
       });
     }
 
-    // =====================================================
-    // PAGINATION
-    // =====================================================
-
-    const totalPages = Math.ceil(total / limit);
-
-    const hasMore = page < totalPages;
-
-    // =====================================================
-    // RESPONSE
-    // =====================================================
-
+    
+    
     return res.status(200).json({
       success: true,
-
-      message: "Providers fetched successfully.",
+      message: "Providers fetched successfully",
 
       providers,
 
-      pagination: {
+      pagination: buildPaginationResponse({
         page,
         limit,
         total,
-        totalPages,
-        hasMore,
-      },
+      }),
     });
   } catch (err) {
     console.error("Recommended providers error:", err);
 
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
-      message: "Internal server error.",
+      message: err.message,
     });
   }
 }
-//   try {
-//     const limit = Number(req.query.limit) || 6;
-//     const page = Number(req.query.page) || 1;
-//     const skip = (page - 1) * limit;
-//     const { slug } = req.query;
 
-//     let categoryId = null;
-
-//     if (slug) {
-//       const category = await categoryModel.findOne({ slug });
-
-//       if (!category) {
-//         return res.status(404).json({
-//           success: false,
-//           message: "Category not found",
-//         });
-//       }
-
-//       categoryId = category._id;
-//     }
-
-//     const pipeline = [
-//       {
-//         $match: {
-//           status: "approved",
-//           verifiedByAdmin: true,
-//           availability: true,
-//           rating: { $gte: 4 },
-//           totalReview: { $gte: 10 },
-//         },
-//       },
-//     ];
-
-//     if (categoryId) {
-//       pipeline.push(...buildCategoryProviderPipeline(categoryId));
-//     } else {
-//       pipeline.push(...buildHomeProviderPipeline());
-//     }
-
-//     pipeline.push(
-//       {
-//         $sort: {
-//           rating: -1,
-//           totalReview: -1,
-//           completedJobs: -1,
-//         },
-//       },
-//       {
-//         $facet: {
-//           providers: [
-//             {
-//               $skip: skip,
-//             },
-//             {
-//               $limit: limit,
-//             },
-//           ],
-//           totalCount: [
-//             {
-//               $count: "total",
-//             },
-//           ],
-//         },
-//       },
-//     );
-
-//     const result = await providerModel.aggregate(pipeline);
-// if (result.length === 0) {
-//       return res.status(200).json({
-//         message: "No recommended providers found",
-//         providers: [],
-//       });
-//     }
-//     const providers = result[0]?.providers || [];
-
-//     const totalProviders = result[0]?.totalCount?.[0]?.total || 0;
-
-//     return res.status(200).json({
-//       success: true,
-//       providers,
-//       pagination: {
-//         page,
-//         limit,
-//         total: totalProviders,
-//         totalPages: Math.ceil(totalProviders / limit),
-//         hasMore: page * limit < totalProviders,
-//       },
-//     });
-//   } catch (err) {
-//     console.error("Recommended provider error:", err);
-
-//     return res.status(500).json({
-//       message: "Internal server error",
-//     });
-//   }
 async function availabilityProvider(req, res) {
   try {
     const { availability } = req.body;
