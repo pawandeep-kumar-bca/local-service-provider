@@ -41,9 +41,7 @@ const SORT_FIELDS = {
 };
 
 function buildProviderSort(sort) {
-  const sortOptions = Array.isArray(sort)
-    ? sort
-    : [sort].filter(Boolean);
+  const sortOptions = Array.isArray(sort) ? sort : [sort].filter(Boolean);
 
   const sortObject = {};
   const usedFields = new Set();
@@ -52,23 +50,16 @@ function buildProviderSort(sort) {
     const sortField = SORT_FIELDS[option];
 
     if (!sortField) {
-      throw new Error(
-        `Invalid sort option: ${option}`,
-      );
+      throw new Error(`Invalid sort option: ${option}`);
     }
 
-    if (
-      usedFields.has(sortField.field)
-    ) {
-      throw new Error(
-        `Cannot sort ${sortField.field} multiple times`,
-      );
+    if (usedFields.has(sortField.field)) {
+      throw new Error(`Cannot sort ${sortField.field} multiple times`);
     }
 
     usedFields.add(sortField.field);
 
-    sortObject[sortField.field] =
-      sortField.order;
+    sortObject[sortField.field] = sortField.order;
   }
 
   return {
@@ -76,15 +67,11 @@ function buildProviderSort(sort) {
     sortObject,
 
     hasPriceSort: sortOptions.some(
-      (option) =>
-        option === "price-low" ||
-        option === "price-high",
+      (option) => option === "price-low" || option === "price-high",
     ),
 
     hasDistanceSort: sortOptions.some(
-      (option) =>
-        option === "distance-near" ||
-        option === "distance-far",
+      (option) => option === "distance-near" || option === "distance-far",
     ),
   };
 }

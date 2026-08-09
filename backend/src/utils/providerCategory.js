@@ -1,98 +1,60 @@
 const mongoose = require("mongoose");
 
-async function getCategoryId(
-  categoryId,
-  categoryModel,
-) {
+async function getCategoryId(categoryId, categoryModel) {
   if (!categoryId) {
     return null;
   }
 
-  if (
-    !mongoose.Types.ObjectId.isValid(
-      categoryId,
-    )
-  ) {
-    throw new Error(
-      "Invalid categoryId",
-    );
+  if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+    throw new Error("Invalid categoryId");
   }
 
-  const category =
-    await categoryModel.findById(categoryId);
+  const category = await categoryModel.findById(categoryId);
 
   if (!category) {
-    throw new Error(
-      "Category not found",
-    );
+    throw new Error("Category not found");
   }
 
-  return new mongoose.Types.ObjectId(
-    categoryId,
-  );
+  return new mongoose.Types.ObjectId(categoryId);
 }
 
-async function getCategoryBySlug(
-  slug,
-  categoryModel,
-) {
+async function getCategoryBySlug(slug, categoryModel) {
   if (!slug) {
     return null;
   }
 
-  const category =
-    await categoryModel.findOne({
-      slug,
-    });
+  const category = await categoryModel.findOne({
+    slug,
+  });
 
   if (!category) {
-    throw new Error(
-      "Category not found",
-    );
+    throw new Error("Category not found");
   }
 
   return category._id;
 }
 
-function buildCategoryFilter({
-  categoryId,
-  minPrice,
-  maxPrice,
-}) {
+function buildCategoryFilter({ categoryId, minPrice, maxPrice }) {
   const filter = {};
 
   if (!categoryId) {
-    if (
-      minPrice !== undefined ||
-      maxPrice !== undefined
-    ) {
-      throw new Error(
-        "Category is required for price filter",
-      );
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      throw new Error("Category is required for price filter");
     }
 
     return filter;
   }
 
-  filter["categories.category"] =
-    categoryId;
+  filter["categories.category"] = categoryId;
 
-  if (
-    minPrice !== undefined ||
-    maxPrice !== undefined
-  ) {
+  if (minPrice !== undefined || maxPrice !== undefined) {
     const priceFilter = {};
 
     if (minPrice !== undefined) {
       const min = Number(minPrice);
 
-      if (
-        Number.isNaN(min) ||
-        min < 0
-      ) {
-        throw new Error(
-          "Invalid minPrice",
-        );
+      if (Number.isNaN(min) || min < 0) {
+        throw new Error("Invalid minPrice");
       }
 
       priceFilter.$gte = min;
@@ -101,13 +63,8 @@ function buildCategoryFilter({
     if (maxPrice !== undefined) {
       const max = Number(maxPrice);
 
-      if (
-        Number.isNaN(max) ||
-        max < 0
-      ) {
-        throw new Error(
-          "Invalid maxPrice",
-        );
+      if (Number.isNaN(max) || max < 0) {
+        throw new Error("Invalid maxPrice");
       }
 
       priceFilter.$lte = max;
@@ -118,9 +75,7 @@ function buildCategoryFilter({
       maxPrice !== undefined &&
       Number(minPrice) > Number(maxPrice)
     ) {
-      throw new Error(
-        "minPrice cannot be greater than maxPrice",
-      );
+      throw new Error("minPrice cannot be greater than maxPrice");
     }
 
     filter.categories = {

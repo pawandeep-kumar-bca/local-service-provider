@@ -1,16 +1,7 @@
 function getPagination(query) {
-  const page = Math.max(
-    Number(query.page) || 1,
-    1,
-  );
+  const page = Math.max(Number(query.page) || 1, 1);
 
-  const limit = Math.min(
-    Math.max(
-      Number(query.limit) || 6,
-      1,
-    ),
-    50,
-  );
+  const limit = Math.min(Math.max(Number(query.limit) || 6, 1), 50);
 
   const skip = (page - 1) * limit;
 
@@ -21,13 +12,8 @@ function getPagination(query) {
   };
 }
 
-function buildPaginationResponse({
-  page,
-  limit,
-  total,
-}) {
-  const totalPages =
-    Math.ceil(total / limit);
+function buildPaginationResponse({ page, limit, total }) {
+  const totalPages = Math.ceil(total / limit);
 
   return {
     page,

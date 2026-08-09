@@ -7,12 +7,12 @@ const UserModel = require("../models/User.model");
 const { generateId } = require("../utils/generateId");
 const reviewModel = require("../models/review.model");
 const { mongoose } = require("mongoose");
-const {
-  buildHomeProviderPipeline,
-  buildCategoryProviderPipeline,
-} = require("../utils/providerAggregation.js");
+
 const { selectFields } = require("express-validator/lib/field-selection.js");
-const { getPagination, buildPaginationResponse } = require("../utils/providerPagination.js");
+const {
+  getPagination,
+  buildPaginationResponse,
+} = require("../utils/providerPagination.js");
 const { buildProviderFilter } = require("../utils/providerFilter.js");
 const {
   getCategoryBySlug,
@@ -24,6 +24,9 @@ const {
   addSelectedCategoryStage,
   addCategoryPriceStage,
   addSortStage,
+  addProviderProjectStage,
+  addPaginationFacetStage,
+  addProviderLookups,
 } = require("../utils/providerPipeline.js");
 const { getFacetResult } = require("../utils/providerResponse.js");
 async function providerProfileCreate(req, res) {
@@ -465,28 +468,16 @@ async function nearbySearchLocation(req, res) {
       sort = [],
     } = req.query;
 
-    
     // PAGINATION
-    
 
-    const {
-      page,
-      limit,
-      skip,
-    } = getPagination(req.query);
+    const { page, limit, skip } = getPagination(req.query);
 
-   
     // LOCATION VALIDATION
-   
-    if (
-      lat === undefined ||
-      lng === undefined ||
-      radius === undefined
-    ) {
+
+    if (lat === undefined || lng === undefined || radius === undefined) {
       return res.status(400).json({
         success: false,
-        message:
-          "lat, lng and radius are required",
+        message: "lat, lng and radius are required",
       });
     }
 
@@ -501,25 +492,18 @@ async function nearbySearchLocation(req, res) {
     ) {
       return res.status(400).json({
         success: false,
-        message:
-          "lat, lng and radius must be valid numbers",
+        message: "lat, lng and radius must be valid numbers",
       });
     }
 
-    if (
-      latitude < -90 ||
-      latitude > 90
-    ) {
+    if (latitude < -90 || latitude > 90) {
       return res.status(400).json({
         success: false,
         message: "Invalid latitude",
       });
     }
 
-    if (
-      longitude < -180 ||
-      longitude > 180
-    ) {
+    if (longitude < -180 || longitude > 180) {
       return res.status(400).json({
         success: false,
         message: "Invalid longitude",
@@ -529,14 +513,11 @@ async function nearbySearchLocation(req, res) {
     if (searchRadius <= 0) {
       return res.status(400).json({
         success: false,
-        message:
-          "Radius must be greater than 0",
+        message: "Radius must be greater than 0",
       });
     }
 
-    
     // COMMON PROVIDER FILTER
-    
 
     const filter = buildProviderFilter({
       rating,
@@ -545,61 +526,39 @@ async function nearbySearchLocation(req, res) {
       trusted,
     });
 
-   
     // CATEGORY
-  
 
-    const validCategoryId =
-      await getCategoryId(
-        categoryId,
-        categoryModel,
-      );
+    const validCategoryId = await getCategoryId(categoryId, categoryModel);
 
-    const categoryFilter =
-      buildCategoryFilter({
-        categoryId: validCategoryId,
-        minPrice,
-        maxPrice,
-      });
+    const categoryFilter = buildCategoryFilter({
+      categoryId: validCategoryId,
+      minPrice,
+      maxPrice,
+    });
 
-    Object.assign(
-      filter,
-      categoryFilter,
-    );
+    Object.assign(filter, categoryFilter);
 
-    
     // SORT
 
-    const {
-      sortObject,
-      hasPriceSort,
-    } = buildProviderSort(sort);
+    const { sortObject, hasPriceSort } = buildProviderSort(sort);
 
-    if (
-      hasPriceSort &&
-      !validCategoryId
-    ) {
+    if (hasPriceSort && !validCategoryId) {
       return res.status(400).json({
         success: false,
-        message:
-          "Category is required for price sorting",
+        message: "Category is required for price sorting",
       });
     }
 
     // GEO NEAR
 
-    const distance =
-      searchRadius * 1000;
+    const distance = searchRadius * 1000;
 
     const pipeline = [
       {
         $geoNear: {
           near: {
             type: "Point",
-            coordinates: [
-              longitude,
-              latitude,
-            ],
+            coordinates: [longitude, latitude],
           },
 
           key: "location",
@@ -617,192 +576,36 @@ async function nearbySearchLocation(req, res) {
 
     // SELECTED CATEGORY
 
-    addSelectedCategoryStage(
-      pipeline,
-      validCategoryId,
-    );
+    addSelectedCategoryStage(pipeline, validCategoryId);
 
     // CATEGORY PRICE
 
-    addCategoryPriceStage(
-      pipeline,
-      validCategoryId,
-      hasPriceSort,
-    );
+    addCategoryPriceStage(pipeline, validCategoryId, hasPriceSort);
 
     // SORT
 
-    addSortStage(
-      pipeline,
-      sortObject,
-    );
+    addSortStage(pipeline, sortObject);
 
-    // USER LOOKUP
-
-    pipeline.push(
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: "$user",
-      },
-    );
-
-    // STATE LOOKUP
-
-    pipeline.push(
-      {
-        $lookup: {
-          from: "states",
-          localField: "location.state",
-          foreignField: "_id",
-          as: "state",
-        },
-      },
-      {
-        $unwind: "$state",
-      },
-    );
-
-    // DISTRICT LOOKUP
-
-    pipeline.push(
-      {
-        $lookup: {
-          from: "districts",
-          localField: "location.district",
-          foreignField: "_id",
-          as: "district",
-        },
-      },
-      {
-        $unwind: "$district",
-      },
-    );
-
-    // CITY LOOKUP
-
-    pipeline.push(
-      {
-        $lookup: {
-          from: "cities",
-          localField: "location.city",
-          foreignField: "_id",
-          as: "city",
-        },
-      },
-      {
-        $unwind: "$city",
-      },
-    );
-
-    // CATEGORY LOOKUP
-
-    if (validCategoryId) {
-      pipeline.push(
-        {
-          $lookup: {
-            from: "categories",
-            localField:
-              "selectedCategory.category",
-            foreignField: "_id",
-            as: "category",
-          },
-        },
-        {
-          $unwind: "$category",
-        },
-      );
-    }
-
+    addProviderLookups(pipeline, validCategoryId);
     // PROJECT
 
-    pipeline.push({
-      $project: {
-        _id: 1,
-        providerId: 1,
-
-        providerName:
-          "$user.fullname",
-
-        profileImage:
-          "$user.profileImage.url",
-
-        rating: 1,
-        totalReview: 1,
-        experience: 1,
-        availability: 1,
-        trusted: 1,
-        topRated: 1,
-
-        locality:
-          "$location.locality",
-
-        state:
-          "$state.name",
-
-        district:
-          "$district.name",
-
-        city:
-          "$city.name",
-
-        location: 1,
-
-        distance: 1,
-
-        categoryName:
-          "$category.name",
-
-        categoryPrice: 1,
-      },
+    addProviderProjectStage(pipeline, {
+      includeDistance: true,
     });
-
     // PAGINATION + COUNT
 
-    pipeline.push({
-      $facet: {
-        providers: [
-          {
-            $skip: skip,
-          },
-          {
-            $limit: limit,
-          },
-        ],
-
-        totalCount: [
-          {
-            $count: "total",
-          },
-        ],
-      },
-    });
+    addPaginationFacetStage(pipeline, skip, limit);
 
     // EXECUTE
 
-    const result =
-      await providerModel.aggregate(
-        pipeline,
-      );
+    const result = await providerModel.aggregate(pipeline);
 
-    const {
-      providers,
-      total,
-    } = getFacetResult(result);
-
-    
+    const { providers, total } = getFacetResult(result);
 
     if (total === 0) {
       return res.status(200).json({
         success: true,
-        message:
-          "No providers found nearby",
+        message: "No providers found nearby",
         providers: [],
         pagination: {
           page,
@@ -814,28 +617,21 @@ async function nearbySearchLocation(req, res) {
       });
     }
 
-   
-
     return res.status(200).json({
       success: true,
 
-      message:
-        "Nearby providers found",
+      message: "Nearby providers found",
 
       providers,
 
-      pagination:
-        buildPaginationResponse({
-          page,
-          limit,
-          total,
-        }),
+      pagination: buildPaginationResponse({
+        page,
+        limit,
+        total,
+      }),
     });
   } catch (err) {
-    console.error(
-      "Nearby provider error:",
-      err,
-    );
+    console.error("Nearby provider error:", err);
 
     return res.status(400).json({
       success: false,
@@ -914,156 +710,21 @@ async function recommendedProviders(req, res) {
 
     addSortStage(pipeline, sortObject);
 
-    // USER LOOKUP
-
-    pipeline.push(
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: "$user",
-      },
-    );
-
-    // STATE LOOKUP
-
-    pipeline.push(
-      {
-        $lookup: {
-          from: "states",
-          localField: "location.state",
-          foreignField: "_id",
-          as: "state",
-        },
-      },
-      {
-        $unwind: "$state",
-      },
-    );
-
-    // DISTRICT LOOKUP
-
-    pipeline.push(
-      {
-        $lookup: {
-          from: "districts",
-          localField: "location.district",
-          foreignField: "_id",
-          as: "district",
-        },
-      },
-      {
-        $unwind: "$district",
-      },
-    );
-
-    // CITY LOOKUP
-
-    pipeline.push(
-      {
-        $lookup: {
-          from: "cities",
-          localField: "location.city",
-          foreignField: "_id",
-          as: "city",
-        },
-      },
-      {
-        $unwind: "$city",
-      },
-    );
-
-    // CATEGORY LOOKUP
-
-    if (categoryId) {
-      pipeline.push(
-        {
-          $lookup: {
-            from: "categories",
-            localField: "selectedCategory.category",
-            foreignField: "_id",
-            as: "category",
-          },
-        },
-        {
-          $unwind: "$category",
-        },
-      );
-    }
+    addProviderLookups(pipeline, categoryId);
 
     // PROJECT
 
-    pipeline.push({
-      $project: {
-        _id: 1,
-        providerId: 1,
-
-        providerName: "$user.fullname",
-
-        profileImage: "$user.profileImage.url",
-
-        rating: 1,
-        totalReview: 1,
-        experience: 1,
-        availability: 1,
-        trusted: 1,
-        topRated: 1,
-
-        locality: "$location.locality",
-
-        state: "$state.name",
-
-        district: "$district.name",
-
-        city: "$city.name",
-
-        location: 1,
-
-        categoryName: "$category.name",
-
-        categoryPrice: 1,
-      },
-    });
-
-    
+    addProviderProjectStage(pipeline);
     // PAGINATION + COUNT
 
-
-    pipeline.push({
-      $facet: {
-        providers: [
-          {
-            $skip: skip,
-          },
-          {
-            $limit: limit,
-          },
-        ],
-
-        totalCount: [
-          {
-            $count: "total",
-          },
-        ],
-      },
-    });
-
-   
+    addPaginationFacetStage(pipeline, skip, limit);
     // EXECUTE
-  
 
     const result = await providerModel.aggregate(pipeline);
 
     const { providers, total } = getFacetResult(result);
 
-   
     // NO PROVIDERS
-   
 
     if (total === 0) {
       return res.status(200).json({
@@ -1080,8 +741,6 @@ async function recommendedProviders(req, res) {
       });
     }
 
-    
-    
     return res.status(200).json({
       success: true,
       message: "Providers fetched successfully",
