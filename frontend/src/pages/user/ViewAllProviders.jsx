@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import ProviderCard from "../../components/provider/ProviderCard";
 import Button from "../../components/common/Button";
 import { IoIosArrowBack } from "react-icons/io";
 import FilterProviders from "./FilterProviders";
-import ProviderList from "../../components/provider/ProviderList";
 import Pagination from "../../components/common/Pagination";
 
 const ViewAllProviders = () => {

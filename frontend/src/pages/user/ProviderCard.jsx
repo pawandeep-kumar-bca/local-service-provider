@@ -1,4 +1,4 @@
-import Button from "../common/Button";
+import Button from "../../components/common/Button";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaBolt, FaStar } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
@@ -11,10 +11,10 @@ import {
   MdWork,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import StatusBadge from "../common/StatusBadge";
+import StatusBadge from "../../components/common/StatusBadge";
 import { CiStar } from "react-icons/ci";
 import { AiOutlineLike } from "react-icons/ai";
-import Avatar from "../common/Avatar";
+import Avatar from "../../components/common/Avatar";
 const ProviderCard = ({ provider }) => {
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const ProviderCard = ({ provider }) => {
 
   const reviews = provider.totalReview || 0;
 
-  const price = provider?.categories?.[0]?.pricing?.price || 0;
+  const price = provider?.category?.pricing?.price || 0;
 
   const base =
     "py-1 px-3 rounded-full text-sm flex w-fit gap-2 items-center font-medium border";
@@ -45,7 +45,7 @@ const ProviderCard = ({ provider }) => {
             <div className="w-20 h-20 min-w-20">
               <Avatar
                 image={provider?.profileImage}
-                name={provider?.fullName}
+                name={provider?.providerName}
                 className="bg-gray-300 text-3xl text-red-500"
               />
             </div>
@@ -58,14 +58,14 @@ const ProviderCard = ({ provider }) => {
           <div className="w-full flex flex-col gap-1 ">
             <div className="w-full flex justify-between  items-center ">
               <h1 className="text-2xl font-semibold flex items-center">
-                {provider?.fullName}
+                {provider?.providerName}
               </h1>
               <BsThreeDotsVertical className="text-2xl cursor-pointer" />
             </div>
 
             <div className="flex gap-2 my-2">
-              <StatusBadge category={provider?.categories?.[0]?.name} />
-              {provider?.verified ? (
+              <StatusBadge category={provider?.category?.name} />
+              {provider?.verifiedByAdmin ? (
                 <span
                   className={`${base} bg-green-100 text-green-600 border-green-200`}
                 >
@@ -152,7 +152,7 @@ const ProviderCard = ({ provider }) => {
               <h3 className="flex items-center text-xl font-bold">
                 <MdOutlineCurrencyRupee />
                 {price}
-                {provider?.categories?.[0]?.pricing?.priceType === "hourly"
+                {provider?.category?.pricing?.priceType === "hourly"
                   ? "/hr"
                   : "/fixed"}
               </h3>

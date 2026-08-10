@@ -8,7 +8,8 @@ export default {
         primary: "#3B82F6",
         "primary-dark": "#2563EB",
         "primary-light": "#60A5FA",
-
+        grayness: "#333333",
+        brownness:'#333300',
         success: "#22C55E",
         "success-dark": "#16A34A",
 
@@ -31,9 +32,8 @@ export default {
       },
       fontFamily: {
         ubuntu: ["Ubuntu", "sans-serif"],
-        roboto:["Roboto","sans-serif"]
-        
-      }
+        roboto: ["Roboto", "sans-serif"],
+      },
     },
   },
   plugins: [],

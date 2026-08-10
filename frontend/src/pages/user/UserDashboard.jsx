@@ -4,7 +4,6 @@ import {
   FaStar,
   FaWallet,
 } from "react-icons/fa";
-import ProviderCard from "../../components/provider/ProviderCard";
 import {
   Link,
   NavLink,
@@ -27,33 +26,27 @@ const UserDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isAllProviders = location.pathname.includes("all-providers");
-  const [filters, setFilters] = useState({
-    category: "all",
+ const [filters, setFilters] = useState({
+  categoryId: "",
+  rating: "",
+  experience: "",
+  availability: "",
+  trusted: "",
+  minPrice: "",
+  maxPrice: "",
+  sort: [],
+ 
+});
+console.log(filters);
 
-    search: "",
 
-    city: "",
-
-    minRating: "",
-
-    minExperience: "",
-
-    availability: "",
-
-    sort: "latest",
-
-    page: 1,
-
-    limit: 9,
-  });
-  const {data} = useMe()
-  const user = data?.user || []
+  const { data } = useMe();
+  const user = data?.user || [];
   return (
     <>
       <div className="w-full h-full">
         {!isAllProviders && (
           <>
-           
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1447E6] to-[#97BEFD] min-h-[600px] md:min-h-[320px]">
               {/* Background Image */}
               <img
@@ -68,7 +61,7 @@ const UserDashboard = () => {
                 {/* Heading */}
                 <div className="text-center md:text-left">
                   <h1 className="text-white text-2xl md:text-3xl font-bold">
-                    Welcome Back , { user.fullname?.split(' ')[0]} 👋
+                    Welcome Back , {user.fullname?.split(" ")[0]} 👋
                   </h1>
 
                   <p className="text-white/90 text-sm md:text-lg mt-2">
@@ -113,7 +106,9 @@ const UserDashboard = () => {
 
                     <div className="text-white">
                       <h3 className="text-xl font-bold leading-none">100%</h3>
-                      <p className="text-sm text-white/80 mt-1">Secure Booking</p>
+                      <p className="text-sm text-white/80 mt-1">
+                        Secure Booking
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -138,18 +133,12 @@ const UserDashboard = () => {
                     Become a Provider
                   </Button>
                 </div>
-                
               </div>
             </div>
-            
+
             <div className="md:px-3 mt-6">
-               <PopularCategoriesSection/>
-
-              
-
-             
+              <PopularCategoriesSection />
             </div>
-           
           </>
         )}
         <Outlet

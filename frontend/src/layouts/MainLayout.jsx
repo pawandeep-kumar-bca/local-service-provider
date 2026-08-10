@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/common/navbar/NavBar";
 import MenuSideBar from "../components/common/MenuSideBar";
-import UserHeroLayout from "./UserHeroLayout";
 import { useSelector } from "react-redux";
 
 const MainLayout = () => {

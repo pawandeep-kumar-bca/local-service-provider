@@ -49,7 +49,6 @@ import SuccessfulPayment from "../pages/BookingProviders/SuccessfulPayment";
 import ViewUserBooking from "../pages/BookingProviders/ViewUserBooking";
 import RescheduleBooking from "../pages/BookingProviders/RescheduleBooking";
 import CategoryList from "../pages/user/CategoryList";
-import ProviderCard from "../components/provider/ProviderCard";
 import SelectProviders from "../pages/user/SelectProviders";
 import AddNewService from "../pages/provider/AddNewService";
 import ProviderReviews from "../pages/provider/ProviderReviews";
@@ -80,7 +79,7 @@ import PaymentTransitionDetails from "../pages/admin/payments/PaymentTransitionD
 import ReportDetails from "../pages/admin/reports/ReportDetails";
 
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage'
-import ProviderList from "../components/provider/ProviderList";
+import ProviderList from "../pages/user/ProviderList";
 import SelectProvidersList from "../pages/user/SelectProvidersList";
 const AppRoutes = () => {
   return (

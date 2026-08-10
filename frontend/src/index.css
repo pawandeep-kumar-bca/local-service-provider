@@ -10,9 +10,9 @@
   --color-success: #14c756;
   --color-success-dark: #16A34A;
   --color-success-light: #4ADE80;
-
+  --color-purpleLess:#330066;
   /* 🟡 Warning */
-  --color-warning: #F59E0B;
+  --color-warning: #1b1204;
   --color-warning-light: #FBBF24;
 
   /* 🔴 Danger */
@@ -94,5 +94,37 @@ select {
 input[type="date"] {
   appearance: none;
   -webkit-appearance: none;
+}
+.price-range {
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+  height: 20px;
+}
+
+.price-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22c55e;
+  cursor: grab;
+  pointer-events: auto;
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.price-range::-webkit-slider-thumb:active {
+  cursor: grabbing;
+}
+
+.price-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22c55e;
+  cursor: grab;
+  pointer-events: auto;
+  border: 2px solid white;
 }
 @import 'tailwindcss'

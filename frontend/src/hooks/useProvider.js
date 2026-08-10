@@ -44,9 +44,10 @@ export const useCreateProviders = () => {
 
   return { createProviderMutation };
 };
- export const useRecommendedProviders = (slug)=>{
+export const useRecommendedProviders = (filters) => {
   return useQuery({
-    queryKey:['recommended-providers',slug],
-    queryFn:()=>getRecommendedProviders({slug})
-  })
- }
+    queryKey: ["recommended-providers", filters],
+
+    queryFn: () => getRecommendedProviders(filters),
+  });
+};
