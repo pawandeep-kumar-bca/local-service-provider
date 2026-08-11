@@ -11,7 +11,8 @@ const Button = ({
   const base =
     "py-2 flex items-center justify-center gap-2 font-roboto rounded-xl cursor-pointer font-medium shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-95 text-lg md:text-base whitespace-nowrap";
 const sizes = {
-  sm: "px-4",
+  xs: "px-4",
+  sm:'px-6',
   md: "px-8",
   lg: "px-12",
 };

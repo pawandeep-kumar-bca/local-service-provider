@@ -4,13 +4,7 @@ import {
   FaStar,
   FaWallet,
 } from "react-icons/fa";
-import {
-  Link,
-  NavLink,
-  Outlet,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import Cards from "../../components/common/Cards";
 
 import { useState } from "react";
@@ -23,9 +17,7 @@ import { FaHandshakeAngle, FaUserGroup } from "react-icons/fa6";
 import { useMe } from "../../hooks/useAuth";
 import PopularCategoriesSection from "./PopularCategoriesSection";
 const UserDashboard = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const isAllProviders = location.pathname.includes("all-providers");
   const savedLocation = JSON.parse(localStorage.getItem("location") || "null");
   const [filters, setFilters] = useState({
     categoryId: "",
@@ -41,109 +33,136 @@ const UserDashboard = () => {
     lng: savedLocation?.longitude || "",
     radius: 200,
   });
-console.log(filters.lat,filters.lng);
+  console.log(filters.lat, filters.lng);
 
   const { data } = useMe();
   const user = data?.user || [];
   return (
     <>
       <div className="w-full h-full">
-        {!isAllProviders && (
-          <>
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1447E6] to-[#97BEFD] min-h-[600px] md:min-h-[320px]">
-              {/* Background Image */}
-              <img
-                src="/assets/cleaning-service.svg"
-                alt="Cleaning"
-                className=" w-60 mx-auto mt-6 absolute right-0 -bottom-7 h-full w-auto object-contain z-[1] hidden md:flex pointer-events-none
+        <>
+          <div className="hidden md:block relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1447E6] to-[#97BEFD] min-h-[600px] md:min-h-[320px]">
+            {/* Background Image */}
+            <img
+              src="/assets/cleaning-service.svg"
+              alt="Cleaning"
+              className=" w-60 mx-auto mt-6 absolute right-0 -bottom-7 h-full w-auto object-contain z-[1] hidden md:flex pointer-events-none
     "
-              />
+            />
 
-              {/* Content */}
-              <div className="relative z-10 flex flex-col justify-between h-full p-6 md:px-10 md:py-8">
-                {/* Heading */}
-                <div className="text-center md:text-left">
-                  <h1 className="text-white text-2xl md:text-3xl font-bold">
-                    Welcome Back , {user.fullname?.split(" ")[0]} 👋
-                  </h1>
+            {/* Content */}
+            <div className="relative z-10 flex flex-col justify-between h-full p-6 md:px-10 md:py-8">
+              {/* Heading */}
+              <div className="text-center md:text-left">
+                <h1 className="text-white text-2xl md:text-3xl font-bold">
+                  Welcome Back , {user.fullname?.split(" ")[0]} 👋
+                </h1>
 
-                  <p className="text-white/90 text-sm md:text-lg mt-2">
-                    Find trusted professionals for your home services.
-                  </p>
-                </div>
+                <p className="text-white/90 text-sm md:text-lg mt-2">
+                  Find trusted professionals for your home services.
+                </p>
+              </div>
 
-                <div className="flex mt-8 flex-col gap-3 md:gap-0 md:flex-row">
-                  {/* Verified Providers */}
-                  <div className="flex items-center gap-3 pl-5 pr-8 py-3   rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg ">
-                    <div className="w-11 h-11 rounded-full bg-green-400/20 flex items-center justify-center">
-                      <MdVerifiedUser className="text-green-300 text-2xl" />
-                    </div>
-
-                    <div className="text-white">
-                      <h3 className="text-xl font-bold leading-none">250+</h3>
-                      <p className="text-sm text-white/80 mt-1">
-                        Verified Providers
-                      </p>
-                    </div>
+              <div className="flex mt-8 flex-col gap-3 md:gap-0 md:flex-row">
+                {/* Verified Providers */}
+                <div className="flex items-center gap-3 pl-5 pr-8 py-3   rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg ">
+                  <div className="w-11 h-11 rounded-full bg-green-400/20 flex items-center justify-center">
+                    <MdVerifiedUser className="text-green-300 text-2xl" />
                   </div>
 
-                  {/* Response Time */}
-                  <div className="flex items-center gap-3 pl-5 pr-8 py-3 md:-ml-4  rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg ">
-                    <div className="w-11 h-11 rounded-full bg-blue-400/20 flex items-center justify-center">
-                      <GoClock className="text-blue-200 text-2xl" />
-                    </div>
-
-                    <div className="text-white">
-                      <h3 className="text-xl font-bold leading-none">12 min</h3>
-                      <p className="text-sm text-white/80 mt-1">
-                        Avg. Response Time
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Secure Booking */}
-                  <div className="flex items-center gap-3 pl-5 pr-8 py-3 md:-ml-4  rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg ">
-                    <div className="w-11 h-11 rounded-full bg-indigo-400/20 flex items-center justify-center">
-                      <LuLock className="text-indigo-200 text-2xl" />
-                    </div>
-
-                    <div className="text-white">
-                      <h3 className="text-xl font-bold leading-none">100%</h3>
-                      <p className="text-sm text-white/80 mt-1">
-                        Secure Booking
-                      </p>
-                    </div>
+                  <div className="text-white">
+                    <h3 className="text-xl font-bold leading-none">250+</h3>
+                    <p className="text-sm text-white/80 mt-1">
+                      Verified Providers
+                    </p>
                   </div>
                 </div>
-                {/* Buttons */}
-                <div className="flex flex-col md:flex-row gap-3 mt-8">
-                  <Button className="w-full md:w-auto" color="success">
-                    <FaRegCalendarCheck size={18} />
-                    Book a Service
-                  </Button>
 
-                  <Button className="w-full md:w-auto" color="white">
-                    <FaUserGroup size={18} />
-                    Explore Providers
-                  </Button>
+                {/* Response Time */}
+                <div className="flex items-center gap-3 pl-5 pr-8 py-3 md:-ml-4  rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg ">
+                  <div className="w-11 h-11 rounded-full bg-blue-400/20 flex items-center justify-center">
+                    <GoClock className="text-blue-200 text-2xl" />
+                  </div>
 
-                  <Button
-                    className="w-full md:w-auto"
-                    color="blue"
-                    onClick={() => navigate("/user/become-provider/basic-info")}
-                  >
-                    <FaHandshakeAngle size={20} />
-                    Become a Provider
-                  </Button>
+                  <div className="text-white">
+                    <h3 className="text-xl font-bold leading-none">12 min</h3>
+                    <p className="text-sm text-white/80 mt-1">
+                      Avg. Response Time
+                    </p>
+                  </div>
+                </div>
+
+                {/* Secure Booking */}
+                <div className="flex items-center gap-3 pl-5 pr-8 py-3 md:-ml-4  rounded-xl bg-transparent backdrop-blur-xs border border-white/15 shadow-lg ">
+                  <div className="w-11 h-11 rounded-full bg-indigo-400/20 flex items-center justify-center">
+                    <LuLock className="text-indigo-200 text-2xl" />
+                  </div>
+
+                  <div className="text-white">
+                    <h3 className="text-xl font-bold leading-none">100%</h3>
+                    <p className="text-sm text-white/80 mt-1">Secure Booking</p>
+                  </div>
                 </div>
               </div>
-            </div>
+              {/* Buttons */}
+              <div className="flex flex-col md:flex-row gap-3 mt-8">
+                <Button className="w-full md:w-auto" color="success">
+                  <FaRegCalendarCheck size={18} />
+                  Book a Service
+                </Button>
 
-            <div className="md:px-3 mt-6">
-              <PopularCategoriesSection />
+                <Button className="w-full md:w-auto" color="white">
+                  <FaUserGroup size={18} />
+                  Explore Providers
+                </Button>
+
+                <Button
+                  className="w-full md:w-auto"
+                  color="blue"
+                  onClick={() => navigate("/user/become-provider/basic-info")}
+                >
+                  <FaHandshakeAngle size={20} />
+                  Become a Provider
+                </Button>
+              </div>
             </div>
-          </>
-        )}
+          </div>
+          <div
+            className=" relative md:hidden w-full min-h-[200px] bg-[url('/assets/cleaning-service.svg')] bg-right bg-contain bg-no-repeat rounded-2xl overflow-hidden
+  "
+          >
+            {/* Overlay */}
+            <div
+              className=" absolute inset-0 bg-gradient-to-r from-blue-50/70 via-blue-50/90 to-transparent
+    "
+            />
+
+            {/* Content */}
+            <div className="relative z-10 flex flex-col justify-center h-full min-h-[200px] px-2  max-w-[80%]">
+              <h1 className="text-3xl font-bold text-brownness leading-tight">
+                Find Trusted
+              </h1>
+
+              <h1 className="text-2xl font-bold text-brownness leading-tight">
+                Local <span className="text-success">Service Providers</span>
+              </h1>
+
+              <p className="mt-1 text-sm text-gray-600 font-medium">
+                Reliable services at your doorstep.
+              </p>
+              <div className="mt-2 flex gap-2">
+               
+                
+                <button type="button" className="text-sm flex-1 py-2 px-4  whitespace-nowrap bg-linear-to-r to-green-50 from-green-100 text-brownness border border-green-500 font-semibold rounded-sm" >Book a Service</button>
+                <button type="button" className="text-sm flex-1 py-2 px-4  whitespace-nowrap bg-linear-to-r to-blue-100 from-blue-200 text-blue-500 border border-blue-500 font-semibold rounded-sm" onClick={() => navigate("/user/become-provider/basic-info")}>Became a Provider</button>
+              </div>
+            </div>
+          </div>
+          <div className="md:px-3 mt-6">
+            <PopularCategoriesSection />
+          </div>
+        </>
+
         <Outlet
           context={{
             filters,
