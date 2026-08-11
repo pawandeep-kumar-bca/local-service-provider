@@ -7,105 +7,7 @@ const UserModel = require("../models/User.model");
 const { generateId } = require("../utils/generateId");
 
 // ✅ CREATE ORDER (handles both COD and UPI)
-// async function createOrder(req, res) {
-//   try {
-//     const { bookingId, paymentMethod } = req.body; // paymentMethod: "cod" | "upi"
-//     const userId = req.user.id;
 
-//     if (!bookingId || !paymentMethod) {
-//       return res
-//         .status(400)
-//         .json({ message: "bookingId and paymentMethod are required" });
-//     }
-
-//     if (!["cod", "upi"].includes(paymentMethod)) {
-//       return res.status(400).json({ message: "Invalid paymentMethod" });
-//     }
-
-//     const booking = await bookingModel.findById(bookingId);
-//     if (!booking) {
-//       return res.status(404).json({ message: "Booking not found" });
-//     }
-
-//     if (booking.userId.toString() !== userId) {
-//       return res.status(403).json({ message: "Forbidden" });
-//     }
-
-//     // ✅ Prevent duplicate payment
-//     const existingPayment = await paymentModel.findOne({ bookingId });
-//     if (existingPayment && existingPayment.paymentStatus === "success") {
-//       return res.status(400).json({ message: "Already paid" });
-//     }
-//   const paymentId = await generateId("LSP-PAY-", "payment");
-//     // ---------------- COD FLOW ----------------
-//     if (paymentMethod === "cod") {
-//       const payment = await paymentModel.findOneAndUpdate(
-//         { bookingId },
-//         {
-//           userId,
-//           paymentId,
-//           providerId: booking.providerSnapshot.providerId,
-//           bookingId,
-//           amount: booking.pricing.totalAmount, // rupees (no gateway involved)
-//           currency: "INR",
-//           paymentMethod: "cod",
-//           paymentStatus: "pending", // stays pending till service is delivered/settled
-//         },
-//         { upsert: true, new: true },
-//       );
-
-//       booking.paymentMethod = "cod";
-//       booking.paymentStatus = "pending";
-
-//       await booking.save();
-
-//       return res.status(201).json({
-//         message: "Booking confirmed with Cash on Delivery",
-//         payment,
-//         booking,
-//       });
-//     }
-
-//     // ---------------- UPI FLOW ----------------
-//     const amount = Math.round(booking.pricing.totalAmount * 100); // paise, Razorpay expects smallest unit
-
-//     const razorpayOrder = await razorpay.orders.create({
-//       amount,
-//       currency: "INR",
-//       receipt: bookingId.toString(),
-//     });
-
-//     const payment = await paymentModel.findOneAndUpdate(
-//       { bookingId },
-//       {
-//         userId,
-//         providerId: booking.providerSnapshot.providerId,
-//         bookingId,
-//         amount,
-//         currency: "INR",
-//         razorpayOrderId: razorpayOrder.id,
-//         receipt: razorpayOrder.receipt,
-//         paymentMethod: "upi",
-//         paymentStatus: "pending",
-//       },
-//       { upsert: true, new: true },
-//     );
-
-//     booking.paymentMethod = "upi";
-//     booking.paymentStatus = "pending";
-//     booking.payment.orderId = razorpayOrder.id;
-//     await booking.save();
-
-//     return res.status(201).json({
-//       message: "Order created",
-//       payment,
-//       razorpayOrder, // frontend needs order.id + amount + currency to open checkout
-//     });
-//   } catch (err) {
-//     console.error("createOrder error:", err);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// }
 async function createOrder(req, res) {
   try {
     const { bookingId, paymentMethod } = req.body;
@@ -434,6 +336,7 @@ async function paymentHistory(req, res) {
 
 async function userPaymentHistory(req, res) {
   try {
+    const { search, status } = req.query;
     const userId = req.user.id;
 
     const userExists = await UserModel.findById(userId);
@@ -445,17 +348,69 @@ async function userPaymentHistory(req, res) {
       });
     }
 
-    const paymentHistory = await paymentModel
-      .find({ userId })
-      .select("providerId createdAt amount paymentStatus paymentMethod")
-      .populate({
-        path: "providerId",
-        select: "userId",
-        populate: {
-          path: "userId",
-          select: "fullname",
+    const filters = {
+      userId: new mongoose.Types.ObjectId(userId),
+    };
+
+    if (status && status !== "all") {
+      filters.paymentStatus = status;
+    }
+    const pipeline = [
+      {
+        $match: filters,
+      },
+
+      {
+        $lookup: {
+          from: "bookings",
+          localField: "bookingId",
+          foreignField: "_id",
+          as: "booking",
+        },
+      },
+
+      {
+        $unwind: "$booking",
+      },
+    ];
+    if (search?.trim()) {
+      pipeline.push({
+        $match: {
+          $or: [
+            {
+              "booking.providerSnapshot.name": {
+                $regex: search?.trim(),
+                $options: "i",
+              },
+            },
+            {
+              "booking.serviceSnapshot.categoryName": {
+                $regex: search?.trim(),
+                $options: "i",
+              },
+            },
+          ],
         },
       });
+    }
+    pipeline.push({
+      $project: {
+        _id: 1,
+        bookingId: 1,
+        createdAt: 1,
+        amount: 1,
+        paymentStatus: 1,
+        paymentMethod: 1,
+
+        categoryName: "$booking.serviceSnapshot.categoryName",
+
+        providerName: "$booking.providerSnapshot.name",
+
+        providerImage: "$booking.providerSnapshot.profileImage",
+      },
+    });
+    const paymentHistory = await paymentModel.aggregate(pipeline);
+
     if (paymentHistory.length === 0) {
       return res.status(200).json({
         success: true,

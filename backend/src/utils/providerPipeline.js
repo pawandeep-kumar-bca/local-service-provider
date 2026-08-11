@@ -1,4 +1,4 @@
-function addSelectedCategoryStage(pipeline, categoryId) {
+function addSelectedCategoryStage(pipeline, categoryId, priceSortOrder = null) {
   if (categoryId) {
     pipeline.push({
       $set: {
@@ -22,8 +22,28 @@ function addSelectedCategoryStage(pipeline, categoryId) {
     return;
   }
 
-  // Category select nahi hai
-  // First category select karo
+  if (priceSortOrder !== null) {
+    pipeline.push({
+      $set: {
+        selectedCategory: {
+          $arrayElemAt: [
+            {
+              $sortArray: {
+                input: "$categories",
+                sortBy: {
+                  "pricing.price": priceSortOrder,
+                },
+              },
+            },
+            0,
+          ],
+        },
+      },
+    });
+
+    return;
+  }
+
   pipeline.push({
     $set: {
       selectedCategory: {
@@ -33,22 +53,10 @@ function addSelectedCategoryStage(pipeline, categoryId) {
   });
 }
 
-function addCategoryPriceStage(pipeline, categoryId) {
-  if (categoryId) {
-    pipeline.push({
-      $set: {
-        categoryPrice: "$selectedCategory.pricing.price",
-      },
-    });
-
-    return;
-  }
-
+function addCategoryPriceStage(pipeline) {
   pipeline.push({
     $set: {
-      categoryPrice: {
-        $arrayElemAt: ["$categories.pricing.price", 0],
-      },
+      categoryPrice: "$selectedCategory.pricing.price",
     },
   });
 }
@@ -73,6 +81,7 @@ function addProviderProjectStage(pipeline, { includeDistance = false } = {}) {
     rating: 1,
     totalReview: 1,
     experience: 1,
+
     verifiedByAdmin: 1,
     completedJobs: 1,
     responseTime: 1,
@@ -89,8 +98,6 @@ function addProviderProjectStage(pipeline, { includeDistance = false } = {}) {
 
     location: 1,
 
-   
-
     category: {
       id: "$selectedCategory.category",
 
@@ -98,7 +105,6 @@ function addProviderProjectStage(pipeline, { includeDistance = false } = {}) {
 
       pricing: {
         priceType: "$selectedCategory.pricing.priceType",
-
         price: "$selectedCategory.pricing.price",
       },
     },
@@ -132,9 +138,9 @@ function addPaginationFacetStage(pipeline, skip, limit) {
     },
   });
 }
-function addProviderLookups(pipeline, categoryId = null) {
-  // USER
+function addProviderLookups(pipeline) {
   pipeline.push(
+    // USER
     {
       $lookup: {
         from: "users",
@@ -186,7 +192,7 @@ function addProviderLookups(pipeline, categoryId = null) {
       $unwind: "$city",
     },
 
-    // SELECTED CATEGORY
+    // CATEGORY
     {
       $lookup: {
         from: "categories",

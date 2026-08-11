@@ -23,9 +23,7 @@ async function getCategoryBySlug(slug, categoryModel) {
     return null;
   }
 
-  const category = await categoryModel.findOne({
-    slug,
-  });
+  const category = await categoryModel.findOne({ slug });
 
   if (!category) {
     throw new Error("Category not found");
@@ -37,16 +35,21 @@ async function getCategoryBySlug(slug, categoryModel) {
 function buildCategoryFilter({ categoryId, minPrice, maxPrice }) {
   const filter = {};
 
-  // Category selected hai
   if (categoryId) {
-    filter["categories.category"] = categoryId;
+    filter.categories = {
+      $elemMatch: {
+        category: categoryId,
+      },
+    };
   }
 
-  // Price filter
-  if (minPrice !== undefined || maxPrice !== undefined) {
+  if (
+    (minPrice !== undefined && minPrice !== "") ||
+    (maxPrice !== undefined && maxPrice !== "")
+  ) {
     const priceFilter = {};
 
-    if (minPrice !== undefined) {
+    if (minPrice !== undefined && minPrice !== "") {
       const min = Number(minPrice);
 
       if (Number.isNaN(min) || min < 0) {
@@ -56,7 +59,7 @@ function buildCategoryFilter({ categoryId, minPrice, maxPrice }) {
       priceFilter.$gte = min;
     }
 
-    if (maxPrice !== undefined) {
+    if (maxPrice !== undefined && maxPrice !== "") {
       const max = Number(maxPrice);
 
       if (Number.isNaN(max) || max < 0) {
@@ -66,7 +69,18 @@ function buildCategoryFilter({ categoryId, minPrice, maxPrice }) {
       priceFilter.$lte = max;
     }
 
-    // Category selected hai
+    if (
+      priceFilter.$gte !== undefined &&
+      priceFilter.$lte !== undefined &&
+      priceFilter.$gte > priceFilter.$lte
+    ) {
+      throw new Error("minPrice cannot be greater than maxPrice");
+    }
+
+    /*
+      Category selected:
+      selected category ke price par filter
+    */
     if (categoryId) {
       filter.categories = {
         $elemMatch: {
@@ -74,10 +88,7 @@ function buildCategoryFilter({ categoryId, minPrice, maxPrice }) {
           "pricing.price": priceFilter,
         },
       };
-    }
-
-    // Category selected nahi hai
-    else {
+    } else {
       filter.categories = {
         $elemMatch: {
           "pricing.price": priceFilter,

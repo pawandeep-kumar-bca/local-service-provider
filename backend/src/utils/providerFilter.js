@@ -4,31 +4,31 @@ function buildProviderFilter({ rating, experience, availability, trusted }) {
     verifiedByAdmin: true,
   };
 
-  if (rating !== undefined) {
-    const value = Number(rating);
+  if (rating !== undefined && rating !== "") {
+    rating = Number(rating);
 
-    if (Number.isNaN(value) || value < 0 || value > 5) {
-      throw new Error("Rating must be between 0 and 5");
+    if (Number.isNaN(rating) || rating < 0 || rating > 5) {
+      throw new Error("Invalid rating");
     }
 
     filter.rating = {
-      $gte: value,
+      $gte: rating,
     };
   }
 
-  if (experience !== undefined) {
-    const value = Number(experience);
+  if (experience !== undefined && experience !== "") {
+    experience = Number(experience);
 
-    if (Number.isNaN(value) || value < 0) {
-      throw new Error("Experience must be a valid number");
+    if (Number.isNaN(experience) || experience < 0) {
+      throw new Error("Invalid experience");
     }
 
     filter.experience = {
-      $gte: value,
+      $gte: experience,
     };
   }
 
-  if (availability !== undefined) {
+  if (availability !== undefined && availability !== "") {
     if (availability !== "true" && availability !== "false") {
       throw new Error("Invalid availability");
     }
@@ -36,7 +36,7 @@ function buildProviderFilter({ rating, experience, availability, trusted }) {
     filter.availability = availability === "true";
   }
 
-  if (trusted !== undefined) {
+  if (trusted !== undefined && trusted !== "") {
     if (trusted !== "true" && trusted !== "false") {
       throw new Error("Invalid trusted");
     }

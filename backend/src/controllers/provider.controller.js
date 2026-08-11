@@ -646,7 +646,7 @@ async function recommendedProviders(req, res) {
       experience,
       availability,
       trusted,
-      slug,
+      categoryId,
       minPrice,
       maxPrice,
       sort = [],
@@ -656,7 +656,7 @@ async function recommendedProviders(req, res) {
 
     const { page, limit, skip } = getPagination(req.query);
 
-    // COMMON PROVIDER FILTER
+    // COMMON FILTER
 
     const filter = buildProviderFilter({
       rating,
@@ -667,10 +667,10 @@ async function recommendedProviders(req, res) {
 
     // CATEGORY
 
-    const categoryId = await getCategoryBySlug(slug, categoryModel);
+    const validCategoryId = await getCategoryId(categoryId, categoryModel);
 
     const categoryFilter = buildCategoryFilter({
-      categoryId,
+      categoryId: validCategoryId,
       minPrice,
       maxPrice,
     });
@@ -679,15 +679,7 @@ async function recommendedProviders(req, res) {
 
     // SORT
 
-    const { sortObject, hasPriceSort } = buildProviderSort(sort);
-
-    // Price sorting requires category
-    if (hasPriceSort && !categoryId) {
-      return res.status(400).json({
-        success: false,
-        message: "Category is required for price sorting",
-      });
-    }
+    const { sortObject, priceSortOrder } = buildProviderSort(sort);
 
     // PIPELINE
 
@@ -697,25 +689,44 @@ async function recommendedProviders(req, res) {
       },
     ];
 
-    // SELECTED CATEGORY
+    /*
+      CATEGORY SELECTION
 
-    addSelectedCategoryStage(pipeline, categoryId);
+      1. category selected
+         → selected category
+
+      2. no category + price low
+         → cheapest category
+
+      3. no category + price high
+         → highest category
+
+      4. no category + other sort
+         → first category
+    */
+
+    addSelectedCategoryStage(pipeline, validCategoryId, priceSortOrder);
 
     // CATEGORY PRICE
 
-    addCategoryPriceStage(pipeline, categoryId);
+    addCategoryPriceStage(pipeline);
+
     // SORT
 
     addSortStage(pipeline, sortObject);
+
+    // LOOKUPS
 
     addProviderLookups(pipeline);
 
     // PROJECT
 
     addProviderProjectStage(pipeline);
-    // PAGINATION + COUNT
+
+    // PAGINATION
 
     addPaginationFacetStage(pipeline, skip, limit);
+
     // EXECUTE
 
     const result = await providerModel.aggregate(pipeline);
@@ -739,12 +750,12 @@ async function recommendedProviders(req, res) {
       });
     }
 
+    // SUCCESS
+
     return res.status(200).json({
       success: true,
       message: "Providers fetched successfully",
-
       providers,
-
       pagination: buildPaginationResponse({
         page,
         limit,
@@ -756,7 +767,7 @@ async function recommendedProviders(req, res) {
 
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: err.message || "Internal server error",
     });
   }
 }

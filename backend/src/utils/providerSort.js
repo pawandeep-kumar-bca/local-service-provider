@@ -41,38 +41,45 @@ const SORT_FIELDS = {
 };
 
 function buildProviderSort(sort) {
-  const sortOptions = Array.isArray(sort) ? sort : [sort].filter(Boolean);
+  const sortOptions = Array.isArray(sort)
+    ? sort
+    : [sort].filter(Boolean);
 
   const sortObject = {};
-  const usedFields = new Set();
+  const usedSortFields = new Set();
 
-  for (const option of sortOptions) {
-    const sortField = SORT_FIELDS[option];
+  let priceSortOrder = null;
+
+  for (const sortOption of sortOptions) {
+    const sortField = SORT_FIELDS[sortOption];
 
     if (!sortField) {
-      throw new Error(`Invalid sort option: ${option}`);
+      throw new Error(`Invalid sort option: ${sortOption}`);
     }
 
-    if (usedFields.has(sortField.field)) {
-      throw new Error(`Cannot sort ${sortField.field} multiple times`);
+    // Same field ko do baar sort nahi kar sakte
+    if (usedSortFields.has(sortField.field)) {
+      throw new Error(
+        `Cannot sort ${sortField.field} multiple times`
+      );
     }
 
-    usedFields.add(sortField.field);
+    usedSortFields.add(sortField.field);
 
     sortObject[sortField.field] = sortField.order;
+
+    // Price sorting detect
+    if (
+      sortOption === "price-low" ||
+      sortOption === "price-high"
+    ) {
+      priceSortOrder = sortField.order;
+    }
   }
 
   return {
-    sortOptions,
     sortObject,
-
-    hasPriceSort: sortOptions.some(
-      (option) => option === "price-low" || option === "price-high",
-    ),
-
-    hasDistanceSort: sortOptions.some(
-      (option) => option === "distance-near" || option === "distance-far",
-    ),
+    priceSortOrder,
   };
 }
 
