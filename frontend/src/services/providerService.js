@@ -41,3 +41,10 @@ export const getRecommendedProviders = async (filters) => {
   });
   return response.data;
 };
+export const getNearbyProvider = async (filters)=>{
+  const params = cleanFilters(filters)
+  const response = await api.get('/providers/nearby',{
+    params:params
+  })
+  return response.data
+}

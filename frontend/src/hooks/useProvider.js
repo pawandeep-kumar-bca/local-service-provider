@@ -47,7 +47,7 @@ export const useCreateProviders = () => {
 export const useRecommendedProviders = (filters) => {
   return useQuery({
     queryKey: ["recommended-providers", filters],
-
     queryFn: () => getRecommendedProviders(filters),
+    enabled: !filters.lat || !filters.lng || !filters.radius,
   });
 };

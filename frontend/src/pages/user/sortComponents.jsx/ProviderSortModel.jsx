@@ -7,7 +7,7 @@ import Button from "../../../components/common/Button";
 import { IoClose } from "react-icons/io5";
 import { MdSort } from "react-icons/md";
 
-const ProviderSortModel = ({ filters, setFilters, isClose }) => {
+const ProviderSortModel = ({ filters, setFilters, isClose ,showDistance}) => {
   const [tempSort, setTempSort] = useState(filters.sort || []);
 
   const handleApplySort = () => {
@@ -145,7 +145,7 @@ const ProviderSortModel = ({ filters, setFilters, isClose }) => {
             />
           </div>
 
-          <div>
+         {showDistance && <div>
             <span className="block text-sm font-bold mb-3 text-brownness">
               Sort by Distance
             </span>
@@ -163,7 +163,7 @@ const ProviderSortModel = ({ filters, setFilters, isClose }) => {
                 );
               }}
             />
-          </div>
+          </div>}
         </div>
 
         {/* Footer */}

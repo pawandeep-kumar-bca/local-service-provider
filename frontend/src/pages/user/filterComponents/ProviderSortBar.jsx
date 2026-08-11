@@ -7,7 +7,7 @@ import ProviderSortByRating from "../sortComponents.jsx/ProviderSortByRating";
 import ProviderSortByExperience from "../sortComponents.jsx/ProviderSortByExperience";
 import ProviderSortByDistance from "../sortComponents.jsx/ProviderSortByDistance";
 import { CgSortZa } from "react-icons/cg";
-const ProviderSortBar = ({ filters, setFilters }) => {
+const ProviderSortBar = ({ filters, setFilters,showCategory ,showDistance}) => {
   const [openFilters, setOpenFilters] = useState(false);
   const [openSorts, setOpenSorts] = useState(false);
 
@@ -24,7 +24,7 @@ const ProviderSortBar = ({ filters, setFilters }) => {
           md:pb-0
         "
         >
-          {/* Desktop Sort Label */}
+          
           <div
             className="hidden md:flex flex
           items-center
@@ -69,14 +69,14 @@ const ProviderSortBar = ({ filters, setFilters }) => {
             </div>
 
             {/* Distance */}
-            <div className="shrink-0">
+          {showDistance &&  <div className="shrink-0">
               <ProviderSortByDistance
                 filters={filters}
                 setFilters={setFilters}
               />
-            </div>
+            </div>}
           </div>
-          {/* Desktop Filters */}
+         
           <button
             type="button"
             onClick={() => setOpenSorts(true)}
@@ -122,6 +122,7 @@ const ProviderSortBar = ({ filters, setFilters }) => {
         <ProviderFilterModal
           filters={filters}
           setFilters={setFilters}
+          showCategory={showCategory}
           isClose={() => setOpenFilters(false)}
         />
       )}
@@ -131,6 +132,7 @@ const ProviderSortBar = ({ filters, setFilters }) => {
         <ProviderSortModel
           filters={filters}
           setFilters={setFilters}
+          showDistance={showDistance}
           isClose={() => setOpenSorts(false)}
         />
       )}

@@ -12,7 +12,7 @@ import Button from "../../../components/common/Button";
 import { MdFilterListAlt } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 
-const ProviderFilterModal = ({ filters, setFilters, isClose }) => {
+const ProviderFilterModal = ({ filters, setFilters, isClose ,showCategory}) => {
   const [tempFilters, setTempFilters] = useState(filters);
 
   const resetFilters = () => {
@@ -85,7 +85,7 @@ const ProviderFilterModal = ({ filters, setFilters, isClose }) => {
           <div className="space-y-5">
             {/* CATEGORY */}
 
-            <div className="w-full">
+           {showCategory && <div className="w-full">
               <span className="block text-sm font-bold mb-3 text-brownness">
                 Category
               </span>
@@ -94,7 +94,7 @@ const ProviderFilterModal = ({ filters, setFilters, isClose }) => {
                 filters={tempFilters}
                 setFilters={setTempFilters}
               />
-            </div>
+            </div>}
 
             {/* PRICE */}
 

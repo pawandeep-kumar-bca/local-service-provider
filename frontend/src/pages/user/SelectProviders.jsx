@@ -7,6 +7,8 @@ import Avatar from "../../components/common/Avatar";
 import { useNavigate } from "react-router-dom";
 
 const SelectProviders = ({ provider }) => {
+ 
+  
   const navigate = useNavigate();
   return (
     <div className="md:px-4 md:py-3 px-2 py-3 grid grid-cols-3  items-center">

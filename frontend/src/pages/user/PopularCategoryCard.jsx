@@ -8,7 +8,7 @@ const PopularCategoryCard = ({ category }) => {
     <button
       type="button"
       onClick={() =>
-        navigate(`/user/category/${category?.categorySlug}/select-provider`)
+        navigate(`/user/category/${category?._id}/select-provider`)
       }
       className="min-w-fit min-h-24  border border-gray-200 rounded-2xl bg-gray-50 py-3 px-4 flex flex-col md:flex-row  items-center  gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/40 cursor-pointer"
     >

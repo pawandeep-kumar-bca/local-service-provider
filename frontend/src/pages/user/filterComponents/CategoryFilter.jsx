@@ -19,7 +19,8 @@ const CategoryFilter = ({ filters, setFilters }) => {
             categoryId: e.target.value,
           }))
         }
-        className="w-full appearance-none outline-none border-2 border-brownness rounded-lg bg-white text-brownness text-sm font-semibold py-2 pl-3 pr-8 cursor-pointer min-w-[130px]
+        className="w-full appearance-none outline-none border rounded-lg bg-white border-gray-300 text-grayness text-sm font-semibold py-2 pl-3 pr-8 cursor-pointer min-w-[130px]
+        
         "
       >
         <option value="">All Categories</option>
@@ -37,7 +38,7 @@ const CategoryFilter = ({ filters, setFilters }) => {
                   right-2
                   -translate-y-1/2
                   text-xl
-                  text-brownness
+                  text-greyness
                 "
       />
     </div>

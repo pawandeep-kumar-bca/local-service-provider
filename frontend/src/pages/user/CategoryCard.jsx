@@ -79,7 +79,7 @@ const CategoryCard = ({ category }) => {
         fullWidth
         type="button"
         className="mt-auto"
-        onClick={() => navigate(`/user/category/${category.slug}/select-provider`)}
+        onClick={() => navigate(`/user/category/${category._id}/select-provider`)}
       >
         Book Now
       </Button>

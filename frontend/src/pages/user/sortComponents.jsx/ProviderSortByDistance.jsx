@@ -10,7 +10,7 @@ const ProviderSortByDistance = ({ filters, setFilters }) => {
       <select
         name="distance"
         id="distance"
-        className="w-full appearance-none outline-none border-2 border-brownness rounded-lg bg-white text-brownness text-sm font-semibold py-2 pl-3 pr-8 cursor-pointer min-w-[130px]
+        className="w-full appearance-none outline-none border rounded-lg bg-white border-gray-300 text-grayness text-sm font-semibold py-2 pl-3 pr-8 cursor-pointer min-w-[130px]
         "
         value={currentValue}
         onChange={(e) => {
@@ -41,6 +41,8 @@ const ProviderSortByDistance = ({ filters, setFilters }) => {
                   -translate-y-1/2
                   text-xl
                   text-brownness
+                   text-gray-400
+
                 "
       />
     </div>

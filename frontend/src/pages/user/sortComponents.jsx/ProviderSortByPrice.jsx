@@ -23,7 +23,7 @@ const ProviderSortByPrice = ({ filters, setFilters }) => {
             sort: toggleSortOption(prev.sort, value),
           }));
         }}
-        className="w-full appearance-none outline-none border-2 border-brownness rounded-lg bg-white text-brownness text-sm font-semibold py-2 pl-3 pr-8 cursor-pointer min-w-[130px]
+        className="w-full appearance-none outline-none border rounded-lg bg-white border-gray-300 text-grayness text-sm font-semibold py-2 pl-3 pr-8 cursor-pointer min-w-[130px]
         "
         name="price"
         id="price"
@@ -40,7 +40,7 @@ const ProviderSortByPrice = ({ filters, setFilters }) => {
                   right-2
                   -translate-y-1/2
                   text-xl
-                  text-brownness
+                  text-gray-400
                 "
       />
     </div>
