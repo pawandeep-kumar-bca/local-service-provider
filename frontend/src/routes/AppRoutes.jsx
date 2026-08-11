@@ -49,7 +49,6 @@ import SuccessfulPayment from "../pages/BookingProviders/SuccessfulPayment";
 import ViewUserBooking from "../pages/BookingProviders/ViewUserBooking";
 import RescheduleBooking from "../pages/BookingProviders/RescheduleBooking";
 import CategoryList from "../pages/user/CategoryList";
-import SelectProviders from "../pages/user/SelectProviders";
 import AddNewService from "../pages/provider/AddNewService";
 import ProviderReviews from "../pages/provider/ProviderReviews";
 import ProviderSchedule from "../pages/provider/ProviderSchedule";

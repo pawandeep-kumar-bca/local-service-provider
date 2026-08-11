@@ -8,7 +8,7 @@ const NavBarTitle = ({ title, hideOnDashboard }) => {
   if (hideOnDashboard && pathname === "/user/dashboard") {
     return null;
   }
-  return <h1 className="text-lg md:text-2xl font-bold text-black">{title}</h1>;
+  return <h1 className="text-lg md:text-2xl font-bold text-brownness">{title}</h1>;
 };
 
 export default NavBarTitle;

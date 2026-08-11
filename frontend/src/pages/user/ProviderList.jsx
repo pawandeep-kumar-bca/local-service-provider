@@ -24,11 +24,11 @@ const isLoading = hasLocation
   return (
     <div className="max-w-7xl mx-auto md:px-4 md:py-6">
       <div className="flex justify-between items-start pb-5">
-        <h1 className="md:text-2xl text-xl font-bold">
-          Find Best service Providers
+        <h1 className="md:text-2xl text-brownness text-xl font-bold">
+          Find Best Service Providers
         </h1>
 
-        <Link to="all-providers" className="text-primary font-semibold">
+        <Link to="all-providers" className="text-primary text-sm transition-all duration-300 cursor-pointer  font-semibold hover:underline disabled:opacity-50">
           View All
         </Link>
       </div>

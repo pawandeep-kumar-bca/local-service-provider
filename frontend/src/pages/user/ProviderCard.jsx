@@ -60,9 +60,9 @@ const ProviderCard = ({ provider }) => {
                 {provider?.providerName}
               </h1>
               {provider?.verifiedByAdmin ? (
-                <MdVerifiedUser size={16} className="text-primary" />
+                <MdVerifiedUser size={16} className="text-primary mt-1.5" />
               ) : (
-                <MdGppBad size={18} className="text-danger" />
+                <MdGppBad size={18} className="text-danger mt-1.5" />
               )}
             </div>
 

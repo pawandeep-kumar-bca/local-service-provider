@@ -3,8 +3,7 @@ import {
   useRecommendedProviders,
   useNearbyProviders,
 } from "../../hooks/useProvider";
-import { useNavigate, useParams } from "react-router-dom";
-import SelectProviders from "./SelectProviders";
+import {  useParams } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import Button from "../../components/common/Button";
 import ProviderCard from "./ProviderCard";
@@ -22,9 +21,6 @@ const SelectProvidersList = () => {
     minPrice: "",
     maxPrice: "",
     sort: [],
-    page: 1,
-    limit: 20,
-
     lat: savedLocation?.latitude || "",
     lng: savedLocation?.longitude || "",
     radius: 200,
@@ -37,17 +33,10 @@ const SelectProvidersList = () => {
   const nearbyQuery = useNearbyProviders(filters);
 
   const data = hasLocation ? nearbyQuery.data : recommendedQuery.data;
-  const navigate = useNavigate();
   const providers = data?.providers || [];
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <Button color="white" type="button" onClick={() => navigate(-1)}>
-          <IoIosArrowBack />
-          Back
-        </Button>
-      </div>
       <ProviderSortBar
         filters={filters}
         setFilters={setFilters}
