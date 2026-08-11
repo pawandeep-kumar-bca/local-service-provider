@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 
 import CategoryFilter from "./CategoryFilter";
 import PriceFilter from "./PriceFilter";
@@ -15,7 +15,6 @@ import { IoClose } from "react-icons/io5";
 const ProviderFilterModal = ({ filters, setFilters, isClose }) => {
   const [tempFilters, setTempFilters] = useState(filters);
 
- 
   const resetFilters = () => {
     setTempFilters({
       categoryId: "",
@@ -30,13 +29,9 @@ const ProviderFilterModal = ({ filters, setFilters, isClose }) => {
   };
 
   const handleApplyFilters = () => {
-     console.log("TEMP FILTERS:", tempFilters);
+    setFilters(tempFilters);
 
-  setFilters(tempFilters);
-
-  console.log("APPLY CLICKED");
-
-  isClose();
+    isClose();
   };
 
   return (
@@ -90,7 +85,7 @@ const ProviderFilterModal = ({ filters, setFilters, isClose }) => {
           <div className="space-y-5">
             {/* CATEGORY */}
 
-            <div>
+            <div className="w-full">
               <span className="block text-sm font-bold mb-3 text-brownness">
                 Category
               </span>

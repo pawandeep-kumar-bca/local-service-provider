@@ -1,20 +1,24 @@
-// import { MdArrowDropDown } from "react-icons/md";
+// import React from "react";
 // import { toggleSortOption } from "../../../utils/sortHelper";
+// import { MdArrowDropDown } from "react-icons/md";
 
-// const ProviderSortByPrice = ({ filters, setFilters }) => {
-//   const currentValue = filters.sort.find((s) => s.startsWith("price-")) || "";
-
+// const ProviderSortByDistance = ({ filters, setFilters }) => {
+//   const currentValue =
+//     filters.sort.find((s) => s.startsWith("distance-")) || "";
 //   return (
 //     <div className="relative">
 //       <select
+//         name="distance"
+//         id="distance"
+//         className="w-full appearance-none outline-none border-2 border-brownness rounded-lg bg-white text-brownness text-sm font-semibold py-2 pl-3 pr-8 cursor-pointer min-w-[130px]
+//         "
 //         value={currentValue}
 //         onChange={(e) => {
 //           const value = e.target.value;
 //           if (!value) {
-//             // "All Price" select karne pe price wala option hata do
 //             setFilters((prev) => ({
 //               ...prev,
-//               sort: prev.sort.filter((s) => !s.startsWith("price-")),
+//               sort: prev.sort.filter((s) => s.startsWith("distance-")),
 //             }));
 //             return;
 //           }
@@ -23,14 +27,10 @@
 //             sort: toggleSortOption(prev.sort, value),
 //           }));
 //         }}
-//         className="w-full appearance-none outline-none border-2 border-brownness rounded-lg bg-white text-brownness text-sm font-semibold py-2 pl-3 pr-8 cursor-pointer min-w-[130px]
-//         "
-//         name="price"
-//         id="price"
 //       >
-//         <option value="">All Price</option>
-//         <option value="price-high">High to Low</option>
-//         <option value="price-low">Low to High</option>
+//         <option value="">All Distance</option>
+//         <option value="distance-near">Nearest First</option>
+//         <option value="distance-far">Farthest First</option>
 //       </select>
 //       <MdArrowDropDown
 //         className="
@@ -47,4 +47,4 @@
 //   );
 // };
 
-// export default ProviderSortByPrice;
+// export default ProviderSortByDistance;

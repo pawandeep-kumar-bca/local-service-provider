@@ -12,7 +12,7 @@ const StatusBadge = ({
   showIcon = false,
 }) => {
   const base =
-    "py-1 px-3 rounded-full text-sm flex w-fit gap-1 items-center font-semibold border";
+    "py-1 px-3 rounded-full font-mono text-sm flex w-fit gap-1 items-center font-[600] border";
 
   // STATUS BADGES
   const badges = {
@@ -43,20 +43,20 @@ const StatusBadge = ({
 
   // CATEGORY BADGES
   const badgeColors = [
-    "bg-red-100 text-red-600 border-red-200",
-    "bg-orange-100 text-orange-600 border-orange-200",
-    "bg-yellow-100 text-yellow-600 border-yellow-200",
-    "bg-green-100 text-green-600 border-green-200",
-    "bg-emerald-100 text-emerald-600 border-emerald-200",
-    "bg-teal-100 text-teal-600 border-teal-200",
-    "bg-cyan-100 text-cyan-600 border-cyan-200",
-    "bg-sky-100 text-sky-600 border-sky-200",
-    "bg-blue-100 text-blue-600 border-blue-200",
-    "bg-indigo-100 text-indigo-600 border-indigo-200",
-    "bg-violet-100 text-violet-600 border-violet-200",
-    "bg-purple-100 text-purple-600 border-purple-200",
-    "bg-pink-100 text-pink-600 border-pink-200",
-    "bg-rose-100 text-rose-600 border-rose-200",
+    "bg-red-50 text-red-500 border-red-300",
+    "bg-orange-50 text-orange-500 border-orange-300",
+    "bg-yellow-50 text-yellow-500 border-yellow-300",
+    "bg-green-50 text-green-500 border-green-300",
+    "bg-emerald-50 text-emerald-500 border-emerald-300",
+    "bg-teal-50 text-teal-500 border-teal-300",
+    "bg-cyan-50 text-cyan-500 border-cyan-300",
+    "bg-sky-50 text-sky-500 border-sky-300",
+    "bg-blue-50 text-blue-500 border-blue-300",
+    "bg-indigo-50 text-indigo-500 border-indigo-300",
+    "bg-violet-50 text-violet-500 border-violet-300",
+    "bg-purple-50 text-purple-500 border-purple-300",
+    "bg-pink-50 text-pink-500 border-pink-300",
+    "bg-rose-50 text-rose-500 border-rose-300",
   ];
   const getCategoryStyle = (category) => {
     let hash = 0;

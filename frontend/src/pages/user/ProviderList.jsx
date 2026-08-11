@@ -6,9 +6,9 @@ import { Link, useOutletContext } from "react-router-dom";
 import ProviderSortBar from "./filterComponents/ProviderSortBar";
 const ProviderList = () => {
   const { filters, setFilters } = useOutletContext();
-  console.log("ACTUAL FILTERS:", filters);
+ 
   const { data, isLoading } = useRecommendedProviders(filters);
-console.log(data?.providers);
+
 
   if (isLoading) {
     return (
@@ -18,13 +18,9 @@ console.log(data?.providers);
 
   return (
     <div className="max-w-7xl mx-auto md:px-4 md:py-6">
-      <div className="flex justify-between items-center pb-5">
-        <div>
-          <h1 className="text-2xl font-bold">Find Best service Providers</h1>
-          <p className="text-sm text-gray-500">
-            Choose from top rated and Verified professionals near you.
-          </p>
-        </div>
+      <div className="flex justify-between items-start pb-5">
+                  <h1 className="md:text-2xl text-xl font-bold">Find Best service Providers</h1>
+
 
         <Link to="all-providers" className="text-primary font-semibold">
           View All
