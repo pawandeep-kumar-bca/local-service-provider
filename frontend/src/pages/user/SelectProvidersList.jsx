@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { useRecommendedProviders } from "../../hooks/useProvider";
+import {
+  useRecommendedProviders,
+  useNearbyProviders,
+} from "../../hooks/useProvider";
 import { useNavigate, useParams } from "react-router-dom";
 import SelectProviders from "./SelectProviders";
 import { IoIosArrowBack } from "react-icons/io";
@@ -8,6 +11,8 @@ import ProviderCard from "./ProviderCard";
 import ProviderSortBar from "./filterComponents/ProviderSortBar";
 const SelectProvidersList = () => {
   const { categoryId } = useParams();
+  const savedLocation = JSON.parse(localStorage.getItem("location") || "null");
+
   const [filters, setFilters] = useState({
     categoryId,
     rating: "",
@@ -19,10 +24,20 @@ const SelectProvidersList = () => {
     sort: [],
     page: 1,
     limit: 20,
+
+    lat: savedLocation?.latitude || "",
+    lng: savedLocation?.longitude || "",
+    radius: 200,
   });
-  
+  const hasLocation =
+    filters.lat !== "" && filters.lng !== "" && filters.radius !== "";
+
+  const recommendedQuery = useRecommendedProviders(filters);
+
+  const nearbyQuery = useNearbyProviders(filters);
+
+  const data = hasLocation ? nearbyQuery.data : recommendedQuery.data;
   const navigate = useNavigate();
-  const { data } = useRecommendedProviders(filters);
   const providers = data?.providers || [];
 
   return (
@@ -33,13 +48,15 @@ const SelectProvidersList = () => {
           Back
         </Button>
       </div>
-      <ProviderSortBar filters={filters} setFilters={setFilters} showCategory={false}/>
+      <ProviderSortBar
+        filters={filters}
+        setFilters={setFilters}
+        showDistance={hasLocation}
+        showCategory={false}
+      />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {providers.map((provider) => (
-          
-            <ProviderCard provider={provider} key={`${provider._id}`} />
-            
-          
+          <ProviderCard provider={provider} key={`${provider._id}`} />
         ))}
       </div>
     </div>

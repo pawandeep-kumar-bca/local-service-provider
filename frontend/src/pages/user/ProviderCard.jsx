@@ -54,9 +54,9 @@ const ProviderCard = ({ provider }) => {
             </div>
           </div>
 
-          <div className="space-y-1">
+          <div className="md:space-y-1">
             <div className="w-full flex gap-1 items-center ">
-              <h1 className="text-xl font-semibold flex items-center">
+              <h1 className=" text-lg md:text-xl font-semibold flex items-center">
                 {provider?.providerName}
               </h1>
               {provider?.verifiedByAdmin ? (
@@ -87,9 +87,9 @@ const ProviderCard = ({ provider }) => {
           <div className="flex flex-col justify-center items-center gap-1 flex-1">
             <MdVerifiedUser size={20} className="text-green-500" />
 
-            <h1 className="font-bold text-lg">{jobsCompleted}</h1>
+            <h1 className="font-bold text-sm md:text-lg">{jobsCompleted}</h1>
 
-            <p className="text-muted text-sm whitespace-nowrap">
+            <p className="text-muted text-xs md:text-sm whitespace-nowrap">
               Jobs Completed
             </p>
           </div>
@@ -100,9 +100,9 @@ const ProviderCard = ({ provider }) => {
           <div className="flex flex-col justify-center items-center gap-1 flex-1">
             <MdWork size={20} className="text-purple-500" />
 
-            <h1 className="font-bold text-lg">{providerExperience}</h1>
+            <h1 className="font-bold text-sm md:text-lg">{providerExperience}</h1>
 
-            <p className="text-muted text-sm whitespace-nowrap">Experience</p>
+            <p className="text-muted text-xs md:text-sm whitespace-nowrap">Experience</p>
           </div>
 
           {/* Divider */}
@@ -111,9 +111,9 @@ const ProviderCard = ({ provider }) => {
           <div className="flex flex-col justify-center items-center gap-1 flex-1">
             <FaBolt size={20} className="text-blue-500" />
 
-            <h1 className="font-bold text-lg">{response}</h1>
+            <h1 className="font-bold text-sm md:text-lg">{response} Mins</h1>
 
-            <p className="text-muted text-sm whitespace-nowrap">
+            <p className="text-muted text-xs md:text-sm whitespace-nowrap">
               Response Time
             </p>
           </div>
@@ -126,16 +126,16 @@ const ProviderCard = ({ provider }) => {
             <div className="flex items-center gap-2 ">
               <FaLocationDot className=" text-black" size={20} />
               <div>
-                {provider?.distanceInKm && (
-                  <h3 className="font-bold text-text text-sm">500m away</h3>
+                {provider?.distance && (
+                  <h3 className="font-bold text-text text-sm">{(provider?.distance/1000).toFixed(2)}KM away</h3>
                 )}
-                <p className="text-sm text-muted">
-                  {provider?.city},{provider?.district},{provider?.state}
+                <p className=" text-sm text-muted">
+                  {provider?.city},{provider?.district}
                 </p>
               </div>
             </div>
             <div>
-              <h3 className="flex items-center text-xl font-bold">
+              <h3 className="flex items-center text-lg md:text-xl font-bold">
                 <MdOutlineCurrencyRupee size={18}/>
                 {price} 
                 {provider?.category?.pricing?.priceType === "hourly"
@@ -150,12 +150,12 @@ const ProviderCard = ({ provider }) => {
             <div className="w-full flex flex-col gap-5">
               <div className="flex gap-3 justify-center">
                 {provider.topRated ? (
-                  <span className="bg-orange-50 w-full flex items-center justify-center gap-2 font-bold rounded-md py-2 px-5">
+                  <span className="bg-orange-50 w-full flex items-center justify-center gap-2 font-bold rounded-md py-2  px-5">
                     <FaStar className="text-orange-500" size={16} />
                     <h1 className="text-orange-500 text-sm font-semibold">Top Rated</h1>
                   </span>
                 ) : (
-                  <span className="bg-blue-50 w-full flex items-center justify-center gap-2 font-bold rounded-md py-2 px-5">
+                  <span className="bg-blue-50 w-full flex items-center justify-center gap-2 font-bold rounded-md py-2 px-2 md:px-5">
                     <FiTrendingUp className="text-blue-500" size={16} />
                     <h1 className="text-primary text-sm font-semibold">
                       Rising Talent
@@ -163,12 +163,12 @@ const ProviderCard = ({ provider }) => {
                   </span>
                 )}
                 {provider.trusted ? (
-                  <span className="bg-green-50 w-full flex items-center justify-center gap-2 font-bold rounded-md py-2 px-5">
+                  <span className="bg-green-50 w-full flex items-center justify-center gap-2 font-bold rounded-md py-2  px-5">
                     <AiOutlineLike className="text-green-500" size={16} />
                     <h1 className="text-success text-sm font-semibold">Trusted Pro</h1>
                   </span>
                 ) : (
-                  <span className="bg-gray-50 w-full  flex items-center justify-center gap-2 font-bold rounded-md py-2 px-3 md:px-5">
+                  <span className="bg-gray-50 w-full  flex items-center justify-center gap-2 font-bold rounded-md py-2  px-2 md:px-5">
                     <IoRocketOutline className="text-gray-500" size={16} />
 
                     <h1 className="text-text text-sm font-semibold">Recently Joined</h1>

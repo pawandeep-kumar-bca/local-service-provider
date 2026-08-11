@@ -1,13 +1,20 @@
 import React from "react";
-import { useRecommendedProviders } from "../../hooks/useProvider";
+import { useRecommendedProviders,useNearbyProviders } from "../../hooks/useProvider";
 import ProviderCard from "./ProviderCard";
 import { Link, useOutletContext } from "react-router-dom";
 import ProviderSortBar from "./filterComponents/ProviderSortBar";
 const ProviderList = () => {
   const { filters, setFilters } = useOutletContext();
+  const hasLocation = filters.lat !== "" && filters.lng !== "" && filters.radius !=='';
 
-  const { data, isLoading } = useRecommendedProviders(filters);
+  const recommendedQuery = useRecommendedProviders(filters);
 
+  const nearbyQuery = useNearbyProviders(filters);
+
+  const data = hasLocation ? nearbyQuery.data : recommendedQuery.data;
+const isLoading = hasLocation
+  ? nearbyQuery.isLoading
+  : recommendedQuery.isLoading;
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">Loading...</div>
@@ -28,6 +35,7 @@ const ProviderList = () => {
       <ProviderSortBar
         filters={filters}
         setFilters={setFilters}
+        showDistance={hasLocation}
         showCategory={true}
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">

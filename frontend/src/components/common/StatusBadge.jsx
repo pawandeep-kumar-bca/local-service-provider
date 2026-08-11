@@ -12,7 +12,7 @@ const StatusBadge = ({
   showIcon = false,
 }) => {
   const base =
-    "py-1 px-3 rounded-full font-mono text-sm flex w-fit gap-1 items-center font-[600] border";
+    "py-1 px-3  rounded-full font-mono text-xs md:text-sm flex w-fit gap-1 items-center font-[600] border";
 
   // STATUS BADGES
   const badges = {

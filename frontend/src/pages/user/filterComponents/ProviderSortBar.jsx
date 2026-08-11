@@ -123,6 +123,7 @@ const ProviderSortBar = ({ filters, setFilters,showCategory ,showDistance}) => {
           filters={filters}
           setFilters={setFilters}
           showCategory={showCategory}
+          showDistance={showDistance}
           isClose={() => setOpenFilters(false)}
         />
       )}

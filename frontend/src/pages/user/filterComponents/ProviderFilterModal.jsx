@@ -11,8 +11,15 @@ import Button from "../../../components/common/Button";
 
 import { MdFilterListAlt } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
+import RadiusFilter from "./RadiusFilter";
 
-const ProviderFilterModal = ({ filters, setFilters, isClose ,showCategory}) => {
+const ProviderFilterModal = ({
+  filters,
+  setFilters,
+  isClose,
+  showCategory,
+  showDistance,
+}) => {
   const [tempFilters, setTempFilters] = useState(filters);
 
   const resetFilters = () => {
@@ -85,17 +92,21 @@ const ProviderFilterModal = ({ filters, setFilters, isClose ,showCategory}) => {
           <div className="space-y-5">
             {/* CATEGORY */}
 
-           {showCategory && <div className="w-full">
-              <span className="block text-sm font-bold mb-3 text-brownness">
-                Category
-              </span>
+            {showCategory && (
+              <div className="w-full">
+                <span className="block text-sm font-bold mb-3 text-brownness">
+                  Category
+                </span>
 
-              <CategoryFilter
-                filters={tempFilters}
-                setFilters={setTempFilters}
-              />
-            </div>}
-
+                <CategoryFilter
+                  filters={tempFilters}
+                  setFilters={setTempFilters}
+                />
+              </div>
+            )}
+            {showDistance && (
+              <RadiusFilter filters={tempFilters} setFilters={setTempFilters} />
+            )}
             {/* PRICE */}
 
             <div>

@@ -26,19 +26,22 @@ const UserDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isAllProviders = location.pathname.includes("all-providers");
- const [filters, setFilters] = useState({
-  categoryId: "",
-  rating: "",
-  experience: "",
-  availability: "",
-  trusted: "",
-  minPrice: "",
-  maxPrice: "",
-  sort: [],
- 
-});
-console.log(filters);
-
+  const savedLocation = JSON.parse(localStorage.getItem("location") || "null");
+  const [filters, setFilters] = useState({
+    categoryId: "",
+    rating: "",
+    experience: "",
+    availability: "",
+    trusted: "",
+    minPrice: "",
+    maxPrice: "",
+    sort: [],
+    // location
+    lat: savedLocation?.latitude || "",
+    lng: savedLocation?.longitude || "",
+    radius: 200,
+  });
+console.log(filters.lat,filters.lng);
 
   const { data } = useMe();
   const user = data?.user || [];

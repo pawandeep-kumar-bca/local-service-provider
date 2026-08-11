@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createProvider,
   getAllProviders,
+  getNearbyProviders,
   getProviderById,
   getRecommendedProviders,
   getSelectProviderByCategory,
@@ -49,5 +50,12 @@ export const useRecommendedProviders = (filters) => {
     queryKey: ["recommended-providers", filters],
     queryFn: () => getRecommendedProviders(filters),
     enabled: !filters.lat || !filters.lng || !filters.radius,
+  });
+};
+export const useNearbyProviders = (filters) => {
+  return useQuery({
+    queryKey: ["nearby-providers", filters],
+    queryFn: () => getNearbyProviders(filters),
+    enabled: !!filters.lat && !!filters.lng && !!filters.radius,
   });
 };
