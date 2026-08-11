@@ -45,10 +45,10 @@ export const usePayment = () => {
   };
 };
 
-export const useUserPaymentHistory = () => {
+export const useUserPaymentHistory = (filters) => {
   return useQuery({
-    queryKey: ["user-payment-history"],
-    queryFn: userPaymentHistory,
+    queryKey: ["user-payment-history",filters],
+    queryFn:  ()=>userPaymentHistory(filters),
     onError: (err) => {
       console.error("User payment history Error", err);
     },
@@ -57,7 +57,7 @@ export const useUserPaymentHistory = () => {
 export const useAdminPayments = () => {
   return useQuery({
     queryKey: ["admin-payment"],
-    queryFn: getAdminPayment,
+    queryFn:getAdminPayment,
     onError: (err) => {
       console.error("Get admin payment error:", err);
     },

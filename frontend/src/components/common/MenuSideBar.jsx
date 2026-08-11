@@ -18,14 +18,14 @@ const MenuSideBar = ({ role, onItemClick }) => {
 
   return (
     <div className="w-full   min-h-screen bg-bg  relative">
-      <div className="md:hidden flex justify-between items-center bg-gray-200 py-3 px-2">
+      <div className="md:hidden flex justify-between items-center bg-[#DBEAFE] py-3 px-5">
         
          <button
           type="button"
           onClick={onItemClick}
           className="text-brownness  hover:bg-gray-100"
         >
-          <IoClose size={26} />
+          <IoClose size={28} />
         </button>
         <span className="text-lg text-brownness font-bold">Menu</span>
       </div>

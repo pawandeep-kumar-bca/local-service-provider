@@ -130,10 +130,12 @@ console.log(formData.date)
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-4 rounded-lg">
       <div className="flex items-center  justify-between mb-3 md:w-[90%] mx-auto">
         <h1 className="text-2xl font-semibold">Booking Details</h1>
-        <Button color="white" type="button" onClick={() => navigate(-1)}>
+       <div className="hidden md:block">
+         <Button color="white" type="button" onClick={() => navigate(-1)}>
           <MdOutlineKeyboardArrowLeft size={24} />
           Back
         </Button>
+       </div>
       </div>
 
       <div className="md:w-[80%] mx-auto mt-6 ">

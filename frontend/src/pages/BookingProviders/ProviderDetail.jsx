@@ -28,7 +28,7 @@ const ProviderDetail = () => {
   const provider = data?.providerExists || [];
 
   const {
-    verificationStatus,
+    verifiedByAdmin,
     totalReview,
     availability,
     categories = [],
@@ -48,14 +48,14 @@ const ProviderDetail = () => {
   if (error) return <h1>Something went wrong.</h1>;
 
   return (
-    <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-3 md:rounded">
-      <div className="flex justify-end items-center mb-4">
+    <div className="md:shadow-[inset_0_0_1px_rgba(0,0,0,0.30)] md:p-3 md:rounded">
+      <div className="hidden md:flex justify-end items-center mb-4">
         <Button color="white" type="button" onClick={() => navigate(-1)}>
           <MdOutlineKeyboardArrowLeft size={24} />
           Back
         </Button>
       </div>
-      <div className="flex w-full justify-between flex-col md:flex-row  md:items-center border border-muted rounded-md p-3 mt-4">
+      <div className="flex w-full justify-between flex-col md:flex-row  md:items-center border border-gray-200 shadow-[inset_0_0_1px_rgba(0,0,0,0.30)] rounded-md p-3 mt-4">
         <div className="w-full">
           <div className="flex gap-3 items-center">
             <div className="w-[5rem] h-[5rem] rounded-full shrink-0">
@@ -72,13 +72,13 @@ const ProviderDetail = () => {
 
               <div className="flex items-center gap-2 text-yellow-500">
                 <div className="flex gap-1">
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      className={`${star <= provider?.rating ? "text-orange-500" : "text-gray-300"}`}
+                    />
+                  ))}
                 </div>
-                <h2 className="text-muted text-sm">{totalReview} Reviews</h2>
+                <h2 className="text-muted text-sm">({totalReview} Reviews)</h2>
               </div>
               <div className="flex items-center gap-2">
                 <IoShieldCheckmarkOutline className="text-success " />
@@ -86,55 +86,49 @@ const ProviderDetail = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-start mt-3 gap-10  md:ml-8">
-            <div className="flex items-center gap-2 ">
-              <IoBagCheckOutline
-                className="p-1 rounded-full text-blue-500 bg-blue-200"
-                size={32}
-              />
+          <div className="flex md:items-center md:flex-row flex-col justify-start mt-3 gap-4  md:ml-8">
+            <div className="flex items-center justify-start  gap-10 ">
+              <div className="flex items-center gap-2 ">
+                <div className="w-10 h-10  flex justify-center items-center rounded-full text-blue-500 bg-blue-200">
+                  <IoBagCheckOutline size={22} />
+                </div>
 
-              <div>
-                <h1 className="text-sm font-medium">
-                  {provider?.experience} Years
-                </h1>
-                <p className="text-sm text-muted">Experience</p>
+                <div>
+                  <h1 className="text-sm font-medium">
+                    {provider?.experience} Years
+                  </h1>
+                  <p className="text-sm text-muted">Experience</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 justify-end">
+                <div className="w-10 h-10  flex justify-center items-center rounded-full text-green-500 bg-green-200">
+                  <MdOutlineVerifiedUser size={22} />
+                </div>
+                <div>
+                  <h1 className="text-sm font-medium">
+                    {verifiedByAdmin ? "Verified" : "Not Verified"}
+                  </h1>
+                  <p className="text-sm text-muted">Professional</p>
+                </div>
               </div>
             </div>
-
             <div className="flex items-center gap-2 justify-center">
-              <CiLocationOn
-                className="p-1 rounded-full text-yellow-800 bg-yellow-100"
-                size={32}
-              />
-
+              <div className="w-10 h-10  flex justify-center items-center rounded-full shrink-0 text-gray-500 bg-gray-100">
+                <CiLocationOn size={24} />
+              </div>
               <div>
                 <h1 className="text-sm font-medium">
-                  {provider.location?.village}, {provider.location?.city?.name},{" "}
-                  {provider.location?.district?.name},{" "}
+                  {provider.location?.locality}, {provider.location?.city?.name}
+                  , {provider.location?.district?.name},{" "}
                   {provider.location?.state?.name}
                 </h1>
-                <p className="text-sm text-muted">Location</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 justify-end">
-              <MdOutlineVerifiedUser
-                className="p-1 rounded-full text-green-500 bg-green-100"
-                size={32}
-              />
-
-              <div>
-                <h1 className="text-sm font-medium">
-                  {verificationStatus === "verified"
-                    ? "Verified"
-                    : "Not Verified"}
-                </h1>
-                <p className="text-sm text-muted">Professional</p>
+                <p className="text-sm hidden md:flex text-muted">Location</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="shadow-[inset_0_0_3px_rgba(0,0,0,0.3)] py-4 md:px-4 px-2 rounded flex md:flex-col justify-end items-center md:gap-0 gap-6 mt-4">
+        <div className="shadow-[inset_0_0_1px_rgba(0,0,0,0.30)] py-4 md:px-4 px-2 rounded-xl flex md:flex-col justify-end items-center md:gap-0 gap-6 mt-4">
           <h3 className="flex items-center text-xl font-bold mb-3 md:mx-15 ">
             <MdOutlineCurrencyRupee /> {price}
             /hr
@@ -239,7 +233,7 @@ const ProviderDetail = () => {
               </h4>
 
               <div>
-              <RatingStars rating={summary?.averageRating.toFixed(1)}/>
+                <RatingStars rating={summary?.averageRating.toFixed(1)} />
 
                 <p className="text-sm text-muted mt-1">
                   Based on {summary?.totalReviews} reviews

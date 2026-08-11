@@ -31,7 +31,7 @@ const MainLayout = () => {
         </div>
 
         {/* Content */}
-        <div className="pt-20">
+        <div className="pt-12 md:pt-18">
           <Outlet />
         </div>
       </div>

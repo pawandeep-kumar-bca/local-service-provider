@@ -64,7 +64,8 @@ const ProviderFilterModal = ({
       >
         {/* HEADER */}
 
-        <div className="sticky top-0 w-full  flex justify-between bg-gray-50 px-4 py-3 rounded-t-xl z-[999]">
+        <div className="sticky border-b
+          border-gray-200 top-0 w-full  flex justify-between bg-gray-50 px-4 py-3 rounded-t-xl z-[999]">
           <h1 className="text-lg font-bold text-brownness">Filters</h1>
 
           <button
@@ -88,7 +89,7 @@ const ProviderFilterModal = ({
 
         {/* FILTERS */}
 
-        <div className=" px-4 pb-7 w-full">
+        <div className=" px-4 pb-7 w-full mt-3">
           <div className="space-y-5">
             {/* CATEGORY */}
 
@@ -169,7 +170,8 @@ const ProviderFilterModal = ({
 
           {/* ACTION BUTTONS */}
 
-          <div className="flex gap-3 mt-6">
+          <div className="flex gap-3 mt-3 py-4  border-t
+          border-gray-200">
             <Button type="button" color="white" fullWidth onClick={isClose}>
               <IoClose size={20} className="text-brownness" />
 

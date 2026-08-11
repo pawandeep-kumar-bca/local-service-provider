@@ -28,7 +28,7 @@ const BookingProvider = ({ booking }) => {
     reason: "",
     notes: "",
   });
-  console.log(formData);
+ 
 
   const { cancelBookingByUserMutation } = useCancelBookingByUser();
   const USER_BOOKING_CANCEL_REASONS = [

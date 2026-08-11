@@ -77,7 +77,7 @@ import CategoryProviders from "../pages/admin/categories/CategoryProviders";
 import PaymentTransitionDetails from "../pages/admin/payments/PaymentTransitionDetails";
 import ReportDetails from "../pages/admin/reports/ReportDetails";
 
-import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage'
+import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import ProviderList from "../pages/user/ProviderList";
 import SelectProvidersList from "../pages/user/SelectProvidersList";
 const AppRoutes = () => {
@@ -85,7 +85,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/login" element={<AuthLayout />} />
       <Route path="/register" element={<AuthLayout />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
@@ -98,7 +98,7 @@ const AppRoutes = () => {
               <Route index element={<ProviderList />} />
               <Route path=":category" element={<ProviderList />} />
               <Route path="all-providers" element={<ViewAllProviders />}>
-               <Route index element={<ProviderList />} />
+                <Route index element={<ProviderList />} />
                 <Route path=":category" element={<ProviderList />} />
               </Route>
             </Route>
@@ -110,12 +110,16 @@ const AppRoutes = () => {
               path="/user/category/:categoryId/select-provider"
               element={<SelectProvidersList />}
             />
-            {/* <Route path="/user/saved-providers" element={<SavedProviders />} /> */}
-            <Route path="/user/payment-history" element={<PaymentHistoryList />}>
-              {/* <Route index element={<PaymentList />} />
-              <Route path=":status" element={<PaymentList />} /> */}
-              <Route path="payment-info/:id" element={<PaymentInfo />} />
-            </Route>
+
+            <Route
+              path="/user/payment-history"
+              element={<PaymentHistoryList />}
+            />
+
+            <Route
+              path="/user/payment-history/payment-info/:id"
+              element={<PaymentInfo />}
+            />
             <Route path="/user/reviews" element={<ReviewList />} />
             <Route path="/user/support" element={<Support />} />
             <Route path="/user/profile-settings" element={<ProfileSettings />}>
@@ -132,7 +136,10 @@ const AppRoutes = () => {
               <Route index element={<CategoryList />} />
               <Route path=":category" element={<CategoryList />} />
             </Route>
-            <Route path="/user/provider-details/:providerId" element={<ProviderDetail />} />
+            <Route
+              path="/user/provider-details/:providerId"
+              element={<ProviderDetail />}
+            />
 
             <Route
               path="/user/provider-details/:providerId/booking-details"
@@ -216,32 +223,77 @@ const AppRoutes = () => {
               <Route path="payment-history" element={<PaymentUserHistory />} />
               <Route path="active-logs" element={<ActiveLogs />} />
             </Route>
-             <Route path="/admin/users/booking-history" element={<BookingHistory />} />
-              <Route path="/admin/users/payment-history" element={<PaymentUserHistory />} />
-              <Route path="/admin/users/active-logs" element={<ActiveLogs />} />
-           <Route path="/admin/users/edit-user" element={<EditUser/>}/>
+            <Route
+              path="/admin/users/booking-history"
+              element={<BookingHistory />}
+            />
+            <Route
+              path="/admin/users/payment-history"
+              element={<PaymentUserHistory />}
+            />
+            <Route path="/admin/users/active-logs" element={<ActiveLogs />} />
+            <Route path="/admin/users/edit-user" element={<EditUser />} />
             <Route path="/admin/providers" element={<AllProvidersList />} />
-            <Route path="/admin/providers/view-provider-profile" element={<ViewProviderProfile/>}>
-            <Route index element={<OverviewProvider/>}/>
-            <Route path="documents" element={<Documents/>}/>
-            <Route path="bank-details" element={<BankDetailsProvider/>}/>
-            <Route path="service-&-pricing" element={<ServiceAndPricingProvider/>}/>
+            <Route
+              path="/admin/providers/view-provider-profile"
+              element={<ViewProviderProfile />}
+            >
+              <Route index element={<OverviewProvider />} />
+              <Route path="documents" element={<Documents />} />
+              <Route path="bank-details" element={<BankDetailsProvider />} />
+              <Route
+                path="service-&-pricing"
+                element={<ServiceAndPricingProvider />}
+              />
             </Route>
-            <Route path="/admin/providers/edit-provider-profile" element={<EditProviderProfile/>}/>
-            <Route path="/admin/providers/job-completed" element={<JobHistoryProvider/>}/>
-            <Route path="/admin/providers/earings-&-payouts" element={<EarningsAndPayout/>}/>
+            <Route
+              path="/admin/providers/edit-provider-profile"
+              element={<EditProviderProfile />}
+            />
+            <Route
+              path="/admin/providers/job-completed"
+              element={<JobHistoryProvider />}
+            />
+            <Route
+              path="/admin/providers/earings-&-payouts"
+              element={<EarningsAndPayout />}
+            />
             <Route path="/admin/bookings" element={<AllBookingsList />} />
-            <Route path="/admin/bookings/booking-details" element={<BookingDetails/>}/>
+            <Route
+              path="/admin/bookings/booking-details"
+              element={<BookingDetails />}
+            />
             <Route path="/admin/categories" element={<AllCategoriesList />} />
-            <Route path="/admin/categories/category-details" element={<CategoryDetails />} />
-            <Route path="/admin/categories/edit-category" element={<EditCategory />} />
-            <Route path="/admin/categories/add-category" element={<AddCategory />} />
-            <Route path="/admin/categories/category-services" element={<CategoryServices/>} />
-            <Route path="/admin/categories/category-providers" element={<CategoryProviders/>} />
+            <Route
+              path="/admin/categories/category-details"
+              element={<CategoryDetails />}
+            />
+            <Route
+              path="/admin/categories/edit-category"
+              element={<EditCategory />}
+            />
+            <Route
+              path="/admin/categories/add-category"
+              element={<AddCategory />}
+            />
+            <Route
+              path="/admin/categories/category-services"
+              element={<CategoryServices />}
+            />
+            <Route
+              path="/admin/categories/category-providers"
+              element={<CategoryProviders />}
+            />
             <Route path="/admin/payments" element={<AllPayments />} />
-            <Route path="/admin/payments/payment-details" element={<PaymentTransitionDetails />} />
+            <Route
+              path="/admin/payments/payment-details"
+              element={<PaymentTransitionDetails />}
+            />
             <Route path="/admin/reports" element={<AllReports />} />
-            <Route path="/admin/reports/report-details" element={<ReportDetails />} />
+            <Route
+              path="/admin/reports/report-details"
+              element={<ReportDetails />}
+            />
           </Route>
         </Route>
       </Route>

@@ -33,6 +33,7 @@ const ProviderSortModel = ({ filters, setFilters, isClose ,showDistance}) => {
           top-18
           w-full
           max-w-xs
+          h-full
           max-h-[calc(100vh-5rem)]
           overflow-y-auto
           scrollbar-hide
@@ -169,16 +170,15 @@ const ProviderSortModel = ({ filters, setFilters, isClose ,showDistance}) => {
         {/* Footer */}
         <div
           className="
-          sticky
-          bottom-0
+          
           flex
           gap-3
-          mt-2
           px-4
           py-4
           bg-gray-50
           border-t
           border-gray-200
+          
         "
         >
           <Button type="button" color="white" fullWidth onClick={isClose}>

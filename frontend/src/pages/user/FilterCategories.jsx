@@ -68,7 +68,7 @@ const FilterCategories = ({url,setFilters}) => {
     if (isLoading) return null;
   
     return (
-      <div className="md:mb-5 sticky top-20 bg-white z-40 pb-5 md:pb-1 pt-3 md:pt-1 md:px-2 relative">
+      <div className="md:mb-5 sticky top-18  bg-white z-40 p-2 md:pb-1  md:pt-1 md:px-2 relative">
         {showLeft && (
           <button
             onClick={scrollLeft}

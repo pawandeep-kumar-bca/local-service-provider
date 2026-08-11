@@ -11,82 +11,89 @@ import { payments } from "../../utils/payments";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 const PaymentInfo = () => {
-
-    const navigate = useNavigate()
-    const backHandler= ()=>{
-        if(window.history.length>1){
-            navigate(-1)
-        }else{
-            navigate('/payment-history')
-        }
+  const navigate = useNavigate();
+  const backHandler = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/payment-history");
     }
-    const {id} =useParams()
+  };
+  const { id } = useParams();
 
-    const payment = payments.find((item) => item.id === Number(id));
-    if(!payment){
-      return <div className="mt-5 ml-5">
-        <Button color="primary" onClick={()=>navigate("/user/payment-history")}><IoChevronBackSharp className='text-xl' />Back</Button>
+  const payment = payments.find((item) => item.id === Number(id));
+  if (!payment) {
+    return (
+      <div className="mt-5 ml-5">
+        <Button
+          color="primary"
+          onClick={() => navigate("/user/payment-history")}
+        >
+          <IoChevronBackSharp className="text-xl" />
+          Back
+        </Button>
         <div className="flex item-center justify-center w-full p-10">
-        <p className="text-lg font-semibold text-text">Payment Not Found</p>
+          <p className="text-lg font-semibold text-text">Payment Not Found</p>
+        </div>
       </div>
-      </div>
-    }
-   const {
-  name,
-  phone,
-  email,
-  service,
-  date,
-  time,
-  transactionId,
-  status,
-  amount,
-  paymentMethod,
-  adminCommission,
-  providerEarning
-} = payment;
+    );
+  }
+  const {
+    name,
+    phone,
+    email,
+    service,
+    date,
+    time,
+    transactionId,
+    status,
+    amount,
+    paymentMethod,
+    adminCommission,
+    providerEarning,
+  } = payment;
 
+  const downloadInvoice = async () => {
+    const input = document.getElementById("invoice");
 
-const downloadInvoice = async () => {
+    const canvas = await html2canvas(input, {
+      backgroundColor: "#ffffff",
+    });
 
-  const input = document.getElementById("invoice");
+    const imgData = canvas.toDataURL("image/png");
 
- const canvas = await html2canvas(input, {
-  backgroundColor: "#ffffff",
-});
+    const pdf = new jsPDF("p", "mm", "a4");
 
-  const imgData = canvas.toDataURL("image/png");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
 
-  const pdf = new jsPDF("p", "mm", "a4");
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-  const pdfWidth = pdf.internal.pageSize.getWidth();
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
 
-  const pdfHeight =
-    (canvas.height * pdfWidth) / canvas.width;
-
-  pdf.addImage(
-    imgData,
-    "PNG",
-    0,
-    0,
-    pdfWidth,
-    pdfHeight
-  );
-
-  pdf.save("invoice.pdf");
-};
+    pdf.save("invoice.pdf");
+  };
   return (
     <div className="w-full md:flex md:justify-center md:mt-6 md:items-center">
       <div className="md:w-[60%]">
         <div className="flex items-center gap-7 md:bg-bg bg-primary py-6 px-3 md:justify-center md:hidden rounded-b">
-          <FaArrowLeftLong className="text-2xl md:text-text cursor-pointer  text-bg" onClick={backHandler}/>
+          <FaArrowLeftLong
+            className="text-2xl md:text-text cursor-pointer  text-bg"
+            onClick={backHandler}
+          />
           <h1 className="text-2xl text-bg font-semibold md:text-text">
             Transaction Details
           </h1>
         </div>
         <div className="p-2">
-          <div id="invoice" className="shadow-[0_0_30px_rgba(0,0,0,0.30)] p-3 md:px-3 rounded-lg md:bg-bg md:relative md:py-9 relative">
-            <MdClose size={30} onClick={backHandler} className="absolute hidden md:flex right-4 top-4 cursor-pointer"/>
+          <div
+            id="invoice"
+            className="shadow-[0_0_30px_rgba(0,0,0,0.30)] p-3 md:px-3 rounded-lg md:bg-bg md:relative md:py-9 relative"
+          >
+            <MdClose
+              size={30}
+              onClick={backHandler}
+              className="absolute hidden md:flex right-4 top-4 cursor-pointer"
+            />
             <h1 className="text-2xl text-bg font-semibold md:text-text hidden md:block text-center">
               Transaction Details
             </h1>
@@ -117,7 +124,9 @@ const downloadInvoice = async () => {
                     <h3>{email}</h3>
                   </div>
                 </div>
-                <StatusBadge badge={status} className="font-normal">{status}</StatusBadge>
+                <StatusBadge badge={status} className="font-normal">
+                  {status}
+                </StatusBadge>
               </div>
 
               {/* transaction Info */}
@@ -145,7 +154,9 @@ const downloadInvoice = async () => {
                     </div>
                     <div className="flex justify-between items-center  font-semibold">
                       <h2>Payment Status</h2>
-                      <StatusBadge badge={status} className="font-normal">{status}</StatusBadge>
+                      <StatusBadge badge={status} className="font-normal">
+                        {status}
+                      </StatusBadge>
                     </div>
                   </div>
                 </div>

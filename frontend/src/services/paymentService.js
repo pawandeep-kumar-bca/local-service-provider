@@ -15,8 +15,10 @@ export const paymentMarkFailed = async (payload) => {
   return response.data;
 };
 
-export const userPaymentHistory = async ()=>{
-  const response = await api.get('/payments/user/payment-history')
+export const userPaymentHistory = async (filters)=>{
+  const response = await api.get('/payments/user/payment-history',{
+    params:filters
+  })
   return response.data
 }
 
