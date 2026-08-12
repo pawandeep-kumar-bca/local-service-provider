@@ -3,6 +3,7 @@ const userModel = require("../models/User.model");
 const stateModel = require("../models/State.model");
 const districtModel = require("../models/district.model");
 const cityModel = require("../models/city.model");
+const { uploadFile, deleteFile } = require("../config/imagekit");
 
 async function getUserProfile(req, res) {
   try {
@@ -29,36 +30,63 @@ async function getUserProfile(req, res) {
 
 async function updateUserProfile(req, res) {
   try {
-    const { fullname } = req.body;
-    if (!fullname) {
-      return res.status(400).json({ message: "fullname field is required" });
-    }
-    const userExists = await userModel
+    const { fullname, phoneNumber } = req.body;
+
+    const user = await userModel
       .findById(req.user.id)
-      .select("-password");
+      .select("fullname phoneNumber profileImage email");
 
-    if (!userExists) {
-      return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
-    userExists.fullname = fullname;
-    await userExists.save();
+    // Update profile image
+    if (req?.files?.profileImage?.[0]) {
+      if (user?.profileImage?.fieldId) {
+        await deleteFile(user.profileImage.fieldId);
+      }
+
+      const profileImage = await uploadFile(
+        req.files.profileImage[0],
+        `${user.fullname}-${Date.now()}-ProfileImage`,
+        "Users/ProfileImages",
+      );
+
+      user.profileImage = {
+        url: profileImage.url,
+        fieldId: profileImage.fileId,
+      };
+    }
+
+    // Update fullname
+    if (fullname) {
+      user.fullname = fullname;
+    }
+
+    // Update phone number
+    if (phoneNumber) {
+      user.phoneNumber = phoneNumber;
+    }
+
+    await user.save();
+
     return res.status(200).json({
-      message: "User profile fetched",
-      userExists: {
-        id: userExists._id,
-        fullname: userExists.fullname,
-        email: userExists.email,
-        role: userExists.role,
-      },
+      success: true,
+      message: "User profile updated successfully.",
+      user,
     });
   } catch (err) {
     console.error("User update profile error:", err);
 
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 }
-
 async function changePassword(req, res) {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
@@ -79,7 +107,7 @@ async function changePassword(req, res) {
       });
     }
 
-    const isMatch = await user.comparePassword(oldPassword);
+    const isMatch = await user.comparePassword(currentPassword);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -104,6 +132,8 @@ async function changePassword(req, res) {
     }
 
     user.password = newPassword;
+    user.refreshToken = null;
+
     await user.save();
 
     return res.status(200).json({

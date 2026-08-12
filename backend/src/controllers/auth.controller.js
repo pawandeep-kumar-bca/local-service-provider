@@ -230,7 +230,7 @@ async function logoutUser(req, res) {
       decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     } catch (err) {
       res.clearCookie("refreshToken");
-      return res.status(200).json({ message: "Logged out" });
+      return res.status(200).json({ message: "Logged out Successfully" });
     }
 
     const user = await userModel.findById(decoded.id);
