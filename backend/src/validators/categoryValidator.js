@@ -1,15 +1,6 @@
-const { body, validationResult } = require("express-validator");
-async function ResponseWithCategoryValidator(req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      errors: errors.array(),
-    });
-    
-  }
-  next();
-}
+const { body} = require("express-validator");
+const respondWithValidationErrors = require("../middlewares/validation.middleware");
+
 const categoryValidator = [
   body("name").trim().notEmpty().withMessage("Category name is required"),
   body("description").optional().trim(),
@@ -23,7 +14,7 @@ const categoryValidator = [
     .optional()
     .isIn(["active", "inactive"])
     .withMessage("Invalid status"),
-  ResponseWithCategoryValidator,
+  respondWithValidationErrors,
 ];
 
 module.exports = { categoryValidator };

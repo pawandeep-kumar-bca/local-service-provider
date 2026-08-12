@@ -1,16 +1,5 @@
-const { body, validationResult } = require("express-validator");
-
-function ResponseWithBookingValidation(req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      errors: errors.array(),
-    });
-  }
-  next();
-}
-
+const { body } = require("express-validator");
+const respondWithValidationErrors = require("../middlewares/validation.middleware");
 
 const BookingValidation = [
   body("providerId").notEmpty().withMessage("providerId is required"),
@@ -28,10 +17,10 @@ const BookingValidation = [
     .withMessage("Start time is required"),
 
   body("bookingSlot.endTime").notEmpty().withMessage("End time is required"),
- body("notes")
-  .optional({ checkFalsy: true })
-  .isLength({ min: 10, max: 100 })
-  .withMessage("Notes must be between 10 and 100 characters."),
+  body("notes")
+    .optional({ checkFalsy: true })
+    .isLength({ min: 10, max: 100 })
+    .withMessage("Notes must be between 10 and 100 characters."),
 
   body("lat")
     .notEmpty()
@@ -57,7 +46,7 @@ const BookingValidation = [
 
   body("landmark").optional().trim(),
 
-  ResponseWithBookingValidation,
+  respondWithValidationErrors,
 ];
 
-module.exports = {BookingValidation};
+module.exports = { BookingValidation };
