@@ -257,7 +257,7 @@ async function me(req, res) {
   try {
     const userId = req.user.id;
 
-    const user = await userModel.findById(userId).select("-password -refreshToken");
+    const user = await userModel.findById(userId).select("fullname profileImage.url email role isProvider");
 
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
