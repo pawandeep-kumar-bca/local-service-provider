@@ -1,6 +1,13 @@
 import { AiFillHome } from "react-icons/ai";
 import { BiCategory } from "react-icons/bi";
-import { FaBookmark, FaCalendarCheck, FaRegStar, FaUser, FaUserFriends, FaUsers } from "react-icons/fa";
+import {
+  FaBookmark,
+  FaCalendarCheck,
+  FaRegStar,
+  FaUser,
+  FaUserFriends,
+  FaUsers,
+} from "react-icons/fa";
 import { FaChartSimple, FaListCheck } from "react-icons/fa6";
 import { GrServices } from "react-icons/gr";
 import { IoDocumentSharp } from "react-icons/io5";
@@ -56,11 +63,6 @@ export const userMenu = [
     name: "Reviews",
     icon: <MdReviews />,
     path: "/user/reviews",
-  },
-  {
-    name: "Support",
-    icon: <TbHelpCircleFilled />,
-    path: "/user/support",
   },
   {
     name: "Profile Settings",
@@ -141,5 +143,4 @@ export const adminMenu = [
     icon: <MdReport />,
     path: "/admin/reports",
   },
-  
 ];

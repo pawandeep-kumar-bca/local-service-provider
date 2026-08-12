@@ -30,12 +30,9 @@ const MenuSideBar = ({ role, onItemClick }) => {
         <span className="text-lg text-brownness font-bold">Menu</span>
       </div>
       <div className="flex flex-col pt-3  px-4 gap-2">
-      <div className="hidden md:flex gap-2 items-center mb-5">
+      <div className="hidden md:flex gap-2 justify-center items-center mb-5">
         <img src="/assets/logo.png" alt="logo" className="w-[3rem]" />
-       <div>
-         <h1 className="text-lg font-bold text-brownness font-sans">Local Service</h1>
-        <h1 className="text-lg font-bold text-brownness font-sans">Provider</h1>
-       </div>
+      
       </div>
 
       {menu.map((item, idx) => (

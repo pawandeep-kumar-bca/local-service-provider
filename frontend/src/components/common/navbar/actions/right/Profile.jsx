@@ -3,8 +3,7 @@ import Avatar from "../../../Avatar";
 import { useSelector } from "react-redux";
 
 const Profile = ({ className = "" }) => {
-  const user =useSelector((state)=>state.auth.user)
-  console.log(user);
+  const user =useSelector((state)=>state.auth.user) 
   
   return (
     <div className={`w-12 h-12 shrink-0 ${className}`}>

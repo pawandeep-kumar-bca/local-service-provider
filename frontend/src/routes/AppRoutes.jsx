@@ -8,7 +8,6 @@ import MyBookingsPage from "../pages/user/MyBookingsPage";
 // import SavedProviders from "../pages/user/SavedProvi;ders"
 import PaymentHistoryList from "../pages/user/PaymentHistoryList";
 import ReviewList from "../pages/user/ReviewList";
-import Support from "../pages/user/Support";
 import ProfileSettings from "../pages/user/ProfileSettings";
 
 // Provider
@@ -122,7 +121,6 @@ const AppRoutes = () => {
               element={<PaymentInfo />}
             />
             <Route path="/user/reviews" element={<ReviewList />} />
-            <Route path="/user/support" element={<Support />} />
             <Route path="/user/profile-settings" element={<ProfileSettings />}>
               {/* ✅ DEFAULT PAGE */}
               <Route index element={<UserSetting />} />
