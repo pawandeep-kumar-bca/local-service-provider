@@ -61,9 +61,9 @@ async function updateUserProfile(req, res) {
 
 async function changePassword(req, res) {
   try {
-    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
 
-    if (!oldPassword || !newPassword || !confirmPassword) {
+    if (!currentPassword || !newPassword || !confirmPassword) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -95,11 +95,11 @@ async function changePassword(req, res) {
       });
     }
 
-    if (oldPassword === newPassword || newPassword.length < 6) {
+    if (currentPassword === newPassword || newPassword.length < 8) {
       return res.status(400).json({
         success: false,
         message:
-          "New password must be different and at least 6 characters long",
+          "New password must be different and at least 8 characters long",
       });
     }
 
