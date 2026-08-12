@@ -1,11 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-
 const RoleRoute = ({ allowedRoles }) => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, token, isAuthChecked } = useSelector((state) => state.auth);
 
-  if (!user) {
+  if (!isAuthChecked) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (!token || !user) {
     return <Navigate to="/login" replace />;
   }
 
@@ -16,19 +18,21 @@ const RoleRoute = ({ allowedRoles }) => {
     if (allowedRole === "provider") {
       return isApprovedProvider;
     }
+
     return user.role === allowedRole;
   });
 
   if (!hasAccess) {
-   
     if (allowedRoles.includes("provider") && user.isProvider) {
       if (user.providerStatus === "pending") {
         return <Navigate to="/provider/application-pending" replace />;
       }
+
       if (user.providerStatus === "rejected") {
         return <Navigate to="/provider/application-rejected" replace />;
       }
     }
+
     return <Navigate to="/login" replace />;
   }
 

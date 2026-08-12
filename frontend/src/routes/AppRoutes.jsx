@@ -80,6 +80,7 @@ import ReportDetails from "../pages/admin/reports/ReportDetails";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import ProviderList from "../pages/user/ProviderList";
 import SelectProvidersList from "../pages/user/SelectProvidersList";
+
 const AppRoutes = () => {
   return (
     <Routes>

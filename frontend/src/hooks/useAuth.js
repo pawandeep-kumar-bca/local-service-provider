@@ -29,19 +29,20 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      // clean data store karo (sirf required fields)
       const authData = {
         accessToken: data.accessToken,
         user: data.user,
       };
 
-      // ✅ Redux update
       dispatch(setCredentials(authData));
 
-      // ✅ LocalStorage persist
-      localStorage.setItem("auth", JSON.stringify(authData));
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          accessToken: data.accessToken,
+        }),
+      );
 
-      // ✅ redirect
       if (data.user.role === "admin") {
         navigate("/admin/dashboard");
       } else if (
@@ -53,12 +54,12 @@ export const useAuth = () => {
         data.user.isProvider &&
         data.user.providerStatus === "pending"
       ) {
-        navigate("/provider/application-pending"); // "under review" wala page
+        navigate("/provider/application-pending");
       } else if (
         data.user.isProvider &&
         data.user.providerStatus === "rejected"
       ) {
-        navigate("/provider/application-rejected"); // reason/reapply wala page
+        navigate("/provider/application-rejected");
       } else {
         navigate("/user/dashboard");
       }
@@ -74,6 +75,7 @@ export const useMe = () => {
   return useQuery({
     queryKey: ["me"],
     queryFn: getMe,
+    retry: false,
   });
 };
 export const useAddressToReverseGeocode = () => {

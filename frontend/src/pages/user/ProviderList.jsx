@@ -4,6 +4,7 @@ import ProviderCard from "./ProviderCard";
 import { Link, useOutletContext } from "react-router-dom";
 import ProviderSortBar from "./filterComponents/ProviderSortBar";
 const ProviderList = () => {
+  console.log("PROVIDER LIST RENDER");
   const { filters, setFilters } = useOutletContext();
   const hasLocation = filters.lat !== "" && filters.lng !== "" && filters.radius !=='';
 

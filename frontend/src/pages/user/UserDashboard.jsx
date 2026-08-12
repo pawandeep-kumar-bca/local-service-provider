@@ -6,7 +6,6 @@ import {
 } from "react-icons/fa";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import Cards from "../../components/common/Cards";
-
 import { useState } from "react";
 import Button from "../../components/common/Button";
 import { MdVerifiedUser } from "react-icons/md";
@@ -16,6 +15,8 @@ import { LuLock } from "react-icons/lu";
 import { FaHandshakeAngle, FaUserGroup } from "react-icons/fa6";
 import PopularCategoriesSection from "./PopularCategoriesSection";
 const UserDashboard = () => {
+  console.log("USER DASHBOARD RENDER");
+
   const navigate = useNavigate();
   const savedLocation = JSON.parse(localStorage.getItem("location") || "null");
   const [filters, setFilters] = useState({
@@ -32,7 +33,7 @@ const UserDashboard = () => {
     lng: savedLocation?.longitude || "",
     radius: 200,
   });
-  console.log(filters.lat, filters.lng);
+
 
   return (
     <>
