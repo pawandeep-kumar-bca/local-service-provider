@@ -1,14 +1,29 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createReviews, getAllUserReviews, getProviderReviews } from "../services/reviewService";
+import { createReviews, editReview, getAllUserReviews, getProviderReviews } from "../services/reviewService";
+import { toast } from "react-toastify";
 
 export const useReview = () => {
   const createReviewMutation = useMutation({
     mutationFn: createReviews,
+    onSuccess:(data)=>{
+      toast.success(data?.message)
+    },
     onError: (err) => {
       console.error("create review error:", err);
+      toast.error(err?.response?.data?.message)
     },
   });
-  return { createReviewMutation };
+  const updateReviewMutation = useMutation({
+    mutationFn:editReview,
+    onSuccess:(data)=>{
+      toast.success(data?.message)
+    },
+    onError:(err)=>{
+      console.error('update review error:',err)
+      toast.error(err?.response?.data?.message)
+    }
+  })
+  return { createReviewMutation,updateReviewMutation };
 };
 
 export const useGetAllUserReviews = () => {
