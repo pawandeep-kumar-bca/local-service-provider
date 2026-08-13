@@ -6,7 +6,7 @@ export const changePassword =async (payload)=>{
     return response.data
 }
 
-export const updateProfile = async (payload)=>{
-    const response = await api.patch('/users/update-profile',payload)
+export const updateProfile = async (form)=>{
+    const response = await api.patch('/users/update-profile',form)
     return response.data
 }

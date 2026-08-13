@@ -5,6 +5,8 @@ import StatusBadge from "../../components/common/StatusBadge";
 import { IoIosCheckmark } from "react-icons/io";
 import Button from "../../components/common/Button";
 import Avatar from "../../components/common/Avatar";
+import { useUser } from "../../hooks/useUser";
+import { toast } from "react-toastify";
 // import { useSelector } from "react-redux";
 
 const UserUpdateProfile = ({ user, isClose }) => {
@@ -18,6 +20,43 @@ const UserUpdateProfile = ({ user, isClose }) => {
     phoneNumber: user?.phoneNumber || "",
     profileImage: null,
   });
+  const { updateProfileMutation } = useUser();
+  const handleSubmitProfile = async (e) => {
+    e.preventDefault();
+    const hasChanges =
+      updateProfile.fullname !== user?.fullname ||
+      updateProfile.phoneNumber !== user?.phoneNumber ||
+      updateProfile.profileImage !== null;
+
+    if (!hasChanges) {
+      toast.info("No changes made");
+      return;
+    }
+
+    try {
+      const form = new FormData();
+
+      if (updateProfile.profileImage) {
+        form.append("profileImage", updateProfile.profileImage);
+      }
+
+      if (updateProfile.fullname) {
+        form.append("fullname", updateProfile.fullname);
+      }
+
+      if (updateProfile.phoneNumber) {
+        form.append("phoneNumber", updateProfile.phoneNumber);
+      }
+
+      await updateProfileMutation.mutateAsync(form, {
+        onSuccess: () => {
+          isClose();
+        },
+      });
+    } catch (error) {
+      console.log("Update profile error:", error);
+    }
+  };
   return (
     <div
       className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[999] flex items-center justify-center"
@@ -27,7 +66,7 @@ const UserUpdateProfile = ({ user, isClose }) => {
         onClick={(e) => e.stopPropagation()}
         className="w-full h-full md:max-h-fit max-w-sm bg-white px-4 py-2 rounded-xl py-6"
       >
-        <form >
+        <form onSubmit={handleSubmitProfile}>
           <div className="flex justify-center">
             <label
               htmlFor="profileImage"
@@ -64,42 +103,42 @@ const UserUpdateProfile = ({ user, isClose }) => {
             </label>
           </div>
 
-            <div className="space-y-2 mt-8">
-              <Input
-                label="Full Name"
-                value={updateProfile.fullname}
-                onChange={(e) => {
-                  setUpdateProfile((prev) => ({
-                    ...prev,
-                    fullname: e.target.value,
-                  }));
-                }}
-                type="text"
-                id="name"
-                placeholder="Update your name..."
-              />
-              <Input
-                label="Phone Number"
-                value={updateProfile.phoneNumber}
-                onChange={(e) => {
-                  setUpdateProfile((prev) => ({
-                    ...prev,
-                    phoneNumber: e.target.value,
-                  }));
-                }}
-                type="text"
-                id="phoneNumber"
-                placeholder="Update your Phone number..."
-              />
-              <Input
-                label="Email"
-                type="email"
-                value={user?.email}
-                id="email"
-                disabled
-                className="cursor-not-allowed"
-              />
-            </div>
+          <div className="space-y-2 mt-8">
+            <Input
+              label="Full Name"
+              value={updateProfile.fullname}
+              onChange={(e) => {
+                setUpdateProfile((prev) => ({
+                  ...prev,
+                  fullname: e.target.value,
+                }));
+              }}
+              type="text"
+              id="name"
+              placeholder="Update your name..."
+            />
+            <Input
+              label="Phone Number"
+              value={updateProfile.phoneNumber}
+              onChange={(e) => {
+                setUpdateProfile((prev) => ({
+                  ...prev,
+                  phoneNumber: e.target.value,
+                }));
+              }}
+              type="text"
+              id="phoneNumber"
+              placeholder="Update your Phone number..."
+            />
+            <Input
+              label="Email"
+              type="email"
+              value={user?.email}
+              id="email"
+              disabled
+              className="cursor-not-allowed"
+            />
+          </div>
           <div className="flex justify-center  mb-3 mt-5 gap-4">
             <Button color="blue" fullWidth type="button" onClick={isClose}>
               Cancel

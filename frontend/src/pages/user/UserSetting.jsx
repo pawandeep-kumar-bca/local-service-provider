@@ -8,21 +8,42 @@ const UserSetting = () => {
   const { user } = useSelector((state) => state?.auth);
   const [openEdit, setOpenEdit] = useState(false);
   useEffect(() => {
-  document.body.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
 
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, []);
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
   return (
     <>
       <div className="flex flex-col md:flex-row justify-center items-center gap-10 mt-10">
-        <div className="w-50 h-50 rounded-full shrink-0 object-cover">
+        <div className="w-50 h-50 rounded-full shrink-0 object-cover group relative">
           <Avatar
             name={user?.fullname}
             image={user?.profileImage?.url}
             className="text-blue-500 bg-blue-50 text-3xl"
           />
+          <button
+            type="button"
+            onClick={() => setOpenEdit(true)}
+            className="
+      absolute inset-0
+      rounded-full
+      bg-black/50
+      cursor-pointer
+      text-white
+      flex flex-col
+      items-center
+      justify-center
+      opacity-0
+      group-hover:opacity-100
+      transition-opacity
+      duration-200
+    "
+          >
+            <MdOutlineEdit size={28} />
+            <span className="text-sm mt-1">Edit</span>
+          </button>
         </div>
         <div className="space-y-3">
           <div className="flex items-end gap-2">
