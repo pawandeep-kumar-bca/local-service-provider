@@ -1,15 +1,28 @@
 import { FaStar } from "react-icons/fa";
 import Button from "../../components/common/Button";
 import { IoCameraOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useReview } from "../../hooks/useReview";
+import { IoIosClose } from "react-icons/io";
 
-const ReviewForm = ({ booking, setOpenReview }) => {
-  const [rating, setRating] = useState(0);
+const ReviewForm = ({
+  booking = null,
+  review = null,
+  mode = "create",
+  setOpenReview,
+}) => {
   const [hover, setHover] = useState(0);
-  const [comment, setComment] = useState("");
+
+  const [rating, setRating] = useState(review?.rating || 0);
+  const [comment, setComment] = useState(review?.comment || "");
+
+  const [existingImages, setExistingImages] = useState(review?.images || []);
+
   const [images, setImages] = useState([]);
-  const bookingId = booking._id;
+  let bookingId = null;
+  if (booking) {
+    bookingId = booking._id;
+  }
 
   const { createReviewMutation } = useReview();
   const MAX_IMAGES = 5;
@@ -55,35 +68,63 @@ const ReviewForm = ({ booking, setOpenReview }) => {
 
       return [...prev, ...uniqueFiles];
     });
-    e.target.value = ''
+    e.target.value = "";
   };
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
+
     const form = new FormData();
-    form.append("bookingId", bookingId);
+
     form.append("rating", rating);
     form.append("comment", comment);
-    images.forEach((image) => form.append("ReviewImage", image));
-    createReviewMutation.mutate(form, {
-      onSuccess: () => {
-        setOpenReview(null);
-      },
+
+    if (mode === "create") {
+      form.append("bookingId", bookingId);
+    }
+
+    images.forEach((image) => {
+      form.append("ReviewImage", image);
     });
+
+    if (mode === "edit") {
+      form.append(
+        "existingImages",
+        JSON.stringify(existingImages.map((image) => image.fileId)),
+      );
+
+      // await updateReviewMutation.mutateAsync({
+      //   reviewId: review._id,
+      //   data: form,
+      // });
+    } else {
+      await createReviewMutation.mutateAsync(form);
+    }
+
+    setOpenReview(null);
   };
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
   return (
     <div
-      className="w-full min-h-screen flex items-center justify-center bg-black/40 px-4 inset-0 fixed z-[999]"
+      className="w-full flex items-center justify-center bg-black/40  inset-0 fixed z-[999]"
       onClick={() => setOpenReview(null)}
     >
       {/* Card */}
       <div
         className="bg-bg backdrop-blur-sm
-            border border-muted bg-white hover:scale-95 ease-in-out shadow-[0_5px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)] transition-all duration-300 px-5 py-6 rounded-xl max-w-lg w-full h-auto"
+            border border-muted bg-white hover:scale-95 ease-in-out shadow-[0_5px_15px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_35px_rgba(0,0,0,0.12)] transition-all duration-300 px-5 py-6 rounded-xl w-full max-w-lg h-full md:h-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-2xl font-semibold mb-1">Leave a Review</h1>
+          <h1 className="text-2xl font-semibold mb-1">
+            {mode === "edit" ? "Edit Review" : "Leave a Review"}
+          </h1>
           <p className="text-text">
             Your feedback helps us improve our service quality
           </p>
@@ -138,45 +179,107 @@ const ReviewForm = ({ booking, setOpenReview }) => {
             <p className="text-sm text-gray-500">
               Upload photos of service or work done.
             </p>
-            <div className="grid grid-cols-4 gap-2 mt-3 ">
-              {images.map((image) => (
+            <div className="grid grid-cols-4 gap-2 mt-3">
+              {/* Existing images from backend */}
+              {existingImages.map((image) => (
                 <div
-                  key={image.name}
-                  className="w-20 h-20 md:w-28 md:h-22 rounded-xl overflow-hidden border-2 border-purple-200 flex-shrink-0"
+                  key={image.fileId}
+                  className="relative w-20 h-20 md:w-28 md:h-22 rounded-xl overflow-hidden border-2 border-purple-200"
                 >
                   <img
-                    src={URL.revokeObjectURL(image)}
-                    alt={image.name}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105 cursor-pointer"
+                    src={image.url}
+                    alt="Review"
+                    className="w-full h-full object-cover"
                   />
+
+                  {/* Remove existing image */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExistingImages((prev) =>
+                        prev.filter((item) => item.fileId !== image.fileId),
+                      )
+                    }
+                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/40 cursor-pointer text-white flex items-center justify-center"
+                  >
+                    <IoIosClose size={24} />
+                  </button>
                 </div>
               ))}
 
-              <label className="border-2 border-dashed p-2 inline-block text-center w-fit-content border-purple-400 rounded-lg bg-gray-100 cursor-pointer transition-all duration-200 hover:scale-[1.05]">
-                <input
-                  id="file"
-                  name="file"
-                  type="file"
-                  multiple
-                  accept="image/png,image/jpeg,image/jpg"
-                  className="hidden"
-                  onChange={handlerImageChange}
-                />
-                <IoCameraOutline
-                  size={30}
-                  className="text-purple-500 inline-block"
-                />
-                <p className="text-xs text-gray-500 mb-1">Add more</p>
-                <p className="text-[10px] text-gray-500">JPG,PNG (Max 5MB)</p>
-              </label>
+              {/* Newly selected images */}
+              {images.map((image) => {
+                const previewUrl = URL.createObjectURL(image);
+
+                return (
+                  <div
+                    key={`${image.name}-${image.size}`}
+                    className="relative w-20 h-20 md:w-28 md:h-22 rounded-xl overflow-hidden border-2 border-purple-200"
+                  >
+                    <img
+                      src={previewUrl}
+                      alt={image.name}
+                      className="w-full h-full object-cover"
+                    />
+
+                    {/* Remove new image */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setImages((prev) =>
+                          prev.filter(
+                            (item) =>
+                              item.name !== image.name ||
+                              item.size !== image.size,
+                          ),
+                        )
+                      }
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
+                );
+              })}
+
+              {/* Add More */}
+              {existingImages.length + images.length < 5 && (
+                <label className="border-2 border-dashed p-2 text-center w-full h-20 md:h-22 border-purple-400 rounded-lg bg-gray-100 cursor-pointer transition-all duration-200 hover:scale-[1.05] flex flex-col items-center justify-center">
+                  <input
+                    id="file"
+                    name="file"
+                    type="file"
+                    multiple
+                    accept="image/png,image/jpeg,image/jpg"
+                    className="hidden"
+                    onChange={handlerImageChange}
+                  />
+
+                  <IoCameraOutline size={30} className="text-purple-500" />
+
+                  <p className="text-xs text-gray-500">Add more</p>
+
+                  <p className="text-[10px] text-gray-500">
+                    JPG, PNG (Max 5MB)
+                  </p>
+                </label>
+              )}
             </div>
           </div>
           {/* Buttons */}
-          <div className="flex justify-end gap-3 pt-2">
-            <Button color="white" onClick={() => setOpenReview(null)}>
+          <div className="flex  justify-end gap-3 pt-7">
+            <Button
+              type="button"
+              color="white"
+              className="flex-1 md:flex-0"
+              onClick={() => setOpenReview(null)}
+            >
               Cancel
             </Button>
-            <Button color="blue">Submit Review</Button>
+            <Button color="blue" className="flex-1 md:flex-0">
+              {" "}
+              {mode === "edit" ? "Update Review" : "Submit Review"}
+            </Button>
           </div>
         </form>
       </div>

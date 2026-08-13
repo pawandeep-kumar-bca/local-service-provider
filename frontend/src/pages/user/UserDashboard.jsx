@@ -34,12 +34,10 @@ const UserDashboard = () => {
     radius: 200,
   });
 
-
   return (
     <>
       <div className="w-full h-full">
         <>
-          
           <div
             className="
     relative

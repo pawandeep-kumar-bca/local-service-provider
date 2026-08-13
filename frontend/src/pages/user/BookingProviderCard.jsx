@@ -368,7 +368,7 @@ const BookingProvider = ({ booking }) => {
         </div>
       </div>
       {openReview && (
-        <ReviewForm booking={openReview} setOpenReview={setOpenReview} />
+        <ReviewForm booking={openReview} mode="create" setOpenReview={setOpenReview} />
       )}
 
       {cancelBooking && (
