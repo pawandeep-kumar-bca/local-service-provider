@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createReviews,
+  deleteReview,
   editReview,
   getAllUserReviews,
   getProviderReviews,
@@ -33,7 +34,22 @@ export const useReview = () => {
       toast.error(err?.response?.data?.message);
     },
   });
-  return { createReviewMutation, updateReviewMutation };
+  const deleteReviewMutation = useMutation({
+    mutationFn:deleteReview,
+    onSuccess:(data)=>{
+      queryClient.invalidateQueries({
+        queryKey:["user-reviews"]
+      })
+      toast.success(data?.message)
+
+    },
+    onError:(err)=>{
+      toast.error(err?.response?.data?.message)
+      console.log('Delete review error:',err);
+      
+    }
+  })
+  return { createReviewMutation, updateReviewMutation,deleteReviewMutation };
 };
 
 export const useGetAllUserReviews = () => {
@@ -56,3 +72,4 @@ export const useProviderReviews = ({ providerId, categoryId }) => {
     enabled: !!providerId && !!categoryId,
   });
 };
+

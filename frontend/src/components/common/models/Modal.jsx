@@ -1,5 +1,6 @@
 import { IoClose } from "react-icons/io5";
 import Button from "../Button";
+import { useEffect } from "react";
 
 const Modal = ({
   isOpen,
@@ -12,6 +13,12 @@ const Modal = ({
   rightBtnText,
   leftBtnColor,
 }) => {
+  useEffect(()=>{
+    document.body.style.overflow='hidden'
+    return ()=>{
+      document.body.style.overflow=''
+    }
+  },[])
   if (!isOpen) return null;
 
   // Modal Sizes
@@ -23,6 +30,7 @@ const Modal = ({
     xl: "max-w-4xl",
   };
 
+  
   return (
     <div
       className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 py-5"

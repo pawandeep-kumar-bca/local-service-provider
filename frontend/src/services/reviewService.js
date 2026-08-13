@@ -23,7 +23,7 @@ export const editReview =async ({data,reviewId})=>{
   const response = await api.patch(`/reviews/user/${reviewId}/edit-review`,data)
   return response.data
 }
-export const deleteReview =async ({reviewId})=>{
-  const response = await api.patch(`/reviews/user/${reviewId}/delete-review`)
+export const deleteReview =async (reviewId)=>{
+  const response = await api.delete(`/reviews/user/${reviewId}/delete-review`)
   return response.data
 }

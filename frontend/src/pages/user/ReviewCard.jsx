@@ -1,23 +1,32 @@
 import Button from "../../components/common/Button";
 import { FaStar } from "react-icons/fa";
 import StatusBadge from "../../components/common/StatusBadge";
-import { MdDelete, MdModeEdit } from "react-icons/md";
+import { MdDelete, MdDeleteOutline, MdModeEdit } from "react-icons/md";
 import Avatar from "../../components/common/Avatar";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { VscEdit } from "react-icons/vsc";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import {  useState } from "react";
+import { useState } from "react";
 import ReviewForm from "./ReviewForm";
+import Modal from "../../components/common/models/Modal";
+import { useReview } from "../../hooks/useReview";
 const ReviewCard = ({ review }) => {
+  console.log(review._id);
+
   const [openAction, setOpenAction] = useState(false);
   const [openEitReviewForm, setOpenEitReviewForm] = useState(false);
-  
+  const [openDeleteModel, setOpnDeleteModel] = useState(false);
+  const { deleteReviewMutation } = useReview();
   const editReviewHandler = () => {
     setOpenAction(false);
     setOpenEitReviewForm(true);
   };
   const deleteReviewHandler = () => {
     setOpenAction(false);
+    setOpnDeleteModel(true);
+  };
+  const deleteReviewSubmitHandler = async () => {
+    await deleteReviewMutation.mutateAsync(review?._id);
   };
   return (
     <>
@@ -64,7 +73,9 @@ const ReviewCard = ({ review }) => {
           /> */}
             </div>
             <div>
-              <p className="text-sm line-clamp-3 text-gray-500  py-2">{review.comment}</p>
+              <p className="text-sm line-clamp-3 text-gray-500  py-2">
+                {review.comment}
+              </p>
               <p className="text-sm text-gray-500 text-end">
                 {new Date(review.createdAt).toLocaleDateString("en-IN", {
                   day: "numeric",
@@ -119,6 +130,50 @@ const ReviewCard = ({ review }) => {
           mode="edit"
           setOpenReview={() => setOpenEitReviewForm(false)}
         />
+      )}
+      {openDeleteModel && (
+        <Modal
+          isOpen={openDeleteModel}
+          onClose={() => setOpnDeleteModel(false)}
+          onConfirm={deleteReviewSubmitHandler}
+          showFooter
+          size="sm"
+          rightBtnColor="danger"
+          rightBtnText={
+            deleteReviewMutation.isPending ? "Deleting..." : "Delete Review"
+          }
+          leftBtnColor="white"
+        >
+          <div className="flex justify-center">
+            <div
+              className="
+          flex
+          h-14
+          w-14
+          items-center
+          justify-center
+          rounded-full
+          bg-red-50
+          text-red-500
+        "
+            >
+              <MdDeleteOutline size={30} />
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="mt-4 text-center">
+            <h2 className="text-xl font-semibold text-gray-900">
+              Delete Review?
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-gray-500">
+              Are you sure you want to delete this review?
+              <br />
+              This action cannot be undone.
+            </p>
+          </div>
+        </Modal>
       )}
     </>
   );
