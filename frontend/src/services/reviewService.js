@@ -20,6 +20,10 @@ export const getProviderReviews = async ({ providerId, categoryId }) => {
 };
 
 export const editReview =async ({data,reviewId})=>{
-  const response = await api.patch(`/users/${reviewId}/edit-review`,data)
+  const response = await api.patch(`/reviews/user/${reviewId}/edit-review`,data)
+  return response.data
+}
+export const deleteReview =async ({reviewId})=>{
+  const response = await api.patch(`/reviews/user/${reviewId}/delete-review`)
   return response.data
 }
