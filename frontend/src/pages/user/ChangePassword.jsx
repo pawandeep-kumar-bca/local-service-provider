@@ -5,6 +5,10 @@ import { FaLock } from "react-icons/fa";
 import Button from "../../components/common/Button";
 import { IoIosCheckmark, IoIosClose } from "react-icons/io";
 import { useUser } from "../../hooks/useUser";
+import { useDispatch } from "react-redux";
+import { logout } from "../../features/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 const ChangePassword = () => {
   const [password, setPassword] = useState({
@@ -12,7 +16,8 @@ const ChangePassword = () => {
     newPassword: "",
     confirmPassword: "",
   });
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isPasswordValid = {
     minLength: password.newPassword.length >= 8,
     uppercase: /[A-Z]/.test(password.newPassword),
@@ -21,14 +26,27 @@ const ChangePassword = () => {
     specialChar: /[^A-Za-z0-9]/.test(password.newPassword),
   };
   const { changePasswordMutation } = useUser();
-  const submitChangePassword = (e) => {
+  const { logoutMutation } = useAuth();
+  const submitChangePassword = async (e) => {
     e.preventDefault();
-    changePasswordMutation.mutateAsync(password);
-    setPassword({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
+
+    try {
+      await changePasswordMutation.mutateAsync(password);
+
+      await logoutMutation.mutateAsync();
+
+      dispatch(logout());
+
+      setPassword({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handler = (e) => {
     const { name, value } = e.target;

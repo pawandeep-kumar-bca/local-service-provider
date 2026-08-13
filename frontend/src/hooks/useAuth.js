@@ -4,11 +4,13 @@ import {
   getAddressToReverseGeocode,
   getMe,
   loginUser,
+  logout,
   registerUser,
 } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../features/authSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 export const useAuth = () => {
   const navigate = useNavigate();
@@ -69,7 +71,21 @@ export const useAuth = () => {
     },
   });
 
-  return { registerMutation, loginMutation };
+  // ✅ LOGOUT
+  const logoutMutation = useMutation({
+    mutationFn:logout,
+    onSuccess:(data)=>{
+      toast.success(data?.message)
+    },
+    onError:(err)=>{
+      toast.error(err?.response?.data?.message)
+      console.log("Logout Error",err);
+      
+    }
+  })
+
+
+  return { registerMutation, loginMutation ,logoutMutation};
 };
 export const useMe = () => {
   return useQuery({
@@ -78,6 +94,7 @@ export const useMe = () => {
     retry: false,
   });
 };
+
 export const useAddressToReverseGeocode = () => {
   const addressToReverseGeocodeMutation = useMutation({
     mutationFn: getAddressToReverseGeocode,
