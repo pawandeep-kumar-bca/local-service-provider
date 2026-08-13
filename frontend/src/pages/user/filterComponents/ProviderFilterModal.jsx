@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import CategoryFilter from "./CategoryFilter";
 import PriceFilter from "./PriceFilter";
@@ -40,9 +40,14 @@ const ProviderFilterModal = ({
 
     isClose();
   };
-
+ useEffect(()=>{
+  document.body.style.overflow='hidden'
+  return ()=>{
+    document.body.style.overflow=''
+  }
+ },[])
   return (
-    <div onClick={isClose} className="fixed inset-0 bg-transparent z-[9999]">
+    <div onClick={isClose} className="fixed w-full inset-0 bg-transparent z-[9999]">
       <div
         onClick={(e) => e.stopPropagation()}
         className="
@@ -50,7 +55,7 @@ const ProviderFilterModal = ({
           right-0
           top-18
           w-full
-          max-w-xs
+          md:max-w-xs
           max-h-[calc(100vh-5rem)]
           overflow-y-auto
           scrollbar-hide
@@ -58,7 +63,6 @@ const ProviderFilterModal = ({
           border
           border-gray-200
           rounded-xl
-         
           shadow-lg
         "
       >
@@ -89,7 +93,7 @@ const ProviderFilterModal = ({
 
         {/* FILTERS */}
 
-        <div className=" px-4 pb-7 w-full mt-3">
+        <div className=" px-4 pb-15 md:pb-5 w-full mt-3">
           <div className="space-y-5">
             {/* CATEGORY */}
 
@@ -170,7 +174,7 @@ const ProviderFilterModal = ({
 
           {/* ACTION BUTTONS */}
 
-          <div className="flex gap-3 mt-3 py-4  border-t
+          <div className="flex gap-3 mt-3 pt-4  border-t
           border-gray-200">
             <Button type="button" color="white" fullWidth onClick={isClose}>
               <IoClose size={20} className="text-brownness" />
@@ -178,7 +182,7 @@ const ProviderFilterModal = ({
               <span className="text-brownness font-bold">Cancel</span>
             </Button>
 
-            <Button type="button" fullWidth onClick={handleApplyFilters}>
+            <Button type="button" size="xs" fullWidth onClick={handleApplyFilters}>
               <MdFilterListAlt size={20} />
               Apply Filters
             </Button>

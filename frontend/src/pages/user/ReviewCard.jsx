@@ -64,7 +64,7 @@ const ReviewCard = ({ review }) => {
           /> */}
             </div>
             <div>
-              <p className="text-sm text-gray-500  py-2">{review.comment}</p>
+              <p className="text-sm line-clamp-3 text-gray-500  py-2">{review.comment}</p>
               <p className="text-sm text-gray-500 text-end">
                 {new Date(review.createdAt).toLocaleDateString("en-IN", {
                   day: "numeric",

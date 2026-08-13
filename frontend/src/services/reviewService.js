@@ -18,3 +18,8 @@ export const getProviderReviews = async ({ providerId, categoryId }) => {
 
   return response.data;
 };
+
+export const editReview =async ({data,reviewId})=>{
+  const response = await api.patch(`/users/${reviewId}/edit-review`,data)
+  return response.data
+}

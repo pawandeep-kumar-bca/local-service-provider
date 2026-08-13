@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineFileUpload } from "react-icons/md";
 import Input from "../../components/common/Input";
 import StatusBadge from "../../components/common/StatusBadge";
@@ -57,6 +57,13 @@ const UserUpdateProfile = ({ user, isClose }) => {
       console.log("Update profile error:", error);
     }
   };
+   useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
   return (
     <div
       className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[999] flex items-center justify-center"

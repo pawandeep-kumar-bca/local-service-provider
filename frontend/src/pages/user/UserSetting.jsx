@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { useSelector } from "react-redux";
 import Avatar from "../../components/common/Avatar";
 import { MdGppBad, MdOutlineEdit, MdVerifiedUser } from "react-icons/md";
@@ -7,13 +7,7 @@ import UserUpdateProfile from "./UserUpdateProfile";
 const UserSetting = () => {
   const { user } = useSelector((state) => state?.auth);
   const [openEdit, setOpenEdit] = useState(false);
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
+ 
   return (
     <>
       <div className="flex flex-col md:flex-row justify-center items-center gap-10 mt-10">

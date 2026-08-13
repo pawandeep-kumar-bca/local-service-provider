@@ -14,7 +14,7 @@ const ExperienceFilter = ({ filters, setFilters }) => {
           experience: e.target.value,
         }))
       }
-      className="border-2 w-full border-brownness px-3 py-2 rounded-lg text-sm text-brownness font-semibold outline-none"
+      className="border w-full border-gray-300 text-grayness px-3 py-2 rounded-lg text-sm text-brownness font-semibold outline-none"
     >
       <option value="">Any Experience</option>
 
