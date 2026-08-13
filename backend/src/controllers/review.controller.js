@@ -1,7 +1,7 @@
 const reviewModel = require("../models/review.model");
 const providerModel = require("../models/provider.model");
 const bookingModel = require("../models/booking.model");
-const { uploadFile } = require("../config/imagekit");
+const { uploadFile, deleteFile } = require("../config/imagekit");
 const categoryModel = require("../models/category.model");
 const { mongoose } = require("mongoose");
 async function reviewCreate(req, res) {
@@ -312,12 +312,22 @@ async function getProviderReviews(req, res) {
       twoStar: 0,
       oneStar: 0,
     };
-    if(summary.totalReviews >0){
-     summary.fiveStarPercentage = Number((summary.fiveStar/summary.totalReviews)*100).toFixed(0)
-     summary.fourStarPercentage = Number((summary.fourStar/summary.totalReviews)*100).toFixed(0)
-     summary.threeStarPercentage = Number((summary.threeStar/summary.totalReviews)*100).toFixed(0)
-     summary.twoStarPercentage = Number((summary.twoStar/summary.totalReviews)*100).toFixed(0)
-     summary.oneStarPercentage = Number((summary.oneStar/summary.totalReviews)*100).toFixed(0)
+    if (summary.totalReviews > 0) {
+      summary.fiveStarPercentage = Number(
+        (summary.fiveStar / summary.totalReviews) * 100,
+      ).toFixed(0);
+      summary.fourStarPercentage = Number(
+        (summary.fourStar / summary.totalReviews) * 100,
+      ).toFixed(0);
+      summary.threeStarPercentage = Number(
+        (summary.threeStar / summary.totalReviews) * 100,
+      ).toFixed(0);
+      summary.twoStarPercentage = Number(
+        (summary.twoStar / summary.totalReviews) * 100,
+      ).toFixed(0);
+      summary.oneStarPercentage = Number(
+        (summary.oneStar / summary.totalReviews) * 100,
+      ).toFixed(0);
     }
     return res.status(200).json({
       message: "Provider reviews fetch successfully",
@@ -333,36 +343,175 @@ async function getProviderReviews(req, res) {
 }
 async function deleteReview(req, res) {
   try {
-    const reviewId = req.params.id;
+    const reviewId = req.params.reviewId;
     const userId = req.user.id;
+
 
     if (!reviewId) {
       return res.status(400).json({ message: "Invalid review Id" });
     }
-    const deletedReview = await reviewModel.findOneAndDelete({
+    const review = await reviewModel.findOne({
       _id: reviewId,
       userId: userId,
     });
 
-    if (!deletedReview) {
-      return res
-        .status(404)
-        .json({ message: "Review not found or unauthorized" });
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
     }
-
+    if (review.images?.length > 0) {
+      for (const image of review.images) {
+        if (image.fileId) {
+          await deleteFile(image.fileId);
+        }
+      }
+    }
+    await reviewModel.deleteOne({
+      _id:reviewId
+    })
     return res
       .status(200)
-      .json({ message: "review deleted successfully", deletedReview });
+      .json({ message: "review deleted successfully"});
   } catch (err) {
     console.error("Delete review error:", err);
     return res.status(500).json({ message: "internal server error" });
   }
 }
+async function editReview(req, res) {
+  try {
+    const { rating, comment, existingImages } = req.body;
+    const { reviewId } = req.params;
+    const userId = req.user.id;
+    const hasNewImages = req.files?.ReviewImage?.length > 0;
+    const hasExistingImagesUpdate = existingImages !== undefined;
+    if (!reviewId) {
+      return res.status(400).json({
+        success: false,
+        message: "Review Id is required",
+      });
+    }
 
+    const review = await reviewModel.findOne({
+      _id: reviewId,
+      userId,
+    });
+
+    if (!review) {
+      return res.status(404).json({
+        success: false,
+        message: "Review not found",
+      });
+    }
+
+    // Rating
+    if (rating !== undefined) {
+      const numericRating = Number(rating);
+
+      if (numericRating < 1 || numericRating > 5) {
+        return res.status(400).json({
+          success: false,
+          message: "Rating must be between 1 and 5",
+        });
+      }
+
+      review.rating = numericRating;
+    }
+
+    // Comment
+    if (comment !== undefined) {
+      const trimmedComment = comment.trim();
+
+      if (trimmedComment.length < 10) {
+        return res.status(400).json({
+          success: false,
+          message: "Comment must be at least 10 characters",
+        });
+      }
+
+      review.comment = trimmedComment;
+    }
+    if (hasNewImages || hasExistingImagesUpdate) {
+      let keepImageIds = [];
+
+      if (hasExistingImagesUpdate) {
+        try {
+          keepImageIds = JSON.parse(existingImages);
+        } catch {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid existingImages format",
+          });
+        }
+      } else {
+        // If only new images are being added,
+        // keep all existing images.
+        keepImageIds = review.images.map((image) => image.fileId);
+      }
+
+      const newImageCount = req.files?.ReviewImage?.length || 0;
+
+      if (keepImageIds.length + newImageCount > 5) {
+        return res.status(400).json({
+          success: false,
+          message: "Maximum 5 images are allowed",
+        });
+      }
+
+      // Delete removed images
+      const removedImages = review.images.filter(
+        (image) => !keepImageIds.includes(image.fileId),
+      );
+
+      for (const image of removedImages) {
+        await deleteFile(image.fileId);
+      }
+
+      // Keep remaining images
+      review.images = review.images.filter((image) =>
+        keepImageIds.includes(image.fileId),
+      );
+
+      // Upload new images
+      if (newImageCount > 0) {
+        const newImages = await Promise.all(
+          req.files.ReviewImage.map((image) =>
+            uploadFile(
+              image,
+              `review-${Date.now()}-${image.originalname}`,
+              "ReviewImages",
+            ),
+          ),
+        );
+
+        review.images.push(
+          ...newImages.map((image) => ({
+            url: image.url,
+            fileId: image.fileId,
+          })),
+        );
+      }
+    }
+
+    await review.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Review updated successfully",
+      review,
+    });
+  } catch (err) {
+    console.log("Edit review error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   reviewCreate,
   providerReview,
   getProviderReviews,
   deleteReview,
   getAllReviewOfUser,
+  editReview,
 };

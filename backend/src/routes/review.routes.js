@@ -16,7 +16,10 @@ router.get(
   authMiddleware.tokenVerify,
   reviewController.getAllReviewOfUser,
 );
-
+router.patch('/user/:reviewId/edit-review',authMiddleware.tokenVerify,validateObjectId("reviewId"),
+  imageUpload.fields([{name:'ReviewImage',maxCount:5}]),
+  reviewController.editReview
+)
 router.get(
   "/provider/:providerId",
   authMiddleware.tokenVerify,
@@ -28,10 +31,11 @@ router.get(
   validateObjectId("providerId"),
   reviewController.getProviderReviews,
 );
+
 router.delete(
-  "/:id",
+  "/user/:reviewId/delete-review",
   authMiddleware.tokenVerify,
-  validateObjectId("id"),
+  validateObjectId("reviewId"),
   reviewController.deleteReview,
 );
 
