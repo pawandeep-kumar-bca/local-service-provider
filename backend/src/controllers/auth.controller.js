@@ -257,7 +257,7 @@ async function me(req, res) {
   try {
     const userId = req.user.id;
 
-    const user = await userModel.findById(userId).select("fullname profileImage.url email role isProvider");
+    const user = await userModel.findById(userId).select("fullname profileImage.url email role isProvider phoneNumber isVerified isProvider");
 
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });

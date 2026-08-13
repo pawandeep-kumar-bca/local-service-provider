@@ -3,6 +3,7 @@ const userController = require("../controllers/user.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 const { changePasswordValidation } = require("../validators/auth.validator");
 const { imageUpload } = require("../middlewares/upload.middleware");
+const { updateUserProfileValidation } = require("../validators/user.validator");
 const router = express.Router();
 
 router.get(
@@ -15,7 +16,7 @@ router.post("/reverse-geocode", userController.reverseGeocode);
 router.patch(
   "/update-profile",
   authMiddleware.tokenVerify,
-  imageUpload.fields([{ name: "profileImage", maxCount: 1 }]),
+  imageUpload.fields([{ name: "profileImage", maxCount: 1 }]),updateUserProfileValidation,
   userController.updateUserProfile,
 );
 router.patch(
