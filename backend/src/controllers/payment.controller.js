@@ -6,8 +6,6 @@ const mongoose = require("mongoose");
 const UserModel = require("../models/User.model");
 const { generateId } = require("../utils/generateId");
 
-// ✅ CREATE ORDER (handles both COD and UPI)
-
 async function createOrder(req, res) {
   try {
     const { bookingId, paymentMethod } = req.body;
@@ -112,7 +110,6 @@ async function createOrder(req, res) {
     });
   }
 }
-// ✅ VERIFY PAYMENT (UPI only)
 async function verifyPayment(req, res) {
   try {
     const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body;
@@ -199,7 +196,6 @@ async function verifyPayment(req, res) {
   }
 }
 
-// ✅ MARK PAYMENT FAILED (call this from frontend if user cancels/closes checkout)
 async function markPaymentFailed(req, res) {
   try {
     const { razorpayOrderId } = req.body;
@@ -230,7 +226,6 @@ async function markPaymentFailed(req, res) {
   }
 }
 
-// ✅ WEBHOOK (source of truth, works even if user closes browser mid-payment)
 async function razorpayWebhook(req, res) {
   try {
     const signature = req.headers["x-razorpay-signature"];
@@ -304,7 +299,6 @@ async function razorpayWebhook(req, res) {
   }
 }
 
-// ✅ PAYMENT HISTORY
 async function paymentHistory(req, res) {
   try {
     const userId = req.user.id;
@@ -433,6 +427,46 @@ async function userPaymentHistory(req, res) {
     });
   }
 }
+
+async function userPaymentDetails(req, res) {
+  try {
+    const paymentId = req.params.paymentId;
+    const userId = req.user.id;
+
+    if (!paymentId) {
+      return res.status(400).json({
+        success: false,
+        message: "Payment Id required",
+      });
+    }
+    const paymentDetails = await paymentModel
+      .findOne({
+        _id: paymentId,
+        userId,
+      }).select('-razorpaySignature')
+      .populate(
+        "bookingId",
+        "bookingId bookingDate pricing durationHours bookingSlot  bookingStatus  paymentMethod paymentStatus serviceSnapshot serviceAddressSnapshot providerSnapshot",
+      );
+    if (!paymentDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "No payment details found", 
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Payment Details fetch successfully",
+      paymentDetails,
+    });
+  } catch (err) {
+    console.error("User Payment Details Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   createOrder,
   verifyPayment,
@@ -440,4 +474,5 @@ module.exports = {
   razorpayWebhook,
   paymentHistory,
   userPaymentHistory,
+  userPaymentDetails,
 };

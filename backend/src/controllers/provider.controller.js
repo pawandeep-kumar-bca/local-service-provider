@@ -1,5 +1,5 @@
 const providerModel = require("../models/provider.model");
-const { uploadImage } = require("../config/imagekit");
+const { uploadFile, deleteFile } = require("../config/imagekit");
 const imagekit = require("@imagekit/nodejs");
 const categoryModel = require("../models/category.model");
 
@@ -36,13 +36,15 @@ async function providerProfileCreate(req, res) {
       price,
       experience,
       state,
-      categories,
+      categoryId,
+      priceType,
       district,
       city,
       locality,
       lat,
       lng,
     } = req.body;
+console.log(categoryId);
 
     const userId = req.user.id;
 
@@ -85,14 +87,14 @@ async function providerProfileCreate(req, res) {
     }
 
     // Upload Aadhar
-    const aadharCardData = await uploadImage(
+    const aadharCardData = await  uploadFile(
       req.files.aadharCard[0],
       `${userId}-${Date.now()}-aadharCard`,
       "Providers/Documents/AadharCards",
     );
 
     // Upload Certificate
-    const certificateData = await uploadImage(
+    const certificateData = await uploadFile(
       req.files.certificate[0],
       `${userId}-${Date.now()}-certificate`,
       "Providers/Documents/Certificates",
@@ -105,7 +107,13 @@ async function providerProfileCreate(req, res) {
 
       experience,
 
-      categories,
+      categories:[{
+        category:new mongoose.Types.ObjectId(categoryId),
+        pricing:{
+          priceType:priceType,
+          price:price
+        }
+      }],
 
       location: {
         type: "Point",
@@ -119,11 +127,11 @@ async function providerProfileCreate(req, res) {
       documents: {
         aadharCard: {
           url: aadharCardData.url,
-          fileId: aadharCardData.fileId,
+          fileId: aadharCardData.fieldId,
         },
         certificate: {
           url: certificateData.url,
-          fileId: certificateData.fileId,
+          fileId: certificateData.fieldId,
         },
       },
     });
@@ -133,11 +141,11 @@ async function providerProfileCreate(req, res) {
     }
 
     if (req.files.profileImage) {
-      if (user.profileImage?.fileId) {
-        await deleteImage(user.profileImage.fileId);
+      if (user.profileImage?.fieldId) {
+        await deleteFile(user.profileImage.fieldId);
       }
 
-      const profileImageData = await uploadImage(
+      const profileImageData = await uploadFile(
         req.files.profileImage[0],
         `${userId}-${Date.now()}-profileImage`,
         "Users/ProfileImages",
@@ -145,7 +153,7 @@ async function providerProfileCreate(req, res) {
 
       user.profileImage = {
         url: profileImageData.url,
-        fileId: profileImageData.fileId,
+        fieldId: profileImageData.fieldId,
       };
     }
 

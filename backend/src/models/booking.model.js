@@ -226,7 +226,7 @@ const bookingsSchema = new mongoose.Schema(
       phone: String,
       rating: Number,
       totalReview: Number,
-
+      email:String,
       profileImage: {
         url: {
           type: String,

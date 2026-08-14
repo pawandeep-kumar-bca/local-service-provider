@@ -202,6 +202,7 @@ async function userBookingCreate(req, res) {
         providerId: provider.providerId,
         name: provider.userId.fullname,
         phone: provider.userId.phoneNumber,
+        email: provider.userId.email,
         rating: provider.rating,
         totalReview: provider.totalReview,
         availability: provider.availability,
@@ -265,7 +266,6 @@ async function userBookingCreate(req, res) {
 async function getUserAllBooking(req, res) {
   try {
     const { status } = req.query;
-  
 
     const userId = req.user.id;
     const now = new Date();
