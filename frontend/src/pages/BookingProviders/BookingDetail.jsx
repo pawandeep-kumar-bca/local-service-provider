@@ -99,26 +99,24 @@ const BookingDetail = () => {
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        try{
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        const data = await addressToReverseGeocodeMutation.mutateAsync({
-          latitude,
-          longitude,
-        });
-        setFormData((prev) => ({
-          ...prev,
-          lat: data.location.latitude,
-          lng: data.location.longitude,
+        try {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          const data = await addressToReverseGeocodeMutation.mutateAsync({
+            latitude,
+            longitude,
+          });
+          setFormData((prev) => ({
+            ...prev,
+            lat: data.location.latitude,
+            lng: data.location.longitude,
 
-          state: data.location.state,
-          district: data.location.district,
-          city: data.location.city,
-
-         
-        }));
-        }catch(err){
-           console.error(err);
+            state: data.location.state,
+            district: data.location.district,
+            city: data.location.city,
+          }));
+        } catch (err) {
+          console.error(err);
           alert("Unable to fetch location.");
         }
       },
@@ -189,6 +187,7 @@ const BookingDetail = () => {
               required
               startTime={formData.startTime}
               endTime={formData.endTime}
+              date={formData.date}
               onStartTimeChange={(value) =>
                 setFormData((prev) => ({
                   ...prev,

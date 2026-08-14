@@ -21,15 +21,30 @@ const allTimes = [
   "10:00 PM",
 ];
 
-// Converts "10:30 AM" style string to minutes since midnight, for comparison
 function parseTimeToMinutes(timeStr) {
   const [time, meridian] = timeStr.trim().split(" ");
+
   let [hours, minutes] = time.split(":").map(Number);
 
-  if (meridian === "PM" && hours !== 12) hours += 12;
-  if (meridian === "AM" && hours === 12) hours = 0;
+  if (meridian === "PM" && hours !== 12) {
+    hours += 12;
+  }
+
+  if (meridian === "AM" && hours === 12) {
+    hours = 0;
+  }
 
   return hours * 60 + minutes;
+}
+
+// Round current time UP to next full hour
+function getNextAvailableHour() {
+  const now = new Date();
+
+  const currentHour = now.getHours();
+
+  // Always next full hour
+  return (currentHour + 1) * 60;
 }
 
 const SlotTime = ({
@@ -40,23 +55,63 @@ const SlotTime = ({
   endTime,
   onStartTimeChange,
   onEndTimeChange,
+  date,
 }) => {
-  // start options: everything except the last slot (needs at least 1hr after it)
-  const startTimes = allTimes.slice(0, allTimes.length - 1);
+  // -----------------------------
+  // Check whether selected date is today
+  // -----------------------------
 
-  // end options: only times strictly after the selected start time
+  const isToday = () => {
+    if (!date) return false;
+
+    const selectedDate = new Date(date);
+    const today = new Date();
+
+    return (
+      selectedDate.getFullYear() === today.getFullYear() &&
+      selectedDate.getMonth() === today.getMonth() &&
+      selectedDate.getDate() === today.getDate()
+    );
+  };
+
+  // -----------------------------
+  // Start times
+  // -----------------------------
+
+  let startTimes = allTimes.slice(0, allTimes.length - 1);
+
+  if (isToday()) {
+    const nextAvailableMinutes = getNextAvailableHour();
+
+    startTimes = startTimes.filter(
+      (time) => parseTimeToMinutes(time) >= nextAvailableMinutes
+    );
+  }
+
+  // -----------------------------
+  // End times
+  // -----------------------------
+
   const endTimes = startTime
     ? allTimes.filter(
-        (time) => parseTimeToMinutes(time) > parseTimeToMinutes(startTime),
+        (time) =>
+          parseTimeToMinutes(time) > parseTimeToMinutes(startTime)
       )
     : allTimes.slice(1);
 
+  // -----------------------------
+  // Start change
+  // -----------------------------
+
   const handleStartChange = (e) => {
     const newStart = e.target.value;
+
     onStartTimeChange(newStart);
 
-    // if existing endTime is no longer valid for the new start, clear it
-    if (endTime && parseTimeToMinutes(endTime) <= parseTimeToMinutes(newStart)) {
+    if (
+      endTime &&
+      parseTimeToMinutes(endTime) <= parseTimeToMinutes(newStart)
+    ) {
       onEndTimeChange("");
     }
   };
@@ -67,10 +122,13 @@ const SlotTime = ({
         htmlFor="start-time"
         className="block mb-2 font-medium text-lg md:text-sm"
       >
-        {label} {required && <span className="text-red-500">*</span>}
+        {label}{" "}
+        {required && <span className="text-red-500">*</span>}
       </label>
 
       <div className="flex items-center gap-1">
+        {/* START TIME */}
+
         <select
           name="startTime"
           id="start-time"
@@ -81,14 +139,17 @@ const SlotTime = ({
           <option disabled value="">
             Start Time
           </option>
-          {startTimes.map((time, idx) => (
-            <option key={idx} value={time}>
+
+          {startTimes.map((time) => (
+            <option key={time} value={time}>
               {time}
             </option>
           ))}
         </select>
 
         <GoDash />
+
+        {/* END TIME */}
 
         <select
           name="endTime"
@@ -101,8 +162,9 @@ const SlotTime = ({
           <option disabled value="">
             End Time
           </option>
-          {endTimes.map((time, idx) => (
-            <option key={idx} value={time}>
+
+          {endTimes.map((time) => (
+            <option key={time} value={time}>
               {time}
             </option>
           ))}
