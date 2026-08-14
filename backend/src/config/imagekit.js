@@ -16,7 +16,7 @@ const uploadFile = async (file, fileName, folder) => {
 
     return {
       url: result.url,
-      fileId: result.fileId,
+      fieldId: result.fileId,
     };
   } catch (error) {
     console.error("ImageKit Upload Error:", error);

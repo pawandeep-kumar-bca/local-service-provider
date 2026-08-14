@@ -43,6 +43,7 @@ async function updateUserProfile(req, res) {
       });
     }
 
+
     // Update profile image
     if (req?.files?.profileImage?.[0]) {
       if (user?.profileImage?.fieldId) {
@@ -54,11 +55,12 @@ async function updateUserProfile(req, res) {
         `${user.fullname}-${Date.now()}-ProfileImage`,
         "Users/ProfileImages",
       );
-
+   
       user.profileImage = {
         url: profileImage.url,
-        fieldId: profileImage.fileId,
+        fieldId: profileImage.fieldId,
       };
+     
     }
 
     // Update fullname

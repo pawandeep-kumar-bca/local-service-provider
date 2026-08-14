@@ -35,7 +35,7 @@ const reviewSchema = new mongoose.Schema(
           type: String,
           default: "",
         },
-        fileId: {
+        fieldId: {
           type: String,
           default: "",
         },

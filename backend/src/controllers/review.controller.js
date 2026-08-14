@@ -360,8 +360,8 @@ async function deleteReview(req, res) {
     }
     if (review.images?.length > 0) {
       for (const image of review.images) {
-        if (image.fileId) {
-          await deleteFile(image.fileId);
+        if (image.fieldId) {
+          await deleteFile(image.fieldId);
         }
       }
     }
@@ -444,7 +444,7 @@ async function editReview(req, res) {
       } else {
         // If only new images are being added,
         // keep all existing images.
-        keepImageIds = review.images.map((image) => image.fileId);
+        keepImageIds = review.images.map((image) => image.fieldId);
       }
 
       const newImageCount = req.files?.ReviewImage?.length || 0;
@@ -458,16 +458,16 @@ async function editReview(req, res) {
 
       // Delete removed images
       const removedImages = review.images.filter(
-        (image) => !keepImageIds.includes(image.fileId),
+        (image) => !keepImageIds.includes(image.fieldId),
       );
 
       for (const image of removedImages) {
-        await deleteFile(image.fileId);
+        await deleteFile(image.fieldId);
       }
 
       // Keep remaining images
       review.images = review.images.filter((image) =>
-        keepImageIds.includes(image.fileId),
+        keepImageIds.includes(image.fieldId),
       );
 
       // Upload new images
@@ -485,7 +485,7 @@ async function editReview(req, res) {
         review.images.push(
           ...newImages.map((image) => ({
             url: image.url,
-            fileId: image.fileId,
+            fieldId: image.fieldId,
           })),
         );
       }
