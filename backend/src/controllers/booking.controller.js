@@ -110,20 +110,28 @@ async function userBookingCreate(req, res) {
       cityModel.findById(city),
     ]);
     // ---------- Date check ----------
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const userDate = new Date(bookingDate);
-
-    if (userDate < today) {
-      return res.status(400).json({ message: "Invalid booking date" });
-    }
     const bookingStartTime = convertSlotToDate(
       bookingDate,
       bookingSlot.startTime,
     );
 
     const bookingEndTime = convertSlotToDate(bookingDate, bookingSlot.endTime);
+
+    // ---------- Time validation ----------
+
+    const now = new Date();
+
+    if (bookingStartTime <= now) {
+      return res.status(400).json({
+        message: "Booking slot must start in the future",
+      });
+    }
+
+    if (bookingEndTime <= bookingStartTime) {
+      return res.status(400).json({
+        message: "End time must be after start time",
+      });
+    }
     // ---------- Slot clash check (only active statuses block a slot) ----------
     const blockingStatuses = ["pending", "accepted", "in_progress"];
 
@@ -145,12 +153,23 @@ async function userBookingCreate(req, res) {
     const bookingSlotAlready = await bookingsModel.findOne({
       "providerSnapshot.providerObjectId": providerId,
       bookingDate: userDate,
-      "bookingSlot.startTime": bookingStartTime,
-      "bookingSlot.endTime": bookingEndTime,
       bookingStatus: { $in: blockingStatuses },
+
+      $expr: {
+        $and: [
+          {
+            $lt: ["$bookingSlot.startTime", bookingEndTime],
+          },
+          {
+            $gt: ["$bookingSlot.endTime", bookingStartTime],
+          },
+        ],
+      },
     });
     if (bookingSlotAlready) {
-      return res.status(409).json({ message: "This slot is already booked" });
+      return res
+        .status(409)
+        .json({ message: "This slot overlaps with an existing booking" });
     }
 
     // ---------- Duration + pricing ----------
