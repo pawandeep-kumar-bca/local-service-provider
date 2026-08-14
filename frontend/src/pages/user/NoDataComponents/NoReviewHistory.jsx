@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../../../components/common/Button";
 import { useNavigate } from "react-router-dom";
 
-const NoReviews = () => {
+const NoReviewHistory = () => {
   const navigate = useNavigate();
 
   return (
@@ -51,4 +51,4 @@ const NoReviews = () => {
   );
 };
 
-export default NoReviews;
+export default NoReviewHistory;

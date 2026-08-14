@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../../../components/common/Button";
 import { useNavigate } from "react-router-dom";
 
-const NoBooking = ({ status }) => {
+const NoBookingHistory = ({ status }) => {
   const navigate = useNavigate();
 
   return (
@@ -53,4 +53,4 @@ const NoBooking = ({ status }) => {
   );
 };
 
-export default NoBooking;
+export default NoBookingHistory;

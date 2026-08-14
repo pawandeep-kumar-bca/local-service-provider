@@ -6,6 +6,7 @@ import SearchFilterBar from "../../components/common/admin/SearchFilterBar";
 import { IoSearch } from "react-icons/io5";
 import useDebounce from "../../hooks/useDebounce";
 import TableWrapper from "../../components/common/admin/TableWrapper";
+import NoPaymentHistory from "./NoDataComponents/NoPaymentHistory";
 
 const PaymentHistoryList = () => {
   const [filters, setFilters] = useState({
@@ -63,7 +64,7 @@ const PaymentHistoryList = () => {
         </div>
         </div>
       </div>
-      <div className="border border-slate-300 rounded-xl">
+     {allPaymentsHistory.length !==0? <div className="border border-slate-300 rounded-xl">
         <UserPaymentHistoryPageHeader />
         {allPaymentsHistory.map((paymentHistory) => (
           <UserPaymentHistoryPageRow
@@ -71,7 +72,7 @@ const PaymentHistoryList = () => {
             paymentHistory={paymentHistory}
           />
         ))}
-      </div>
+      </div>:<NoPaymentHistory filters={filters}/>}
     </TableWrapper>
   );
 };

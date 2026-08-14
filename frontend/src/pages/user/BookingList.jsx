@@ -2,7 +2,7 @@ import React from "react";
 import BookingProviderCard from "./BookingProviderCard";
 import { useAllUserBookings } from "../../hooks/useBooking";
 import { useOutletContext } from "react-router-dom";
-import NoBooking from "./NoDataComponents/NoBooking";
+import NoBookingHistory from "./NoDataComponents/NoBookingHistory";
 
 const BookingList = () => {
   const status = useOutletContext();
@@ -17,7 +17,7 @@ const BookingList = () => {
       {bookings.map((booking) => (
         <BookingProviderCard booking={booking} key={booking._id} />
       ))}
-    </div>:<NoBooking status={status}/>}
+    </div>:<NoBookingHistory status={status}/>}
     </>
   );
 };
