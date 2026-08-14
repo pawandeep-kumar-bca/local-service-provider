@@ -15,7 +15,6 @@ import { LuLock } from "react-icons/lu";
 import { FaHandshakeAngle, FaUserGroup } from "react-icons/fa6";
 import PopularCategoriesSection from "./PopularCategoriesSection";
 const UserDashboard = () => {
-  console.log("USER DASHBOARD RENDER");
 
   const navigate = useNavigate();
   const savedLocation = JSON.parse(localStorage.getItem("location") || "null");

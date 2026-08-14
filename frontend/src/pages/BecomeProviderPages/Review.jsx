@@ -43,8 +43,8 @@ const Review = () => {
     form.append("experience", formData.experience);
 
     form.append("price", formData.price);
-
-    form.append("categories", formData.category._id);
+    form.append("priceType", formData.priceType);
+    form.append("categoryId", formData.category?._id);
 
     form.append("state", formData.state._id);
 
@@ -52,7 +52,7 @@ const Review = () => {
 
     form.append("city", formData.city._id);
 
-    form.append("village", formData.village);
+    form.append("locality", formData.village);
 
     form.append("lat", formData.lat);
 
@@ -194,7 +194,9 @@ const Review = () => {
           disabled={createProviderMutation.isLoading}
           className="w-full md:w-[30%]"
         >
-          {createProviderMutation.isLoading ? "Submitting..." : "Submit Application"}
+          {createProviderMutation.isLoading
+            ? "Submitting..."
+            : "Submit Application"}
           <MdChevronRight size={25} />
         </Button>
       </div>

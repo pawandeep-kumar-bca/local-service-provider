@@ -5,13 +5,19 @@ const ReviewList = () => {
   const { data } = useGetAllUserReviews();
 
   const allReviews = data?.allReviews || [];
- 
+
   return (
-    <div className=" grid grid-cols-1 md:grid-cols-3 gap-2">
-      {allReviews.map((review) => (
-        <ReviewCard key={review._id} review={review} />
-      ))}
-    </div>
+    <>
+      {allReviews?.length !== 0 ? (
+        <div className=" grid grid-cols-1 md:grid-cols-3 gap-2">
+          {allReviews.map((review) => (
+            <ReviewCard key={review._id} review={review} />
+          ))}
+        </div>
+      ) : (
+        <div>hello</div>
+      )}
+    </>
   );
 };
 

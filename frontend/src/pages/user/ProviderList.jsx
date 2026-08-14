@@ -1,10 +1,10 @@
 import React from "react";
 import { useRecommendedProviders,useNearbyProviders } from "../../hooks/useProvider";
 import ProviderCard from "./ProviderCard";
-import { Link, useOutletContext } from "react-router-dom";
+import {useNavigate, useOutletContext } from "react-router-dom";
 import ProviderSortBar from "./filterComponents/ProviderSortBar";
 const ProviderList = () => {
-  console.log("PROVIDER LIST RENDER");
+  const navigate  = useNavigate()
   const { filters, setFilters } = useOutletContext();
   const hasLocation = filters.lat !== "" && filters.lng !== "" && filters.radius !=='';
 
@@ -29,9 +29,9 @@ const isLoading = hasLocation
           Find Best Service Providers
         </h1>
 
-        <Link to="all-providers" className="text-primary text-sm transition-all duration-300 cursor-pointer  font-semibold hover:underline disabled:opacity-50">
+        <button type="button" onClick={()=>navigate('/user/all-providers')} className="text-primary text-sm transition-all duration-300 cursor-pointer  font-semibold hover:underline disabled:opacity-50">
           View All
-        </Link>
+        </button>
       </div>
       <ProviderSortBar
         filters={filters}

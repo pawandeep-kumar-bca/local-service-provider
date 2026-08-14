@@ -130,12 +130,40 @@ const BasicInfo = () => {
               id="price"
               placeholder="e.g. 500"
               type="number"
-              min={100}
-              step={10}
               value={formData.price}
               onChange={handleChange}
               required
             />
+            <div className="flex flex-col w-full relative">
+              <label
+                htmlFor="category"
+                className="block mb-2 font-medium text-lg md:text-sm"
+              >
+                Service Category <span className="text-red-500">*</span>
+              </label>
+
+              <select
+                name="priceType"
+                id="priceType"
+                required
+                value={formData.priceType || ""}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    priceType: e.target.value,
+                  }));
+                }}
+                className="w-full text-sm  border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring focus:ring-blue-500 focus:outline-none bg-white  appearance-none
+      "
+              >
+                <option value="" disabled className="bg-muted text-white">
+                  Select Price Type
+                </option>
+
+                <option value="hourly">Hourly</option>
+                <option value="fixed">Fixed</option>
+              </select>
+            </div>
             {/* Service Category */}
             <div className="flex flex-col w-full relative">
               <label

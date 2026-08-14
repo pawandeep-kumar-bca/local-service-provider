@@ -37,7 +37,7 @@ const Submit = () => {
         </p>
       </div>
       <div className="flex justify-center mt-6">
-        <Button color="blue" onClick={()=>navigate('/user')}>Go to Dashboard</Button>
+        <Button color="blue" onClick={()=>navigate('/user/dashboard')}>Go to Dashboard</Button>
       </div>
     </div>
   );

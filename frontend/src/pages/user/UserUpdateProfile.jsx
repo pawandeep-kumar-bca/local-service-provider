@@ -71,7 +71,7 @@ const UserUpdateProfile = ({ user, isClose }) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full h-full md:max-h-auto max-w-sm bg-white px-4 py-2 rounded-xl py-6"
+        className="w-full h-full md:max-h-fit max-w-sm bg-white px-4 py-2 rounded-xl py-6"
       >
         <form onSubmit={handleSubmitProfile}>
           <div className="flex justify-center">

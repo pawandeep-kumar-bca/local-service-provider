@@ -2,65 +2,32 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Button from "../../components/common/Button";
 import { IoIosArrowBack } from "react-icons/io";
-import FilterProviders from "./FilterProviders";
 import Pagination from "../../components/common/Pagination";
 
 const ViewAllProviders = () => {
-  // const navigate = useNavigate();
-  // const handleBack = () => {
-  //   if (window.history.length > 1) {
-  //     navigate(-1);
-  //   } else {
-  //     navigate("/user");
-  //   }
-  // };
-  const [totalPages, setTotalPages] = useState(1);
+  const savedLocation = JSON.parse(localStorage.getItem("location") || "null");
   const [filters, setFilters] = useState({
-    category: "all",
-
-    search: "",
-
-    city: "",
-
-    minRating: "",
-
-    minExperience: "",
-
+    categoryId: "",
+    rating: "",
+    experience: "",
     availability: "",
-
-    sort: "latest",
-
-    page: 1,
-
-    limit: 9,
+    trusted: "",
+    minPrice: "",
+    maxPrice: "",
+    sort: [],
+    // location
+    lat: savedLocation?.latitude || "",
+    lng: savedLocation?.longitude || "",
+    radius: 200,
   });
 
   return (
     <div className="mt-4">
-      <FilterProviders
-        url="user/all-providers"
-        filters={filters}
-        setFilters={setFilters}
-      />
-      <div className="w-full h-[1px] bg-muted my-5"></div>
       <Outlet
         context={{
           filters,
           setFilters,
-          totalPages,
-          setTotalPages,
         }}
-      />
-
-      <Pagination
-        currentPage={filters.page}
-        totalPages={totalPages}
-        onPageChange={(page) =>
-          setFilters((prev) => ({
-            ...prev,
-            page,
-          }))
-        }
       />
     </div>
   );

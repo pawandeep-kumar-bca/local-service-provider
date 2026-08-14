@@ -11,6 +11,7 @@ import City from "../../components/common/City";
 import { FaLocationArrow } from "react-icons/fa";
 import { useBookingCreate } from "../../hooks/useBooking";
 import CustomDatePicker from "../../components/common/CustomDatePicker";
+import { useAddressToReverseGeocode } from "../../hooks/useAuth";
 
 const BookingDetail = () => {
   const navigate = useNavigate();
@@ -38,9 +39,10 @@ const BookingDetail = () => {
     lat: "",
     lng: "",
   });
+  const { addressToReverseGeocodeMutation } = useAddressToReverseGeocode();
 
   const { createBookingMutation } = useBookingCreate();
-console.log(formData.date)
+  console.log(formData.date);
   const formSubmit = (e) => {
     e.preventDefault();
 
@@ -96,15 +98,29 @@ console.log(formData.date)
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
+        try{
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-
+        const data = await addressToReverseGeocodeMutation.mutateAsync({
+          latitude,
+          longitude,
+        });
         setFormData((prev) => ({
           ...prev,
-          lat: latitude,
-          lng: longitude,
+          lat: data.location.latitude,
+          lng: data.location.longitude,
+
+          state: data.location.state,
+          district: data.location.district,
+          city: data.location.city,
+
+         
         }));
+        }catch(err){
+           console.error(err);
+          alert("Unable to fetch location.");
+        }
       },
       (error) => {
         console.log(error);
@@ -130,12 +146,12 @@ console.log(formData.date)
     <div className="md:shadow-[inset_0_0_3px_rgba(0,0,0,0.4)] md:p-4 rounded-lg">
       <div className="flex items-center  justify-between mb-3 md:w-[90%] mx-auto">
         <h1 className="text-2xl font-semibold">Booking Details</h1>
-       <div className="hidden md:block">
-         <Button color="white" type="button" onClick={() => navigate(-1)}>
-          <MdOutlineKeyboardArrowLeft size={24} />
-          Back
-        </Button>
-       </div>
+        <div className="hidden md:block">
+          <Button color="white" type="button" onClick={() => navigate(-1)}>
+            <MdOutlineKeyboardArrowLeft size={24} />
+            Back
+          </Button>
+        </div>
       </div>
 
       <div className="md:w-[80%] mx-auto mt-6 ">
