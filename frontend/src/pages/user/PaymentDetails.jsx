@@ -10,16 +10,19 @@ import {
   MdHome,
   MdAccessTime,
   MdSchedule,
+  MdChevronLeft,
 } from "react-icons/md";
 
 import { FaPhoneAlt, FaRegCalendarMinus, FaStar } from "react-icons/fa";
 import { SiRazorpay } from "react-icons/si";
 import StatusBadge from "../../components/common/StatusBadge";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUserPaymentDetails } from "../../hooks/usePayment";
 import Avatar from "../../components/common/Avatar";
+import Button from "../../components/common/Button";
 
 const PaymentDetails = () => {
+  const navigate = useNavigate()
   const { paymentId } = useParams();
 
   const { data } = useUserPaymentDetails(paymentId);
@@ -93,8 +96,12 @@ const PaymentDetails = () => {
   };
   return (
     <section className="w-full pb-8">
-      <div className="mt-5 bg-white border border-blue-100 rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-5 md:p-6">
+      
+      <div className="hidden md:flex justify-end">
+        <Button color="white" onClick={()=>navigate(-1)}><MdChevronLeft size={18}/>Back</Button>
+      </div>
+      <div className="mt-5 md:bg-white md:border md:border-blue-100 rounded-2xl md:shadow-sm overflow-hidden">
+        <div className="md:p-6">
           {/* HEADER */}
 
           <div className="flex items-center gap-3 mb-5">
@@ -115,26 +122,26 @@ const PaymentDetails = () => {
 
           {/* FEE CARDS */}
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-1 md:gap-4">
             {/* PROVIDER FEE */}
 
             <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4">
               <div className="flex items-center justify-between">
                 <p className="text-xs md:text-sm text-grayness">Provider Fee</p>
 
-                <span className="w-8 h-8 rounded-lg bg-white text-primary flex items-center justify-center">
+                <span className="hidden w-8 h-8 rounded-lg bg-white text-primary md:flex items-center justify-center">
                   <MdPerson size={18} />
                 </span>
               </div>
 
-              <p className="text-xl md:text-2xl font-bold text-brownness mt-3">
+              <p className="text-xl md:text-2xl font-bold text-brownness mt-2 md:mt-3">
                 {formatAmount(
                   payment?.bookingId?.pricing?.serviceCharge,
                   payment?.currency,
                 )}
               </p>
 
-              <p className="text-xs text-grayness mt-1">Service amount</p>
+              <p className="text-[10px] md:text-xs text-grayness mt-1">Service amount</p>
             </div>
 
             {/* PLATFORM FEE */}
@@ -143,40 +150,40 @@ const PaymentDetails = () => {
               <div className="flex items-center justify-between">
                 <p className="text-xs md:text-sm text-grayness">Platform Fee</p>
 
-                <span className="w-8 h-8 rounded-lg bg-white text-indigo-500 flex items-center justify-center">
+                <span className="w-8 h-8 rounded-lg bg-white text-indigo-500 hidden md:flex items-center justify-center">
                   <MdOutlinePayment size={18} />
                 </span>
               </div>
 
-              <p className="text-xl md:text-2xl font-bold text-brownness mt-3">
+              <p className="text-xl md:text-2xl font-bold text-brownness mt-2 md:mt-3">
                 {formatAmount(
                   payment?.bookingId?.pricing?.platformFee,
                   payment?.currency,
                 )}
               </p>
 
-              <p className="text-xs text-grayness mt-1">LSC platform charge</p>
+              <p className="text-[10px] md:text-xs text-grayness mt-1">Platform charge</p>
             </div>
 
             {/* TOTAL */}
 
             <div className="rounded-xl border border-green-200 bg-green-50/50 p-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center  justify-between">
                 <p className="text-xs md:text-sm text-grayness">Total Paid</p>
 
-                <span className="px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-[10px] md:text-xs font-semibold">
+                <span className="px-2.5 py-1 rounded-full bg-green-100 hidden md:block text-green-700 text-[10px] md:text-xs font-semibold">
                   Paid
                 </span>
               </div>
 
-              <p className="text-xl md:text-2xl font-bold text-brownness mt-3">
+              <p className="text-xl md:text-2xl font-bold text-brownness mt-2 md:mt-3">
                 {formatAmount(
                   payment?.bookingId?.pricing?.totalAmount,
                   payment?.currency,
                 )}
               </p>
 
-              <p className="text-xs text-green-600 font-medium mt-1">
+              <p className="text-[10px] md:text-xs text-green-600 font-medium mt-1">
                 Paid via {payment?.paymentMethod?.toUpperCase() || "UPI"}
               </p>
             </div>
@@ -193,10 +200,10 @@ const PaymentDetails = () => {
                 Transaction Information
               </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-5 p-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 md:gap-x-6 gap-y-3 md:gap-y-5 p-2">
               {paymentInfo.map((item, idx) => (
                 <div key={idx} className="min-w-0">
-                  <div className="flex items-center gap-2 mb-1.5">
+                  <div className="flex items-center gap-2 nd:mb-1.5">
                     <span className="w-8 h-8 shrink-0 rounded-lg bg-blue-50 text-primary flex items-center justify-center">
                       {item.icon}
                     </span>
@@ -236,7 +243,7 @@ const PaymentDetails = () => {
           BOOKING INFORMATION
       ====================================================== */}
 
-      <div className="mt-5 bg-white border border-blue-100 rounded-2xl shadow-sm p-5 md:p-6">
+      <div className="mt-5 md:bg-white md:border md:border-blue-100 md:rounded-2xl md:shadow-sm  md:p-6">
         {/* HEADER */}
 
         <div className="flex items-center gap-3 mb-5">

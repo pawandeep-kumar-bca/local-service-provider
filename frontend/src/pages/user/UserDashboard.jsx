@@ -15,7 +15,6 @@ import { LuLock } from "react-icons/lu";
 import { FaHandshakeAngle, FaUserGroup } from "react-icons/fa6";
 import PopularCategoriesSection from "./PopularCategoriesSection";
 const UserDashboard = () => {
-
   const navigate = useNavigate();
   const savedLocation = JSON.parse(localStorage.getItem("location") || "null");
   const [filters, setFilters] = useState({
@@ -247,18 +246,27 @@ const UserDashboard = () => {
 
               {/* Buttons */}
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button color="success">
+                <Button
+                  color="success"
+                  type="button"
+                  onClick={() => navigate("/user/our-services")}
+                >
                   <FaRegCalendarCheck size={18} />
                   Book a Service
                 </Button>
 
-                <Button color="white">
+                <Button
+                  color="white"
+                  type="button"
+                  onClick={() => navigate("/user/all-providers")}
+                >
                   <FaUserGroup size={18} />
                   Explore Providers
                 </Button>
 
                 <Button
                   color="blue"
+                  type="button"
                   onClick={() => navigate("/user/become-provider/basic-info")}
                 >
                   <FaHandshakeAngle size={20} />
