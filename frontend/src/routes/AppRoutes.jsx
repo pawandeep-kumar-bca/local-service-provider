@@ -32,7 +32,7 @@ import Profile from "../pages/public/Profile";
 import ChangePassword from "../pages/user/ChangePassword";
 import UserSetting from "../pages/user/UserSetting";
 import ViewAllProviders from "../pages/user/ViewAllProviders";
-import PaymentInfo from "../pages/user/PaymentInfo";
+import PaymentDetails from "../pages/user/PaymentDetails";
 import BookingList from "../pages/user/BookingList";
 // import PaymentList from "../pages/user/PaymentList";
 import OurServices from "../pages/user/OurServices";
@@ -115,8 +115,8 @@ const AppRoutes = () => {
             />
 
             <Route
-              path="/user/payment-history/payment-info/:id"
-              element={<PaymentInfo />}
+              path="/user/payment-history/payment-details/:paymentId"
+              element={<PaymentDetails />}
             />
             <Route path="/user/reviews" element={<ReviewList />} />
             <Route path="/user/profile-settings" element={<ProfileSettings />}>

@@ -67,7 +67,7 @@ const UserPaymentHistoryPageRow = ({ paymentHistory }) => {
           color="blue"
           size="sm"
           type="button"
-          onClick={() => navigate(`payment-info/${paymentHistory._id}`)}
+          onClick={() => navigate(`payment-details/${paymentHistory._id}`)}
         >
           <FaRegEye size={16} /> View
         </Button>
@@ -75,7 +75,7 @@ const UserPaymentHistoryPageRow = ({ paymentHistory }) => {
       <FaRegEye
         size={20}
         className="md:hidden flex justify-center text-primary"
-        onClick={() => navigate(`payment-info/${paymentHistory._id}`)}
+        onClick={() => navigate(`payment-details/${paymentHistory._id}`)}
       />
     </div>
   );
