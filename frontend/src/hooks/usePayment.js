@@ -5,6 +5,7 @@ import {
   paymentMarkFailed,
   userPaymentHistory,
   getAdminPayment,
+  getUserPaymentDetails,
 } from "../services/paymentService";
 
 export const usePayment = () => {
@@ -37,11 +38,18 @@ export const usePayment = () => {
       );
     },
   });
- 
+   const userPaymentDetailsMutation = useMutation({
+    mutationFn:getUserPaymentDetails,
+    onError:(err)=>{
+      console.error('User payment details error:',err);
+      
+    }
+   })
   return {
     createOrderMutation,
     verifyPaymentMutation,
     markPaymentFailedMutation,
+    userPaymentDetailsMutation
   };
 };
 
