@@ -15,14 +15,18 @@ export const paymentMarkFailed = async (payload) => {
   return response.data;
 };
 
-export const userPaymentHistory = async (filters)=>{
-  const response = await api.get('/payments/user/payment-history',{
-    params:filters
-  })
-  return response.data
-}
+export const userPaymentHistory = async (filters) => {
+  const response = await api.get("/payments/user/payment-history", {
+    params: filters,
+  });
+  return response.data;
+};
 
-export const getAdminPayment = async ()=>{
-  const response = await api.get('/admin/payments')
-  return response.data
-}
+export const getAdminPayment = async () => {
+  const response = await api.get("/admin/payments");
+  return response.data;
+};
+export const userPaymentDetails = async ({ paymentId }) => {
+  const response = await api.get(`/payments/user/payment-details/${paymentId}`);
+  return response.data;
+};
