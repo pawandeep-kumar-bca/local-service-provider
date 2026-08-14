@@ -2,6 +2,7 @@ import React from "react";
 import BookingProviderCard from "./BookingProviderCard";
 import { useAllUserBookings } from "../../hooks/useBooking";
 import { useOutletContext } from "react-router-dom";
+import NoBooking from "./NoDataComponents/NoBooking";
 
 const BookingList = () => {
   const status = useOutletContext();
@@ -11,11 +12,13 @@ const BookingList = () => {
    
    
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <>
+   {bookings.length !==0 ? <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
       {bookings.map((booking) => (
         <BookingProviderCard booking={booking} key={booking._id} />
       ))}
-    </div>
+    </div>:<NoBooking status={status}/>}
+    </>
   );
 };
 
