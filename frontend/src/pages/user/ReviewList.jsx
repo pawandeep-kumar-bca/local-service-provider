@@ -1,5 +1,6 @@
 import ReviewCard from "./ReviewCard";
 import { useGetAllUserReviews } from "../../hooks/useReview";
+import NoReviews from "./NoDataComponents/NoReviews";
 
 const ReviewList = () => {
   const { data } = useGetAllUserReviews();
@@ -15,7 +16,7 @@ const ReviewList = () => {
           ))}
         </div>
       ) : (
-        <div>hello</div>
+        <NoReviews/>
       )}
     </>
   );
