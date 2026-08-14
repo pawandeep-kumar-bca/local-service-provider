@@ -38,25 +38,29 @@ export const usePayment = () => {
       );
     },
   });
-   const userPaymentDetailsMutation = useMutation({
-    mutationFn:getUserPaymentDetails,
-    onError:(err)=>{
-      console.error('User payment details error:',err);
-      
-    }
-   })
+
   return {
     createOrderMutation,
     verifyPaymentMutation,
     markPaymentFailedMutation,
-    userPaymentDetailsMutation
   };
 };
+export const useUserPaymentDetails = (paymentId) => {
 
+  
+  return useQuery({
+    queryKey: ["user-payment-details", paymentId],
+    queryFn: () => getUserPaymentDetails(paymentId),
+    enabled: !!paymentId,
+    onError: (err) => {
+      console.error("User payment details error:", err);
+    },
+  });
+};
 export const useUserPaymentHistory = (filters) => {
   return useQuery({
-    queryKey: ["user-payment-history",filters],
-    queryFn:  ()=>userPaymentHistory(filters),
+    queryKey: ["user-payment-history", filters],
+    queryFn: () => userPaymentHistory(filters),
     onError: (err) => {
       console.error("User payment history Error", err);
     },
@@ -65,7 +69,7 @@ export const useUserPaymentHistory = (filters) => {
 export const useAdminPayments = () => {
   return useQuery({
     queryKey: ["admin-payment"],
-    queryFn:getAdminPayment,
+    queryFn: getAdminPayment,
     onError: (err) => {
       console.error("Get admin payment error:", err);
     },

@@ -26,7 +26,9 @@ export const getAdminPayment = async () => {
   const response = await api.get("/admin/payments");
   return response.data;
 };
-export const getUserPaymentDetails = async ({ paymentId }) => {
+export const getUserPaymentDetails = async ( paymentId ) => {
+  console.log(paymentId);
+  
   const response = await api.get(`/payments/user/payment-details/${paymentId}`);
   return response.data;
 };

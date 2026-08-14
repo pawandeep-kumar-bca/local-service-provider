@@ -15,52 +15,23 @@ import {
 import { FaPhoneAlt, FaRegCalendarMinus, FaStar } from "react-icons/fa";
 import { SiRazorpay } from "react-icons/si";
 import StatusBadge from "../../components/common/StatusBadge";
+import { useParams } from "react-router-dom";
+import { useUserPaymentDetails } from "../../hooks/usePayment";
+import Avatar from "../../components/common/Avatar";
 
-const PaymentDetails = ({ paymentDetails }) => {
-  const payment = paymentDetails;
-  const booking = payment?.bookingId;
+const PaymentDetails = () => {
+  const { paymentId } = useParams();
 
-  const service = booking?.serviceSnapshot;
-  const address = booking?.serviceAddressSnapshot;
-  const provider = booking?.providerSnapshot;
-
-  // =========================
-  // FORMATTERS
-  // =========================
+  const { data } = useUserPaymentDetails(paymentId);
+  const payment = data?.paymentDetails;
 
   const formatDate = (date) => {
-    if (!date) return "-";
-
     return new Date(date).toLocaleDateString("en-IN", {
       day: "2-digit",
-      month: "short",
-      year: "numeric",
+      month: "long",
+      year: "2-digit",
     });
   };
-
-  const formatDateTime = (date) => {
-    if (!date) return "-";
-
-    return new Date(date).toLocaleString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const formatTime = (date) => {
-    if (!date) return "-";
-
-    return new Date(date).toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
   const formatAmount = (amount, currency = "INR") => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -68,18 +39,6 @@ const PaymentDetails = ({ paymentDetails }) => {
       maximumFractionDigits: 0,
     }).format(amount || 0);
   };
-
-  // =========================
-  // FEES
-  // =========================
-
-  const providerFee = payment?.providerFee || 0;
-  const platformFee = payment?.platformFee || 0;
-  const totalPaid = payment?.amount || 0;
-
-  // =========================
-  // PAYMENT INFO
-  // =========================
 
   const paymentInfo = [
     {
@@ -89,7 +48,7 @@ const PaymentDetails = ({ paymentDetails }) => {
     },
     {
       label: "Receipt / Booking ID",
-      value: payment?.receipt || booking?.bookingId || "-",
+      value: payment?.receipt,
       icon: <MdReceiptLong size={18} />,
     },
     {
@@ -104,12 +63,12 @@ const PaymentDetails = ({ paymentDetails }) => {
     },
     {
       label: "Razorpay Payment ID",
-      value: payment,
+      value: payment?.razorpayPaymentId,
       icon: <SiRazorpay size={18} />,
     },
     {
       label: "Razorpay Order ID",
-      value: payment,
+      value: payment?.razorpayOrderId,
       icon: <SiRazorpay size={18} />,
     },
     {
@@ -123,15 +82,17 @@ const PaymentDetails = ({ paymentDetails }) => {
       icon: <MdCurrencyRupee size={18} />,
     },
   ];
+  const formatTime = (date) => {
+    if (!date) return "-";
 
+    return new Date(date).toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
   return (
     <section className="w-full pb-8">
-      
-
-      {/* =====================================================
-          PAYMENT FEE BREAKDOWN
-      ====================================================== */}
-
       <div className="mt-5 bg-white border border-blue-100 rounded-2xl shadow-sm overflow-hidden">
         <div className="p-5 md:p-6">
           {/* HEADER */}
@@ -167,7 +128,10 @@ const PaymentDetails = ({ paymentDetails }) => {
               </div>
 
               <p className="text-xl md:text-2xl font-bold text-brownness mt-3">
-                {formatAmount(providerFee, payment?.currency)}
+                {formatAmount(
+                  payment?.bookingId?.pricing?.serviceCharge,
+                  payment?.currency,
+                )}
               </p>
 
               <p className="text-xs text-grayness mt-1">Service amount</p>
@@ -185,7 +149,10 @@ const PaymentDetails = ({ paymentDetails }) => {
               </div>
 
               <p className="text-xl md:text-2xl font-bold text-brownness mt-3">
-                {formatAmount(platformFee, payment?.currency)}
+                {formatAmount(
+                  payment?.bookingId?.pricing?.platformFee,
+                  payment?.currency,
+                )}
               </p>
 
               <p className="text-xs text-grayness mt-1">LSC platform charge</p>
@@ -203,7 +170,10 @@ const PaymentDetails = ({ paymentDetails }) => {
               </div>
 
               <p className="text-xl md:text-2xl font-bold text-brownness mt-3">
-                {formatAmount(totalPaid, payment?.currency)}
+                {formatAmount(
+                  payment?.bookingId?.pricing?.totalAmount,
+                  payment?.currency,
+                )}
               </p>
 
               <p className="text-xs text-green-600 font-medium mt-1">
@@ -224,8 +194,8 @@ const PaymentDetails = ({ paymentDetails }) => {
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-5 p-2">
-              {paymentInfo.map((item) => (
-                <div key={item.label} className="min-w-0">
+              {paymentInfo.map((item, idx) => (
+                <div key={idx} className="min-w-0">
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="w-8 h-8 shrink-0 rounded-lg bg-blue-50 text-primary flex items-center justify-center">
                       {item.icon}
@@ -238,7 +208,7 @@ const PaymentDetails = ({ paymentDetails }) => {
 
                   {item.label === "Payment Status" ? (
                     <div className="ml-10">
-                      <StatusBadge status={item.value} />
+                      <StatusBadge badge={item.value} />
                     </div>
                   ) : (
                     <p
@@ -300,49 +270,57 @@ const PaymentDetails = ({ paymentDetails }) => {
             </div>
 
             <div className="space-y-3">
-              <div>
-                <p className="text-xs text-grayness">Booking ID</p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-xs text-grayness">Booking ID</p>
 
-                <p className="text-sm font-semibold text-brownness mt-0.5">
-                  {booking?.bookingId || "-"}
-                </p>
-              </div>
+                  <p className="text-sm font-semibold text-brownness mt-0.5">
+                    {payment?.bookingId?.bookingId || "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-grayness">Booking Status</p>
 
-              <div>
-                <p className="text-xs text-grayness">Booking Date & Time</p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <FaRegCalendarMinus size={15} className="text-primary" />
-                    <p className="text-sm font-semibold text-brownness ">
-                      {formatDate(booking?.bookingDate)}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <MdAccessTime size={15} className="text-primary" />
-
-                    <p className="text-sm font-semibold text-brownness">
-                      {formatTime(booking?.bookingSlot?.startTime)}
-                      {" - "}
-                      {formatTime(booking?.bookingSlot?.endTime)}
-                    </p>
+                  <div className="mt-2">
+                    <StatusBadge badge={payment?.bookingId?.bookingStatus} />
                   </div>
                 </div>
               </div>
+<div className="flex justify-between items-center">
               <div>
+                <p className="text-xs text-grayness">Booking Date</p>
+                <div className="flex items-center gap-1 mt-1">
+                  <FaRegCalendarMinus size={15} className="text-primary" />
+                  <p className="text-sm font-semibold text-brownness ">
+                    {formatDate(payment?.bookingId?.bookingDate)}
+                  </p>
+                </div>
+              </div>
+               <div>
                 <p className="text-xs text-grayness">Duration</p>
 
                 <p className="text-sm font-semibold text-brownness mt-0.5">
-                  {booking?.durationHours || 0} Hours
+                  {payment?.bookingId?.durationHours || 0} Hours
                 </p>
               </div>
+</div>
+              <div className="mt-0.5">
+                <p className="text-xs text-grayness">Booking Slot</p>
+                <div className="flex items-center gap-1 mt-1">
+                  <MdAccessTime size={15} className="text-primary" />
 
-              <div>
-                <p className="text-xs text-grayness">Booking Status</p>
-
-                <div className="mt-1">
-                  <StatusBadge status={booking?.bookingStatus} />
+                  <p className="text-sm font-semibold text-brownness">
+                    {formatTime(
+                      payment?.bookingId?.bookingSlot?.startTime,
+                    ).toUpperCase()}
+                    {" - "}
+                    {formatTime(
+                      payment?.bookingId?.bookingSlot?.endTime,
+                    ).toUpperCase()}
+                  </p>
                 </div>
               </div>
+             
             </div>
           </div>
 
@@ -358,19 +336,30 @@ const PaymentDetails = ({ paymentDetails }) => {
             </div>
 
             <div className="flex items-center gap-3">
-              <img
-                src={service?.serviceImage}
-                alt={service?.categoryName || "Service"}
-                className="w-14 h-14 rounded-xl object-cover border border-pink-100 bg-white"
-              />
+              <div
+                className=" w-14 flex items-center justify-center h-14 rounded-xl"
+                style={{
+                  backgroundColor:
+                    payment?.bookingId?.serviceSnapshot?.serviceBackground,
+                }}
+              >
+                <img
+                  src={payment?.bookingId?.serviceSnapshot?.serviceImage}
+                  alt={
+                    payment?.bookingId?.serviceSnapshot?.categoryName ||
+                    "Service"
+                  }
+                  className="w-10 h-10  object-cover border border-pink-100"
+                />
+              </div>
 
               <div className="min-w-0">
                 <h4 className="font-bold text-brownness truncate">
-                  {service?.categoryName || "-"}
+                  {payment?.bookingId?.serviceSnapshot?.categoryName || "-"}
                 </h4>
 
                 <p className="text-xs text-grayness mt-1">
-                  {service?.priceType === "hourly"
+                  {payment?.bookingId?.serviceSnapshot?.priceType === "hourly"
                     ? "Hourly Service"
                     : "Fixed Service"}
                 </p>
@@ -382,7 +371,7 @@ const PaymentDetails = ({ paymentDetails }) => {
                 <span className="text-xs text-grayness">Price Type</span>
 
                 <span className="text-sm font-semibold text-brownness capitalize">
-                  {service?.priceType || "-"}
+                  {payment?.bookingId?.serviceSnapshot?.priceType || "-"}
                 </span>
               </div>
 
@@ -390,8 +379,12 @@ const PaymentDetails = ({ paymentDetails }) => {
                 <span className="text-xs text-grayness">Service Price</span>
 
                 <span className="text-sm font-bold text-primary">
-                  {formatAmount(service?.price, payment?.currency)}
-                  {service?.priceType === "hourly" && "/hr"}
+                  {formatAmount(
+                    payment?.bookingId?.serviceSnapshot?.price,
+                    payment?.currency,
+                  )}
+                  {payment?.bookingId?.serviceSnapshot?.priceType ===
+                    "hourly" && "/hr"}
                 </span>
               </div>
             </div>
@@ -413,28 +406,30 @@ const PaymentDetails = ({ paymentDetails }) => {
                 <MdHome size={16} className="text-grayness mt-0.5 shrink-0" />
 
                 <p className="text-sm text-brownness leading-5">
-                  {address?.fullAddress || "-"}
+                  {payment?.bookingId?.serviceAddressSnapshot?.fullAddress ||
+                    "-"}
                 </p>
               </div>
 
               <p className="text-sm text-brownness pl-6">
-                {address?.village || "-"}
+                {payment?.bookingId?.serviceAddressSnapshot?.village || "-"}
               </p>
 
               <p className="text-sm text-brownness pl-6">
-                {address?.city || "-"}, {address?.district || "-"}
+                {payment?.bookingId?.serviceAddressSnapshot?.city || "-"},{" "}
+                {payment?.bookingId?.serviceAddressSnapshot?.district || "-"}
               </p>
 
               <p className="text-sm text-brownness pl-6">
-                {address?.state || "-"}
+                {payment?.bookingId?.serviceAddressSnapshot?.state || "-"}
               </p>
 
-              {address?.landmark && (
+              {payment?.bookingId?.serviceAddressSnapshot?.landmark && (
                 <div className="mt-4 pt-3 border-t border-blue-100">
                   <p className="text-xs text-grayness">Landmark</p>
 
                   <p className="text-sm font-medium text-brownness mt-1">
-                    {address.landmark}
+                    {payment?.bookingId?.serviceAddressSnapshot?.landmark}
                   </p>
                 </div>
               )}
@@ -456,31 +451,34 @@ const PaymentDetails = ({ paymentDetails }) => {
 
             <div className="flex items-center gap-3">
               <div className="relative shrink-0">
-                <img
-                  src={provider?.profileImage?.url}
-                  alt={provider?.name || "Provider"}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm"
-                />
-
-                {provider?.availability && (
+                <div className="w-14 h-14 object-cover border-2 border-white rounded-full shadow-sm">
+                  <Avatar
+                    name={payment?.bookingId?.providerSnapshot?.name}
+                    image={
+                      payment?.bookingId?.providerSnapshot?.profileImage?.url
+                    }
+                  />
+                </div>
+                {payment?.bookingId?.providerSnapshot?.availability && (
                   <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-white" />
                 )}
               </div>
 
               <div className="min-w-0">
                 <h4 className="font-bold text-brownness truncate">
-                  {provider?.name || "-"}
+                  {payment?.bookingId?.providerSnapshot?.name || "-"}
                 </h4>
 
                 <div className="flex items-center gap-1 mt-1">
                   <FaStar size={12} className="text-yellow-400" />
 
                   <span className="text-xs font-medium text-brownness">
-                    {provider?.rating || 0}
+                    {payment?.bookingId?.providerSnapshot?.rating || 0}
                   </span>
 
                   <span className="text-xs text-grayness">
-                    ({provider?.totalReview || 0} reviews)
+                    ({payment?.bookingId?.providerSnapshot?.totalReview || 0}{" "}
+                    reviews)
                   </span>
                 </div>
               </div>
@@ -493,7 +491,7 @@ const PaymentDetails = ({ paymentDetails }) => {
                 <p className="text-xs text-grayness">Provider ID</p>
 
                 <p className="text-sm font-semibold text-brownness mt-1">
-                  {provider?.providerId || "-"}
+                  {payment?.bookingId?.providerSnapshot?.providerId || "-"}
                 </p>
               </div>
 
@@ -501,7 +499,7 @@ const PaymentDetails = ({ paymentDetails }) => {
                 <FaPhoneAlt size={12} className="text-green-600" />
 
                 <span className="text-sm font-semibold text-brownness">
-                  {provider?.phone || "-"}
+                  {payment?.bookingId?.providerSnapshot?.phone || "-"}
                 </span>
               </div>
 
@@ -514,13 +512,15 @@ const PaymentDetails = ({ paymentDetails }) => {
                   text-xs
                   font-semibold
                   ${
-                    provider?.availability
+                    payment?.bookingId?.providerSnapshot?.availability
                       ? "bg-green-100 text-green-700"
                       : "bg-red-100 text-red-600"
                   }
                 `}
               >
-                {provider?.availability ? "Available" : "Unavailable"}
+                {payment?.bookingId?.providerSnapshot?.availability
+                  ? "Available"
+                  : "Unavailable"}
               </span>
             </div>
           </div>
