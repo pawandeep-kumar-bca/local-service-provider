@@ -1,21 +1,27 @@
 import React from "react";
-import { useRecommendedProviders,useNearbyProviders } from "../../hooks/useProvider";
+import {
+  useRecommendedProviders,
+  useNearbyProviders,
+} from "../../hooks/useProvider";
 import ProviderCard from "./ProviderCard";
-import {useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import ProviderSortBar from "./filterComponents/ProviderSortBar";
 const ProviderList = () => {
-  const navigate  = useNavigate()
-  const { filters, setFilters } = useOutletContext();
-  const hasLocation = filters.lat !== "" && filters.lng !== "" && filters.radius !=='';
+  const navigate = useNavigate();
+  const { filters, setFilters, nearbyFilters } = useOutletContext();
+const hasLocation =
+  Boolean(nearbyFilters?.lat) &&
+  Boolean(nearbyFilters?.lng) &&
+  Boolean(nearbyFilters?.radius);
 
   const recommendedQuery = useRecommendedProviders(filters);
 
-  const nearbyQuery = useNearbyProviders(filters);
+  const nearbyQuery = useNearbyProviders(nearbyFilters);
 
   const data = hasLocation ? nearbyQuery.data : recommendedQuery.data;
-const isLoading = hasLocation
-  ? nearbyQuery.isLoading
-  : recommendedQuery.isLoading;
+  const isLoading = hasLocation
+    ? nearbyQuery.isLoading
+    : recommendedQuery.isLoading;
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">Loading...</div>
@@ -29,7 +35,11 @@ const isLoading = hasLocation
           Find Best Service Providers
         </h1>
 
-        <button type="button" onClick={()=>navigate('/user/all-providers')} className="text-primary text-sm transition-all duration-300 cursor-pointer  font-semibold hover:underline disabled:opacity-50">
+        <button
+          type="button"
+          onClick={() => navigate("/user/all-providers")}
+          className="text-primary text-sm transition-all duration-300 cursor-pointer  font-semibold hover:underline disabled:opacity-50"
+        >
           View All
         </button>
       </div>

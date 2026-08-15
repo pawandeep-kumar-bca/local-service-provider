@@ -84,7 +84,7 @@ const SlotTime = ({
     const nextAvailableMinutes = getNextAvailableHour();
 
     startTimes = startTimes.filter(
-      (time) => parseTimeToMinutes(time) >= nextAvailableMinutes
+      (time) => parseTimeToMinutes(time) >= nextAvailableMinutes,
     );
   }
 
@@ -94,8 +94,7 @@ const SlotTime = ({
 
   const endTimes = startTime
     ? allTimes.filter(
-        (time) =>
-          parseTimeToMinutes(time) > parseTimeToMinutes(startTime)
+        (time) => parseTimeToMinutes(time) > parseTimeToMinutes(startTime),
       )
     : allTimes.slice(1);
 
@@ -122,8 +121,7 @@ const SlotTime = ({
         htmlFor="start-time"
         className="block mb-2 font-medium text-lg md:text-sm"
       >
-        {label}{" "}
-        {required && <span className="text-red-500">*</span>}
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
 
       <div className="flex items-center gap-1">

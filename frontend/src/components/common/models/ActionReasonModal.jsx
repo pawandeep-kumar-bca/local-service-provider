@@ -27,7 +27,7 @@ const ActionReasonModal = ({
       <div className="flex flex-col items-center text-center">
         {Icon}
 
-        <h2 className="text-2xl text-text font-bold mb-4">{title}</h2>
+        <h2 className="text-2xl text-text font-bold pt-6 mb-4">{title}</h2>
         <p className="text-muted font-semibold text-sm mb-6">{text}</p>
         <form onSubmit={handlerSubmit} className="w-full">
           <div className="flex flex-col gap-3 w-full mb-2">
@@ -88,12 +88,12 @@ const ActionReasonModal = ({
               </p>
             </div>
           </div>
-          <div className="flex justify-end gap-3  py-4 bg-white">
-            <Button onClick={close} color="white" size="md">
+          <div className="flex justify-end gap-3  py-3 bg-white">
+            <Button onClick={close} color="white" size="md" fullWidth>
               Cancel
             </Button>
 
-            <Button color={rightBtnColor} size="md">
+            <Button color={rightBtnColor} size="md" fullWidth>
               {rightBtnText}
             </Button>
           </div>

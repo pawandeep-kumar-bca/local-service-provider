@@ -251,6 +251,7 @@ const BookingProvider = ({ booking }) => {
               {!booking.isRescheduled && (
                 <Button
                   color="white"
+                  size="xs"
                   fullWidth
                   type="button"
                   onClick={() =>

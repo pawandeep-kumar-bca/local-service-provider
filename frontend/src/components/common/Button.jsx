@@ -9,7 +9,7 @@ const Button = ({
   ...props
 }) => {
   const base =
-    "py-2 flex items-center justify-center gap-2 font-roboto rounded-xl cursor-pointer font-medium shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-95 text-lg md:text-base whitespace-nowrap";
+    "py-2 flex items-center justify-center gap-2 font-roboto rounded-xl cursor-pointer font-medium shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-95 text-base whitespace-nowrap";
 const sizes = {
   xs: "px-4",
   sm:'px-6',

@@ -6,7 +6,7 @@ import {
 } from "react-icons/fa";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import Cards from "../../components/common/Cards";
-import { useState } from "react";
+import {  useState } from "react";
 import Button from "../../components/common/Button";
 import { MdVerifiedUser } from "react-icons/md";
 import { GoClock } from "react-icons/go";
@@ -14,9 +14,17 @@ import { GoClock } from "react-icons/go";
 import { LuLock } from "react-icons/lu";
 import { FaHandshakeAngle, FaUserGroup } from "react-icons/fa6";
 import PopularCategoriesSection from "./PopularCategoriesSection";
+import { useSelector } from "react-redux";
 const UserDashboard = () => {
   const navigate = useNavigate();
-  const savedLocation = JSON.parse(localStorage.getItem("location") || "null");
+  // const savedLocation = JSON.parse(localStorage.getItem("location") 
+  // || "null");
+
+  const location = useSelector(
+  (state) => state.location.location
+);
+
+
   const [filters, setFilters] = useState({
     categoryId: "",
     rating: "",
@@ -27,11 +35,15 @@ const UserDashboard = () => {
     maxPrice: "",
     sort: [],
     // location
-    lat: savedLocation?.latitude || "",
-    lng: savedLocation?.longitude || "",
+    // lat: location?.latitude || "",
+    // lng: location?.longitude || "",
     radius: 200,
   });
-
+const nearbyFilters = {
+  ...filters,
+  lat: location?.latitude || "",
+  lng: location?.longitude || "",
+};
   return (
     <>
       <div className="w-full h-full">
@@ -431,6 +443,7 @@ const UserDashboard = () => {
           context={{
             filters,
             setFilters,
+            nearbyFilters
           }}
         />
       </div>

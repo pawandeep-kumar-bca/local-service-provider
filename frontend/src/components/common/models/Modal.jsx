@@ -33,7 +33,7 @@ const Modal = ({
   
   return (
     <div
-      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 py-5"
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
       onClick={onClose}
     >
       {/* Modal Box */}
@@ -41,18 +41,19 @@ const Modal = ({
       <div
         className={`
           w-full
-          ${modalSizes[size]}
+          h-full
+          md:${modalSizes[size]}
           bg-white
           rounded-2xl
           shadow-[0_10px_40px_rgba(0,0,0,0.2)]
-          pt-10 pb-2
+          md:pt-10 md:pb-2
           relative
           overflow-hidden
           animate-in
           fade-in
           zoom-in-95
           duration-200
-          max-h-[90vh]
+          md:max-h-[80vh]
           overflow-y-auto
           relative
         `}
@@ -62,7 +63,7 @@ const Modal = ({
 
         <button
           onClick={onClose}
-          className="p-2 rounded-full hover:bg-gray-100 transition-all absolute top-2  right-2 cursor-pointer"
+          className="p-2 hidden md:block rounded-full hover:bg-gray-100 transition-all absolute top-2  right-2 cursor-pointer"
         >
           <IoClose className="text-2xl" />
         </button>

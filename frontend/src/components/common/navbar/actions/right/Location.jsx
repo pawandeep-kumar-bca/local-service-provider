@@ -3,15 +3,21 @@ import React, { useState } from "react";
 import { CiLocationArrow1 } from "react-icons/ci";
 import { IoIosArrowDown } from "react-icons/io";
 import { useAddressToReverseGeocode } from "../../../../../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { setLocation } from "../../../../../features/locationSlice";
 const Location = () => {
+ const dispatch = useDispatch();
+
   const [open, setOpen] = useState(false);
+
   const [address, setAddress] = useState(
-    JSON.parse(localStorage.getItem("location") || "{}"),
+    JSON.parse(localStorage.getItem("location") || "{}")
   );
 
-  const { addressToReverseGeocodeMutation } = useAddressToReverseGeocode();
+  const { addressToReverseGeocodeMutation } =
+    useAddressToReverseGeocode();
+
   const selectCurrentLocation = () => {
-    console.log(window.isSecureContext);
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
@@ -29,25 +35,34 @@ const Location = () => {
                 locality: data.location.locality,
               };
 
-              localStorage.setItem("location", JSON.stringify(locationData));
+              // localStorage
+              localStorage.setItem(
+                "location",
+                JSON.stringify(locationData)
+              );
 
+              // local component
               setAddress(locationData);
+
+              // ⭐ shared React state
+              dispatch(setLocation(locationData));
+
               setOpen(false);
             },
-          },
+          }
         );
       },
       (error) => {
         console.error(error);
+
         switch (error.code) {
           case error.POSITION_UNAVAILABLE:
             alert("Location unavailable");
             break;
+
           case error.PERMISSION_DENIED:
             alert("Permission Denied");
             break;
-
-          
 
           case error.TIMEOUT:
             alert("Location timeout");
@@ -56,7 +71,7 @@ const Location = () => {
           default:
             alert(error.message);
         }
-      },
+      }
     );
   };
 
