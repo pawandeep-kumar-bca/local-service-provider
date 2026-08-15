@@ -2,7 +2,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 const RoleRoute = ({ allowedRoles }) => {
   const { user, token, isAuthChecked } = useSelector((state) => state.auth);
+ 
 
+  
   if (!isAuthChecked) {
     return <h1>Loading...</h1>;
   }
@@ -14,6 +16,7 @@ const RoleRoute = ({ allowedRoles }) => {
   const isApprovedProvider =
     user.isProvider && user.providerStatus === "approved";
 
+
   const hasAccess = allowedRoles.some((allowedRole) => {
     if (allowedRole === "provider") {
       return isApprovedProvider;
@@ -21,6 +24,7 @@ const RoleRoute = ({ allowedRoles }) => {
 
     return user.role === allowedRole;
   });
+
 
   if (!hasAccess) {
     if (allowedRoles.includes("provider") && user.isProvider) {

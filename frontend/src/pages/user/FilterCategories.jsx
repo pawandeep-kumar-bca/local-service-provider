@@ -12,7 +12,7 @@ const FilterCategories = ({url,setFilters}) => {
     const categories = data?.categories || [];
   
     const base =
-      "whitespace-nowrap text-sm md:text-[16px] flex gap-2 items-center border shrink-0 transition-all duration-300 mb-2 px-5 py-2 hover:bg-blue-200 hover:border-blue-300 hover:text-blue-600 rounded-xl font-semibold";
+      "whitespace-nowrap text-sm  flex gap-2 items-center border shrink-0 transition-all duration-300 mb-2 px-5 py-2 hover:bg-blue-200 hover:border-blue-300 hover:text-blue-600 rounded-xl font-semibold";
   
     const active = "bg-blue-200 border-blue-300 text-blue-600";
     const notActive = "border-muted border text-black";
@@ -90,7 +90,7 @@ const FilterCategories = ({url,setFilters}) => {
               `${base} ${isActive ? active : notActive}`
             }
           >
-            <BsGridFill className=" text-sm md:text-xl" /> All Services
+            <BsGridFill className=" text-sm md:text-lg" /> All Services
           </NavLink>
   
           {categories.map((category) => (
@@ -106,7 +106,7 @@ const FilterCategories = ({url,setFilters}) => {
                 <img
                   src={category.icon.url}
                   alt={category.name}
-                  className="w-5 h-5 md:w-7  md:h-7"
+                  className="w-5 h-5 md:w-6  md:h-6"
                 />
               )}
   

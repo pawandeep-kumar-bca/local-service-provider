@@ -12,6 +12,8 @@ const getStoredAuth = () => {
 };
 
 const savedAuth = getStoredAuth();
+console.log(savedAuth);
+
 const initialState = {
   user: null,
   token: savedAuth?.accessToken || null,

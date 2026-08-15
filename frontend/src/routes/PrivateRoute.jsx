@@ -2,14 +2,20 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const PrivateRoute = () => {
-  const { token } = useSelector((state) => state.auth);
+  const { token, isAuthChecked } = useSelector(
+    (state) => state.auth
+  );
+ 
+  
+  if (!isAuthChecked) {
+    return <h1>Loading...</h1>;
+  }
 
-  // agar token nahi hai → login bhej
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  // agar token hai → child routes show karo
+
   return <Outlet />;
 };
 
