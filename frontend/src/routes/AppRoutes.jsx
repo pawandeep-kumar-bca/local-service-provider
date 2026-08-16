@@ -79,11 +79,14 @@ import ReportDetails from "../pages/admin/reports/ReportDetails";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import ProviderList from "../pages/user/ProviderList";
 import SelectProvidersList from "../pages/user/SelectProvidersList";
+import HomeRedirect from "../pages/auth/HomeRedirect";
+// import WelcomePage from "../pages/public/WelcomePage";
 // import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
 
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/" element={<HomeRedirect />} />
       <Route path="/login" element={<AuthLayout />} />
       <Route path="/register" element={<AuthLayout />} />
       {/* <Route path="/reset" element={<ResetPasswordPage/>}/> */}

@@ -11,10 +11,8 @@ const CombinedPage = () => {
 
   const isLogin = location.pathname === "/login";
   const isRegister = location.pathname === "/register";
-  const isForgotPassword =
-    location.pathname === "/forgot-password";
-  const isResetPassword =
-    location.pathname === "/reset-password";
+  const isForgotPassword = location.pathname === "/forgot-password";
+  const isResetPassword = location.pathname === "/reset-password";
 
   const showTabs = isLogin || isRegister;
 
@@ -58,8 +56,8 @@ const CombinedPage = () => {
         </div>
 
         {/* ================= RIGHT ================= */}
-      <div
-  className="
+        <div
+          className="
     w-full
     md:w-1/3
     md:h-[600px]
@@ -73,39 +71,37 @@ const CombinedPage = () => {
     justify-start
     overflow-y-auto
   "
->
-  {/* Login / Register Tabs */}
-  {showTabs && (
-    <div className="flex justify-around w-full mb-8 shrink-0">
-      <Link
-        to="/login"
-        className={`pb-2 font-semibold ${
-          isLogin
-            ? "border-b-2 border-blue-500 text-blue-600"
-            : "text-gray-400"
-        }`}
-      >
-        Login
-      </Link>
+        >
+          {/* Login / Register Tabs */}
+          {showTabs && (
+            <div className="flex justify-around w-full mb-8 shrink-0">
+              <Link
+                to="/login"
+                className={`pb-2 font-semibold ${
+                  isLogin
+                    ? "border-b-2 border-blue-500 text-blue-600"
+                    : "text-gray-400"
+                }`}
+              >
+                Login
+              </Link>
 
-      <Link
-        to="/register"
-        className={`pb-2 font-semibold ${
-          isRegister
-            ? "border-b-2 border-blue-500 text-blue-600"
-            : "text-gray-400"
-        }`}
-      >
-        Register
-      </Link>
-    </div>
-  )}
+              <Link
+                to="/register"
+                className={`pb-2 font-semibold ${
+                  isRegister
+                    ? "border-b-2 border-blue-500 text-blue-600"
+                    : "text-gray-400"
+                }`}
+              >
+                Register
+              </Link>
+            </div>
+          )}
 
-  {/* Auth Content */}
-  <div className="w-full">
-    {renderAuthPage()}
-  </div>
-</div>
+          {/* Auth Content */}
+          <div className="w-full">{renderAuthPage()}</div>
+        </div>
       </div>
     </div>
   );
