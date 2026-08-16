@@ -9,13 +9,15 @@ const AuthLayout = () => {
   const location = useLocation();
 
   const isLogin = location.pathname === "/login";
-
-  // 📱 Mobile → separate pages
+  const isRegister = location.pathname === "/register";
+  
   if (isMobile) {
-    return isLogin ? <LoginPage /> : <RegisterPage />;
+    if (isLogin) return <LoginPage />;
+    if (isRegister) return <RegisterPage />;
+   
   }
 
-  // 💻 Desktop → combined UI
+ 
   return <CombinedPage />;
 };
 
