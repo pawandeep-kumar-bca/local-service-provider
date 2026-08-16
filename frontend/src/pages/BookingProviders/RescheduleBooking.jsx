@@ -115,8 +115,16 @@ const RescheduleBooking = () => {
                     <h1 className="text-semibold text-lg text-muted">Time</h1>
                   </div>
                   <h2 className="font-semibold">
-                    {booking?.bookingSlot?.startTime} -{" "}
-                    {booking?.bookingSlot?.endTime}
+                    {new Date(booking?.bookingSlot?.startTime).toLocaleString('en-IN',{
+                      hour:'2-digit',
+                      minute:'2-digit',
+                      hour12:true
+                    }).toUpperCase()} -{" "}{new Date(booking?.bookingSlot?.endTime).toLocaleString('en-IN',{
+                      hour:'2-digit',
+                      minute:'2-digit',
+                      hour12:true
+                    }).toUpperCase()}
+                   
                   </h2>
                 </div>
                 <div className="flex justify-between md:justify-start md:flex-col md:items-center">
@@ -152,6 +160,7 @@ const RescheduleBooking = () => {
                 <div className="flex flex-col relative flex-1">
                   <SlotTime
                     label=" Time Slot"
+                    date={formData.date}
                     startTime={formData?.startTime}
                     endTime={formData?.endTime}
                     required

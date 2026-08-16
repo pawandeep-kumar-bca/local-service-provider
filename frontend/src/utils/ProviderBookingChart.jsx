@@ -9,9 +9,7 @@ import {
 } from "chart.js";
 
 import { useState } from "react";
-
 import { Line } from "react-chartjs-2";
-
 import { IoMdArrowRoundUp } from "react-icons/io";
 
 ChartJS.register(
@@ -20,83 +18,71 @@ ChartJS.register(
   PointElement,
   LineElement,
   Filler,
-  Tooltip,
+  Tooltip
 );
 
 const chartData = {
   "This Week": {
-    amount: "₹ 22,550",
-
-    growth: "15%",
-
     labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
 
-    current: [4000, 5800, 6300, 7400, 5600, 7500, 7200],
+    current: [4, 7, 6, 9, 5, 8, 3],
 
-    previous: [2800, 3900, 5000, 4700, 3500, 5700, 5200],
+    previous: [3, 5, 6, 5, 4, 6, 4],
   },
 
   "This Month": {
-    amount: "₹ 85,420",
-
-    growth: "22%",
-
     labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
 
-    current: [22000, 26000, 32000, 38000],
+    current: [42, 58, 67, 75],
 
-    previous: [18000, 21000, 28000, 30000],
+    previous: [35, 48, 55, 62],
   },
 
   "This Year": {
-    amount: "₹ 4,82,000",
-
-    growth: "35%",
-
     labels: [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-],
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
 
     current: [
-  40000,
-  58000,
-  72000,
-  85000,
-  92000,
-  110000,
-  118000,
-  125000,
-  132000,
-  145000,
-  152000,
-  168000,
-],
+      32,
+      45,
+      52,
+      61,
+      68,
+      75,
+      82,
+      91,
+      87,
+      96,
+      105,
+      118,
+    ],
 
-previous: [
-  32000,
-  45000,
-  55000,
-  70000,
-  76000,
-  90000,
-  98000,
-  105000,
-  112000,
-  120000,
-  128000,
-  140000,
-],
+    previous: [
+      27,
+      38,
+      45,
+      50,
+      56,
+      62,
+      68,
+      73,
+      71,
+      78,
+      86,
+      94,
+    ],
   },
 };
 
@@ -105,13 +91,29 @@ const ProviderBookingChart = () => {
 
   const selectedData = chartData[option];
 
+  const currentTotal = selectedData.current.reduce(
+    (total, value) => total + value,
+    0
+  );
+
+  const previousTotal = selectedData.previous.reduce(
+    (total, value) => total + value,
+    0
+  );
+
+  const growth =
+    previousTotal > 0
+      ? Math.round(
+          ((currentTotal - previousTotal) / previousTotal) * 100
+        )
+      : 0;
+
   const data = {
     labels: selectedData.labels,
 
     datasets: [
       {
         label: "Current",
-
         data: selectedData.current,
 
         borderColor: "#22c55e",
@@ -121,16 +123,25 @@ const ProviderBookingChart = () => {
 
           const gradient = ctx.createLinearGradient(0, 0, 0, 300);
 
-          gradient.addColorStop(0, "rgba(34,197,94,0.25)");
-          gradient.addColorStop(1, "rgba(34,197,94,0)");
+          gradient.addColorStop(
+            0,
+            "rgba(34,197,94,0.25)"
+          );
+
+          gradient.addColorStop(
+            1,
+            "rgba(34,197,94,0)"
+          );
 
           return gradient;
         },
 
         fill: true,
         tension: 0.4,
+
         pointRadius: 4,
         pointHoverRadius: 6,
+
         pointBackgroundColor: "#22c55e",
       },
 
@@ -142,8 +153,10 @@ const ProviderBookingChart = () => {
         borderColor: "#d1d5db",
 
         tension: 0.4,
+
         pointRadius: 4,
         pointHoverRadius: 6,
+
         pointBackgroundColor: "#d1d5db",
       },
     ],
@@ -156,6 +169,14 @@ const ProviderBookingChart = () => {
       legend: {
         display: false,
       },
+
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return `${context.dataset.label}: ${context.parsed.y} bookings`;
+          },
+        },
+      },
     },
 
     scales: {
@@ -163,18 +184,20 @@ const ProviderBookingChart = () => {
         beginAtZero: true,
 
         ticks: {
-          callback: function (value) {
-            if (value >= 1000) {
-              return "₹" + value / 1000 + "K";
-            }
+          precision: 0,
 
-            return value;
+          callback: function (value) {
+            return `${value}`;
           },
+        },
+
+        title: {
+          display: true,
+          text: "Bookings",
         },
 
         grid: {
           display: false,
-          color: "#f1f5f9",
         },
 
         border: {
@@ -196,7 +219,7 @@ const ProviderBookingChart = () => {
 
   return (
     <div>
-      
+      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4 mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-muted">
@@ -224,25 +247,57 @@ const ProviderBookingChart = () => {
           "
         >
           <option value="This Week">This Week</option>
-
           <option value="This Month">This Month</option>
-
           <option value="This Year">This Year</option>
         </select>
       </div>
 
       {/* Analytics */}
-      <div className="flex md:items-center md:flex-row flex-col justify-between  gap-4 mb-6 relative">
-        {/* Revenue */}
+      <div
+        className="
+          flex
+          md:items-center
+          md:flex-row
+          flex-col
+          justify-between
+          gap-4
+          mb-6
+          relative
+        "
+      >
+        {/* Total Bookings */}
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
-            {selectedData.amount}
+            {currentTotal}
           </h1>
 
+          <p className="text-sm text-muted mt-1">
+            Total Bookings
+          </p>
+
           <div className="flex items-center gap-2 mt-2">
-            <span className="flex items-center gap-1 text-green-500 font-semibold text-sm">
-              <IoMdArrowRoundUp size={18} />
-              {selectedData.growth}
+            <span
+              className={`
+                flex
+                items-center
+                gap-1
+                font-semibold
+                text-sm
+                ${
+                  growth >= 0
+                    ? "text-green-500"
+                    : "text-red-500"
+                }
+              `}
+            >
+              <IoMdArrowRoundUp
+                size={18}
+                className={
+                  growth < 0 ? "rotate-180" : ""
+                }
+              />
+
+              {Math.abs(growth)}%
             </span>
 
             <p className="text-sm text-muted">
@@ -252,15 +307,26 @@ const ProviderBookingChart = () => {
         </div>
 
         {/* Chart Labels */}
-        <div className="flex items-center gap-5 absolute right-0  text-sm font-medium text-muted">
+        <div
+          className="
+            flex
+            items-center
+            gap-5
+            absolute
+            right-0
+            text-sm
+            font-medium
+            text-muted
+          "
+        >
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500" />
 
             <p>Current</p>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+            <div className="w-3 h-3 rounded-full bg-gray-300" />
 
             <p>Previous</p>
           </div>
@@ -268,7 +334,15 @@ const ProviderBookingChart = () => {
       </div>
 
       {/* Chart */}
-      <Line data={data} options={options} className="shadow-[0_0_20px_rgba(0,0,0,0.10)] p-1 rounded-xl"/>
+      <Line
+        data={data}
+        options={options}
+        className="
+          shadow-[0_0_20px_rgba(0,0,0,0.10)]
+          p-1
+          rounded-xl
+        "
+      />
     </div>
   );
 };

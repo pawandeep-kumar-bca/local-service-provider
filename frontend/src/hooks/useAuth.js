@@ -71,7 +71,7 @@ export const useAuth = () => {
       }
     },
     onError: (error) => {
-      console.log("Login Error:", error);
+      console.log("Login Error:", error?.response?.data?.message);
     },
   });
 
