@@ -4,6 +4,7 @@ const RoleRoute = ({ allowedRoles }) => {
   const { user, token, isAuthChecked } = useSelector((state) => state.auth);
  
 
+ 
   
   if (!isAuthChecked) {
     return <h1>Loading...</h1>;
@@ -24,6 +25,7 @@ const RoleRoute = ({ allowedRoles }) => {
 
     return user.role === allowedRole;
   });
+
 
 
   if (!hasAccess) {

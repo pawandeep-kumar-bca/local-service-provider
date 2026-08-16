@@ -6,7 +6,6 @@ const PrivateRoute = () => {
     (state) => state.auth
   );
  
-  
   if (!isAuthChecked) {
     return <h1>Loading...</h1>;
   }

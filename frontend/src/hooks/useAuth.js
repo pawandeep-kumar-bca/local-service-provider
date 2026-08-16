@@ -36,7 +36,8 @@ export const useAuth = () => {
         user: data.user,
       };
       
-       
+      
+        
       dispatch(setCredentials(authData));
 
       localStorage.setItem(
@@ -45,12 +46,14 @@ export const useAuth = () => {
           accessToken: data.accessToken,
         }),
       );
-
+    
+      
       if (data.user.role === "admin") {
         navigate("/admin/dashboard");
       } else if (
         data.user.isProvider &&
         data.user.providerStatus === "approved"
+        
       ) {
         navigate("/provider/dashboard");
       } else if (
@@ -88,14 +91,14 @@ export const useAuth = () => {
 
   return { registerMutation, loginMutation ,logoutMutation};
 };
-export const useMe = () => {
+export const useMe = (token) => {
   return useQuery({
     queryKey: ["me"],
     queryFn: getMe,
+    enabled: !!token,
     retry: false,
   });
 };
-
 export const useAddressToReverseGeocode = () => {
 
   const addressToReverseGeocodeMutation = useMutation({

@@ -2,36 +2,26 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useMe } from "../hooks/useAuth";
-import { logout, updateUser } from "../features/authSlice";
+import {  updateUser } from "../features/authSlice";
 
-const AuthInitializer = () => {
-  const dispatch = useDispatch();
+ const AuthInitializer = () => {
+    const dispatch = useDispatch();
 
-  const { token } = useSelector((state) => state.auth);
+    const { token } = useSelector((state) => state.auth);
 
-  const {
-    data,
-    isSuccess,
-    isError,
-    
-  } = useMe();
+    const { data, isSuccess,  } = useMe(token);
 
-  useEffect(() => {
-    if (!token) {
-      dispatch(logout());
-      return;
-    }
+    useEffect(() => {
+      if (!token) {
+        return;
+      }
 
-    if (isSuccess && data?.user) {
-      dispatch(updateUser(data.user));
-    }
+      if (isSuccess && data?.user) {
+        dispatch(updateUser(data.user));
+      }
+    }, [token, isSuccess, data, dispatch]);
 
-    if (isError) {
-      dispatch(logout());
-    }
-  }, [token, isSuccess, isError, data, dispatch]);
-
-  return null;
-};
+    return null;
+  };
 
 export default AuthInitializer;

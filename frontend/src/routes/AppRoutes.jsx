@@ -94,6 +94,8 @@ const AppRoutes = () => {
         <Route element={<PrivateRoute />}>
           {/* User */}
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
+      
+          
             <Route path="/user/dashboard" element={<UserDashboard />}>
               <Route index element={<ProviderList />} />
             </Route>
