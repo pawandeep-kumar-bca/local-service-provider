@@ -15,7 +15,7 @@ const BecomeProvider = () => {
     experience: "",
     price: "",
     category: null,
-    priceType:'',
+    priceType: "",
     state: null,
     district: null,
     city: null,

@@ -5,7 +5,7 @@ import Button from "../../components/common/Button";
 import { useNavigate } from "react-router-dom";
 
 const Submit = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div>
       <div className="text-center">
@@ -37,7 +37,9 @@ const Submit = () => {
         </p>
       </div>
       <div className="flex justify-center mt-6">
-        <Button color="blue" onClick={()=>navigate('/user/dashboard')}>Go to Dashboard</Button>
+        <Button color="blue" onClick={() => navigate("/user/dashboard")}>
+          Go to Dashboard
+        </Button>
       </div>
     </div>
   );
