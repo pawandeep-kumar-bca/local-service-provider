@@ -7,8 +7,10 @@ const LoginPage = () => {
         <img src="/assets/mail.jpg" alt="mail" className="w-64 h-auto" />
       </div>
       <div className=" px-6 py-8">
-        <h1 className="font-bold text-center mb-6 text-text text-3xl">Verify Your Email</h1>
-    <p className="font-semibold text-center mb-6 text-muted text-lg">
+        <h1 className="font-bold text-center mb-6 text-text text-3xl">
+          Verify Your Email
+        </h1>
+        <p className="font-semibold text-center mb-6 text-muted text-lg">
           We have sent a verification link to your email address.
         </p>
         <p className="font-semibold text-center mb-6 text-muted text-lg">

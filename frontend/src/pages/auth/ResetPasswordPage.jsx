@@ -106,10 +106,7 @@ const ResetPasswordPage = () => {
                       justify-center
                     "
                   >
-                    <MdLockReset
-                      size={48}
-                      className="text-blue-600"
-                    />
+                    <MdLockReset size={48} className="text-blue-600" />
                   </div>
                 </div>
               </div>
@@ -146,10 +143,7 @@ const ResetPasswordPage = () => {
                   rotate-6
                 "
               >
-                <FaShieldAlt
-                  size={28}
-                  className="text-green-500"
-                />
+                <FaShieldAlt size={28} className="text-green-500" />
               </div>
 
               {/* Success Icon */}
@@ -169,20 +163,15 @@ const ResetPasswordPage = () => {
                   -rotate-6
                 "
               >
-                <IoCheckmarkCircleOutline
-                  size={27}
-                  className="text-blue-600"
-                />
+                <IoCheckmarkCircleOutline size={27} className="text-blue-600" />
               </div>
             </div>
 
-            <h2 className="text-3xl font-bold mb-3">
-              Create a new password
-            </h2>
+            <h2 className="text-3xl font-bold mb-3">Create a new password</h2>
 
             <p className="text-white/80 max-w-sm mx-auto leading-relaxed">
-              Choose a strong password to keep your account
-              secure and protected.
+              Choose a strong password to keep your account secure and
+              protected.
             </p>
           </div>
         </div>
@@ -215,9 +204,7 @@ const ResetPasswordPage = () => {
               shadow-lg
             "
           >
-            <h1 className="text-2xl font-medium">
-              Reset Password
-            </h1>
+            <h1 className="text-2xl font-medium">Reset Password</h1>
           </div>
 
           {/* ================= FORM CONTAINER ================= */}
@@ -251,10 +238,7 @@ const ResetPasswordPage = () => {
                 mb-6
               "
             >
-              <MdLockReset
-                size={36}
-                className="text-blue-600"
-              />
+              <MdLockReset size={36} className="text-blue-600" />
             </div>
 
             {/* Heading */}
@@ -264,8 +248,8 @@ const ResetPasswordPage = () => {
 
             {/* Description */}
             <p className="text-sm text-muted mb-8 leading-relaxed">
-              Create a new password for your account. Make
-              sure your new password is strong and secure.
+              Create a new password for your account. Make sure your new
+              password is strong and secure.
             </p>
 
             {/* Form */}
@@ -293,9 +277,7 @@ const ResetPasswordPage = () => {
             <div className="flex items-center gap-3 my-7">
               <div className="flex-1 h-px bg-border" />
 
-              <span className="text-xs text-muted">
-                OR
-              </span>
+              <span className="text-xs text-muted">OR</span>
 
               <div className="flex-1 h-px bg-border" />
             </div>
