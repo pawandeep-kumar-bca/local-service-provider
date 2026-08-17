@@ -43,7 +43,21 @@ router.get("/", providerControllers.getProviders);
 router.get("/nearby", providerControllers.nearbySearchLocation);
 
 router.get("/recommended", providerControllers.recommendedProviders);
+
+//====================
+// PROVIDER DASHBOARD APIS
+//====================
+
+// GET /api/v1/provider/dashboard/overview
+
+// GET /api/v1/provider/dashboard/today-bookings
+
+// GET /api/v1/provider/dashboard/booking-analytics?period=week
+
+
 // PUT /api/v1/providers/availability
+
+
 router.put(
   "/availability",
   authMiddleware.tokenVerify,
@@ -61,8 +75,7 @@ router.put(
   ]),
   providerControllers.uploadProviderDocuments,
 );
-// GET /api/v1/providers/:id
-router.get("/category/:slug", providerControllers.getSelectProviderByCategory);
+
 router.get(
   "/:id",
   validateObjectIdMiddleware("id"),

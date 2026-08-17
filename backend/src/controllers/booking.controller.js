@@ -138,7 +138,7 @@ async function userBookingCreate(req, res) {
     const alreadyBooking = await bookingsModel.findOne({
       "providerSnapshot.providerObjectId": providerId,
       "userSnapshot.userObjectId": userId,
-      bookingDate: userDate,
+      bookingDate: bookingDate,
       "bookingSlot.startTime": bookingStartTime,
       "bookingSlot.endTime": bookingEndTime,
       bookingStatus: { $in: blockingStatuses },
@@ -152,7 +152,7 @@ async function userBookingCreate(req, res) {
 
     const bookingSlotAlready = await bookingsModel.findOne({
       "providerSnapshot.providerObjectId": providerId,
-      bookingDate: userDate,
+      bookingDate: bookingDate,
       bookingStatus: { $in: blockingStatuses },
 
       $expr: {
