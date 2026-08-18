@@ -6,6 +6,7 @@ import {
   loginUser,
   logout,
   registerUser,
+  resetPassword,
   sendForgotPasswordEmail,
 } from "../services/authService";
 import { useNavigate } from "react-router-dom";
@@ -104,11 +105,25 @@ export const useAuth = () => {
     },
   });
 
+  const resetPasswordMutation = useMutation({
+    mutationFn: resetPassword,
+
+    onSuccess: (data) => {
+      toast.success(data?.message || "Password reset successful");
+    },
+
+    onError: (err) => {
+      toast.error(err?.response?.data?.message || "Failed to reset password");
+
+      console.error("Reset password error:", err);
+    },
+  });
   return {
     registerMutation,
     loginMutation,
     logoutMutation,
     sendForgotPasswordEmailMutation,
+    resetPasswordMutation,
   };
 };
 export const useMe = (token) => {
