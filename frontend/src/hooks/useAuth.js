@@ -111,9 +111,7 @@ export const useAuth = () => {
     },
 
     onError: (err) => {
-      console.log(err?.response);
-      console.log(err?.response);
-      console.log(err?.response?.data);
+     
       
       toast.error(err?.response?.data?.message || "Failed to reset password");
 
