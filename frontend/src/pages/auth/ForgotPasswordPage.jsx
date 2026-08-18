@@ -4,8 +4,20 @@ import { Link } from "react-router-dom";
 import { MdLockReset } from "react-icons/md";
 import { IoMailOutline } from "react-icons/io5";
 import { FaShieldAlt } from "react-icons/fa";
+import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 const ForgotPasswordPage = () => {
+  const [email, setEmail] = useState("");
+
+  const { sendForgotPasswordEmailMutation } = useAuth();
+
+  const forgotPasswordHandler = async (e) => {
+    e.preventDefault();
+
+    await sendForgotPasswordEmailMutation.mutateAsync({ email });
+    setEmail("");
+  };
   return (
     <div className="min-h-screen w-full bg-bg flex items-center justify-center md:p-6">
       <div
@@ -253,16 +265,27 @@ const ForgotPasswordPage = () => {
             </p>
 
             {/* Form */}
-            <form>
+            <form onSubmit={forgotPasswordHandler}>
               <Input
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 id="email"
                 type="email"
                 className="placeholder:font-semibold mb-5"
               />
 
-              <Button color="success" fullWidth>
-                Send Reset Link
+              <Button
+                type="submit"
+                color="success"
+                disabled={
+                  sendForgotPasswordEmailMutation.isPending
+                }
+                fullWidth
+              >
+                {sendForgotPasswordEmailMutation.isPending
+                  ? "Sending Email"
+                  : "Send Reset Link"}
               </Button>
             </form>
 

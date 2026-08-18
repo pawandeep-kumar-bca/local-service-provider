@@ -1,7 +1,6 @@
 // hooks/useAuth.js
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  
   getAddressToReverseGeocode,
   getMe,
   loginUser,
@@ -93,6 +92,10 @@ export const useAuth = () => {
     },
 
     onError: (err) => {
+      console.log("FORGOT PASSWORD ERROR:", err);
+      console.log("STATUS:", err?.response?.status);
+      console.log("DATA:", err?.response?.data);
+      console.log("MESSAGE:", err?.message);
       toast.error(
         err?.response?.data?.message || "Failed to send password reset email",
       );
@@ -101,7 +104,12 @@ export const useAuth = () => {
     },
   });
 
-  return { registerMutation, loginMutation, logoutMutation,sendForgotPasswordEmailMutation };
+  return {
+    registerMutation,
+    loginMutation,
+    logoutMutation,
+    sendForgotPasswordEmailMutation,
+  };
 };
 export const useMe = (token) => {
   return useQuery({
