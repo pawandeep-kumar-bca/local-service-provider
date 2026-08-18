@@ -81,7 +81,7 @@ import ProviderList from "../pages/user/ProviderList";
 import SelectProvidersList from "../pages/user/SelectProvidersList";
 import HomeRedirect from "../pages/auth/HomeRedirect";
 // import WelcomePage from "../pages/public/WelcomePage";
-// import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
 
 const AppRoutes = () => {
   return (
@@ -89,7 +89,7 @@ const AppRoutes = () => {
       <Route path="/" element={<HomeRedirect />} />
       <Route path="/login" element={<AuthLayout />} />
       <Route path="/register" element={<AuthLayout />} />
-      {/* <Route path="/reset" element={<ResetPasswordPage/>}/> */}
+      <Route path="/reset-password/:token" element={<ResetPasswordPage/>}/>
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
