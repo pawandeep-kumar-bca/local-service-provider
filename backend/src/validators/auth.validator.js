@@ -2,8 +2,6 @@ const { body } = require("express-validator");
 const passwordValidation = require("./password.validator");
 const respondWithValidationErrors = require("../middlewares/validation.middleware");
 
-
-
 // Register
 const registerUserValidation = [
   body("fullname")
@@ -50,6 +48,16 @@ const forgotPasswordValidation = [
 // Reset Password
 const resetPasswordValidation = [
   passwordValidation("password"),
+  body("confirmPassword")
+    .notEmpty()
+    .withMessage("Confirm password is required")
+    .custom((value, { req }) => {
+      if (value !== req.body.confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+
+      return true;
+    }),
 
   respondWithValidationErrors,
 ];

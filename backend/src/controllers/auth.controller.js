@@ -99,7 +99,7 @@ async function registerUser(req, res) {
 async function loginUser(req, res) {
   try {
     const { email, password } = req.body;
-      console.log(password)
+    console.log(password);
     const user = await userModel.findOne({ email }).select("+password");
 
     if (!user) {
@@ -125,14 +125,14 @@ async function loginUser(req, res) {
     const accessToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_ACCESS_SECRET,
-      { expiresIn: "30d" },
+      { expiresIn: "10m" },
     );
 
     // ✅ refresh token
     const refreshToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_REFRESH_SECRET,
-      { expiresIn: "35d" },
+      { expiresIn: "7d" },
     );
     const hashedToken = crypto
       .createHash("sha256")
@@ -277,12 +277,12 @@ async function me(req, res) {
       message: "User fetched",
       user: {
         id: user._id,
-        fullname:user.fullname,
+        fullname: user.fullname,
         email: user.email,
-        phoneNumber:user.phoneNumber,
+        phoneNumber: user.phoneNumber,
         role: user.role,
-        isVerified:user.isVerified,
-        profileImage:user.profileImage,
+        isVerified: user.isVerified,
+        profileImage: user.profileImage,
         isProvider: user.isProvider,
         providerStatus,
       },
@@ -356,7 +356,7 @@ async function forgotPassword(req, res) {
     <p>We received a request to reset your password. Click the button below to set a new password:</p>
 
     <div style="margin: 20px 0;">
-      <a href="http://localhost:3000/reset-password/${resetToken}" 
+      <a href="${process.env.FRONTEND_URL}/${resetToken}" 
          style="background-color: #4CAF50; color: #fff; padding: 12px 20px; 
                 text-decoration: none; border-radius: 5px; display: inline-block;">
          Reset Password
@@ -374,7 +374,7 @@ async function forgotPassword(req, res) {
     </p>
 
     <p style="word-break: break-all; font-size: 12px;">
-      http://localhost:3000/reset-password/${resetToken}
+      ${process.env.FRONTEND_URL}/${resetToken}
     </p>
 
     <br/>
@@ -397,11 +397,21 @@ async function forgotPassword(req, res) {
 // ================= RESET PASSWORD =================
 async function resetPassword(req, res) {
   try {
-    const { password } = req.body;
+    const { password, confirmPassword } = req.body;
     const token = req.params.token;
 
     if (!password || password.length < 6) {
-      return res.status(400).json({ message: "Invalid password" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid password",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Passwords do not match",
+      });
     }
 
     const user = await userModel.findOne({
@@ -409,31 +419,39 @@ async function resetPassword(req, res) {
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid token" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid token",
+      });
     }
 
     if (user.passwordResetExpires < Date.now()) {
-      return res.status(400).json({ message: "Token expired" });
+      return res.status(400).json({
+        success: false,
+        message: "Token expired",
+      });
     }
 
-    // ✅ update password
     user.password = password;
 
-    // ✅ clear tokens
     user.passwordResetToken = null;
     user.passwordResetExpires = null;
 
-    // ✅ logout all sessions
     user.refreshToken = null;
 
     await user.save();
 
     return res.status(200).json({
+      success: true,
       message: "Password reset successful",
     });
   } catch (err) {
     console.error("reset error:", err);
-    res.status(500).json({ message: "Internal server error" });
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 }
 
