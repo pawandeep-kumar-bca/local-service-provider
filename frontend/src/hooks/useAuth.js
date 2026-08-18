@@ -1,11 +1,13 @@
 // hooks/useAuth.js
-import { useMutation, useQuery} from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  
   getAddressToReverseGeocode,
   getMe,
   loginUser,
   logout,
   registerUser,
+  sendForgotPasswordEmail,
 } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../features/authSlice";
@@ -35,9 +37,7 @@ export const useAuth = () => {
         accessToken: data.accessToken,
         user: data.user,
       };
-      
-      
-        
+
       dispatch(setCredentials(authData));
 
       localStorage.setItem(
@@ -46,14 +46,12 @@ export const useAuth = () => {
           accessToken: data.accessToken,
         }),
       );
-    
-      
+
       if (data.user.role === "admin") {
         navigate("/admin/dashboard");
       } else if (
         data.user.isProvider &&
         data.user.providerStatus === "approved"
-        
       ) {
         navigate("/provider/dashboard");
       } else if (
@@ -77,19 +75,33 @@ export const useAuth = () => {
 
   // ✅ LOGOUT
   const logoutMutation = useMutation({
-    mutationFn:logout,
-    onSuccess:(data)=>{
-      toast.success(data?.message)
+    mutationFn: logout,
+    onSuccess: (data) => {
+      toast.success(data?.message);
     },
-    onError:(err)=>{
-      toast.error(err?.response?.data?.message)
-      console.log("Logout Error",err);
-      
-    }
-  })
+    onError: (err) => {
+      toast.error(err?.response?.data?.message);
+      console.log("Logout Error", err);
+    },
+  });
 
+  const sendForgotPasswordEmailMutation = useMutation({
+    mutationFn: sendForgotPasswordEmail,
 
-  return { registerMutation, loginMutation ,logoutMutation};
+    onSuccess: (data) => {
+      toast.success(data?.message || "Password reset link sent to your email");
+    },
+
+    onError: (err) => {
+      toast.error(
+        err?.response?.data?.message || "Failed to send password reset email",
+      );
+
+      console.error("Forgot password email error:", err);
+    },
+  });
+
+  return { registerMutation, loginMutation, logoutMutation,sendForgotPasswordEmailMutation };
 };
 export const useMe = (token) => {
   return useQuery({
@@ -100,7 +112,6 @@ export const useMe = (token) => {
   });
 };
 export const useAddressToReverseGeocode = () => {
-
   const addressToReverseGeocodeMutation = useMutation({
     mutationFn: getAddressToReverseGeocode,
     onError: (err) => {

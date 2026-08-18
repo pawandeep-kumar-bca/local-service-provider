@@ -22,7 +22,7 @@ export const getAddressToReverseGeocode= async (payload)=>{
   const response= await api.post('/users/reverse-geocode',payload)
   return response.data
 }
-export const forgetPasswordEmailSend = async (payload)=>{
+export const sendForgotPasswordEmail = async (payload)=>{
   const response = await api.post('/auth/forgot-password',payload)
   return response.data
 }
