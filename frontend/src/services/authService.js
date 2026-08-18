@@ -26,3 +26,15 @@ export const sendForgotPasswordEmail = async (payload)=>{
   const response = await api.post('/auth/forgot-password',payload)
   return response.data
 }
+
+export const resetPassword = async ({ token, password, confirmPassword }) => {
+  const response = await api.post(
+    `/auth/reset-password/${token}`,
+    {
+      password,
+      confirmPassword,
+    }
+  );
+
+  return response.data;
+};
