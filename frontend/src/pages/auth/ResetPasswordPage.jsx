@@ -1,11 +1,34 @@
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MdLockReset } from "react-icons/md";
 import { FaShieldAlt } from "react-icons/fa";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import Loader from "../../components/common/Loader";
 
 const ResetPasswordPage = () => {
+  const {token} = useParams();
+
+  const [formData, setFormData] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+  const { resetPasswordMutation } = useAuth();
+  const resetPasswordHandler = async (e) => {
+    e.preventDefault();
+    const payload = {
+      token,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+    };
+    await resetPasswordMutation.mutateAsync(payload);
+    setFormData({
+      password: "",
+      confirmPassword: "",
+    });
+  };
   return (
     <div className="min-h-screen w-full bg-bg flex items-center justify-center md:p-6">
       <div
@@ -253,9 +276,16 @@ const ResetPasswordPage = () => {
             </p>
 
             {/* Form */}
-            <form>
+            <form onSubmit={resetPasswordHandler}>
               <Input
                 placeholder="New Password"
+                value={formData.password}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    password: e.target.value,
+                  }));
+                }}
                 id="newPassword"
                 type="password"
                 className="placeholder:font-semibold mb-4"
@@ -263,13 +293,28 @@ const ResetPasswordPage = () => {
 
               <Input
                 placeholder="Confirm New Password"
+                value={formData.confirmPassword}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    confirmPassword: e.target.value,
+                  }));
+                }}
                 id="confirmPassword"
                 type="password"
                 className="placeholder:font-semibold mb-5"
               />
 
-              <Button color="success" fullWidth>
-                Reset Password
+              <Button
+                color="success"
+                fullWidth
+                disabled={resetPasswordMutation.isPending}
+              >
+                {resetPasswordMutation.isPending ? (
+                  <Loader size="small" />
+                ) : (
+                  "Reset Password"
+                )}
               </Button>
             </form>
 

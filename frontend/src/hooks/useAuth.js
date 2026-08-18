@@ -85,6 +85,7 @@ export const useAuth = () => {
     },
   });
 
+  // ✅ Send Forgot Password Email
   const sendForgotPasswordEmailMutation = useMutation({
     mutationFn: sendForgotPasswordEmail,
 
@@ -93,10 +94,7 @@ export const useAuth = () => {
     },
 
     onError: (err) => {
-      console.log("FORGOT PASSWORD ERROR:", err);
-      console.log("STATUS:", err?.response?.status);
-      console.log("DATA:", err?.response?.data);
-      console.log("MESSAGE:", err?.message);
+     
       toast.error(
         err?.response?.data?.message || "Failed to send password reset email",
       );
@@ -104,7 +102,7 @@ export const useAuth = () => {
       console.error("Forgot password email error:", err);
     },
   });
-
+// ✅ Reset Password
   const resetPasswordMutation = useMutation({
     mutationFn: resetPassword,
 
@@ -113,6 +111,10 @@ export const useAuth = () => {
     },
 
     onError: (err) => {
+      console.log(err?.response);
+      console.log(err?.response);
+      console.log(err?.response?.data);
+      
       toast.error(err?.response?.data?.message || "Failed to reset password");
 
       console.error("Reset password error:", err);

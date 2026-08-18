@@ -6,6 +6,7 @@ import { IoMailOutline } from "react-icons/io5";
 import { FaShieldAlt } from "react-icons/fa";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import Loader from "../../components/common/Loader";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -284,7 +285,7 @@ const ForgotPasswordPage = () => {
                 fullWidth
               >
                 {sendForgotPasswordEmailMutation.isPending
-                  ? "Sending Email"
+                  ? <Loader size="small" />
                   : "Send Reset Link"}
               </Button>
             </form>
