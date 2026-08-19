@@ -29,6 +29,7 @@ const {
   addProviderLookups,
 } = require("../utils/providerPipeline.js");
 const { getFacetResult } = require("../utils/providerResponse.js");
+const bookingsModel = require("../models/booking.model.js");
 async function providerProfileCreate(req, res) {
   try {
     const {
@@ -44,7 +45,7 @@ async function providerProfileCreate(req, res) {
       lat,
       lng,
     } = req.body;
-console.log(categoryId);
+    console.log(categoryId);
 
     const userId = req.user.id;
 
@@ -87,7 +88,7 @@ console.log(categoryId);
     }
 
     // Upload Aadhar
-    const aadharCardData = await  uploadFile(
+    const aadharCardData = await uploadFile(
       req.files.aadharCard[0],
       `${userId}-${Date.now()}-aadharCard`,
       "Providers/Documents/AadharCards",
@@ -107,13 +108,15 @@ console.log(categoryId);
 
       experience,
 
-      categories:[{
-        category:new mongoose.Types.ObjectId(categoryId),
-        pricing:{
-          priceType:priceType,
-          price:price
-        }
-      }],
+      categories: [
+        {
+          category: new mongoose.Types.ObjectId(categoryId),
+          pricing: {
+            priceType: priceType,
+            price: price,
+          },
+        },
+      ],
 
       location: {
         type: "Point",
@@ -384,8 +387,6 @@ async function getOneProviderDetails(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-
-
 
 async function nearbySearchLocation(req, res) {
   try {
@@ -806,6 +807,34 @@ async function uploadProviderDocuments(req, res) {
   }
 }
 
+async function providerDashboardOverview(req, res) {
+  try {
+    const providerId = req.user.id
+   
+    const dashboardOverview = await bookingsModel.aggregate([
+      {
+        $match:{
+          'providerSnapshot.providerObjectId':new mongoose.Types.ObjectId(providerId)
+        }
+      },{
+        $group:{
+          totalBookings:{
+            
+          }
+        }
+      }
+    ])
+    
+
+ 
+  } catch (err) {
+    console.log("Provider Dashboard Overview Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -813,8 +842,9 @@ module.exports = {
   getProviders,
   getOneProviderDetails,
   uploadProviderDocuments,
- 
+
   nearbySearchLocation,
   recommendedProviders,
   availabilityProvider,
+  providerDashboardOverview,
 };

@@ -48,7 +48,11 @@ router.get("/recommended", providerControllers.recommendedProviders);
 // PROVIDER DASHBOARD APIS
 //====================
 
-// GET /api/v1/provider/dashboard/overview
+
+// GET /api/v1/providers/dashboard/overview
+router.get('/dashboard/overview',authMiddleware.tokenVerify,providerControllers
+  .providerDashboardOverview
+)
 
 // GET /api/v1/provider/dashboard/today-bookings
 
@@ -81,5 +85,6 @@ router.get(
   validateObjectIdMiddleware("id"),
   providerControllers.getOneProviderDetails,
 );
+
 
 module.exports = router;
