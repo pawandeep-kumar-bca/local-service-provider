@@ -1,9 +1,11 @@
 import api from "./api";
-const cleanFilters = (filters) => {
+
+const cleanFilters = (filters = {}) => {
   return Object.fromEntries(
     Object.entries(filters).filter(([, value]) => {
-      if (value === "") return false;
-      if (value === null || value === undefined) return false;
+      if (value === "" || value === null || value === undefined) {
+        return false;
+      }
 
       if (Array.isArray(value) && value.length === 0) {
         return false;
@@ -13,8 +15,12 @@ const cleanFilters = (filters) => {
     }),
   );
 };
-export const getAllProviders = async (params) => {
-  const response = await api.get("/providers", { params });
+
+export const getAllProviders = async (params = {}) => {
+  const response = await api.get("/providers", {
+    params,
+  });
+
   return response.data;
 };
 
@@ -32,19 +38,26 @@ export const createProvider = async (formData) => {
 
 export const getSelectProviderByCategory = async (slug) => {
   const response = await api.get(`/providers/category/${slug}`);
+
   return response.data;
 };
-export const getRecommendedProviders = async (filters) => {
+
+export const getRecommendedProviders = async (filters = {}) => {
   const params = cleanFilters(filters);
+
   const response = await api.get("/providers/recommended", {
-    params: params,
+    params,
   });
+
   return response.data;
 };
-export const getNearbyProviders = async (filters)=>{
-  const params = cleanFilters(filters)
-  const response = await api.get('/providers/nearby',{
-    params:params
-  })
-  return response.data
-}
+
+export const getNearbyProviders = async (filters = {}) => {
+  const params = cleanFilters(filters);
+
+  const response = await api.get("/providers/nearby", {
+    params,
+  });
+
+  return response.data;
+};
