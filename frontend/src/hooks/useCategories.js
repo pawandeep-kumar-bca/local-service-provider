@@ -1,6 +1,8 @@
-// hooks/categoryHooks.js
-
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from "@tanstack/react-query";
 import {
   createCategory,
   getAllCategories,
@@ -8,17 +10,28 @@ import {
   getAllPopularCategories,
 } from "../services/categoryService";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 export const useCategoryCreate = () => {
   const navigate = useNavigate();
+
   const createCategoryMutation = useMutation({
     mutationFn: createCategory,
+
     onSuccess: () => {
+      toast.success("Category created successfully");
       navigate("/admin/categories");
     },
+
     onError: (err) => {
-      console.error("Create Category Error: ", err);
+      console.error("Create Category Error:", err);
+
+      toast.error(
+        err?.response?.data?.message || "Failed to create category",
+      );
     },
   });
+
   return { createCategoryMutation };
 };
 
@@ -26,7 +39,6 @@ export const useCategories = (params = {}) => {
   return useQuery({
     queryKey: ["categories", params],
     queryFn: () => getAllCategories(params),
-    enabled: true,
   });
 };
 
@@ -35,7 +47,10 @@ export const useCategoriesPopular = () => {
     queryKey: ["popular-categories"],
 
     queryFn: ({ pageParam = 1 }) =>
-      getAllPopularCategories({ page: pageParam, limit: 5 }),
+      getAllPopularCategories({
+        page: pageParam,
+        limit: 5,
+      }),
 
     initialPageParam: 1,
 
@@ -46,10 +61,10 @@ export const useCategoriesPopular = () => {
     },
   });
 };
+
 export const useCategoriesTabs = () => {
   return useQuery({
     queryKey: ["categories-tabs"],
     queryFn: getAllCategoriesForTabs,
-    enabled: true,
   });
 };
