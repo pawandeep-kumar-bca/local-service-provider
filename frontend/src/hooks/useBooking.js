@@ -20,14 +20,19 @@ export const useBookingCreate = () => {
 
   const createBookingMutation = useMutation({
     mutationFn: createBooking,
+
     onSuccess: (data) => {
       navigate("/user/provider-details/booking-details/payment", {
-        state: { booking: data?.booking },
+        state: {
+          booking: data?.booking,
+        },
       });
     },
+
     onError: (err) => {
-      console.error("create booking error", err);
-      alert(
+      console.error("Create booking error:", err);
+
+      toast.error(
         err?.response?.data?.message ||
           "Something went wrong while creating the booking. Please try again.",
       );
@@ -49,9 +54,6 @@ export const useAllProviderBookings = () => {
     queryKey: ["provider-all-bookings"],
     queryFn: getAllBookingsOfProvider,
     refetchInterval: 10000,
-    onError: (err) => {
-      console.log("Get all provider booking error:", err);
-    },
   });
 };
 
@@ -65,57 +67,97 @@ export const useUserOneBookingDetails = (bookingId) => {
 
 export const useBookingStatus = () => {
   const queryClient = useQueryClient();
+
   const bookingAcceptedMutation = useMutation({
     mutationFn: (bookingId) => acceptedBookingByProvider(bookingId),
+
     onSuccess: (data) => {
-      toast.success(data.message);
+      toast.success(data?.message || "Booking accepted successfully");
+
       queryClient.invalidateQueries({
         queryKey: ["provider-all-bookings"],
       });
     },
+
+    onError: (err) => {
+      toast.error(
+        err?.response?.data?.message || "Failed to accept booking",
+      );
+    },
   });
+
   const bookingRejectMutation = useMutation({
     mutationFn: (payload) => rejectedBookingByProvider(payload),
+
     onSuccess: (data) => {
-      toast.success(data.message);
+      toast.success(data?.message || "Booking rejected successfully");
+
       queryClient.invalidateQueries({
         queryKey: ["provider-all-bookings"],
       });
     },
+
+    onError: (err) => {
+      toast.error(
+        err?.response?.data?.message || "Failed to reject booking",
+      );
+    },
   });
+
   const bookingStartMutation = useMutation({
     mutationFn: (bookingId) => startBookingByProvider(bookingId),
-    onSuccess: () => {
+
+    onSuccess: (data) => {
+      toast.success(data?.message || "Booking started successfully");
+
       queryClient.invalidateQueries({
         queryKey: ["provider-all-bookings"],
       });
     },
+
     onError: (err) => {
-      console.log("Start Booking Error", err);
+      toast.error(
+        err?.response?.data?.message || "Failed to start booking",
+      );
     },
   });
+
   const bookingCancelMutation = useMutation({
     mutationFn: (payload) => cancelBookingByProvider(payload),
-    onSuccess: () => {
+
+    onSuccess: (data) => {
+      toast.success(data?.message || "Booking cancelled successfully");
+
       queryClient.invalidateQueries({
         queryKey: ["provider-all-bookings"],
       });
     },
+
     onError: (err) => {
-      toast.error(err?.response?.data?.message);
+      toast.error(
+        err?.response?.data?.message || "Failed to cancel booking",
+      );
     },
   });
+
   const bookingCompleteMutation = useMutation({
     mutationFn: (bookingId) => completeBookingByProvider(bookingId),
-    onSuccess: () => {
+
+    onSuccess: (data) => {
+      toast.success(data?.message || "Booking completed successfully");
+
       queryClient.invalidateQueries({
         queryKey: ["provider-all-bookings"],
       });
     },
+
     onError: (err) => {
-      toast.error(err?.response?.data?.message);
+      toast.error(
+        err?.response?.data?.message || "Failed to complete booking",
+      );
     },
   });
+
   return {
     bookingAcceptedMutation,
     bookingRejectMutation,
@@ -127,9 +169,15 @@ export const useBookingStatus = () => {
 
 export const useRescheduleBooking = () => {
   const queryClient = useQueryClient();
+
   const rescheduleBookingMutation = useMutation({
     mutationFn: (payload) => rescheduleBookingByUser(payload),
-    onSuccess: (_, variables) => {
+
+    onSuccess: (data, variables) => {
+      toast.success(
+        data?.message || "Booking rescheduled successfully",
+      );
+
       queryClient.invalidateQueries({
         queryKey: ["user-all-bookings"],
       });
@@ -138,26 +186,47 @@ export const useRescheduleBooking = () => {
         queryKey: ["user-booking-details-one", variables.bookingId],
       });
     },
+
     onError: (err) => {
       console.error("Reschedule booking error:", err);
+
+      toast.error(
+        err?.response?.data?.message || "Failed to reschedule booking",
+      );
     },
   });
 
   return { rescheduleBookingMutation };
 };
-export const useCancelBookingByUser=()=>{
-  const queryClient = useQueryClient()
-    const cancelBookingByUserMutation = useMutation({
+
+export const useCancelBookingByUser = () => {
+  const queryClient = useQueryClient();
+
+  const cancelBookingByUserMutation = useMutation({
     mutationFn: (payload) => cancelBookingByUser(payload),
-    onSuccess: () => {
+
+    onSuccess: (data, variables) => {
+      toast.success(
+        data?.message || "Booking cancelled successfully",
+      );
+
       queryClient.invalidateQueries({
         queryKey: ["user-all-bookings"],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["user-booking-details-one", variables.bookingId],
+      });
     },
+
     onError: (err) => {
-      console.error("Cancel booking by User Error:", err);
-      toast.error(err?.response?.data?.message);
+      console.error("Cancel booking by user error:", err);
+
+      toast.error(
+        err?.response?.data?.message || "Failed to cancel booking",
+      );
     },
   });
-  return {cancelBookingByUserMutation}
-}
+
+  return { cancelBookingByUserMutation };
+};

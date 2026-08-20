@@ -6,10 +6,10 @@ export const createBooking = async (payload) => {
 };
 
 export const getAllBookingsOfUser = async (status) => {
+  const params = status ? { status } : {};
+
   const response = await api.get("/bookings/user", {
-    params: {
-      status,
-    },
+    params,
   });
 
   return response.data;
@@ -36,30 +36,43 @@ export const rejectedBookingByProvider = async (payload) => {
     `/bookings/${payload.bookingId}/reject`,
     payload,
   );
+
   return response.data;
 };
+
 export const startBookingByProvider = async (bookingId) => {
   const response = await api.patch(`/bookings/${bookingId}/start`);
   return response.data;
 };
+
 export const cancelBookingByProvider = async (payload) => {
   const response = await api.patch(
     `/bookings/${payload.bookingId}/cancel`,
     payload,
   );
+
   return response.data;
 };
+
 export const completeBookingByProvider = async (bookingId) => {
   const response = await api.patch(`/bookings/${bookingId}/complete`);
   return response.data;
 };
 
-export const rescheduleBookingByUser = async (payload)=>{
-const response = await api.patch(`/bookings/${payload.bookingId}/reschedule-booking`,payload)
-return response.data
-}
+export const rescheduleBookingByUser = async (payload) => {
+  const response = await api.patch(
+    `/bookings/${payload.bookingId}/reschedule-booking`,
+    payload,
+  );
 
-export const cancelBookingByUser =async (payload)=>{
-  const response = await api.patch(`/bookings/${payload.bookingId}/user/cancel`,payload)
-  return response.data
-}
+  return response.data;
+};
+
+export const cancelBookingByUser = async (payload) => {
+  const response = await api.patch(
+    `/bookings/${payload.bookingId}/user/cancel`,
+    payload,
+  );
+
+  return response.data;
+};
