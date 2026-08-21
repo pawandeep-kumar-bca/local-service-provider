@@ -2,24 +2,8 @@ import { FaAngleRight, FaChevronRight } from "react-icons/fa";
 import { NavLink, Outlet } from "react-router-dom";
 
 const Settings = () => {
- const base = `
-  relative
-  flex items-center text-gray-800 justify-between md:justify-center
-  text-center
-  text-lg font-medium
-  transition-all duration-300
-  pb-3
-  min-w-[150px]
-
-  after:absolute
-  after:left-1/2
-  after:-translate-x-1/2
-  after:bottom-0
-  after:h-[2px]
-  after:w-0
-  after:rounded-full
-  after:transition-all
-  after:duration-300
+ const base = ` relative flex items-center text-gray-800 justify-between md:justify-center text-center text-lg font-medium transition-all duration-300 pb-3 min-w-[150px]
+ after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:h-[2px] after:w-0 after:rounded-full after:transition-all after:duration-300
 `;
 
 const active = `
