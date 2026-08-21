@@ -1,20 +1,16 @@
-
 import Button from "../../components/common/Button";
 import { IoMdAdd } from "react-icons/io";
 import ServicesList from "../../components/provider/ServicesList";
 import { useNavigate } from "react-router-dom";
 
-
 const ServicesPage = () => {
-  const navigate= useNavigate()
+  const navigate = useNavigate();
 
   return (
     <>
       <div className="space-y-6">
-
         {/* Header */}
         <div className="flex items-center justify-between ">
-
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-text">
               My Services
@@ -38,8 +34,6 @@ const ServicesPage = () => {
         {/* Services List */}
         <ServicesList />
       </div>
-
-      
     </>
   );
 };
