@@ -518,17 +518,20 @@ const ProviderSchedule = () => {
             </div>
           </div>
 
-          <div className="
+          <div
+            className="
         bg-white
         rounded-xl
         border border-slate-100
         p-5
         shadow-[0_5px_20px_rgba(0,0,0,0.06)]
-      ">
+      "
+          >
             <div>
-
-              <h1 className="text-lg font-semibold mb-2 text-text ">Availability Settings</h1>
-              <SlotTime label='Working Hours'/>
+              <h1 className="text-lg font-semibold mb-2 text-text ">
+                Availability Settings
+              </h1>
+              <SlotTime label="Working Hours" />
             </div>
             <div className="flex-1 mt-3 md:mt-4">
               <label className="block mb-2 font-medium text-lg md:text-sm">
@@ -539,7 +542,7 @@ const ProviderSchedule = () => {
                   return (
                     <label htmlFor={day} key={index} className="cursor-pointer">
                       <input
-                       defaultChecked={index === 0}
+                        defaultChecked={index === 0}
                         type="checkbox"
                         name="days"
                         id={day}
