@@ -809,21 +809,12 @@ async function uploadProviderDocuments(req, res) {
 
 async function providerDashboardOverview(req, res) {
   try {
-    const providerId = req.user.id;
-    console.log(providerId);
+    const providerId = req.provider._id;
 
-    const provider = await providerModel.findOne({ userId: providerId });
-
-    if (!provider) {
-      return res.status(404).json({
-        success: false,
-        message: "Provider Not Found",
-      });
-    }
     const dashboardOverview = await bookingsModel.aggregate([
       {
         $match: {
-          "providerSnapshot.providerObjectId": provider._id,
+          "providerSnapshot.providerObjectId": providerId,
         },
       },
       {
@@ -905,21 +896,13 @@ async function providerDashboardOverview(req, res) {
 
 async function todayBookings(req, res) {
   try {
-    const providerId = req.user.id;
+    const providerId = req.provider._id;
     let { page, limit } = req.query;
 
     page = Math.max(Number(page) || 1, 1);
     limit = Math.min(Math.max(Number(limit) || 5, 1), 50);
     const skip = (page - 1) * limit;
-    const provider = await providerModel.findOne({
-      userId: providerId,
-    });
-    if (!provider) {
-      return res.status(404).json({
-        success: false,
-        message: "Provider Not Found",
-      });
-    }
+
     const now = new Date();
     const todayStart = new Date(now);
     todayStart.setHours(0, 0, 0, 0);
@@ -929,7 +912,7 @@ async function todayBookings(req, res) {
     const result = await bookingsModel.aggregate([
       {
         $match: {
-          "providerSnapshot.providerObjectId": provider._id,
+          "providerSnapshot.providerObjectId": providerId,
 
           bookingDate: {
             $gte: todayStart,
@@ -1002,6 +985,194 @@ async function todayBookings(req, res) {
     });
   }
 }
+
+async function bookingAnalytics(req, res) {
+  try {
+    const { period = "week" } = req.query;
+    const providerId = req.provider._id;
+
+    const allowedPeriods = ["week", "month", "year"];
+
+    if (!allowedPeriods.includes(period)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid period. Allowed values: week, month, year",
+      });
+    }
+    const now = new Date();
+
+    const IST_OFFSET = 5.5 * 60 * 60 * 1000;
+
+    const istNow = new Date(now.getTime() + IST_OFFSET);
+
+    const day = istNow.getUTCDay();
+
+    const diffToMonday = day === 0 ? 6 : day - 1;
+
+    const currentWeekStartIST = new Date(istNow);
+
+    currentWeekStartIST.setUTCDate(istNow.getUTCDate() - diffToMonday);
+
+    currentWeekStartIST.setUTCHours(0, 0, 0, 0);
+
+    const currentWeekDate = new Date(currentWeekStartIST);
+
+    const nextWeekStart = new Date(currentWeekDate);
+
+    nextWeekStart.setUTCDate(nextWeekStart.getUTCDate() + 7);
+
+    const previousWeekDate = new Date(currentWeekDate);
+
+    previousWeekDate.setUTCDate(previousWeekDate.getUTCDate() - 7);
+    const result = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId": providerId,
+        },
+      },
+
+      {
+        $facet: {
+          currentWeek: [
+            {
+              $match: {
+                bookingDate: {
+                  $gte: currentWeekDate,
+                  $lt: nextWeekStart,
+                },
+              },
+            },
+
+            {
+              $group: {
+                _id: {
+                  $dateToString: {
+                    format: "%Y-%m-%d",
+                    date: "$bookingDate",
+                    timezone: "Asia/Kolkata",
+                  },
+                },
+
+                bookings: {
+                  $sum: 1,
+                },
+              },
+            },
+          ],
+
+          previousWeek: [
+            {
+              $match: {
+                bookingDate: {
+                  $gte: previousWeekDate,
+                  $lt: currentWeekDate,
+                },
+              },
+            },
+
+            {
+              $group: {
+                _id: {
+                  $dateToString: {
+                    format: "%Y-%m-%d",
+                    date: "$bookingDate",
+                    timezone: "Asia/Kolkata",
+                  },
+                },
+
+                bookings: {
+                  $sum: 1,
+                },
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    const formatDateKey = (date) => {
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+      const day = String(date.getUTCDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    };
+    const currentWeekData = result[0]?.currentWeek || [];
+
+    const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+    const currentWeek = Array.from({ length: 7 }, (_, index) => {
+     const date = new Date(currentWeekDate);
+
+      date.setUTCDate(date.getUTCDate() + index);
+
+      const dateKey = formatDateKey(date);
+
+      const found = currentWeekData.find((item) => item._id === dateKey);
+
+      const bookings = found?.bookings || 0;
+
+      const day = dayNames[index];
+
+      return {
+        day,
+        bookings,
+      };
+    });
+    const previousWeekData = result[0]?.previousWeek || [];
+    const previousWeek = Array.from({ length: 7 }, (_, index) => {
+     const date = new Date(previousWeekDate);
+
+      date.setUTCDate(date.getUTCDate() + index);
+
+      const dateKey = formatDateKey(date);
+
+      const found = previousWeekData.find((item) => item._id === dateKey);
+
+      const bookings = found?.bookings || 0;
+
+      const day = dayNames[index];
+
+      return {
+        day,
+        bookings,
+      };
+    });
+    const currentTotal = currentWeek.reduce(
+      (total, item) => total + item.bookings,
+      0,
+    );
+    const previousTotal = previousWeek.reduce(
+      (total, item) => total + item.bookings,
+      0,
+    );
+    let growthPercentage = null;
+
+    if (previousTotal > 0) {
+      growthPercentage = Number(
+        (((currentTotal - previousTotal) / previousTotal) * 100).toFixed(2),
+      );
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Booking Analytics data fetched successfully",
+
+      period,
+
+      currentTotal,
+      previousTotal,
+      growthPercentage,
+
+      currentWeek,
+      previousWeek,
+    });
+  } catch (err) {
+    console.error("booking Analytics Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error:",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -1015,4 +1186,5 @@ module.exports = {
   availabilityProvider,
   providerDashboardOverview,
   todayBookings,
+  bookingAnalytics,
 };

@@ -50,16 +50,20 @@ router.get("/recommended", providerControllers.recommendedProviders);
 
 
 // GET /api/v1/providers/dashboard/overview
-router.get('/dashboard/overview',authMiddleware.tokenVerify,providerControllers
+router.get('/dashboard/overview',authMiddleware.tokenVerify,providerMiddleware,providerControllers
   .providerDashboardOverview
 )
 
 // GET /api/v1/provider/dashboard/today-bookings
-router.get('/dashboard/today-bookings',authMiddleware.tokenVerify,
+router.get('/dashboard/today-bookings',authMiddleware.tokenVerify,providerMiddleware,
   providerControllers.todayBookings
 )
 // GET /api/v1/provider/dashboard/booking-analytics?period=week
 
+router.get('/dashboard/booking-analytics',
+  authMiddleware.tokenVerify,providerMiddleware,
+  providerControllers.bookingAnalytics
+)
 
 // PUT /api/v1/providers/availability
 
