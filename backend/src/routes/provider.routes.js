@@ -55,7 +55,9 @@ router.get('/dashboard/overview',authMiddleware.tokenVerify,providerControllers
 )
 
 // GET /api/v1/provider/dashboard/today-bookings
-
+router.get('/dashboard/today-bookings',authMiddleware.tokenVerify,
+  providerControllers.todayBookings
+)
 // GET /api/v1/provider/dashboard/booking-analytics?period=week
 
 

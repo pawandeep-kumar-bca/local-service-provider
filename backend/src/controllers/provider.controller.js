@@ -902,6 +902,106 @@ async function providerDashboardOverview(req, res) {
     });
   }
 }
+
+async function todayBookings(req, res) {
+  try {
+    const providerId = req.user.id;
+    let { page, limit } = req.query;
+
+    page = Math.max(Number(page) || 1, 1);
+    limit = Math.min(Math.max(Number(limit) || 5, 1), 50);
+    const skip = (page - 1) * limit;
+    const provider = await providerModel.findOne({
+      userId: providerId,
+    });
+    if (!provider) {
+      return res.status(404).json({
+        success: false,
+        message: "Provider Not Found",
+      });
+    }
+    const now = new Date();
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+    const result = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId": provider._id,
+
+          bookingDate: {
+            $gte: todayStart,
+            $lt: tomorrowStart,
+          },
+
+          bookingStatus: {
+            $in: ["pending", "in_progress", "accepted"],
+          },
+        },
+      },
+      {
+        $sort: {
+          "bookingSlot.startTime": 1,
+        },
+      },
+      {
+        $facet: {
+          bookings: [
+            {
+              $skip: skip,
+            },
+            {
+              $limit: limit,
+            },
+
+            {
+              $project: {
+                _id: 1,
+                bookingId: 1,
+                bookingStatus: 1,
+
+                bookingDate: 1,
+                bookingSlot: 1,
+
+                userSnapshot: 1,
+                serviceSnapshot: 1,
+                serviceAddressSnapshot: 1,
+              },
+            },
+          ],
+          totalTodayBookings: [
+            {
+              $count: "total",
+            },
+          ],
+        },
+      },
+    ]);
+    const todayBookings = result[0]?.bookings || [];
+    const total = result[0]?.totalTodayBookings[0]?.total || 0;
+    const totalPages = Math.ceil(total / limit);
+    return res.status(200).json({
+      success: true,
+      message: "Today Booking Fetch Successfully.",
+      todayBookings,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasMore: page < totalPages,
+      },
+    });
+  } catch (err) {
+    console.error("Today booking error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -914,4 +1014,5 @@ module.exports = {
   recommendedProviders,
   availabilityProvider,
   providerDashboardOverview,
+  todayBookings,
 };

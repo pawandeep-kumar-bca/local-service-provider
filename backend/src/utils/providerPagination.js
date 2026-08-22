@@ -16,6 +16,7 @@ function buildPaginationResponse({ page, limit, total }) {
   const totalPages = Math.ceil(total / limit);
 
   return {
+    
     page,
     limit,
     total,
