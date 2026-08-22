@@ -809,24 +809,91 @@ async function uploadProviderDocuments(req, res) {
 
 async function providerDashboardOverview(req, res) {
   try {
-    const providerId = req.user.id
-   
+    const providerId = req.user.id;
+    console.log(providerId);
+
+    const provider = await providerModel.findOne({ userId: providerId });
+
+    if (!provider) {
+      return res.status(404).json({
+        success: false,
+        message: "Provider Not Found",
+      });
+    }
     const dashboardOverview = await bookingsModel.aggregate([
       {
-        $match:{
-          'providerSnapshot.providerObjectId':new mongoose.Types.ObjectId(providerId)
-        }
-      },{
-        $group:{
-          totalBookings:{
-            
-          }
-        }
-      }
-    ])
-    
-
- 
+        $match: {
+          "providerSnapshot.providerObjectId": provider._id,
+        },
+      },
+      {
+        $lookup: {
+          from: "payments",
+          localField: "_id",
+          foreignField: "bookingId",
+          as: "payment",
+        },
+      },
+      {
+        $unwind: {
+          path: "$payment",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalBookings: {
+            $sum: 1,
+          },
+          pendingBookings: {
+            $sum: {
+              $cond: [
+                {
+                  $eq: ["$bookingStatus", "pending"],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+          completedBookings: {
+            $sum: {
+              $cond: [{ $eq: ["$bookingStatus", "completed"] }, 1, 0],
+            },
+          },
+          totalEarnings: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    {
+                      $eq: ["$bookingStatus", "completed"],
+                    },
+                    {
+                      $eq: ["$payment.paymentStatus", "success"],
+                    },
+                  ],
+                },
+                "$pricing.providerPayout",
+                0,
+              ],
+            },
+          },
+        },
+      },
+    ]);
+    const overview = dashboardOverview[0] || {
+      totalBookings: 0,
+      pendingBookings: 0,
+      completedBookings: 0,
+      totalEarnings: 0,
+    };
+    return res.status(200).json({
+      success: true,
+      message: "Provider dashboard overview fetched successfully",
+      dashboardOverview: overview,
+    });
   } catch (err) {
     console.log("Provider Dashboard Overview Error:", err);
     return res.status(500).json({
