@@ -1022,8 +1022,42 @@ async function bookingAnalytics(req, res) {
     nextWeekStart.setUTCDate(nextWeekStart.getUTCDate() + 7);
 
     const previousWeekDate = new Date(currentWeekDate);
-
     previousWeekDate.setUTCDate(previousWeekDate.getUTCDate() - 7);
+
+    //=======================================================
+    // MONTH PERIOD
+    //=======================================================
+    const currentMonthStartIST = new Date(istNow);
+
+    currentMonthStartIST.setDate(1);
+    currentMonthStartIST.setHours(0, 0, 0, 0);
+
+    const nextMonthStartIST = new Date(currentMonthStartIST);
+    nextMonthStartIST.setUTCMonth(nextMonthStartIST.getUTCMonth() + 1);
+
+    const previousMonthStartIST = new Date(currentMonthStartIST);
+    previousMonthStartIST.setUTCMonth(previousMonthStartIST.getUTCMonth() - 1);
+
+    const currentMonthStart = new Date(
+      currentMonthStartIST.getTime() - IST_OFFSET,
+    );
+    const nextMonthStart = new Date(nextMonthStartIST.getTime() - IST_OFFSET);
+    const previousMonthStart = new Date(
+      previousMonthStartIST.getTime() - IST_OFFSET,
+    );
+    const daysInCurrentMonth = new Date(
+      currentMonthStartIST.getUTCFullYear(),
+      currentMonthStartIST.getUTCMonth() + 1,
+      0,
+    ).getDate();
+
+    const totalCurrentWeeks = Math.ceil(daysInCurrentMonth / 7);
+    const daysInPreviousMonth = new Date(
+      previousMonthStartIST.getUTCFullYear(),
+      previousMonthStartIST.getUTCMonth() + 1,
+      0,
+    ).getDate();
+    const totalPreviousWeeks = Math.ceil(daysInPreviousMonth / 7);
     const result = await bookingsModel.aggregate([
       {
         $match: {
@@ -1086,9 +1120,134 @@ async function bookingAnalytics(req, res) {
               },
             },
           ],
+
+          currentMonth: [
+            {
+              $match: {
+                bookingDate: {
+                  $gte: currentMonthStart,
+                  $lt: nextMonthStart,
+                },
+              },
+            },
+
+            {
+              $set: {
+                weekNumber: {
+                  $ceil: {
+                    $divide: [
+                      {
+                        $dayOfMonth: {
+                          date: "$bookingDate",
+                          timezone: "Asia/Kolkata",
+                        },
+                      },
+                      7,
+                    ],
+                  },
+                },
+              },
+            },
+
+            {
+              $group: {
+                _id: "$weekNumber",
+
+                bookings: {
+                  $sum: 1,
+                },
+              },
+            },
+          ],
+          previousMonth: [
+            {
+              $match: {
+                bookingDate: {
+                  $gte: previousMonthStart,
+                  $lt: currentMonthStart,
+                },
+              },
+            },
+
+            {
+              $set: {
+                weekNumber: {
+                  $ceil: {
+                    $divide: [
+                      {
+                        $dayOfMonth: {
+                          date: "$bookingDate",
+                          timezone: "Asia/Kolkata",
+                        },
+                      },
+                      7,
+                    ],
+                  },
+                },
+              },
+            },
+
+            {
+              $group: {
+                _id: "$weekNumber",
+
+                bookings: {
+                  $sum: 1,
+                },
+              },
+            },
+          ],
         },
       },
     ]);
+
+    const currentMonthData = result[0]?.currentMonth || [];
+    const previousMonthData = result[0]?.previousMonth || [];
+
+    const currentMonth = Array.from(
+      { length: totalCurrentWeeks },
+      (_, index) => {
+        const weekNumber = index + 1;
+        const found = currentMonthData.find((item) => item._id === weekNumber);
+        const bookings = found?.bookings || 0;
+        return {
+          week: `Week ${weekNumber}`,
+          bookings,
+        };
+      },
+    );
+
+    const currentMonthTotal = currentMonth.reduce(
+      (total, item) => total + item.bookings,
+      0,
+    );
+    const previousMonth = Array.from(
+      { length: totalPreviousWeeks },
+      (_, index) => {
+        const weekNumber = index + 1;
+        const found = previousMonthData.find((item) => item._id === weekNumber);
+        const bookings = found?.bookings || 0;
+
+        return {
+          week: `Week ${weekNumber}`,
+          bookings,
+        };
+      },
+    );
+    const previousMonthTotal = previousMonth.reduce(
+      (total, item) => total + item.bookings,
+      0,
+    );
+
+    let monthGrowthPercentage = null;
+    if (previousMonthTotal > 0) {
+      monthGrowthPercentage = Number(
+        (
+          ((currentMonthTotal - previousMonthTotal) / previousMonthTotal) *
+          100
+        ).toFixed(2),
+      );
+    }
     const formatDateKey = (date) => {
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -1101,7 +1260,7 @@ async function bookingAnalytics(req, res) {
     const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
     const currentWeek = Array.from({ length: 7 }, (_, index) => {
-     const date = new Date(currentWeekDate);
+      const date = new Date(currentWeekDate);
 
       date.setUTCDate(date.getUTCDate() + index);
 
@@ -1120,7 +1279,7 @@ async function bookingAnalytics(req, res) {
     });
     const previousWeekData = result[0]?.previousWeek || [];
     const previousWeek = Array.from({ length: 7 }, (_, index) => {
-     const date = new Date(previousWeekDate);
+      const date = new Date(previousWeekDate);
 
       date.setUTCDate(date.getUTCDate() + index);
 
@@ -1164,6 +1323,12 @@ async function bookingAnalytics(req, res) {
 
       currentWeek,
       previousWeek,
+
+      currentMonthTotal,
+      previousMonthTotal,
+      monthGrowthPercentage,
+      currentMonth,
+      previousMonth,
     });
   } catch (err) {
     console.error("booking Analytics Error:", err);
