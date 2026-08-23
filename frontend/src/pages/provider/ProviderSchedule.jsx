@@ -8,7 +8,8 @@ import {
   IoMdCall,
   IoMdStopwatch,
 } from "react-icons/io";
-import { IoWalletOutline } from "react-icons/io5";
+import { MdOutlineWatchLater } from "react-icons/md";
+import { GiSandsOfTime } from "react-icons/gi"
 import { Link } from "react-router-dom";
 import StatusBadge from "../../components/common/StatusBadge";
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -21,33 +22,27 @@ const ProviderSchedule = () => {
       bgColor: "bg-green-100",
       textColor: "text-green-500",
       Icon: FaRegCalendarAlt,
-      text: "This Month Earning",
+      text: "Today's Bookings",
       value: "5",
       extraContent: (
-        <div className="flex gap-1 items-center">
-          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+        <div className="flex gap-1 items-center text-yellow-500 pl-12">
+          <GiSandsOfTime/>
           <p className="text-yellow-500 font-bold">2</p>
           <p className="text-muted text-sm font-semibold">Pending</p>
         </div>
       ),
     },
-
     {
-      bgColor: "bg-blue-100",
-      textColor: "text-blue-500",
-
-      Icon: FaRegCheckCircle,
-
-      text: "Completed Today",
-
-      value: "20",
+      bgColor: "bg-orange-100",
+      textColor: "text-orange-500",
+      Icon: MdOutlineWatchLater,
+      text: "Upcoming Bookings",
+      value: "4",
 
       extraContent: (
-        <div className="flex gap-1 items-center">
-          <div className="w-3 h-3 rounded-full bg-green-500"></div>
-          <p className="text-sm font-bold">₹ 1,200</p>
-          <p className="text-muted text-sm font-semibold"> Earnings</p>
-        </div>
+        <>
+          <span className="text-sm font-bold text-muted">Next Slot :</span> <span className="text-sm font-bold text-success">01:00 PM - 03:00 PM</span>
+        </>
       ),
     },
 
@@ -62,20 +57,22 @@ const ProviderSchedule = () => {
       value: "2",
 
       extraContent: (
-        <p className="text-muted text-sm font-semibold">Available Today</p>
+        <p className="text-muted text-sm pl-16 font-semibold">Available Today</p>
       ),
     },
+
     {
-      bgColor: "bg-orange-100",
-      textColor: "text-orange-500",
-      Icon: IoWalletOutline,
-      text: "Today Earnings",
-      value: "₹ 22,400",
+      bgColor: "bg-blue-100",
+      textColor: "text-blue-500",
+
+      Icon: FaRegCheckCircle,
+
+      text: "Completed Bookings",
+
+      value: "20",
 
       extraContent: (
-        <Link className="border-b border-[2px] border-transparent hover:border-b hover:border-green hover:border-[2px] transition-all duration-300 text-green-500 ">
-          View Details
-        </Link>
+      <p className="text-muted text-sm pl-17 font-semibold "> Today</p>
       ),
     },
   ];
@@ -144,10 +141,13 @@ const ProviderSchedule = () => {
                       {value}
                     </h1>
 
-                    {extraContent}
+                    
                   </div>
                 </div>
               </div>
+             <div className="pl-1 mt-1">
+               {extraContent}
+             </div>
             </div>
           );
         })}
