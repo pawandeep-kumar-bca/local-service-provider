@@ -1085,193 +1085,192 @@ async function bookingAnalytics(req, res) {
     const previousYearStart = new Date(
       previousYearStartIST.getTime() - IST_OFFSET,
     );
+
+    const facet = {};
+
+    if (period === "week") {
+      facet.currentWeek = [
+        {
+          $match: {
+            bookingDate: {
+              $gte: currentWeekDate,
+              $lt: nextWeekStart,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: {
+                format: "%Y-%m-%d",
+                date: "$bookingDate",
+                timezone: "Asia/Kolkata",
+              },
+            },
+            bookings: {
+              $sum: 1,
+            },
+          },
+        },
+      ];
+
+      facet.previousWeek = [
+        {
+          $match: {
+            bookingDate: {
+              $gte: previousWeekDate,
+              $lt: currentWeekDate,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: {
+                format: "%Y-%m-%d",
+                date: "$bookingDate",
+                timezone: "Asia/Kolkata",
+              },
+            },
+            bookings: {
+              $sum: 1,
+            },
+          },
+        },
+      ];
+    }
+
+    if (period === "month") {
+      facet.currentMonth = [
+        {
+          $match: {
+            bookingDate: {
+              $gte: currentMonthStart,
+              $lt: nextMonthStart,
+            },
+          },
+        },
+        {
+          $set: {
+            weekNumber: {
+              $ceil: {
+                $divide: [
+                  {
+                    $dayOfMonth: {
+                      date: "$bookingDate",
+                      timezone: "Asia/Kolkata",
+                    },
+                  },
+                  7,
+                ],
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$weekNumber",
+            bookings: {
+              $sum: 1,
+            },
+          },
+        },
+      ];
+
+      facet.previousMonth = [
+        {
+          $match: {
+            bookingDate: {
+              $gte: previousMonthStart,
+              $lt: currentMonthStart,
+            },
+          },
+        },
+        {
+          $set: {
+            weekNumber: {
+              $ceil: {
+                $divide: [
+                  {
+                    $dayOfMonth: {
+                      date: "$bookingDate",
+                      timezone: "Asia/Kolkata",
+                    },
+                  },
+                  7,
+                ],
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$weekNumber",
+            bookings: {
+              $sum: 1,
+            },
+          },
+        },
+      ];
+    }
+
+    if (period === "year") {
+      facet.currentYear = [
+        {
+          $match: {
+            bookingDate: {
+              $gte: currentYearStart,
+              $lt: nextYearStart,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $month: {
+                date: "$bookingDate",
+                timezone: "Asia/Kolkata",
+              },
+            },
+            bookings: {
+              $sum: 1,
+            },
+          },
+        },
+      ];
+
+      facet.previousYear = [
+        {
+          $match: {
+            bookingDate: {
+              $gte: previousYearStart,
+              $lt: currentYearStart,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $month: {
+                date: "$bookingDate",
+                timezone: "Asia/Kolkata",
+              },
+            },
+            bookings: {
+              $sum: 1,
+            },
+          },
+        },
+      ];
+    }
     const result = await bookingsModel.aggregate([
       {
         $match: {
           "providerSnapshot.providerObjectId": providerId,
         },
       },
-
       {
-        $facet: {
-          currentWeek: [
-            {
-              $match: {
-                bookingDate: {
-                  $gte: currentWeekDate,
-                  $lt: nextWeekStart,
-                },
-              },
-            },
-
-            {
-              $group: {
-                _id: {
-                  $dateToString: {
-                    format: "%Y-%m-%d",
-                    date: "$bookingDate",
-                    timezone: "Asia/Kolkata",
-                  },
-                },
-
-                bookings: {
-                  $sum: 1,
-                },
-              },
-            },
-          ],
-
-          previousWeek: [
-            {
-              $match: {
-                bookingDate: {
-                  $gte: previousWeekDate,
-                  $lt: currentWeekDate,
-                },
-              },
-            },
-
-            {
-              $group: {
-                _id: {
-                  $dateToString: {
-                    format: "%Y-%m-%d",
-                    date: "$bookingDate",
-                    timezone: "Asia/Kolkata",
-                  },
-                },
-
-                bookings: {
-                  $sum: 1,
-                },
-              },
-            },
-          ],
-
-          currentMonth: [
-            {
-              $match: {
-                bookingDate: {
-                  $gte: currentMonthStart,
-                  $lt: nextMonthStart,
-                },
-              },
-            },
-
-            {
-              $set: {
-                weekNumber: {
-                  $ceil: {
-                    $divide: [
-                      {
-                        $dayOfMonth: {
-                          date: "$bookingDate",
-                          timezone: "Asia/Kolkata",
-                        },
-                      },
-                      7,
-                    ],
-                  },
-                },
-              },
-            },
-
-            {
-              $group: {
-                _id: "$weekNumber",
-
-                bookings: {
-                  $sum: 1,
-                },
-              },
-            },
-          ],
-          previousMonth: [
-            {
-              $match: {
-                bookingDate: {
-                  $gte: previousMonthStart,
-                  $lt: currentMonthStart,
-                },
-              },
-            },
-
-            {
-              $set: {
-                weekNumber: {
-                  $ceil: {
-                    $divide: [
-                      {
-                        $dayOfMonth: {
-                          date: "$bookingDate",
-                          timezone: "Asia/Kolkata",
-                        },
-                      },
-                      7,
-                    ],
-                  },
-                },
-              },
-            },
-
-            {
-              $group: {
-                _id: "$weekNumber",
-
-                bookings: {
-                  $sum: 1,
-                },
-              },
-            },
-          ],
-
-          currentYear: [
-            {
-              $match: {
-                bookingDate: {
-                  $gte: currentYearStart,
-                  $lt: nextYearStart,
-                },
-              },
-            },
-            {
-              $group: {
-                _id: {
-                  $month: {
-                    date: "$bookingDate",
-                    timezone: "Asia/Kolkata",
-                  },
-                },
-                bookings: {
-                  $sum: 1,
-                },
-              },
-            },
-          ],
-          previousYear: [
-            {
-              $match: {
-                bookingDate: {
-                  $gte: previousYearStart,
-                  $lt: currentYearStart,
-                },
-              },
-            },
-            {
-              $group: {
-                _id: {
-                  $month: {
-                    date: "$bookingDate",
-                    timezone: "Asia/Kolkata",
-                  },
-                },
-                bookings: {
-                  $sum: 1,
-                },
-              },
-            },
-          ],
-        },
+        $facet: facet,
       },
     ]);
 
@@ -1286,184 +1285,226 @@ async function bookingAnalytics(req, res) {
 
       return `${year}-${month}-${day}`;
     };
-    const currentWeekData = result[0]?.currentWeek || [];
 
-    const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    if (period === "week") {
+      const currentWeekData = result[0]?.currentWeek || [];
 
-    const currentWeek = Array.from({ length: 7 }, (_, index) => {
-      const date = new Date(currentWeekDate);
+      const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-      date.setUTCDate(date.getUTCDate() + index);
+      const currentWeek = Array.from({ length: 7 }, (_, index) => {
+        const date = new Date(currentWeekDate);
 
-      const dateKey = formatDateKey(date);
+        date.setUTCDate(date.getUTCDate() + index);
 
-      const found = currentWeekData.find((item) => item._id === dateKey);
+        const dateKey = formatDateKey(date);
 
-      const bookings = found?.bookings || 0;
+        const found = currentWeekData.find((item) => item._id === dateKey);
 
-      const day = dayNames[index];
+        const bookings = found?.bookings || 0;
 
-      return {
-        day,
-        bookings,
-      };
-    });
-    const previousWeekData = result[0]?.previousWeek || [];
-    const previousWeek = Array.from({ length: 7 }, (_, index) => {
-      const date = new Date(previousWeekDate);
+        const day = dayNames[index];
 
-      date.setUTCDate(date.getUTCDate() + index);
+        return {
+          day,
+          bookings,
+        };
+      });
+      const previousWeekData = result[0]?.previousWeek || [];
+      const previousWeek = Array.from({ length: 7 }, (_, index) => {
+        const date = new Date(previousWeekDate);
 
-      const dateKey = formatDateKey(date);
+        date.setUTCDate(date.getUTCDate() + index);
 
-      const found = previousWeekData.find((item) => item._id === dateKey);
+        const dateKey = formatDateKey(date);
 
-      const bookings = found?.bookings || 0;
+        const found = previousWeekData.find((item) => item._id === dateKey);
 
-      const day = dayNames[index];
+        const bookings = found?.bookings || 0;
 
-      return {
-        day,
-        bookings,
-      };
-    });
-    const currentTotal = currentWeek.reduce(
-      (total, item) => total + item.bookings,
-      0,
-    );
-    const previousTotal = previousWeek.reduce(
-      (total, item) => total + item.bookings,
-      0,
-    );
-    let growthPercentage = null;
+        const day = dayNames[index];
 
-    if (previousTotal > 0) {
-      growthPercentage = Number(
-        (((currentTotal - previousTotal) / previousTotal) * 100).toFixed(2),
+        return {
+          day,
+          bookings,
+        };
+      });
+      const currentTotal = currentWeek.reduce(
+        (total, item) => total + item.bookings,
+        0,
       );
-    }
+      const previousTotal = previousWeek.reduce(
+        (total, item) => total + item.bookings,
+        0,
+      );
+      let growthPercentage = null;
 
+      if (previousTotal > 0) {
+        growthPercentage = Number(
+          (((currentTotal - previousTotal) / previousTotal) * 100).toFixed(2),
+        );
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Booking Analytics data fetched successfully",
+        period,
+
+        currentTotal,
+        previousTotal,
+        growthPercentage,
+
+        currentWeek,
+        previousWeek,
+      });
+    }
     //=======================================================
     // MONTH PERIOD LOGIC
     //=======================================================
 
-    const currentMonthData = result[0]?.currentMonth || [];
-    const previousMonthData = result[0]?.previousMonth || [];
+    if (period === "month") {
+      const currentMonthData = result[0]?.currentMonth || [];
+      const previousMonthData = result[0]?.previousMonth || [];
 
-    const currentMonth = Array.from(
-      { length: totalCurrentWeeks },
-      (_, index) => {
-        const weekNumber = index + 1;
-        const found = currentMonthData.find((item) => item._id === weekNumber);
-        const bookings = found?.bookings || 0;
-        return {
-          week: `Week ${weekNumber}`,
-          bookings,
-        };
-      },
-    );
-
-    const currentMonthTotal = currentMonth.reduce(
-      (total, item) => total + item.bookings,
-      0,
-    );
-    const previousMonth = Array.from(
-      { length: totalPreviousWeeks },
-      (_, index) => {
-        const weekNumber = index + 1;
-        const found = previousMonthData.find((item) => item._id === weekNumber);
-        const bookings = found?.bookings || 0;
-
-        return {
-          week: `Week ${weekNumber}`,
-          bookings,
-        };
-      },
-    );
-    const previousMonthTotal = previousMonth.reduce(
-      (total, item) => total + item.bookings,
-      0,
-    );
-
-    let monthGrowthPercentage = null;
-    if (previousMonthTotal > 0) {
-      monthGrowthPercentage = Number(
-        (
-          ((currentMonthTotal - previousMonthTotal) / previousMonthTotal) *
-          100
-        ).toFixed(2),
+      const currentMonth = Array.from(
+        { length: totalCurrentWeeks },
+        (_, index) => {
+          const weekNumber = index + 1;
+          const found = currentMonthData.find(
+            (item) => item._id === weekNumber,
+          );
+          const bookings = found?.bookings || 0;
+          return {
+            week: `Week ${weekNumber}`,
+            bookings,
+          };
+        },
       );
+
+      const currentMonthTotal = currentMonth.reduce(
+        (total, item) => total + item.bookings,
+        0,
+      );
+      const previousMonth = Array.from(
+        { length: totalPreviousWeeks },
+        (_, index) => {
+          const weekNumber = index + 1;
+          const found = previousMonthData.find(
+            (item) => item._id === weekNumber,
+          );
+          const bookings = found?.bookings || 0;
+
+          return {
+            week: `Week ${weekNumber}`,
+            bookings,
+          };
+        },
+      );
+      const previousMonthTotal = previousMonth.reduce(
+        (total, item) => total + item.bookings,
+        0,
+      );
+
+      let monthGrowthPercentage = null;
+      if (previousMonthTotal > 0) {
+        monthGrowthPercentage = Number(
+          (
+            ((currentMonthTotal - previousMonthTotal) / previousMonthTotal) *
+            100
+          ).toFixed(2),
+        );
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Booking Analytics data fetched successfully",
+        period,
+
+        currentMonthTotal,
+        previousMonthTotal,
+        monthGrowthPercentage,
+
+        currentMonth,
+        previousMonth,
+      });
     }
-
-
-     //=======================================================
+    //=======================================================
     // YEAR PERIOD LOGIC
     //=======================================================
-    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",
-    ];
 
-    const currentYearData = result[0]?.currentYear ||[]
-    const previousYearData = result[0]?.previousYearData ||[]
+    if (period === "year") {
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
 
-    const currentYear = Array.from({length:12},(_,index)=>{
-      const monthNumber = index +1
-      
-      const found = currentYearData.find((item)=>item._id === monthNumber)
-      const bookings = found?.bookings || []
+      const currentYearData = result[0]?.currentYear || [];
+      const previousYearData = result[0]?.previousYear || [];
 
-      return {
-        month:monthNames[index],
-        bookings
-      }
-    })
-    const previousYear = Array.from({length:12},(_,index)=>{
-      const monthNumber = index +1
-      
-      const found = previousYearData.find((item)=>item._id === monthNumber)
-      const bookings = found?.bookings || []
+      const currentYear = Array.from({ length: 12 }, (_, index) => {
+        const monthNumber = index + 1;
 
-      return {
-        month:monthNames[index],
-        bookings
-      }
-    })
+        const found = currentYearData.find((item) => item._id === monthNumber);
+        const bookings = found?.bookings || 0;
 
-    const currentYearTotal = currentYear.reduce((total,item)=>total+item.bookings,0)
-    const previousYearTotal = previousYear.reduce((total,item)=>total+item.bookings,0)
+        return {
+          month: monthNames[index],
+          bookings,
+        };
+      });
+      const previousYear = Array.from({ length: 12 }, (_, index) => {
+        const monthNumber = index + 1;
 
-    let yearGrowthPercentage = null;
-    if (previousYearTotal > 0) {
-      yearGrowthPercentage = Number(
-        (
-          ((currentYearTotal - previousYearTotal) / previousYearTotal) *
-          100
-        ).toFixed(2),
+        const found = previousYearData.find((item) => item._id === monthNumber);
+        const bookings = found?.bookings || 0;
+
+        return {
+          month: monthNames[index],
+          bookings,
+        };
+      });
+
+      const currentYearTotal = currentYear.reduce(
+        (total, item) => total + item.bookings,
+        0,
       );
+      const previousYearTotal = previousYear.reduce(
+        (total, item) => total + item.bookings,
+        0,
+      );
+
+      let yearGrowthPercentage = null;
+      if (previousYearTotal > 0) {
+        yearGrowthPercentage = Number(
+          (
+            ((currentYearTotal - previousYearTotal) / previousYearTotal) *
+            100
+          ).toFixed(2),
+        );
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Booking Analytics data fetched successfully",
+        period,
+
+        currentYearTotal,
+        previousYearTotal,
+        yearGrowthPercentage,
+
+        currentYear,
+        previousYear,
+      });
     }
-    return res.status(200).json({
-      success: true,
-      message: "Booking Analytics data fetched successfully",
-
-      period,
-
-      currentTotal,
-      previousTotal,
-      growthPercentage,
-       
-      currentWeek,
-      previousWeek,
-
-      currentMonthTotal,
-      previousMonthTotal,
-      monthGrowthPercentage,
-      currentMonth,
-      previousMonth,
-
-      currentYearTotal,
-      previousYearTotal,
-      yearGrowthPercentage,
-      currentYear,previousYear
-    });
   } catch (err) {
     console.error("booking Analytics Error:", err);
     return res.status(500).json({
