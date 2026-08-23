@@ -1004,7 +1004,9 @@ async function bookingAnalytics(req, res) {
     const IST_OFFSET = 5.5 * 60 * 60 * 1000;
 
     const istNow = new Date(now.getTime() + IST_OFFSET);
-
+    //=======================================================
+    // DAY PERIOD
+    //=======================================================
     const day = istNow.getUTCDay();
 
     const diffToMonday = day === 0 ? 6 : day - 1;
@@ -1058,6 +1060,31 @@ async function bookingAnalytics(req, res) {
       0,
     ).getDate();
     const totalPreviousWeeks = Math.ceil(daysInPreviousMonth / 7);
+
+    //=======================================================
+    // Year PERIOD
+    //=======================================================
+
+    const currentYearStartIST = new Date(istNow);
+
+    currentYearStartIST.setUTCMonth(0, 1);
+    currentYearStartIST.setUTCHours(0, 0, 0, 0);
+
+    const nextYearStartIST = new Date(currentYearStartIST);
+    nextYearStartIST.setUTCFullYear(nextYearStartIST.getUTCFullYear() + 1);
+
+    const previousYearStartIST = new Date(currentYearStartIST);
+    previousYearStartIST.setUTCFullYear(
+      previousYearStartIST.getUTCFullYear() - 1,
+    );
+
+    const currentYearStart = new Date(
+      currentYearStartIST.getTime() - IST_OFFSET,
+    );
+    const nextYearStart = new Date(nextYearStartIST.getTime() - IST_OFFSET);
+    const previousYearStart = new Date(
+      previousYearStartIST.getTime() - IST_OFFSET,
+    );
     const result = await bookingsModel.aggregate([
       {
         $match: {
@@ -1197,57 +1224,61 @@ async function bookingAnalytics(req, res) {
               },
             },
           ],
+
+          currentYear: [
+            {
+              $match: {
+                bookingDate: {
+                  $gte: currentYearStart,
+                  $lt: nextYearStart,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $month: {
+                    date: "$bookingDate",
+                    timezone: "Asia/Kolkata",
+                  },
+                },
+                bookings: {
+                  $sum: 1,
+                },
+              },
+            },
+          ],
+          previousYear: [
+            {
+              $match: {
+                bookingDate: {
+                  $gte: previousYearStart,
+                  $lt: currentYearStart,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $month: {
+                    date: "$bookingDate",
+                    timezone: "Asia/Kolkata",
+                  },
+                },
+                bookings: {
+                  $sum: 1,
+                },
+              },
+            },
+          ],
         },
       },
     ]);
 
-    const currentMonthData = result[0]?.currentMonth || [];
-    const previousMonthData = result[0]?.previousMonth || [];
+    //=======================================================
+    // DAY PERIOD LOGIC
+    //=======================================================
 
-    const currentMonth = Array.from(
-      { length: totalCurrentWeeks },
-      (_, index) => {
-        const weekNumber = index + 1;
-        const found = currentMonthData.find((item) => item._id === weekNumber);
-        const bookings = found?.bookings || 0;
-        return {
-          week: `Week ${weekNumber}`,
-          bookings,
-        };
-      },
-    );
-
-    const currentMonthTotal = currentMonth.reduce(
-      (total, item) => total + item.bookings,
-      0,
-    );
-    const previousMonth = Array.from(
-      { length: totalPreviousWeeks },
-      (_, index) => {
-        const weekNumber = index + 1;
-        const found = previousMonthData.find((item) => item._id === weekNumber);
-        const bookings = found?.bookings || 0;
-
-        return {
-          week: `Week ${weekNumber}`,
-          bookings,
-        };
-      },
-    );
-    const previousMonthTotal = previousMonth.reduce(
-      (total, item) => total + item.bookings,
-      0,
-    );
-
-    let monthGrowthPercentage = null;
-    if (previousMonthTotal > 0) {
-      monthGrowthPercentage = Number(
-        (
-          ((currentMonthTotal - previousMonthTotal) / previousMonthTotal) *
-          100
-        ).toFixed(2),
-      );
-    }
     const formatDateKey = (date) => {
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -1311,6 +1342,104 @@ async function bookingAnalytics(req, res) {
         (((currentTotal - previousTotal) / previousTotal) * 100).toFixed(2),
       );
     }
+
+    //=======================================================
+    // MONTH PERIOD LOGIC
+    //=======================================================
+
+    const currentMonthData = result[0]?.currentMonth || [];
+    const previousMonthData = result[0]?.previousMonth || [];
+
+    const currentMonth = Array.from(
+      { length: totalCurrentWeeks },
+      (_, index) => {
+        const weekNumber = index + 1;
+        const found = currentMonthData.find((item) => item._id === weekNumber);
+        const bookings = found?.bookings || 0;
+        return {
+          week: `Week ${weekNumber}`,
+          bookings,
+        };
+      },
+    );
+
+    const currentMonthTotal = currentMonth.reduce(
+      (total, item) => total + item.bookings,
+      0,
+    );
+    const previousMonth = Array.from(
+      { length: totalPreviousWeeks },
+      (_, index) => {
+        const weekNumber = index + 1;
+        const found = previousMonthData.find((item) => item._id === weekNumber);
+        const bookings = found?.bookings || 0;
+
+        return {
+          week: `Week ${weekNumber}`,
+          bookings,
+        };
+      },
+    );
+    const previousMonthTotal = previousMonth.reduce(
+      (total, item) => total + item.bookings,
+      0,
+    );
+
+    let monthGrowthPercentage = null;
+    if (previousMonthTotal > 0) {
+      monthGrowthPercentage = Number(
+        (
+          ((currentMonthTotal - previousMonthTotal) / previousMonthTotal) *
+          100
+        ).toFixed(2),
+      );
+    }
+
+
+     //=======================================================
+    // YEAR PERIOD LOGIC
+    //=======================================================
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",
+    ];
+
+    const currentYearData = result[0]?.currentYear ||[]
+    const previousYearData = result[0]?.previousYearData ||[]
+
+    const currentYear = Array.from({length:12},(_,index)=>{
+      const monthNumber = index +1
+      
+      const found = currentYearData.find((item)=>item._id === monthNumber)
+      const bookings = found?.bookings || []
+
+      return {
+        month:monthNames[index],
+        bookings
+      }
+    })
+    const previousYear = Array.from({length:12},(_,index)=>{
+      const monthNumber = index +1
+      
+      const found = previousYearData.find((item)=>item._id === monthNumber)
+      const bookings = found?.bookings || []
+
+      return {
+        month:monthNames[index],
+        bookings
+      }
+    })
+
+    const currentYearTotal = currentYear.reduce((total,item)=>total+item.bookings,0)
+    const previousYearTotal = previousYear.reduce((total,item)=>total+item.bookings,0)
+
+    let yearGrowthPercentage = null;
+    if (previousYearTotal > 0) {
+      yearGrowthPercentage = Number(
+        (
+          ((currentYearTotal - previousYearTotal) / previousYearTotal) *
+          100
+        ).toFixed(2),
+      );
+    }
     return res.status(200).json({
       success: true,
       message: "Booking Analytics data fetched successfully",
@@ -1320,7 +1449,7 @@ async function bookingAnalytics(req, res) {
       currentTotal,
       previousTotal,
       growthPercentage,
-
+       
       currentWeek,
       previousWeek,
 
@@ -1329,6 +1458,11 @@ async function bookingAnalytics(req, res) {
       monthGrowthPercentage,
       currentMonth,
       previousMonth,
+
+      currentYearTotal,
+      previousYearTotal,
+      yearGrowthPercentage,
+      currentYear,previousYear
     });
   } catch (err) {
     console.error("booking Analytics Error:", err);
