@@ -1,6 +1,6 @@
 import React from "react";
 
-import StatusBadge from "../../../common/StatusBadge";
+import StatusBadge from "../../common/StatusBadge";
 
 const BookingItem = ({ booking }) => {
   const {

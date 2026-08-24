@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import SlotTime from "../../../common/SlotTime";
+import SlotTime from "../../common/SlotTime";
 
 const days = [
   "Mon",

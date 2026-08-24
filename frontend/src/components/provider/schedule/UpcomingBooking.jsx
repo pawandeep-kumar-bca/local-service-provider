@@ -7,8 +7,7 @@ import {
 } from "react-icons/bi";
 import { Link } from "react-router-dom";
 
-import StatusBadge from "../../../common/StatusBadge";
-
+import StatusBadge from "../../common/StatusBadge";
 const UpcomingBooking = () => {
   // TODO:
   // API:
