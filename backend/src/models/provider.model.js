@@ -59,6 +59,7 @@ const providerSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    
     workingHours:{
       startTime:String,
       endTime:String
