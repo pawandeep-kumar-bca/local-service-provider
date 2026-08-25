@@ -1517,6 +1517,33 @@ async function bookingAnalytics(req, res) {
 async function scheduleSummary(req, res) {
   try {
     const providerId = req.provider._id;
+    const workingHours = req.provider.workingHours;
+
+    const [startHours, startMinutes] = workingHours.startTime
+      .split(":")
+      .map(Number);
+
+    const startM = startHours * 60 + startMinutes;
+    const [endHours, endMinutes] = workingHours.endTime.split(":").map(Number);
+    const endM = endHours * 60 + endMinutes;
+
+    let current = startM;
+    function minuteToTime(totalTime) {
+      const hours = Math.floor(totalTime / 60);
+      const minutes = totalTime % 60;
+      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    }
+
+    const slots = [];
+    while (current < endM) {
+      const next = current + 60;
+      slots.push({
+        startTime: minuteToTime(current),
+        endTime: minuteToTime(next),
+      });
+      current = next;
+    }
+    console.log(slots);
 
     const todayStart = new Date();
     todayStart.setUTCHours(0, 0, 0, 0);
@@ -1589,17 +1616,10 @@ async function scheduleSummary(req, res) {
               ],
             },
           },
-          freeSlot:{
-            $sum:{
-              $cond:[
-                
-              ]
-            }
-          }
         },
       },
     ]);
-    
+
     return res.status(200).json({
       success: true,
       message: "Summary fetch successFully",
