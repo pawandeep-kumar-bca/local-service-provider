@@ -1513,6 +1513,106 @@ async function bookingAnalytics(req, res) {
     });
   }
 }
+
+async function scheduleSummary(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const todayStart = new Date();
+    todayStart.setUTCHours(0, 0, 0, 0);
+    const todayEnd = new Date(todayStart);
+    todayEnd.setUTCDate(todayEnd.getUTCDate() + 1);
+
+    const now = new Date();
+
+    const result = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId": providerId,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalTodayBookings: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gte: ["$bookingDate", todayStart] },
+                    { $lt: ["$bookingDate", todayEnd] },
+                    { $ne: ["$bookingStatus", "cancelled"] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+          totalPendingBookings: {
+            $sum: {
+              $cond: [
+                {
+                  $eq: ["$bookingStatus", "pending"],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+          TotalUpcomingBookings: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gt: ["$bookingSlot.startTime", now] },
+                    { $in: ["$bookingStatus", ["pending", "accepted"]] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+          totalCompletedBookings: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gte: ["$bookingDate", todayStart] },
+                    { $lt: ["$bookingDate", todayEnd] },
+                    { $eq: ["$bookingStatus", "completed"] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+          freeSlot:{
+            $sum:{
+              $cond:[
+                
+              ]
+            }
+          }
+        },
+      },
+    ]);
+    
+    return res.status(200).json({
+      success: true,
+      message: "Summary fetch successFully",
+      result,
+    });
+  } catch (err) {
+    console.error("Schedule summary Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server Error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -1527,4 +1627,5 @@ module.exports = {
   providerDashboardOverview,
   todayBookings,
   bookingAnalytics,
+  scheduleSummary,
 };

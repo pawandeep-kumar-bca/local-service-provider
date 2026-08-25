@@ -65,6 +65,43 @@ router.get('/dashboard/booking-analytics',
   providerControllers.bookingAnalytics
 )
 
+
+//  `GET /schedule/summary`
+
+router.get('/schedule/summary',authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.scheduleSummary
+)
+//  `GET /schedule?view=day`          
+//  `GET /schedule?view=week`         
+//  `GET /schedule?view=month`        
+//  `GET /schedule/upcoming-bookings` 
+//  `GET /availability`
+//  `PATCH /availability`             
+//  `GET /schedule/free-slots`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // PUT /api/v1/providers/availability
 
 
