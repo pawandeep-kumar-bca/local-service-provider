@@ -1514,6 +1514,43 @@ async function bookingAnalytics(req, res) {
   }
 }
 
+//=====================================================
+// HELPER FUNCTIONS
+//=====================================================
+
+function minuteToTime(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+    2,
+    "0",
+  )}`;
+}
+
+function timeToMinutes(time) {
+  const [hours, minutes] = time.split(":").map(Number);
+
+  return hours * 60 + minutes;
+}
+
+function dateToISTMinutes(date) {
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
+
+  const parts = formatter.formatToParts(date);
+
+  const hours = Number(parts.find((part) => part.type === "hour").value);
+
+  const minutes = Number(parts.find((part) => part.type === "minute").value);
+
+  return hours * 60 + minutes;
+}
+
 async function scheduleSummary(req, res) {
   try {
     const providerId = req.provider._id;
@@ -1528,41 +1565,6 @@ async function scheduleSummary(req, res) {
     const [endHours, endMinutes] = workingHours.endTime.split(":").map(Number);
 
     const endM = endHours * 60 + endMinutes;
-
-    function minuteToTime(totalMinutes) {
-      const hours = Math.floor(totalMinutes / 60);
-      const minutes = totalMinutes % 60;
-
-      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-        2,
-        "0",
-      )}`;
-    }
-
-    function timeToMinutes(time) {
-      const [hours, minutes] = time.split(":").map(Number);
-
-      return hours * 60 + minutes;
-    }
-
-    function dateToISTMinutes(date) {
-      const formatter = new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        hourCycle: "h23",
-      });
-
-      const parts = formatter.formatToParts(date);
-
-      const hours = Number(parts.find((part) => part.type === "hour").value);
-
-      const minutes = Number(
-        parts.find((part) => part.type === "minute").value,
-      );
-
-      return hours * 60 + minutes;
-    }
 
     const slots = [];
 
@@ -1753,6 +1755,8 @@ async function scheduleSummary(req, res) {
     });
   }
 }
+
+async function providerSlots(req, res) {}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -1760,7 +1764,6 @@ module.exports = {
   getProviders,
   getOneProviderDetails,
   uploadProviderDocuments,
-
   nearbySearchLocation,
   recommendedProviders,
   availabilityProvider,
@@ -1768,4 +1771,5 @@ module.exports = {
   todayBookings,
   bookingAnalytics,
   scheduleSummary,
+  providerSlots,
 };

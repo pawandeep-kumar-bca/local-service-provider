@@ -78,9 +78,9 @@ router.get('/schedule/summary',authMiddleware.tokenVerify,
 //  `GET /schedule/upcoming-bookings` 
 //  `GET /availability`
 //  `PATCH /availability`             
-//  `GET /schedule/free-slots`
+//  `GET /schedule/slots`
 
-
+router.get('/schedule/slots',authMiddleware.tokenVerify,providerMiddleware,providerControllers.providerSlots)
 
 
 
