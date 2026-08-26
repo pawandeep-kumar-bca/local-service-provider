@@ -1524,33 +1524,125 @@ async function scheduleSummary(req, res) {
       .map(Number);
 
     const startM = startHours * 60 + startMinutes;
+
     const [endHours, endMinutes] = workingHours.endTime.split(":").map(Number);
+
     const endM = endHours * 60 + endMinutes;
 
-    let current = startM;
-    function minuteToTime(totalTime) {
-      const hours = Math.floor(totalTime / 60);
-      const minutes = totalTime % 60;
-      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    function minuteToTime(totalMinutes) {
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+        2,
+        "0",
+      )}`;
+    }
+
+    function timeToMinutes(time) {
+      const [hours, minutes] = time.split(":").map(Number);
+
+      return hours * 60 + minutes;
+    }
+
+    function dateToISTMinutes(date) {
+      const formatter = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+      });
+
+      const parts = formatter.formatToParts(date);
+
+      const hours = Number(parts.find((part) => part.type === "hour").value);
+
+      const minutes = Number(
+        parts.find((part) => part.type === "minute").value,
+      );
+
+      return hours * 60 + minutes;
     }
 
     const slots = [];
+
+    let current = startM;
+
     while (current < endM) {
       const next = current + 60;
+
+      if (next > endM) {
+        break;
+      }
+
       slots.push({
         startTime: minuteToTime(current),
         endTime: minuteToTime(next),
       });
+
       current = next;
     }
-    console.log(slots);
 
     const todayStart = new Date();
     todayStart.setUTCHours(0, 0, 0, 0);
+
     const todayEnd = new Date(todayStart);
     todayEnd.setUTCDate(todayEnd.getUTCDate() + 1);
 
     const now = new Date();
+
+    const currentISTMinutes = dateToISTMinutes(now);
+
+    const nextFullHour =
+      currentISTMinutes % 60 === 0
+        ? currentISTMinutes
+        : currentISTMinutes + (60 - (currentISTMinutes % 60));
+
+    const bookings = await bookingsModel.find({
+      "providerSnapshot.providerObjectId": providerId,
+
+      bookingDate: {
+        $gte: todayStart,
+        $lt: todayEnd,
+      },
+    });
+
+    const slotBooks = slots.map((slot) => {
+      const slotStart = timeToMinutes(slot.startTime);
+      const slotEnd = timeToMinutes(slot.endTime);
+
+      if (slotStart < nextFullHour) {
+        return {
+          ...slot,
+          status: "unavailable",
+        };
+      }
+
+      const isBooked = bookings.some((booking) => {
+        if (
+          !["pending", "accepted", "in_progress"].includes(
+            booking.bookingStatus,
+          )
+        ) {
+          return false;
+        }
+
+        const bookingStart = dateToISTMinutes(booking.bookingSlot.startTime);
+
+        const bookingEnd = dateToISTMinutes(booking.bookingSlot.endTime);
+
+        return slotStart < bookingEnd && slotEnd > bookingStart;
+      });
+
+      return {
+        ...slot,
+        status: isBooked ? "booked" : "free",
+      };
+    });
+
+    const totalFreeSlot = slotBooks.filter(
+      (slot) => slot.status === "free",
+    ).length;
 
     const result = await bookingsModel.aggregate([
       {
@@ -1558,17 +1650,25 @@ async function scheduleSummary(req, res) {
           "providerSnapshot.providerObjectId": providerId,
         },
       },
+
       {
         $group: {
           _id: null,
+
           totalTodayBookings: {
             $sum: {
               $cond: [
                 {
                   $and: [
-                    { $gte: ["$bookingDate", todayStart] },
-                    { $lt: ["$bookingDate", todayEnd] },
-                    { $ne: ["$bookingStatus", "cancelled"] },
+                    {
+                      $gte: ["$bookingDate", todayStart],
+                    },
+                    {
+                      $lt: ["$bookingDate", todayEnd],
+                    },
+                    {
+                      $ne: ["$bookingStatus", "cancelled"],
+                    },
                   ],
                 },
                 1,
@@ -1576,6 +1676,7 @@ async function scheduleSummary(req, res) {
               ],
             },
           },
+
           totalPendingBookings: {
             $sum: {
               $cond: [
@@ -1587,13 +1688,18 @@ async function scheduleSummary(req, res) {
               ],
             },
           },
-          TotalUpcomingBookings: {
+
+          totalUpcomingBookings: {
             $sum: {
               $cond: [
                 {
                   $and: [
-                    { $gt: ["$bookingSlot.startTime", now] },
-                    { $in: ["$bookingStatus", ["pending", "accepted"]] },
+                    {
+                      $gt: ["$bookingSlot.startTime", now],
+                    },
+                    {
+                      $in: ["$bookingStatus", ["pending", "accepted"]],
+                    },
                   ],
                 },
                 1,
@@ -1601,14 +1707,21 @@ async function scheduleSummary(req, res) {
               ],
             },
           },
+
           totalCompletedBookings: {
             $sum: {
               $cond: [
                 {
                   $and: [
-                    { $gte: ["$bookingDate", todayStart] },
-                    { $lt: ["$bookingDate", todayEnd] },
-                    { $eq: ["$bookingStatus", "completed"] },
+                    {
+                      $gte: ["$bookingDate", todayStart],
+                    },
+                    {
+                      $lt: ["$bookingDate", todayEnd],
+                    },
+                    {
+                      $eq: ["$bookingStatus", "completed"],
+                    },
                   ],
                 },
                 1,
@@ -1622,11 +1735,18 @@ async function scheduleSummary(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "Summary fetch successFully",
-      result,
+      message: "Summary fetched successfully",
+      result: result[0] || {
+        totalTodayBookings: 0,
+        totalPendingBookings: 0,
+        totalUpcomingBookings: 0,
+        totalCompletedBookings: 0,
+      },
+      totalFreeSlot,
     });
   } catch (err) {
     console.error("Schedule summary Error:", err);
+
     return res.status(500).json({
       success: false,
       message: "Internal server Error",
