@@ -1756,7 +1756,122 @@ async function scheduleSummary(req, res) {
   }
 }
 
-async function providerSlots(req, res) {}
+async function providerSlots(req, res) {
+  try {
+    const providerId = req.provider._id;
+    const workingHours = req.provider.workingHours;
+
+    const [startHours, startMinutes] = workingHours.startTime
+      .split(":")
+      .map(Number);
+
+    const startM = startHours * 60 + startMinutes;
+
+    const [endHours, endMinutes] = workingHours.endTime.split(":").map(Number);
+
+    const endM = endHours * 60 + endMinutes;
+
+    const startDate = new Date();
+    startDate.setUTCHours(0, 0, 0, 0);
+
+    const endDate = new Date(startDate);
+    endDate.setUTCDate(endDate.getUTCDate() + 1);
+    const now = new Date();
+
+    const currentISTMinutes = dateToISTMinutes(now);
+
+    const nextAvailableTime =
+      currentISTMinutes % 60 === 0
+        ? currentISTMinutes
+        : currentISTMinutes + (60 - (currentISTMinutes % 60));
+
+    const todayBookings = await bookingsModel
+      .find({
+        "providerSnapshot.providerObjectId": providerId,
+
+        bookingDate: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+
+        bookingStatus: {
+          $in: ["pending", "accepted", "in_progress"],
+        },
+      })
+      .sort({
+        "bookingSlot.startTime": 1,
+      });
+
+    const slots = [];
+    const effectiveStart = Math.max(startM, nextAvailableTime);
+
+    let cursor = effectiveStart;
+
+    for (const booking of todayBookings) {
+      const start = dateToISTMinutes(booking.bookingSlot.startTime);
+
+      const end = dateToISTMinutes(booking.bookingSlot.endTime);
+
+      if (end <= cursor) {
+        continue;
+      }
+
+      if (end <= startM) {
+        continue;
+      }
+
+      if (start >= endM) {
+        break;
+      }
+
+      const bookingStart = Math.max(start, startM);
+      const bookingEnd = Math.min(end, endM);
+
+      if (cursor < bookingStart) {
+        slots.push({
+          type: "free",
+          startTime: minuteToTime(cursor),
+          endTime: minuteToTime(bookingStart),
+        });
+      }
+      const visibleBookingStart = Math.max(cursor, bookingStart);
+
+      if (visibleBookingStart < bookingEnd) {
+        slots.push({
+          type: "booking",
+          startTime: minuteToTime(visibleBookingStart),
+          endTime: minuteToTime(bookingEnd),
+          booking,
+        });
+      }
+
+      cursor = Math.max(cursor, bookingEnd);
+    }
+
+    if (cursor < endM) {
+      slots.push({
+        type: "free",
+        startTime: minuteToTime(cursor),
+        endTime: minuteToTime(endM),
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Provider slots fetched successfully",
+      date: startDate,
+      workingHours,
+      slots,
+    });
+  } catch (err) {
+    console.error("Provider Slots Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
