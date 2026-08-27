@@ -74,12 +74,13 @@ router.get('/schedule/summary',authMiddleware.tokenVerify,
 )
 //  `GET /schedule?view=day`          
 //  `GET /schedule?view=week`         
-//  `GET /schedule?view=month`        
+//  `GET /schedule?view=month`   
+
+
 //  `GET /schedule/upcoming-bookings`
 
 router.get('/schedule/upcoming-bookings',authMiddleware.tokenVerify,providerMiddleware,providerControllers.providerUpcomingBooking)
-//  `GET /availability`
-//  `PATCH /availability`      
+   
 
 
 //  `GET /schedule/slots` 
@@ -106,11 +107,13 @@ router.get('/schedule/slots',authMiddleware.tokenVerify,providerMiddleware,provi
 
 
 
-// PUT /api/v1/providers/availability
+//  `GET/schedule /availability`
+
+//  `PATCH/schedule /availability`   
 
 
-router.put(
-  "/availability",
+router.patch(
+  "/schedule/availability",
   authMiddleware.tokenVerify,
   providerMiddleware,
   providerControllers.availabilityProvider,

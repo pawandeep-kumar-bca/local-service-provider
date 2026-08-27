@@ -708,32 +708,6 @@ async function recommendedProviders(req, res) {
   }
 }
 
-async function availabilityProvider(req, res) {
-  try {
-    const { availability } = req.body;
-    const providerId = req.user.id;
-    const provider = await providerModel.findOne({ userId: providerId });
-
-    if (!provider) {
-      return res
-        .status(404)
-        .json({ message: "Provider profile not found", provider: [] });
-    }
-    if (availability === undefined) {
-      return res.status(400).json({ message: "availability is required" });
-    }
-    provider.availability = availability;
-    await provider.save();
-    return res.status(200).json({
-      message: "provider availability updated successfully",
-      provider,
-    });
-  } catch (err) {
-    console.error("availability Provider error:", err);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-}
-
 async function uploadProviderDocuments(req, res) {
   try {
     const userId = req.user.id;
@@ -1875,7 +1849,6 @@ async function providerSlots(req, res) {
 
 async function providerUpcomingBooking(req, res) {
   try {
-    
     const providerId = req.provider._id;
 
     const now = new Date();
@@ -1889,7 +1862,10 @@ async function providerUpcomingBooking(req, res) {
         bookingStatus: {
           $in: ["pending", "accepted"],
         },
-      }).select('userSnapshot serviceSnapshot.categoryName bookingStatus bookingSlot serviceAddressSnapshot')
+      })
+      .select(
+        "userSnapshot serviceSnapshot.categoryName bookingStatus bookingSlot serviceAddressSnapshot",
+      )
       .sort({
         "bookingSlot.startTime": 1,
       });
@@ -1905,6 +1881,42 @@ async function providerUpcomingBooking(req, res) {
       success: false,
       message: "Internal server Error:",
     });
+  }
+}
+async function availabilityProvider(req, res) {
+  try {
+    const { startTime, endTime } = req.body;
+    const provider = req.provider;
+    if (startTime === undefined || endTime === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Start time and end time are required!",
+      });
+    }
+
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = timeToMinutes(endTime);
+    if (startMinutes >= endMinutes) {
+      return res.status(400).json({
+        success: false,
+        message: "End time must be greater than start time",
+      });
+    }
+    provider.workingHours = {
+      startTime,
+      endTime,
+    };
+    await provider.save();
+    return res.status(200).json({
+      success: true,
+      message: "provider availability updated successfully",
+      provider,
+    });
+  } catch (err) {
+    console.error("availability Provider error:", err);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   }
 }
 module.exports = {
