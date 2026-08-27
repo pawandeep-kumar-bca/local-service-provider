@@ -1873,16 +1873,38 @@ async function providerSlots(req, res) {
   }
 }
 
-async function providerUpcomingBooking(req,res){
-  try{
-
-  }catch(err){
-    console.error('Upcoming booking Error:',err);
-    return res.status(500).json({
-      success:false,
-      message:'Internal server Error:'
-    })
+async function providerUpcomingBooking(req, res) {
+  try {
     
+    const providerId = req.provider._id;
+
+    const now = new Date();
+
+    const upcomingBooking = await bookingsModel
+      .find({
+        "providerSnapshot.providerObjectId": providerId,
+        "bookingSlot.startTime": {
+          $gt: now,
+        },
+        bookingStatus: {
+          $in: ["pending", "accepted"],
+        },
+      }).select('userSnapshot serviceSnapshot.categoryName bookingStatus bookingSlot serviceAddressSnapshot')
+      .sort({
+        "bookingSlot.startTime": 1,
+      });
+
+    return res.status(200).json({
+      success: true,
+      message: "Upcoming booking fetch successfully",
+      upcomingBooking,
+    });
+  } catch (err) {
+    console.error("Upcoming booking Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server Error:",
+    });
   }
 }
 module.exports = {
@@ -1900,5 +1922,5 @@ module.exports = {
   bookingAnalytics,
   scheduleSummary,
   providerSlots,
-  providerUpcomingBooking
+  providerUpcomingBooking,
 };

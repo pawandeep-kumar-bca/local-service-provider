@@ -82,7 +82,7 @@ router.get('/schedule/upcoming-bookings',authMiddleware.tokenVerify,providerMidd
 //  `PATCH /availability`      
 
 
-//  `GET /schedule/slots`
+//  `GET /schedule/slots` 
 
 router.get('/schedule/slots',authMiddleware.tokenVerify,providerMiddleware,providerControllers.providerSlots)
 
