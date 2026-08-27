@@ -75,9 +75,13 @@ router.get('/schedule/summary',authMiddleware.tokenVerify,
 //  `GET /schedule?view=day`          
 //  `GET /schedule?view=week`         
 //  `GET /schedule?view=month`        
-//  `GET /schedule/upcoming-bookings` 
+//  `GET /schedule/upcoming-bookings`
+
+router.get('/schedule/upcoming-bookings',authMiddleware.tokenVerify,providerMiddleware,providerControllers.providerUpcomingBooking)
 //  `GET /availability`
-//  `PATCH /availability`             
+//  `PATCH /availability`      
+
+
 //  `GET /schedule/slots`
 
 router.get('/schedule/slots',authMiddleware.tokenVerify,providerMiddleware,providerControllers.providerSlots)

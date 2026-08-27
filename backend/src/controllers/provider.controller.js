@@ -1872,6 +1872,19 @@ async function providerSlots(req, res) {
     });
   }
 }
+
+async function providerUpcomingBooking(req,res){
+  try{
+
+  }catch(err){
+    console.error('Upcoming booking Error:',err);
+    return res.status(500).json({
+      success:false,
+      message:'Internal server Error:'
+    })
+    
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -1887,4 +1900,5 @@ module.exports = {
   bookingAnalytics,
   scheduleSummary,
   providerSlots,
+  providerUpcomingBooking
 };
