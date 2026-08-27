@@ -48,75 +48,76 @@ router.get("/recommended", providerControllers.recommendedProviders);
 // PROVIDER DASHBOARD APIS
 //====================
 
-
 // GET /api/v1/providers/dashboard/overview
-router.get('/dashboard/overview',authMiddleware.tokenVerify,providerMiddleware,providerControllers
-  .providerDashboardOverview
-)
+router.get(
+  "/dashboard/overview",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.providerDashboardOverview,
+);
 
 // GET /api/v1/provider/dashboard/today-bookings
-router.get('/dashboard/today-bookings',authMiddleware.tokenVerify,providerMiddleware,
-  providerControllers.todayBookings
-)
+router.get(
+  "/dashboard/today-bookings",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.todayBookings,
+);
 // GET /api/v1/provider/dashboard/booking-analytics?period=week
 
-router.get('/dashboard/booking-analytics',
-  authMiddleware.tokenVerify,providerMiddleware,
-  providerControllers.bookingAnalytics
-)
-
+router.get(
+  "/dashboard/booking-analytics",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.bookingAnalytics,
+);
 
 //  `GET /schedule/summary`
 
-router.get('/schedule/summary',authMiddleware.tokenVerify,
+router.get(
+  "/schedule/summary",
+  authMiddleware.tokenVerify,
   providerMiddleware,
-  providerControllers.scheduleSummary
-)
-//  `GET /schedule?view=day`          
-//  `GET /schedule?view=week`         
-//  `GET /schedule?view=month`   
-
+  providerControllers.scheduleSummary,
+);
+//  `GET /schedule?view=day`
+//  `GET /schedule?view=week`
+//  `GET /schedule?view=month`
 
 //  `GET /schedule/upcoming-bookings`
 
-router.get('/schedule/upcoming-bookings',authMiddleware.tokenVerify,providerMiddleware,providerControllers.providerUpcomingBooking)
-   
+router.get(
+  "/schedule/upcoming-bookings",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.providerUpcomingBooking,
+);
 
+//  `GET /schedule/slots`
 
-//  `GET /schedule/slots` 
+router.get(
+  "/schedule/slots",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.providerSlots,
+);
 
-router.get('/schedule/slots',authMiddleware.tokenVerify,providerMiddleware,providerControllers.providerSlots)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//  `GET/schedule /availability`
-
-//  `PATCH/schedule /availability`   
-
+//  `PATCH/schedule /availability`
 
 router.patch(
   "/schedule/availability",
   authMiddleware.tokenVerify,
   providerMiddleware,
-  providerControllers.availabilityProvider,
+  providerControllers.setProviderAvailability,
+);
+
+//  `GET/schedule /availability`
+
+router.get(
+  "/schedule/availability",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.getProviderAvailability,
 );
 router.put(
   "/upload-documents",
@@ -135,6 +136,5 @@ router.get(
   validateObjectIdMiddleware("id"),
   providerControllers.getOneProviderDetails,
 );
-
 
 module.exports = router;

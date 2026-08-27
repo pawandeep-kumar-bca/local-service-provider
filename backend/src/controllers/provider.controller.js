@@ -1883,7 +1883,7 @@ async function providerUpcomingBooking(req, res) {
     });
   }
 }
-async function availabilityProvider(req, res) {
+async function setProviderAvailability(req, res) {
   try {
     const { startTime, endTime } = req.body;
     const provider = req.provider;
@@ -1919,6 +1919,24 @@ async function availabilityProvider(req, res) {
       .json({ success: false, message: "Internal server error" });
   }
 }
+async function getProviderAvailability(req, res) {
+  try {
+    const workingHours = req.provider.workingHours;
+
+    return res.status(200).json({
+      success: true,
+      message: "Working hours fetched successfully",
+      workingHours,
+    });
+  } catch (err) {
+    console.error("Get provider availability error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -1928,11 +1946,12 @@ module.exports = {
   uploadProviderDocuments,
   nearbySearchLocation,
   recommendedProviders,
-  availabilityProvider,
   providerDashboardOverview,
   todayBookings,
   bookingAnalytics,
   scheduleSummary,
   providerSlots,
   providerUpcomingBooking,
+  setProviderAvailability,
+  getProviderAvailability,
 };
