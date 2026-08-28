@@ -227,9 +227,9 @@ async function getCategoryForPopular(req, res) {
         },
       },
     ]);
-const categories = result[0]?.categories || [];
+    const categories = result[0]?.categories || [];
 
-const total = result[0]?.totalCount[0]?.total || 0;
+    const total = result[0]?.totalCount[0]?.total || 0;
     return res.status(200).json({
       success: true,
       message: "Categories for popular  fetched successfully",
