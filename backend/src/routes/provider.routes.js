@@ -84,6 +84,12 @@ router.get(
 //  `GET /schedule?view=week`
 //  `GET /schedule?view=month`
 
+router.get(
+  "/schedule",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.scheduleBookings,
+);
 //  `GET /schedule/upcoming-bookings`
 
 router.get(

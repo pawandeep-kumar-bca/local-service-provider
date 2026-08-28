@@ -1937,6 +1937,55 @@ async function getProviderAvailability(req, res) {
     });
   }
 }
+async function scheduleBookings(req, res) {
+  try {
+    const { view = "day", date } = req.query;
+    const providerId = req.provider._id;
+
+    if (!date) {
+      return res.status(400).json({
+        success: false,
+        message: "Date is required",
+      });
+    }
+
+    const startToday = new Date(date);
+    startToday.setUTCHours(0, 0, 0, 0);
+
+    const endToday = new Date(startToday);
+    endToday.setUTCDate(endToday.getUTCDate() + 1);
+
+    const bookings = await bookingsModel
+      .find({
+        "providerSnapshot.providerObjectId": providerId,
+
+        bookingDate: {
+          $gte: startToday,
+          $lt: endToday,
+        },
+
+        bookingStatus: {
+          $in: ["pending", "accepted", "in_progress", "completed"],
+        },
+      })
+      .sort({
+        "bookingSlot.startTime": 1,
+      });
+
+    return res.status(200).json({
+      success: true,
+      message: "Bookings fetched successfully ",
+      bookings,
+    });
+  } catch (err) {
+    console.error("Schedule Bookings Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -1954,4 +2003,5 @@ module.exports = {
   providerUpcomingBooking,
   setProviderAvailability,
   getProviderAvailability,
+  scheduleBookings,
 };
