@@ -109,7 +109,7 @@ async function userBookingCreate(req, res) {
       districtModel.findById(district),
       cityModel.findById(city),
     ]);
-    // ---------- Date check ----------
+    
     const bookingStartTime = convertSlotToDate(
       bookingDate,
       bookingSlot.startTime,
