@@ -346,7 +346,6 @@ async function deleteReview(req, res) {
     const reviewId = req.params.reviewId;
     const userId = req.user.id;
 
-
     if (!reviewId) {
       return res.status(400).json({ message: "Invalid review Id" });
     }
@@ -366,11 +365,9 @@ async function deleteReview(req, res) {
       }
     }
     await reviewModel.deleteOne({
-      _id:reviewId
-    })
-    return res
-      .status(200)
-      .json({ message: "review deleted successfully"});
+      _id: reviewId,
+    });
+    return res.status(200).json({ message: "review deleted successfully" });
   } catch (err) {
     console.error("Delete review error:", err);
     return res.status(500).json({ message: "internal server error" });
