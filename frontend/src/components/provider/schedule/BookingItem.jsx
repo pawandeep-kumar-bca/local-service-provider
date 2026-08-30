@@ -3,20 +3,14 @@ import React from "react";
 import StatusBadge from "../../common/StatusBadge";
 
 const BookingItem = ({ booking }) => {
-  const {
-    customer,
-    service,
-    location,
-    time,
-    status,
-  } = booking;
+  const { customer, service, location, time, status } = booking;
 
   const borderColor =
     status === "accepted"
       ? "border-green-500"
       : status === "pending"
-      ? "border-yellow-500"
-      : "border-gray-400";
+        ? "border-yellow-500"
+        : "border-gray-400";
 
   return (
     <div
@@ -47,17 +41,13 @@ const BookingItem = ({ booking }) => {
         />
 
         <div className="min-w-0">
-          <h2 className="font-semibold text-text">
-            {service}
-          </h2>
+          <h2 className="font-semibold text-text">{service}</h2>
 
           <p className="text-sm font-semibold text-muted truncate">
             {customer.name}
           </p>
 
-          <p className="text-sm text-muted truncate">
-            {location}
-          </p>
+          <p className="text-sm text-muted truncate">{location}</p>
         </div>
       </div>
 
