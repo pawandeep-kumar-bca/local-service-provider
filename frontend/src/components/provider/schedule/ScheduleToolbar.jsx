@@ -1,16 +1,8 @@
 import React from "react";
-import {
-  IoIosArrowBack,
-  IoIosArrowForward,
-} from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { FaCalendarDays } from "react-icons/fa6";
 
-const ScheduleToolbar = ({
-  view,
-  setView,
-  selectedDate,
-  setSelectedDate,
-}) => {
+const ScheduleToolbar = ({ view, setView, selectedDate, setSelectedDate }) => {
   const scheduleViews = ["Day", "Week", "Month"];
 
   const formatDate = (date) => {
@@ -26,21 +18,15 @@ const ScheduleToolbar = ({
     const newDate = new Date(selectedDate);
 
     if (view === "Day") {
-      newDate.setDate(
-        newDate.getDate() + direction
-      );
+      newDate.setDate(newDate.getDate() + direction);
     }
 
     if (view === "Week") {
-      newDate.setDate(
-        newDate.getDate() + direction * 7
-      );
+      newDate.setDate(newDate.getDate() + direction * 7);
     }
 
     if (view === "Month") {
-      newDate.setMonth(
-        newDate.getMonth() + direction
-      );
+      newDate.setMonth(newDate.getMonth() + direction);
     }
 
     setSelectedDate(newDate);
@@ -52,20 +38,14 @@ const ScheduleToolbar = ({
         {/* View Selector */}
         <div className="flex items-center gap-2 flex-wrap">
           {scheduleViews.map((item) => (
-            <label
-              key={item}
-              htmlFor={item}
-              className="cursor-pointer"
-            >
+            <label key={item} htmlFor={item} className="cursor-pointer">
               <input
                 id={item}
                 type="radio"
                 name="schedule"
                 value={item}
                 checked={view === item}
-                onChange={(e) =>
-                  setView(e.target.value)
-                }
+                onChange={(e) => setView(e.target.value)}
                 className="peer hidden"
               />
 
@@ -113,10 +93,7 @@ const ScheduleToolbar = ({
           </button>
 
           <div className="flex items-center gap-2">
-            <FaCalendarDays
-              size={18}
-              className="text-slate-500"
-            />
+            <FaCalendarDays size={18} className="text-slate-500" />
 
             <p className="text-sm md:text-base font-semibold text-slate-700 text-center">
               {formatDate(selectedDate)}
