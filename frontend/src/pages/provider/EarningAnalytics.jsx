@@ -109,7 +109,6 @@ const EarningAnalytics = () => {
       id: 3,
 
       image: "https://randomuser.me/api/portraits/women/68.jpg",
-
       name: "Neha Singh",
 
       service: "Home Cleaning",
