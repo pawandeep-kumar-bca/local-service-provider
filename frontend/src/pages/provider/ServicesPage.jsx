@@ -20,7 +20,6 @@ const ServicesPage = () => {
               Manage your services and pricing.
             </p>
           </div>
-
           <Button
             color="purple"
             onClick={() => navigate("/provider/my-services/add-service")}
