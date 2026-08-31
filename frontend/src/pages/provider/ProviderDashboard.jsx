@@ -5,18 +5,13 @@ import ProviderTodayBookings from "./ProviderTodayBookings";
 import { useSelector } from "react-redux";
 
 const ProviderDashboard = () => {
- 
+  const user = useSelector((state) => state.auth.user);
 
-  const user = useSelector((state)=>state.auth.user)
-
-
- 
-  
   return (
     <div className="w-full h-full">
       {/* Welcome Banner */}
-    <div
-  className="
+      <div
+        className="
     relative w-full min-h-[280px] mt-4
     rounded-3xl overflow-hidden
     bg-gradient-to-br from-white via-blue-50 to-blue-100
@@ -25,21 +20,21 @@ const ProviderDashboard = () => {
     px-6 md:px-10 lg:px-12
     flex items-center
   "
->
-  {/* Subtle Grid Background */}
-  <div
-    className="
+      >
+        {/* Subtle Grid Background */}
+        <div
+          className="
       absolute inset-0
       opacity-[0.35]
       pointer-events-none
       bg-[linear-gradient(rgba(59,130,246,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(59,200,255,0.10))]
       bg-[size:32px_32px]
     "
-  />
+        />
 
-  {/* Soft Decorative Circle */}
-  <div
-    className="
+        {/* Soft Decorative Circle */}
+        <div
+          className="
       absolute
       -right-24 -top-24
       w-80 h-80
@@ -47,10 +42,10 @@ const ProviderDashboard = () => {
       bg-blue-200/40
       blur-3xl
     "
-  />
+        />
 
-  <div
-    className="
+        <div
+          className="
       absolute
       left-[35%] -bottom-32
       w-72 h-72
@@ -58,17 +53,13 @@ const ProviderDashboard = () => {
       bg-blue-300/20
       blur-3xl
     "
-  />
+        />
 
-  {/* Left Content */}
-  <div className="relative z-10 py-10 max-w-[560px]">
-
-   
-   
-
-    {/* Heading */}
-    <h1
-      className="
+        {/* Left Content */}
+        <div className="relative z-10 py-10 max-w-[560px]">
+          {/* Heading */}
+          <h1
+            className="
         mt-4
         text-slate-900
         font-bold
@@ -76,30 +67,29 @@ const ProviderDashboard = () => {
         leading-tight
         tracking-tight
       "
-    >
-      Hi, {user?.fullname}👋
-    </h1>
+          >
+            Hi, {user?.fullname}👋
+          </h1>
 
-    {/* Description */}
-    <p
-      className="
+          {/* Description */}
+          <p
+            className="
         mt-3
         text-slate-600
         text-sm md:text-base lg:text-lg
         leading-relaxed
         max-w-[500px]
       "
-    >
-      Welcome back! Stay on top of your bookings, connect with
-      customers, and grow your service business.
-    </p>
+          >
+            Welcome back! Stay on top of your bookings, connect with customers,
+            and grow your service business.
+          </p>
 
-    {/* Actions */}
-    <div className="flex flex-wrap items-center gap-3 mt-6">
-
-      {/* Primary Button */}
-      <button
-        className="
+          {/* Actions */}
+          <div className="flex flex-wrap items-center gap-3 mt-6">
+            {/* Primary Button */}
+            <button
+              className="
           group
           inline-flex items-center gap-2
           bg-blue-600
@@ -115,23 +105,22 @@ const ProviderDashboard = () => {
           active:scale-95
           transition-all duration-300
         "
-      >
-        View Bookings
-
-        <span
-          className="
+            >
+              View Bookings
+              <span
+                className="
             text-lg
             transition-transform duration-300
             group-hover:translate-x-1
           "
-        >
-          →
-        </span>
-      </button>
+              >
+                →
+              </span>
+            </button>
 
-      {/* Secondary Button */}
-      <button
-        className="
+            {/* Secondary Button */}
+            <button
+              className="
           inline-flex items-center gap-2
           bg-white/80
           hover:bg-white
@@ -146,22 +135,22 @@ const ProviderDashboard = () => {
           shadow-sm
           transition-all duration-300
         "
-      >
-        Manage Services
-      </button>
-    </div>
+            >
+              Manage Services
+            </button>
+          </div>
 
-    {/* Small Meaningful Info */}
-    <div
-      className="
+          {/* Small Meaningful Info */}
+          <div
+            className="
         mt-6
         flex items-center gap-2
         text-xs md:text-sm
         text-slate-500
       "
-    >
-      <span
-        className="
+          >
+            <span
+              className="
           flex items-center justify-center
           w-6 h-6
           rounded-full
@@ -169,19 +158,17 @@ const ProviderDashboard = () => {
           text-green-600
           font-bold
         "
-      >
-        ✓
-      </span>
+            >
+              ✓
+            </span>
 
-      <span>
-        Keep your profile updated to get more customer requests
-      </span>
-    </div>
-  </div>
+            <span>Keep your profile updated to get more customer requests</span>
+          </div>
+        </div>
 
-  {/* Right Illustration */}
-  <div
-    className="
+        {/* Right Illustration */}
+        <div
+          className="
       relative z-10
       hidden md:flex
       ml-auto
@@ -191,10 +178,10 @@ const ProviderDashboard = () => {
       min-w-[360px]
       lg:min-w-[430px]
     "
-  >
-    {/* Illustration Glow */}
-    <div
-      className="
+        >
+          {/* Illustration Glow */}
+          <div
+            className="
         absolute
         bottom-0 right-10
         w-[280px] h-[220px]
@@ -202,12 +189,12 @@ const ProviderDashboard = () => {
         bg-blue-200/40
         blur-3xl
       "
-    />
+          />
 
-    <img
-      src="/assets/clean.svg"
-      alt="Service provider"
-      className="
+          <img
+            src="/assets/clean.svg"
+            alt="Service provider"
+            className="
         relative
         w-[330px]
         lg:w-[390px]
@@ -218,9 +205,9 @@ const ProviderDashboard = () => {
         drop-shadow-[0_20px_25px_rgba(37,99,235,0.12)]
         translate-y-2
       "
-    />
-  </div>
-</div>
+          />
+        </div>
+      </div>
 
       {/* Stats Cards */}
       <ProviderListCard />
