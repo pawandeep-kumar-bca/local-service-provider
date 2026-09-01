@@ -60,6 +60,7 @@ const ProfileSettings = () => {
               fullWidth
             />
           </div>
+          
           <div className="flex flex-col md:gap-3 md:flex-row">
             <Input
               type="tel"
