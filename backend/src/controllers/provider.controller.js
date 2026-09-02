@@ -1949,19 +1949,68 @@ async function scheduleBookings(req, res) {
       });
     }
 
-    const startToday = new Date(date);
-    startToday.setUTCHours(0, 0, 0, 0);
+    if (!["day", "week", "month"].includes(view)) {
+      return res.status(400).json({
+        success: false,
+        message: "View must be day, week or month",
+      });
+    }
 
-    const endToday = new Date(startToday);
-    endToday.setUTCDate(endToday.getUTCDate() + 1);
+    const selectedDate = new Date(date);
+
+    if (isNaN(selectedDate.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid date",
+      });
+    }
+
+    selectedDate.setUTCHours(0, 0, 0, 0);
+
+    let startDate;
+    let endDate;
+
+    if (view === "day") {
+      startDate = new Date(selectedDate);
+      endDate = new Date(startDate);
+      endDate.setUTCDate(endDate.getUTCDate() + 1);
+    }
+
+    if (view === "week") {
+      const weekDay = selectedDate.getUTCDay();
+
+      const daysToMonday = weekDay === 0 ? 6 : weekDay - 1;
+
+      startDate = new Date(selectedDate);
+
+      startDate.setUTCDate(startDate.getUTCDate() - daysToMonday);
+
+      endDate = new Date(startDate);
+
+      endDate.setUTCDate(endDate.getUTCDate() + 7);
+    }
+
+    if (view === "month") {
+      startDate = new Date(
+        Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), 1),
+      );
+
+      endDate = new Date(
+        Date.UTC(
+          selectedDate.getUTCFullYear(),
+          selectedDate.getUTCMonth() + 1,
+          1,
+        ),
+      );
+    }
 
     const bookings = await bookingsModel
       .find({
         "providerSnapshot.providerObjectId": providerId,
 
         bookingDate: {
-          $gte: startToday,
-          $lt: endToday,
+          $gte: startDate,
+          $lt: endDate,
         },
 
         bookingStatus: {
@@ -1974,7 +2023,16 @@ async function scheduleBookings(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "Bookings fetched successfully ",
+      message: "Bookings fetched successfully",
+      view,
+
+      dateRange: {
+        startDate,
+        endDate,
+      },
+
+      totalBookings: bookings.length,
+
       bookings,
     });
   } catch (err) {
