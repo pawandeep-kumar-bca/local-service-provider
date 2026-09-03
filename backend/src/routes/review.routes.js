@@ -1,6 +1,7 @@
 const express = require("express");
 const reviewController = require("../controllers/review.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
+const providerMiddleware = require("../middlewares/provider.middleware");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
 const { imageUpload } = require("../middlewares/upload.middleware");
 const router = express.Router();
@@ -16,6 +17,15 @@ router.get(
   authMiddleware.tokenVerify,
   reviewController.getAllReviewOfUser,
 );
+
+//=====================================
+// Provider reviews apis
+//=====================================
+
+
+// GET /provider/reviews/summary
+router.get('/provider/review-summary',authMiddleware.tokenVerify,providerMiddleware,reviewController.providerReviewSummary)
+
 router.patch('/user/:reviewId/edit-review',authMiddleware.tokenVerify,validateObjectId("reviewId"),
   imageUpload.fields([{name:'ReviewImage',maxCount:5}]),
   reviewController.editReview

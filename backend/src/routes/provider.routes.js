@@ -80,9 +80,7 @@ router.get(
   providerMiddleware,
   providerControllers.scheduleSummary,
 );
-//  `GET /schedule?view=day`
-//  `GET /schedule?view=week`
-//  `GET /schedule?view=month`
+
 
 router.get(
   "/schedule",

@@ -504,6 +504,307 @@ async function editReview(req, res) {
     });
   }
 }
+
+//==========================================
+// Provider Reviews APIS
+//=========================================
+
+async function providerReviewSummary(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const [summaryResult, categoryAvg, ratingTrendChart] = await Promise.all([
+      //  REVIEW SUMMARY
+      reviewModel.aggregate([
+        {
+          $match: {
+            providerId: providerId,
+          },
+        },
+
+        {
+          $group: {
+            _id: null,
+
+            // Average Rating
+            averageRating: {
+              $avg: "$rating",
+            },
+
+            // Total Reviews
+            totalReview: {
+              $sum: 1,
+            },
+
+            // 4⭐ and 5⭐ Reviews
+            satisfiedRatings: {
+              $sum: {
+                $cond: [
+                  {
+                    $gte: ["$rating", 4],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+
+            // 5 Star
+            fiveStar: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ["$rating", 5],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+
+            // 4 Star
+            fourStar: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ["$rating", 4],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+
+            // 3 Star
+            threeStar: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ["$rating", 3],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+
+            // 2 Star
+            twoStar: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ["$rating", 2],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+
+            // 1 Star
+            oneStar: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: ["$rating", 1],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+          },
+        },
+
+        {
+          $project: {
+            _id: 0,
+
+            averageRating: {
+              $round: ["$averageRating", 1],
+            },
+
+            totalReview: 1,
+
+            fiveStar: 1,
+            fourStar: 1,
+            threeStar: 1,
+            twoStar: 1,
+            oneStar: 1,
+
+            satisfactionPercentage: {
+              $round: [
+                {
+                  $multiply: [
+                    {
+                      $divide: ["$satisfiedRatings", "$totalReview"],
+                    },
+                    100,
+                  ],
+                },
+                0,
+              ],
+            },
+          },
+        },
+      ]),
+
+      //  CATEGORY-WISE AVERAGE RATING
+      reviewModel.aggregate([
+        {
+          $match: {
+            providerId: providerId,
+          },
+        },
+
+        {
+          $group: {
+            _id: {
+              categoryId: "$serviceSnapshot.categoryObjectId",
+
+              categoryName: "$serviceSnapshot.categoryName",
+            },
+
+            averageRating: {
+              $avg: "$rating",
+            },
+
+            totalReviews: {
+              $sum: 1,
+            },
+          },
+        },
+
+        {
+          $project: {
+            _id: 0,
+
+            categoryId: "$_id.categoryId",
+
+            categoryName: "$_id.categoryName",
+
+            averageRating: {
+              $round: ["$averageRating", 1],
+            },
+
+            totalReviews: 1,
+          },
+        },
+
+        {
+          $sort: {
+            averageRating: -1,
+          },
+        },
+      ]),
+
+      //  MONTHLY RATING TREND CHART
+
+      reviewModel.aggregate([
+        {
+          $match: {
+            providerId: providerId,
+          },
+        },
+
+        {
+          $group: {
+            _id: {
+              year: {
+                $year: "$createdAt",
+              },
+
+              month: {
+                $month: "$createdAt",
+              },
+            },
+
+            averageRating: {
+              $avg: "$rating",
+            },
+
+            totalReviews: {
+              $sum: 1,
+            },
+          },
+        },
+
+        {
+          $sort: {
+            "_id.year": 1,
+            "_id.month": 1,
+          },
+        },
+
+        {
+          $project: {
+            _id: 0,
+
+            year: "$_id.year",
+
+            monthNumber: "$_id.month",
+
+            month: {
+              $arrayElemAt: [
+                [
+                  "",
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ],
+                "$_id.month",
+              ],
+            },
+
+            averageRating: {
+              $round: ["$averageRating", 1],
+            },
+
+            totalReviews: 1,
+          },
+        },
+      ]),
+    ]);
+
+    const summary = summaryResult[0] || {
+      averageRating: 0,
+      totalReview: 0,
+      fiveStar: 0,
+      fourStar: 0,
+      threeStar: 0,
+      twoStar: 0,
+      oneStar: 0,
+      satisfactionPercentage: 0,
+    };
+
+    return res.status(200).json({
+      success: true,
+      message: "Review summary fetched successfully",
+
+      summary,
+
+      categoryAvg,
+
+      ratingTrendChart,
+    });
+  } catch (err) {
+    console.error("Provider Review Summary Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   reviewCreate,
   providerReview,
@@ -511,4 +812,5 @@ module.exports = {
   deleteReview,
   getAllReviewOfUser,
   editReview,
+  providerReviewSummary,
 };
