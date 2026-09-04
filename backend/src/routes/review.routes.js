@@ -26,6 +26,10 @@ router.get(
 // GET /provider/reviews/summary
 router.get('/provider/review-summary',authMiddleware.tokenVerify,providerMiddleware,reviewController.providerReviewSummary)
 
+// GET /provider/reviews
+
+router.get('/provider/reviews',authMiddleware.tokenVerify,providerMiddleware,reviewController.getProviderReviewOfUsers)
+
 router.patch('/user/:reviewId/edit-review',authMiddleware.tokenVerify,validateObjectId("reviewId"),
   imageUpload.fields([{name:'ReviewImage',maxCount:5}]),
   reviewController.editReview

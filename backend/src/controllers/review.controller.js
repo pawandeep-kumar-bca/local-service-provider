@@ -805,6 +805,63 @@ async function providerReviewSummary(req, res) {
     });
   }
 }
+
+async function getProviderReviewOfUsers(req, res) {
+  try {
+    let { rating, search } = req.query;
+
+    const providerId = req.provider._id;
+
+    const filters = {
+      providerId,
+    };
+
+    if (rating !== undefined) {
+      rating = Number(rating);
+
+      if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+        return res.status(400).json({
+          success: false,
+          message: "Rating must be between 1 and 5",
+        });
+      }
+
+      filters.rating = rating;
+    }
+
+    if (search) {
+      filters.$or = [
+        {
+          comment: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          "serviceSnapshot.categoryName": {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    const reviews = await reviewModel.find(filters).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Reviews fetched successfully",
+      reviews,
+    });
+  } catch (err) {
+    console.error("Get Provider Review Of User Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   reviewCreate,
   providerReview,
@@ -813,4 +870,5 @@ module.exports = {
   getAllReviewOfUser,
   editReview,
   providerReviewSummary,
+  getProviderReviewOfUsers,
 };
