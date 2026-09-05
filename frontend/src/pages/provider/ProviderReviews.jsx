@@ -111,7 +111,7 @@ const reviewsData = [
 
             <div className="flex flex-col gap-3 mt-4">
               {[
-                { star: 5, value: "90%", total: 85 },
+                { star: 5, value: "70%", total: 85 },
                 { star: 4, value: "75%", total: 60 },
                 { star: 3, value: "60%", total: 35 },
                 { star: 2, value: "30%", total: 20 },
@@ -207,6 +207,8 @@ const reviewsData = [
           </div>
         </div>
       </div>
+
+
 
       <div
         className="shadow-[0_5px_20px_rgba(0,0,0,0.06)] mt-3  bg-white
