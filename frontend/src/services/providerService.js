@@ -61,3 +61,8 @@ export const getNearbyProviders = async (filters = {}) => {
 
   return response.data;
 };
+
+export const getProviderDashboardOverview=async ()=>{
+  const response = await api.get('/providers/dashboard/overview')
+  return response.data
+}
