@@ -4,6 +4,7 @@ import {
   getAllProviders,
   getNearbyProviders,
   getProviderById,
+  getProviderDashboardOverview,
   getRecommendedProviders,
   getSelectProviderByCategory,
 } from "../services/providerService";
@@ -70,3 +71,10 @@ export const useNearbyProviders = (filters = {}) => {
     enabled: !!filters.lat && !!filters.lng && !!filters.radius,
   });
 };
+
+export const useProviderDashboardOverview=()=>{
+  return useQuery({
+    queryKey:['provider-dashboard-overview'],
+    queryFn:getProviderDashboardOverview
+  })
+}
