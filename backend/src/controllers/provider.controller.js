@@ -785,75 +785,203 @@ async function providerDashboardOverview(req, res) {
   try {
     const providerId = req.provider._id;
 
+    const now = new Date();
+
+    
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  
+    const previousMonthStart = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      1,
+    );
+
     const dashboardOverview = await bookingsModel.aggregate([
       {
         $match: {
           "providerSnapshot.providerObjectId": providerId,
         },
       },
+
       {
-        $lookup: {
-          from: "payments",
-          localField: "_id",
-          foreignField: "bookingId",
-          as: "payment",
-        },
-      },
-      {
-        $unwind: {
-          path: "$payment",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          totalBookings: {
-            $sum: 1,
-          },
-          pendingBookings: {
-            $sum: {
-              $cond: [
-                {
-                  $eq: ["$bookingStatus", "pending"],
+        $facet: {
+          
+          bookings: [
+            {
+              $match: {
+                bookingDate: {
+                  $gte: previousMonthStart,
                 },
-                1,
-                0,
-              ],
+              },
             },
-          },
-          completedBookings: {
-            $sum: {
-              $cond: [{ $eq: ["$bookingStatus", "completed"] }, 1, 0],
-            },
-          },
-          totalEarnings: {
-            $sum: {
-              $cond: [
-                {
-                  $and: [
+            {
+              $group: {
+                _id: {
+                  $cond: [
                     {
-                      $eq: ["$bookingStatus", "completed"],
+                      $gte: ["$bookingDate", currentMonthStart],
                     },
-                    {
-                      $eq: ["$payment.paymentStatus", "success"],
-                    },
+                    "current",
+                    "previous",
                   ],
                 },
-                "$pricing.providerPayout",
-                0,
-              ],
+                count: {
+                  $sum: 1,
+                },
+              },
             },
-          },
+          ],
+
+         
+          pendingBookings: [
+            {
+              $match: {
+                bookingDate: {
+                  $gte: previousMonthStart,
+                },
+                bookingStatus: "pending",
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $cond: [
+                    {
+                      $gte: ["$bookingDate", currentMonthStart],
+                    },
+                    "current",
+                    "previous",
+                  ],
+                },
+                count: {
+                  $sum: 1,
+                },
+              },
+            },
+          ],
+
+         
+          completedBookings: [
+            {
+              $match: {
+                bookingStatus: "completed",
+                completedAt: {
+                  $gte: previousMonthStart,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $cond: [
+                    {
+                      $gte: ["$completedAt", currentMonthStart],
+                    },
+                    "current",
+                    "previous",
+                  ],
+                },
+                count: {
+                  $sum: 1,
+                },
+              },
+            },
+          ],
+
+          
+          earnings: [
+            {
+              $match: {
+                bookingStatus: "completed",
+                paymentStatus: "success",
+                completedAt: {
+                  $gte: previousMonthStart,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $cond: [
+                    {
+                      $gte: ["$completedAt", currentMonthStart],
+                    },
+                    "current",
+                    "previous",
+                  ],
+                },
+                total: {
+                  $sum: "$pricing.providerPayout",
+                },
+              },
+            },
+          ],
         },
       },
     ]);
-    const overview = dashboardOverview[0] || {
-      totalBookings: 0,
-      pendingBookings: 0,
-      completedBookings: 0,
-      totalEarnings: 0,
+
+    const data = dashboardOverview[0];
+
+   
+    const getCurrentPrevious = (data, field) => {
+      const current = data.find((item) => item._id === "current");
+      const previous = data.find((item) => item._id === "previous");
+
+      return {
+        current: current?.[field] || 0,
+        previous: previous?.[field] || 0,
+      };
     };
+
+    const bookings = getCurrentPrevious(data.bookings, "count");
+
+    const pendingBookings = getCurrentPrevious(data.pendingBookings, "count");
+
+    const completedBookings = getCurrentPrevious(
+      data.completedBookings,
+      "count",
+    );
+
+    const earnings = getCurrentPrevious(data.earnings, "total");
+
+    
+    const calculatePercentage = (current, previous) => {
+      if (previous === 0) {
+        if (current === 0) return 0;
+
+        return 100;
+      }
+
+      return Number((((current - previous) / previous) * 100).toFixed(2));
+    };
+
+    const overview = {
+      totalBookings: bookings.current,
+
+      pendingBookings: pendingBookings.current,
+
+      completedBookings: completedBookings.current,
+
+      totalEarnings: earnings.current,
+
+      percentage: {
+        totalBookings: calculatePercentage(bookings.current, bookings.previous),
+
+        pendingBookings: calculatePercentage(
+          pendingBookings.current,
+          pendingBookings.previous,
+        ),
+
+        completedBookings: calculatePercentage(
+          completedBookings.current,
+          completedBookings.previous,
+        ),
+
+        totalEarnings: calculatePercentage(earnings.current, earnings.previous),
+      },
+    };
+
     return res.status(200).json({
       success: true,
       message: "Provider dashboard overview fetched successfully",
@@ -861,6 +989,7 @@ async function providerDashboardOverview(req, res) {
     });
   } catch (err) {
     console.log("Provider Dashboard Overview Error:", err);
+
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
