@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   createProvider,
   getAllProviders,
@@ -80,9 +80,18 @@ export const useProviderDashboardOverview=()=>{
   })
 }
 
-export const useProviderTodayBookings = ()=>{
-  return useQuery({
-    queryKey:['provider-today-bookings'],
-    queryFn:getProviderTodayBookings
-  })
-}
+export const useProviderTodayBookings = () => {
+  return useInfiniteQuery({
+    queryKey: ["provider-today-bookings"],
+    queryFn: ({ pageParam = 1 }) =>
+      getProviderTodayBookings({ page: pageParam, limit: 5 }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.pagination?.hasMore) {
+        return undefined;
+      }
+
+      return lastPage.pagination.page + 1;
+    },
+  });
+};
