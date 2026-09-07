@@ -66,3 +66,9 @@ export const getProviderDashboardOverview=async ()=>{
   const response = await api.get('/providers/dashboard/overview')
   return response.data
 }
+
+export const getProviderTodayBookings = async () =>{
+  const response = await api.get('/providers/dashboard/today-bookings')
+
+  return response.data
+}
