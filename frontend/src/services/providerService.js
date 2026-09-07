@@ -62,17 +62,25 @@ export const getNearbyProviders = async (filters = {}) => {
   return response.data;
 };
 
-export const getProviderDashboardOverview=async ()=>{
-  const response = await api.get('/providers/dashboard/overview')
-  return response.data
-}
+export const getProviderDashboardOverview = async () => {
+  const response = await api.get("/providers/dashboard/overview");
+  return response.data;
+};
 
-export const getProviderTodayBookings = async () =>{
-  const response = await api.get('/providers/dashboard/today-bookings')
-  return response.data
-}
+export const getProviderTodayBookings = async () => {
+  const response = await api.get("/providers/dashboard/today-bookings");
+  return response.data;
+};
 
-export const getProviderBookingAnalytics= async (params = {})=>{
-  const response = await api.get('/providers/dashboard/booking-analytics',{params})
-  return response.data
-}
+export const getProviderBookingAnalytics = async (params = {}) => {
+  const response = await api.get("/providers/dashboard/booking-analytics", {
+    params,
+  });
+  return response.data;
+};
+
+export const getProviderScheduleSummary = async () => {
+  const response = await api.get("/provider/schedule/summary");
+
+  return response.data;
+};
