@@ -80,7 +80,7 @@ export const getProviderBookingAnalytics = async (params = {}) => {
 };
 
 export const getProviderScheduleSummary = async () => {
-  const response = await api.get("/provider/schedule/summary");
+  const response = await api.get("/providers/schedule/summary");
 
   return response.data;
 };
