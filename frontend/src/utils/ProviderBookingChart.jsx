@@ -12,6 +12,8 @@ import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import { IoMdArrowRoundUp } from "react-icons/io";
 
+import { useProviderBookingAnalytics } from "../hooks/useProvider";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,107 +23,100 @@ ChartJS.register(
   Tooltip
 );
 
-const chartData = {
-  "This Week": {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-
-    current: [4, 7, 6, 9, 5, 8, 3],
-
-    previous: [3, 5, 6, 5, 4, 6, 4],
-  },
-
-  "This Month": {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-
-    current: [42, 58, 67, 75],
-
-    previous: [35, 48, 55, 62],
-  },
-
-  "This Year": {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-
-    current: [
-      32,
-      45,
-      52,
-      61,
-      68,
-      75,
-      82,
-      91,
-      87,
-      96,
-      105,
-      118,
-    ],
-
-    previous: [
-      27,
-      38,
-      45,
-      50,
-      56,
-      62,
-      68,
-      73,
-      71,
-      78,
-      86,
-      94,
-    ],
-  },
-};
-
 const ProviderBookingChart = () => {
   const [option, setOption] = useState("This Week");
 
-  const selectedData = chartData[option];
+  const periodMap = {
+    "This Week": "week",
+    "This Month": "month",
+    "This Year": "year",
+  };
 
-  const currentTotal = selectedData.current.reduce(
-    (total, value) => total + value,
-    0
+  const period = periodMap[option];
+
+  const { data, isLoading } = useProviderBookingAnalytics({
+    period,
+  });
+
+  // =========================
+  // Get Period Specific Data
+  // =========================
+
+  let currentData = [];
+  let previousData = [];
+  let currentTotal = 0;
+  // let previousTotal = 0;
+  let growth = null;
+  let labelKey = "";
+
+  if (data?.period === "week") {
+    currentData = data?.currentWeek || [];
+    previousData = data?.previousWeek || [];
+
+    currentTotal = data?.currentTotal ?? 0;
+    // previousTotal = data?.previousTotal ?? 0;
+    growth = data?.growthPercentage;
+
+    labelKey = "day";
+  }
+
+  if (data?.period === "month") {
+    currentData = data?.currentMonth || [];
+    previousData = data?.previousMonth || [];
+
+    currentTotal = data?.currentMonthTotal ?? 0;
+    // previousTotal = data?.previousMonthTotal ?? 0;
+    growth = data?.monthGrowthPercentage;
+
+    labelKey = "week";
+  }
+
+  if (data?.period === "year") {
+    currentData = data?.currentYear || [];
+    previousData = data?.previousYear || [];
+
+    currentTotal = data?.currentYearTotal ?? 0;
+    // previousTotal = data?.previousYearTotal ?? 0;
+    growth = data?.yearGrowthPercentage;
+
+    labelKey = "month";
+  }
+
+  // =========================
+  // Chart Data
+  // =========================
+
+  const labels = currentData.map(
+    (item) => item?.[labelKey]
   );
 
-  const previousTotal = selectedData.previous.reduce(
-    (total, value) => total + value,
-    0
+  const currentBookings = currentData.map(
+    (item) => item?.bookings ?? 0
   );
 
-  const growth =
-    previousTotal > 0
-      ? Math.round(
-          ((currentTotal - previousTotal) / previousTotal) * 100
-        )
-      : 0;
+  const previousBookings = previousData.map(
+    (item) => item?.bookings ?? 0
+  );
 
-  const data = {
-    labels: selectedData.labels,
+  const chartData = {
+    labels,
 
     datasets: [
       {
         label: "Current",
-        data: selectedData.current,
+        data: currentBookings,
 
         borderColor: "#22c55e",
 
         backgroundColor: (context) => {
           const ctx = context.chart.ctx;
 
-          const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+          const gradient = ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            300
+          );
 
           gradient.addColorStop(
             0,
@@ -141,14 +136,12 @@ const ProviderBookingChart = () => {
 
         pointRadius: 4,
         pointHoverRadius: 6,
-
         pointBackgroundColor: "#22c55e",
       },
 
       {
         label: "Previous",
-
-        data: selectedData.previous,
+        data: previousBookings,
 
         borderColor: "#d1d5db",
 
@@ -156,11 +149,14 @@ const ProviderBookingChart = () => {
 
         pointRadius: 4,
         pointHoverRadius: 6,
-
         pointBackgroundColor: "#d1d5db",
       },
     ],
   };
+
+  // =========================
+  // Chart Options
+  // =========================
 
   const options = {
     responsive: true,
@@ -252,97 +248,115 @@ const ProviderBookingChart = () => {
         </select>
       </div>
 
-      {/* Analytics */}
-      <div
-        className="
-          flex
-          md:items-center
-          md:flex-row
-          flex-col
-          justify-between
-          gap-4
-          mb-6
-          relative
-        "
-      >
-        {/* Total Bookings */}
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
-            {currentTotal}
-          </h1>
-
-          <p className="text-sm text-muted mt-1">
-            Total Bookings
+      {/* Loading */}
+      {isLoading ? (
+        <div className="h-[350px] flex items-center justify-center">
+          <p className="text-muted">
+            Loading analytics...
           </p>
+        </div>
+      ) : (
+        <>
+          {/* Analytics */}
+          <div
+            className="
+              flex
+              md:items-center
+              md:flex-row
+              flex-col
+              justify-between
+              gap-4
+              mb-6
+              relative
+            "
+          >
+            {/* Total Bookings */}
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+                {currentTotal}
+              </h1>
 
-          <div className="flex items-center gap-2 mt-2">
-            <span
-              className={`
+              <p className="text-sm text-muted mt-1">
+                Total Bookings
+              </p>
+
+              <div className="flex items-center gap-2 mt-2">
+                {growth !== null && growth !== undefined ? (
+                  <>
+                    <span
+                      className={`
+                        flex
+                        items-center
+                        gap-1
+                        font-semibold
+                        text-sm
+                        ${growth >= 0
+                          ? "text-green-500"
+                          : "text-red-500"
+                        }
+                      `}
+                    >
+                      <IoMdArrowRoundUp
+                        size={18}
+                        className={
+                          growth < 0
+                            ? "rotate-180"
+                            : ""
+                        }
+                      />
+
+                      {Math.abs(growth)}%
+                    </span>
+
+                    <p className="text-sm text-muted">
+                      compared to last period
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-muted">
+                    No previous period data
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Chart Labels */}
+            <div
+              className="
                 flex
                 items-center
-                gap-1
-                font-semibold
+                gap-5
+                absolute
+                right-0
                 text-sm
-                ${
-                  growth >= 0
-                    ? "text-green-500"
-                    : "text-red-500"
-                }
-              `}
+                font-medium
+                text-muted
+              "
             >
-              <IoMdArrowRoundUp
-                size={18}
-                className={
-                  growth < 0 ? "rotate-180" : ""
-                }
-              />
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-green-500" />
+                <p>Current</p>
+              </div>
 
-              {Math.abs(growth)}%
-            </span>
-
-            <p className="text-sm text-muted">
-              compared to last period
-            </p>
-          </div>
-        </div>
-
-        {/* Chart Labels */}
-        <div
-          className="
-            flex
-            items-center
-            gap-5
-            absolute
-            right-0
-            text-sm
-            font-medium
-            text-muted
-          "
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-green-500" />
-
-            <p>Current</p>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-gray-300" />
+                <p>Previous</p>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-gray-300" />
-
-            <p>Previous</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Chart */}
-      <Line
-        data={data}
-        options={options}
-        className="
-          shadow-[0_0_20px_rgba(0,0,0,0.10)]
-          p-1
-          rounded-xl
-        "
-      />
+          {/* Chart */}
+          <Line
+            data={chartData}
+            options={options}
+            className="
+              shadow-[0_0_20px_rgba(0,0,0,0.10)]
+              p-1
+              rounded-xl
+            "
+          />
+        </>
+      )}
     </div>
   );
 };
