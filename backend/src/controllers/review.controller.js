@@ -884,7 +884,9 @@ async function getProviderReviewOfUsers(req, res) {
       providerId,
     };
 
-    if (rating !== undefined) {
+   
+
+    if (rating !== undefined && rating !== "all") {
       rating = Number(rating);
 
       if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
@@ -897,24 +899,28 @@ async function getProviderReviewOfUsers(req, res) {
       filters.rating = rating;
     }
 
-    if (search) {
+    if (search?.trim()) {
+      const searchValue = search.trim();
+
       filters.$or = [
         {
           comment: {
-            $regex: search,
+            $regex: searchValue,
             $options: "i",
           },
         },
         {
           "serviceSnapshot.categoryName": {
-            $regex: search,
+            $regex: searchValue,
             $options: "i",
           },
         },
       ];
     }
 
-    const reviews = await reviewModel.find(filters).sort({ createdAt: -1 });
+    const reviews = await reviewModel
+      .find(filters)
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       success: true,
