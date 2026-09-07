@@ -69,6 +69,10 @@ export const getProviderDashboardOverview=async ()=>{
 
 export const getProviderTodayBookings = async () =>{
   const response = await api.get('/providers/dashboard/today-bookings')
+  return response.data
+}
 
+export const getProviderBookingAnalytics= async ()=>{
+  const response = await api.get('/providers/dashboard/booking-analytics')
   return response.data
 }
