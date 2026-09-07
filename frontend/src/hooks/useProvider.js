@@ -6,6 +6,7 @@ import {
   getProviderBookingAnalytics,
   getProviderById,
   getProviderDashboardOverview,
+  getProviderScheduleSummary,
   getProviderTodayBookings,
   getRecommendedProviders,
   getSelectProviderByCategory,
@@ -101,5 +102,12 @@ export const useProviderBookingAnalytics = (params) => {
   return useQuery({
     queryKey: ["provider-booking-analytic", params],
     queryFn: () => getProviderBookingAnalytics(params),
+  });
+};
+
+export const useProviderScheduleSummary = () => {
+  return useQuery({
+    queryKey: ["provider-schedule-summary"],
+    queryFn: getProviderScheduleSummary,
   });
 };
