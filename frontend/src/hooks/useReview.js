@@ -10,6 +10,7 @@ import {
   editReview,
   getAllUserReviews,
   getProviderReviews,
+  getProviderReviewsSummary,
 } from "../services/reviewService";
 
 import { toast } from "react-toastify";
@@ -130,3 +131,10 @@ export const useProviderReviews = ({
     enabled: !!providerId && !!categoryId,
   });
 };
+
+export const useGetProviderReviewSummary = ()=>{
+  return useQuery({
+    queryKey:['provider-review-summary'],
+    queryFn:getProviderReviewsSummary
+  })
+}
