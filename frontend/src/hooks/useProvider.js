@@ -3,6 +3,7 @@ import {
   createProvider,
   getAllProviders,
   getNearbyProviders,
+  getProviderBookingAnalytics,
   getProviderById,
   getProviderDashboardOverview,
   getProviderTodayBookings,
@@ -93,5 +94,12 @@ export const useProviderTodayBookings = () => {
 
       return lastPage.pagination.page + 1;
     },
+  });
+};
+
+export const useProviderBookingAnalytics = (params) => {
+  return useQuery({
+    queryKey: ["provider-booking-analytic", params],
+    queryFn: () => getProviderBookingAnalytics(params),
   });
 };

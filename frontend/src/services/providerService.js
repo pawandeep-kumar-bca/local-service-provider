@@ -72,7 +72,7 @@ export const getProviderTodayBookings = async () =>{
   return response.data
 }
 
-export const getProviderBookingAnalytics= async ()=>{
-  const response = await api.get('/providers/dashboard/booking-analytics')
+export const getProviderBookingAnalytics= async (params = {})=>{
+  const response = await api.get('/providers/dashboard/booking-analytics',{params})
   return response.data
 }
