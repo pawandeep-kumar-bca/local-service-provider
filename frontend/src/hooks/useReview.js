@@ -10,6 +10,7 @@ import {
   editReview,
   getAllUserReviews,
   getProviderReviews,
+  getProviderReviewsForProvider,
   getProviderReviewsSummary,
 } from "../services/reviewService";
 
@@ -136,5 +137,11 @@ export const useGetProviderReviewSummary = ()=>{
   return useQuery({
     queryKey:['provider-review-summary'],
     queryFn:getProviderReviewsSummary
+  })
+}
+export const useGetProviderReviewForProvider = (params)=>{
+  return useQuery({
+    queryKey:['provider-review-for-provider',params],
+    queryFn:()=>getProviderReviewsForProvider(params)
   })
 }
