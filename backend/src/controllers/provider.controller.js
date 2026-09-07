@@ -30,6 +30,7 @@ const {
 } = require("../utils/providerPipeline.js");
 const { getFacetResult } = require("../utils/providerResponse.js");
 const bookingsModel = require("../models/booking.model.js");
+const { promises } = require("nodemailer/lib/xoauth2/index.js");
 async function providerProfileCreate(req, res) {
   try {
     const {
@@ -787,10 +788,8 @@ async function providerDashboardOverview(req, res) {
 
     const now = new Date();
 
-    
     const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  
     const previousMonthStart = new Date(
       now.getFullYear(),
       now.getMonth() - 1,
@@ -806,7 +805,6 @@ async function providerDashboardOverview(req, res) {
 
       {
         $facet: {
-          
           bookings: [
             {
               $match: {
@@ -833,7 +831,6 @@ async function providerDashboardOverview(req, res) {
             },
           ],
 
-         
           pendingBookings: [
             {
               $match: {
@@ -861,7 +858,6 @@ async function providerDashboardOverview(req, res) {
             },
           ],
 
-         
           completedBookings: [
             {
               $match: {
@@ -889,7 +885,6 @@ async function providerDashboardOverview(req, res) {
             },
           ],
 
-          
           earnings: [
             {
               $match: {
@@ -923,7 +918,6 @@ async function providerDashboardOverview(req, res) {
 
     const data = dashboardOverview[0];
 
-   
     const getCurrentPrevious = (data, field) => {
       const current = data.find((item) => item._id === "current");
       const previous = data.find((item) => item._id === "previous");
@@ -945,7 +939,6 @@ async function providerDashboardOverview(req, res) {
 
     const earnings = getCurrentPrevious(data.earnings, "total");
 
-    
     const calculatePercentage = (current, previous) => {
       if (previous === 0) {
         if (current === 0) return 0;
@@ -1703,14 +1696,32 @@ async function scheduleSummary(req, res) {
         ? currentISTMinutes
         : currentISTMinutes + (60 - (currentISTMinutes % 60));
 
-    const bookings = await bookingsModel.find({
-      "providerSnapshot.providerObjectId": providerId,
+    const [bookings, nextUpcomingBooking] = await Promise.all([
+      bookingsModel.find({
+        "providerSnapshot.providerObjectId": providerId,
 
-      bookingDate: {
-        $gte: todayStart,
-        $lt: todayEnd,
-      },
-    });
+        bookingDate: {
+          $gte: todayStart,
+          $lt: todayEnd,
+        },
+      }),
+      bookingsModel
+        .findOne({
+          "providerSnapshot.providerObjectId": providerId,
+
+          "bookingSlot.startTime": {
+            $gt: now,
+          },
+
+          bookingStatus: {
+            $in: ["pending", "accepted"],
+          },
+        }).select('bookingSlot')
+        .sort({
+          "bookingSlot.startTime": 1,
+        })
+        .lean(),
+    ]);
 
     const slotBooks = slots.map((slot) => {
       const slotStart = timeToMinutes(slot.startTime);
@@ -1848,6 +1859,7 @@ async function scheduleSummary(req, res) {
         totalCompletedBookings: 0,
       },
       totalFreeSlot,
+      nextUpcomingBooking
     });
   } catch (err) {
     console.error("Schedule summary Error:", err);
