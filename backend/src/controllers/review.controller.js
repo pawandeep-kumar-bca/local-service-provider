@@ -740,36 +740,137 @@ async function providerReviewSummary(req, res) {
           $project: {
             _id: 0,
 
-            year: "$_id.year",
-
-            monthNumber: "$_id.month",
-
-            month: {
-              $arrayElemAt: [
-                [
-                  "",
-                  "Jan",
-                  "Feb",
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec",
-                ],
-                "$_id.month",
-              ],
-            },
-
             averageRating: {
               $round: ["$averageRating", 1],
             },
 
-            totalReviews: 1,
+            totalReview: 1,
+
+            fiveStar: 1,
+            fourStar: 1,
+            threeStar: 1,
+            twoStar: 1,
+            oneStar: 1,
+
+            fiveStarPercentage: {
+              $cond: [
+                { $gt: ["$totalReview", 0] },
+                {
+                  $round: [
+                    {
+                      $multiply: [
+                        {
+                          $divide: ["$fiveStar", "$totalReview"],
+                        },
+                        100,
+                      ],
+                    },
+                    1,
+                  ],
+                },
+                0,
+              ],
+            },
+
+            fourStarPercentage: {
+              $cond: [
+                { $gt: ["$totalReview", 0] },
+                {
+                  $round: [
+                    {
+                      $multiply: [
+                        {
+                          $divide: ["$fourStar", "$totalReview"],
+                        },
+                        100,
+                      ],
+                    },
+                    1,
+                  ],
+                },
+                0,
+              ],
+            },
+
+            threeStarPercentage: {
+              $cond: [
+                { $gt: ["$totalReview", 0] },
+                {
+                  $round: [
+                    {
+                      $multiply: [
+                        {
+                          $divide: ["$threeStar", "$totalReview"],
+                        },
+                        100,
+                      ],
+                    },
+                    1,
+                  ],
+                },
+                0,
+              ],
+            },
+
+            twoStarPercentage: {
+              $cond: [
+                { $gt: ["$totalReview", 0] },
+                {
+                  $round: [
+                    {
+                      $multiply: [
+                        {
+                          $divide: ["$twoStar", "$totalReview"],
+                        },
+                        100,
+                      ],
+                    },
+                    1,
+                  ],
+                },
+                0,
+              ],
+            },
+
+            oneStarPercentage: {
+              $cond: [
+                { $gt: ["$totalReview", 0] },
+                {
+                  $round: [
+                    {
+                      $multiply: [
+                        {
+                          $divide: ["$oneStar", "$totalReview"],
+                        },
+                        100,
+                      ],
+                    },
+                    1,
+                  ],
+                },
+                0,
+              ],
+            },
+
+            satisfactionPercentage: {
+              $cond: [
+                { $gt: ["$totalReview", 0] },
+                {
+                  $round: [
+                    {
+                      $multiply: [
+                        {
+                          $divide: ["$satisfiedRatings", "$totalReview"],
+                        },
+                        100,
+                      ],
+                    },
+                    0,
+                  ],
+                },
+                0,
+              ],
+            },
           },
         },
       ]),
