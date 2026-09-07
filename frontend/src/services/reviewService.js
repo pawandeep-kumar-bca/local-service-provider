@@ -49,6 +49,6 @@ export const deleteReview = async (reviewId) => {
 };
 
 export const getProviderReviewsSummary = async ()=>{
-  const response = await api.get('/reviews/provider/reviews')
+  const response = await api.get('/reviews/provider/review-summary')
   return response.data
 }

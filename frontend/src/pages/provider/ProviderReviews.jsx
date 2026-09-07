@@ -5,6 +5,7 @@ import { HiMagnifyingGlass } from "react-icons/hi2";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import ReviewMiniChart from "../../utils/ReviewMiniChart";
+import { useGetProviderReviewSummary } from "../../hooks/useReview";
 const ProviderReviews = () => {
   const [reviews, setReviews] = useState("all reviews");
   const base =
@@ -14,49 +15,62 @@ const ProviderReviews = () => {
 
   const notActive =
     "bg-white border-slate-300 text-text hover:border-green-400 hover:text-green-500";
-const reviewsData = [
-  {
-    id: 1,
-    name: "Anita Sharma",
-    date: "12 May 2026",
-    service: "AC Repair",
-    rating: 4.8,
-    review:
-      "Excellent service. The technician was very professional and fixed the AC quickly. Highly recommended.",
-    profile:
-      "https://randomuser.me/api/portraits/women/11.jpg",
-    image:
-      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop",
-  },
+  const reviewsData = [
+    {
+      id: 1,
+      name: "Anita Sharma",
+      date: "12 May 2026",
+      service: "AC Repair",
+      rating: 4.8,
+      review:
+        "Excellent service. The technician was very professional and fixed the AC quickly. Highly recommended.",
+      profile:
+        "https://randomuser.me/api/portraits/women/11.jpg",
+      image:
+        "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop",
+    },
 
-  {
-    id: 2,
-    name: "Rahul Verma",
-    date: "10 May 2026",
-    service: "Plumbing",
-    rating: 4.7,
-    review:
-      "Very quick response and clean work. The leakage issue was solved properly.",
-    profile:
-      "https://randomuser.me/api/portraits/men/32.jpg",
-    image:
-      "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1200&auto=format&fit=crop",
-  },
+    {
+      id: 2,
+      name: "Rahul Verma",
+      date: "10 May 2026",
+      service: "Plumbing",
+      rating: 4.7,
+      review:
+        "Very quick response and clean work. The leakage issue was solved properly.",
+      profile:
+        "https://randomuser.me/api/portraits/men/32.jpg",
+      image:
+        "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1200&auto=format&fit=crop",
+    },
 
-  {
-    id: 3,
-    name: "Priya Mehta",
-    date: "08 May 2026",
-    service: "Cleaning",
-    rating: 4.9,
-    review:
-      "Very satisfied with the deep cleaning service. Staff was polite and professional.",
-    profile:
-      "https://randomuser.me/api/portraits/women/45.jpg",
-    image:
-      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop",
-  },
-];
+    {
+      id: 3,
+      name: "Priya Mehta",
+      date: "08 May 2026",
+      service: "Cleaning",
+      rating: 4.9,
+      review:
+        "Very satisfied with the deep cleaning service. Staff was polite and professional.",
+      profile:
+        "https://randomuser.me/api/portraits/women/45.jpg",
+      image:
+        "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop",
+    },
+  ];
+
+  const { data } = useGetProviderReviewSummary();
+
+  const summary = data?.summary;
+
+  const fiveStar = summary?.fiveStar ?? 0;
+  const fourStar = summary?.fourStar ?? 0;
+  const threeStar = summary?.threeStar ?? 0;
+  const twoStar = summary?.twoStar ?? 0;
+  const oneStar = summary?.oneStar ?? 0;
+
+  const categoryAvg = data?.categoryAvg ?? [];
+  const ratingTrendChart = data?.ratingTrendChart ?? [];
   return (
     <div>
       <div>
@@ -90,18 +104,27 @@ const reviewsData = [
               Overall Rating
               <AiOutlineQuestionCircle className="text-muted" />
             </h3>
-            <div className="flex flex-col items-center  mt-7">
-              <h1 className="text-5xl font-bold text-text my-3">4.8</h1>
+            <div className="flex flex-col items-center mt-7">
+              <h1 className="text-5xl font-bold text-text my-3">
+                {summary?.averageRating?.toFixed(1) ?? "0.0"}
+              </h1>
 
-              <div className="flex text-yellow-500 text-2xl gap-1">
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
+              <div className="flex text-2xl gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <FaStar
+                    key={star}
+                    className={
+                      star <= Math.round(summary?.averageRating ?? 0)
+                        ? "text-orange-500"
+                        : "text-gray-300"
+                    }
+                  />
+                ))}
               </div>
 
-              <p className="text-sm text-muted mt-3">Based on 120 reviews</p>
+              <p className="text-sm text-muted mt-3">
+                Based on {summary?.totalReview ?? 0} reviews
+              </p>
             </div>
           </div>
 
@@ -111,11 +134,31 @@ const reviewsData = [
 
             <div className="flex flex-col gap-3 mt-4">
               {[
-                { star: 5, value: "70%", total: 85 },
-                { star: 4, value: "75%", total: 60 },
-                { star: 3, value: "60%", total: 35 },
-                { star: 2, value: "30%", total: 20 },
-                { star: 1, value: "10%", total: 5 },
+                {
+                  star: 5,
+                  value: `${summary?.fiveStarPercentage ?? 0}%`,
+                  total: fiveStar,
+                },
+                {
+                  star: 4,
+                  value: `${summary?.fourStarPercentage ?? 0}%`,
+                  total: fourStar,
+                },
+                {
+                  star: 3,
+                  value: `${summary?.threeStarPercentage ?? 0}%`,
+                  total: threeStar,
+                },
+                {
+                  star: 2,
+                  value: `${summary?.twoStarPercentage ?? 0}%`,
+                  total: twoStar,
+                },
+                {
+                  star: 1,
+                  value: `${summary?.oneStarPercentage ?? 0}%`,
+                  total: oneStar,
+                },
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3">
                   <p className="text-sm font-medium text-muted w-14">
@@ -142,21 +185,17 @@ const reviewsData = [
             <h1 className="text-lg font-bold">Service Ratings</h1>
 
             <div className="mt-4 flex flex-col gap-4">
-              {[
-                { name: "AC Repair", rating: 4.9 },
-                { name: "Plumbing", rating: 4.8 },
-                { name: "Cleaning", rating: 4.7 },
-              ].map((service, idx) => (
+              {categoryAvg.map((service, idx) => (
                 <div key={idx}>
                   <div className="flex items-center justify-between">
                     <h2 className="text-sm font-medium text-muted">
-                      {service.name}
+                      {service?.categoryName}
                     </h2>
 
                     <div className="flex items-center gap-2 font-semibold">
-                      <span>{service.rating}</span>
+                      <span><span>{service?.averageRating?.toFixed(1) ?? "0.0"}</span></span>
 
-                      <FaStar className="text-yellow-400" />
+                      <FaStar className="text-orange-500" />
                     </div>
                   </div>
 
@@ -196,14 +235,16 @@ const reviewsData = [
                 <BiLike size={24} />
               </div>
 
-              <h1 className="text-4xl font-bold text-text my-3">98%</h1>
+              <h1 className="text-4xl font-bold text-text my-3">
+                {summary?.satisfactionPercentage ?? 0}%
+              </h1>
 
               <p className="text-sm text-center text-muted max-w-[220px]">
                 Customers are satisfied with your services
               </p>
             </div>
 
-            <ReviewMiniChart />
+            <ReviewMiniChart data={ratingTrendChart} />
           </div>
         </div>
       </div>
@@ -220,9 +261,8 @@ const reviewsData = [
           <div className="flex gap-2 overflow-x-auto scrollbar-hide flex-2">
             <button
               onClick={() => setReviews("all reviews")}
-              className={`${base} ${
-                reviews === "all reviews" ? active : notActive
-              }`}
+              className={`${base} ${reviews === "all reviews" ? active : notActive
+                }`}
             >
               All Review
             </button>
@@ -264,9 +304,8 @@ const reviewsData = [
 
             <button
               onClick={() => setReviews("with comments")}
-              className={`${base} ${
-                reviews === "with comments" ? active : notActive
-              }`}
+              className={`${base} ${reviews === "with comments" ? active : notActive
+                }`}
             >
               With Comments
             </button>
@@ -321,27 +360,27 @@ const reviewsData = [
         </div>
         <div className="border-t border-gray-200 mb-4"></div>
         <div className="p-2">
-         <div className=" flex flex-col gap-2">
-  {reviewsData.map((item) => (
-    <div
-      key={item.id}
-      className="
+          <div className=" flex flex-col gap-2">
+            {reviewsData.map((item) => (
+              <div
+                key={item.id}
+                className="
         bg-white
         border border-slate-200
         rounded-2xl
         p-4
         shadow-[0_4px_15px_rgba(0,0,0,0.05)]
       "
-    >
-      <div className="flex lg:flex-row flex-col gap-6">
-        
-        {/* Left */}
-        <div className="flex items-start gap-3 lg:w-[260px] w-full">
-          
-          <img
-            src={item.profile}
-            alt={item.name}
-            className="
+              >
+                <div className="flex lg:flex-row flex-col gap-6">
+
+                  {/* Left */}
+                  <div className="flex items-start gap-3 lg:w-[260px] w-full">
+
+                    <img
+                      src={item.profile}
+                      alt={item.name}
+                      className="
               w-16 h-16 min-w-16
               rounded-full
               object-cover
@@ -349,56 +388,56 @@ const reviewsData = [
               shadow-md
               ring-2 ring-primary/10
             "
-          />
+                    />
 
-          <div>
-            <h1 className="text-lg font-semibold text-text">
-              {item.name}
-            </h1>
+                    <div>
+                      <h1 className="text-lg font-semibold text-text">
+                        {item.name}
+                      </h1>
 
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <p className="text-sm text-muted">
-                {item.date}
-              </p>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <p className="text-sm text-muted">
+                          {item.date}
+                        </p>
 
-              <div className="w-1.5 h-1.5 rounded-full bg-muted"></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-muted"></div>
 
-              <p className="text-sm text-muted">
-                {item.service}
-              </p>
-            </div>
-          </div>
-        </div>
+                        <p className="text-sm text-muted">
+                          {item.service}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-        {/* Center */}
-        <div className="flex-1 flex md:flex-row flex-col gap-4">
-          
-          <div className="flex-1">
-            
-            <div className="flex items-center gap-3 flex-wrap">
-              
-              <div className="flex text-yellow-500 gap-1">
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-              </div>
+                  {/* Center */}
+                  <div className="flex-1 flex md:flex-row flex-col gap-4">
 
-              <h1 className="text-lg font-bold text-text">
-                {item.rating}
-              </h1>
-            </div>
+                    <div className="flex-1">
 
-            <p className="text-sm text-muted leading-relaxed mt-2">
-              {item.review}
-            </p>
-          </div>
+                      <div className="flex items-center gap-3 flex-wrap">
 
-          <img
-            src={item.image}
-            alt={item.service}
-            className="
+                        <div className="flex text-yellow-500 gap-1">
+                          <FaStar />
+                          <FaStar />
+                          <FaStar />
+                          <FaStar />
+                          <FaStar />
+                        </div>
+
+                        <h1 className="text-lg font-bold text-text">
+                          {item.rating}
+                        </h1>
+                      </div>
+
+                      <p className="text-sm text-muted leading-relaxed mt-2">
+                        {item.review}
+                      </p>
+                    </div>
+
+                    <img
+                      src={item.image}
+                      alt={item.service}
+                      className="
               md:w-[140px]
               w-full
               h-[120px]
@@ -406,12 +445,12 @@ const reviewsData = [
               rounded-xl
               object-cover
             "
-          />
-        </div>
+                    />
+                  </div>
 
-        {/* Right */}
-        <div
-          className="
+                  {/* Right */}
+                  <div
+                    className="
             flex
             
             flex-row
@@ -421,9 +460,9 @@ const reviewsData = [
             lg:w-[160px]
             w-full
           "
-        >
-          <button
-            className="
+                  >
+                    <button
+                      className="
               flex items-center gap-2
               border border-blue-500
               text-blue-500
@@ -434,13 +473,13 @@ const reviewsData = [
               font-medium
               cursor-pointer
             "
-          >
-            <BiShare size={18} />
-            Reply
-          </button>
+                    >
+                      <BiShare size={18} />
+                      Reply
+                    </button>
 
-          <button
-            className="
+                    <button
+                      className="
               w-10 h-10
               rounded-xl
               border border-slate-300
@@ -450,14 +489,14 @@ const reviewsData = [
               transition-all duration-300
               cursor-pointer
             "
-          >
-            <BsThreeDotsVertical size={18} />
-          </button>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
+                    >
+                      <BsThreeDotsVertical size={18} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
