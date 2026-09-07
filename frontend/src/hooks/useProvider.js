@@ -5,6 +5,7 @@ import {
   getNearbyProviders,
   getProviderById,
   getProviderDashboardOverview,
+  getProviderTodayBookings,
   getRecommendedProviders,
   getSelectProviderByCategory,
 } from "../services/providerService";
@@ -76,5 +77,12 @@ export const useProviderDashboardOverview=()=>{
   return useQuery({
     queryKey:['provider-dashboard-overview'],
     queryFn:getProviderDashboardOverview
+  })
+}
+
+export const useProviderTodayBookings = ()=>{
+  return useQuery({
+    queryKey:['provider-today-bookings'],
+    queryFn:getProviderTodayBookings
   })
 }
