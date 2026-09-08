@@ -12,6 +12,7 @@ import {
   getProviderTodayUpcomingBooking,
   getRecommendedProviders,
   getSelectProviderByCategory,
+  setProviderAvailability,
 } from "../services/providerService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -126,4 +127,20 @@ export const useProviderTodayUpcomingBooking = ()=>{
     queryKey:['provider-today-upcoming-booking'],
     queryFn:getProviderTodayUpcomingBooking
   })
+}
+
+export const useProviderAvailability = ()=>{
+  const providerAvailabilityMutation = useMutation({
+    mutationFn:setProviderAvailability,
+    onSuccess:(data)=>{
+      toast.success(data?.message)
+
+    },
+    onError:(err)=>{
+      toast.error(err?.response?.data?.message)
+      console.error('Provider availability error:',err);
+      
+    }
+  })
+  return {providerAvailabilityMutation}
 }
