@@ -1716,7 +1716,8 @@ async function scheduleSummary(req, res) {
           bookingStatus: {
             $in: ["pending", "accepted"],
           },
-        }).select('bookingSlot')
+        })
+        .select("bookingSlot")
         .sort({
           "bookingSlot.startTime": 1,
         })
@@ -1859,7 +1860,7 @@ async function scheduleSummary(req, res) {
         totalCompletedBookings: 0,
       },
       totalFreeSlot,
-      nextUpcomingBooking
+      nextUpcomingBooking,
     });
   } catch (err) {
     console.error("Schedule summary Error:", err);
@@ -1871,30 +1872,70 @@ async function scheduleSummary(req, res) {
   }
 }
 
+function time12ToMinutes(time) {
+  const [timePart, modifier] = time.trim().split(" ");
+
+  let [hours, minutes] = timePart.split(":").map(Number);
+
+  if (modifier.toUpperCase() === "AM") {
+    if (hours === 12) {
+      hours = 0;
+    }
+  } else if (modifier.toUpperCase() === "PM") {
+    if (hours !== 12) {
+      hours += 12;
+    }
+  }
+
+  return hours * 60 + minutes;
+}
+
+function minuteToTime(minutes) {
+  let hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  const period = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+
+  if (hours === 0) {
+    hours = 12;
+  }
+
+  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(
+    2,
+    "0",
+  )} ${period}`;
+}
+
 async function providerSlots(req, res) {
   try {
     const providerId = req.provider._id;
     const workingHours = req.provider.workingHours;
 
-    const [startHours, startMinutes] = workingHours.startTime
-      .split(":")
-      .map(Number);
+    if (!workingHours?.startTime || !workingHours?.endTime) {
+      return res.status(400).json({
+        success: false,
+        message: "Provider working hours are not set",
+      });
+    }
 
-    const startM = startHours * 60 + startMinutes;
-
-    const [endHours, endMinutes] = workingHours.endTime.split(":").map(Number);
-
-    const endM = endHours * 60 + endMinutes;
+    // Convert provider working hours from 12-hour format to minutes
+    const startM = time12ToMinutes(workingHours.startTime);
+    const endM = time12ToMinutes(workingHours.endTime);
 
     const startDate = new Date();
     startDate.setUTCHours(0, 0, 0, 0);
 
     const endDate = new Date(startDate);
     endDate.setUTCDate(endDate.getUTCDate() + 1);
+
     const now = new Date();
 
+    // Current IST time in minutes
     const currentISTMinutes = dateToISTMinutes(now);
 
+    // Next available full-hour slot
     const nextAvailableTime =
       currentISTMinutes % 60 === 0
         ? currentISTMinutes
@@ -1913,11 +1954,16 @@ async function providerSlots(req, res) {
           $in: ["pending", "accepted", "in_progress"],
         },
       })
+      .select(
+        "userSnapshot serviceSnapshot.categoryName bookingStatus bookingSlot serviceAddressSnapshot",
+      )
       .sort({
         "bookingSlot.startTime": 1,
       });
 
     const slots = [];
+
+    // Working hour aur current time me jo later hai usse start karo
     const effectiveStart = Math.max(startM, nextAvailableTime);
 
     let cursor = effectiveStart;
@@ -1927,14 +1973,17 @@ async function providerSlots(req, res) {
 
       const end = dateToISTMinutes(booking.bookingSlot.endTime);
 
+      // Already passed booking
       if (end <= cursor) {
         continue;
       }
 
+      // Booking working hours se pehle hai
       if (end <= startM) {
         continue;
       }
 
+      // Booking working hours ke baad hai
       if (start >= endM) {
         break;
       }
@@ -1942,6 +1991,7 @@ async function providerSlots(req, res) {
       const bookingStart = Math.max(start, startM);
       const bookingEnd = Math.min(end, endM);
 
+      // Free time before booking
       if (cursor < bookingStart) {
         slots.push({
           type: "free",
@@ -1949,6 +1999,8 @@ async function providerSlots(req, res) {
           endTime: minuteToTime(bookingStart),
         });
       }
+
+      // Booking time
       const visibleBookingStart = Math.max(cursor, bookingStart);
 
       if (visibleBookingStart < bookingEnd) {
@@ -1963,6 +2015,7 @@ async function providerSlots(req, res) {
       cursor = Math.max(cursor, bookingEnd);
     }
 
+    // Remaining free time after last booking
     if (cursor < endM) {
       slots.push({
         type: "free",
@@ -1994,12 +2047,21 @@ async function providerUpcomingBooking(req, res) {
 
     const now = new Date();
 
-    const upcomingBooking = await bookingsModel
+    const startOfToday = new Date(now);
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const startOfTomorrow = new Date(startOfToday);
+    startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
+    const upcomingBookings = await bookingsModel
       .find({
         "providerSnapshot.providerObjectId": providerId,
+
         "bookingSlot.startTime": {
-          $gt: now,
+          $gte: now,
+          $lt: startOfTomorrow,
         },
+
         bookingStatus: {
           $in: ["pending", "accepted"],
         },
@@ -2013,14 +2075,15 @@ async function providerUpcomingBooking(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: "Upcoming booking fetch successfully",
-      upcomingBooking,
+      message: "Upcoming bookings fetched successfully",
+      upcomingBookings,
     });
   } catch (err) {
     console.error("Upcoming booking Error:", err);
+
     return res.status(500).json({
       success: false,
-      message: "Internal server Error:",
+      message: "Internal server Error",
     });
   }
 }
@@ -2051,7 +2114,6 @@ async function setProviderAvailability(req, res) {
     return res.status(200).json({
       success: true,
       message: "provider availability updated successfully",
-      provider,
     });
   } catch (err) {
     console.error("availability Provider error:", err);
@@ -2155,9 +2217,12 @@ async function scheduleBookings(req, res) {
         },
 
         bookingStatus: {
-          $in: ["pending", "accepted", "in_progress", "completed"],
+          $in: ["pending", "accepted", "in_progress"],
         },
       })
+      .select(
+        "_id serviceSnapshot.categoryName  serviceAddressSnapshot userSnapshot.profileImage userSnapshot.name bookingStatus bookingSlot",
+      )
       .sort({
         "bookingSlot.startTime": 1,
       });

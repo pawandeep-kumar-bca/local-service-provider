@@ -877,7 +877,7 @@ async function providerReviewSummary(req, res) {
 async function getProviderReviewOfUsers(req, res) {
   try {
     let { rating, search } = req.query;
-
+   
     const providerId = req.provider._id;
 
     const filters = {
@@ -919,7 +919,7 @@ async function getProviderReviewOfUsers(req, res) {
     }
 
     const reviews = await reviewModel
-      .find(filters)
+      .find(filters).select('_id serviceSnapshot.categoryName rating comment images createdAt').populate('userId','fullname profileImage')
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
