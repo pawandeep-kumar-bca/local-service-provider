@@ -99,3 +99,8 @@ export const setProviderAvailability = async ({time})=>{
   const response = await api.patch('/providers/schedule/availability',time)
   return response.data
 }
+
+export const getProviderSlot = async ()=>{
+  const response = await api.get('/providers/schedule/slots')
+  return response.data
+}
