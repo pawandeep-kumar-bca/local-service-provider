@@ -6,6 +6,7 @@ import {
   getProviderBookingAnalytics,
   getProviderById,
   getProviderDashboardOverview,
+  getProviderScheduleBooking,
   getProviderScheduleSummary,
   getProviderTodayBookings,
   getRecommendedProviders,
@@ -111,3 +112,10 @@ export const useProviderScheduleSummary = () => {
     queryFn: getProviderScheduleSummary,
   });
 };
+
+export const useProviderUpcomingSchedule = (params)=>{
+  return useQuery({
+    queryKey:['provider-upcoming-schedule',params],
+    queryFn:()=>getProviderScheduleBooking(params)
+  })
+}
