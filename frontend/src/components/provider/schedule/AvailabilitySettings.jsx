@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import SlotTime from "../../common/SlotTime";
+import { useProviderAvailability } from "../../../hooks/useProvider";
 
 
 
@@ -10,7 +11,12 @@ const AvailabilitySettings = () => {
     startTime:'',
     endTime:''
   })
+  
+  const {providerAvailabilityMutation} = useProviderAvailability()
 
+  const submitTime =async ()=>{
+    await providerAvailabilityMutation.mutateAsync(time)
+  }
   return (
     <div
       className="
@@ -26,6 +32,7 @@ const AvailabilitySettings = () => {
       </h1>
 
       {/* Working Hours */}
+      
       <SlotTime label="Working Hours" startTime={time.startTime} endTime={time.endTime} onStartTimeChange={(value)=>{
         setTime((prev)=>({
           ...prev,
@@ -42,7 +49,7 @@ const AvailabilitySettings = () => {
       {/* Save */}
       <button
         type="button"
-         
+         onClick={submitTime}
         className="
           mt-5
           w-full
