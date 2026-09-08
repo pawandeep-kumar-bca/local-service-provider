@@ -94,3 +94,8 @@ export const getProviderTodayUpcomingBooking =async ()=>{
   const response = await api.get('/providers/schedule/upcoming-bookings')
   return response.data
 }
+
+export const setProviderAvailability = async ({time})=>{
+  const response = await api.patch('/providers/schedule/availability',time)
+  return response.data
+}
