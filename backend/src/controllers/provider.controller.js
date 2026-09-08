@@ -1647,20 +1647,56 @@ function dateToISTMinutes(date) {
   return hours * 60 + minutes;
 }
 
+function time12ToMinutes(time) {
+  const [timePart, modifier] = time.trim().split(" ");
+
+  let [hours, minutes] = timePart.split(":").map(Number);
+
+  if (modifier.toUpperCase() === "AM") {
+    if (hours === 12) {
+      hours = 0;
+    }
+  } else if (modifier.toUpperCase() === "PM") {
+    if (hours !== 12) {
+      hours += 12;
+    }
+  }
+
+  return hours * 60 + minutes;
+}
+
+function minute12ToTime(minutes) {
+  let hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  const period = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+
+  if (hours === 0) {
+    hours = 12;
+  }
+
+  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(
+    2,
+    "0",
+  )} ${period}`;
+}
+
 async function scheduleSummary(req, res) {
   try {
     const providerId = req.provider._id;
     const workingHours = req.provider.workingHours;
 
-    const [startHours, startMinutes] = workingHours.startTime
-      .split(":")
-      .map(Number);
+    if (!workingHours?.startTime || !workingHours?.endTime) {
+      return res.status(400).json({
+        success: false,
+        message: "Provider working hours are not set",
+      });
+    }
 
-    const startM = startHours * 60 + startMinutes;
-
-    const [endHours, endMinutes] = workingHours.endTime.split(":").map(Number);
-
-    const endM = endHours * 60 + endMinutes;
+    const startM = time12ToMinutes(workingHours.startTime);
+    const endM = time12ToMinutes(workingHours.endTime);
 
     const slots = [];
 
@@ -1674,8 +1710,8 @@ async function scheduleSummary(req, res) {
       }
 
       slots.push({
-        startTime: minuteToTime(current),
-        endTime: minuteToTime(next),
+        startTime: minute12ToTime(current),
+        endTime: minute12ToTime(next),
       });
 
       current = next;
@@ -1705,6 +1741,7 @@ async function scheduleSummary(req, res) {
           $lt: todayEnd,
         },
       }),
+
       bookingsModel
         .findOne({
           "providerSnapshot.providerObjectId": providerId,
@@ -1725,9 +1762,11 @@ async function scheduleSummary(req, res) {
     ]);
 
     const slotBooks = slots.map((slot) => {
-      const slotStart = timeToMinutes(slot.startTime);
-      const slotEnd = timeToMinutes(slot.endTime);
+      // 12-hour formatted slot -> minutes
+      const slotStart = time12ToMinutes(slot.startTime);
+      const slotEnd = time12ToMinutes(slot.endTime);
 
+      // Already passed slots
       if (slotStart < nextFullHour) {
         return {
           ...slot,
@@ -1853,13 +1892,16 @@ async function scheduleSummary(req, res) {
     return res.status(200).json({
       success: true,
       message: "Summary fetched successfully",
+
       result: result[0] || {
         totalTodayBookings: 0,
         totalPendingBookings: 0,
         totalUpcomingBookings: 0,
         totalCompletedBookings: 0,
       },
+
       totalFreeSlot,
+
       nextUpcomingBooking,
     });
   } catch (err) {
@@ -1870,42 +1912,6 @@ async function scheduleSummary(req, res) {
       message: "Internal server Error",
     });
   }
-}
-
-function time12ToMinutes(time) {
-  const [timePart, modifier] = time.trim().split(" ");
-
-  let [hours, minutes] = timePart.split(":").map(Number);
-
-  if (modifier.toUpperCase() === "AM") {
-    if (hours === 12) {
-      hours = 0;
-    }
-  } else if (modifier.toUpperCase() === "PM") {
-    if (hours !== 12) {
-      hours += 12;
-    }
-  }
-
-  return hours * 60 + minutes;
-}
-
-function minuteToTime(minutes) {
-  let hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-
-  const period = hours >= 12 ? "PM" : "AM";
-
-  hours = hours % 12;
-
-  if (hours === 0) {
-    hours = 12;
-  }
-
-  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(
-    2,
-    "0",
-  )} ${period}`;
 }
 
 async function providerSlots(req, res) {
@@ -1920,7 +1926,6 @@ async function providerSlots(req, res) {
       });
     }
 
-    // Convert provider working hours from 12-hour format to minutes
     const startM = time12ToMinutes(workingHours.startTime);
     const endM = time12ToMinutes(workingHours.endTime);
 
@@ -1932,10 +1937,8 @@ async function providerSlots(req, res) {
 
     const now = new Date();
 
-    // Current IST time in minutes
     const currentISTMinutes = dateToISTMinutes(now);
 
-    // Next available full-hour slot
     const nextAvailableTime =
       currentISTMinutes % 60 === 0
         ? currentISTMinutes
@@ -1963,7 +1966,6 @@ async function providerSlots(req, res) {
 
     const slots = [];
 
-    // Working hour aur current time me jo later hai usse start karo
     const effectiveStart = Math.max(startM, nextAvailableTime);
 
     let cursor = effectiveStart;
@@ -1973,17 +1975,14 @@ async function providerSlots(req, res) {
 
       const end = dateToISTMinutes(booking.bookingSlot.endTime);
 
-      // Already passed booking
       if (end <= cursor) {
         continue;
       }
 
-      // Booking working hours se pehle hai
       if (end <= startM) {
         continue;
       }
 
-      // Booking working hours ke baad hai
       if (start >= endM) {
         break;
       }
@@ -1991,23 +1990,21 @@ async function providerSlots(req, res) {
       const bookingStart = Math.max(start, startM);
       const bookingEnd = Math.min(end, endM);
 
-      // Free time before booking
       if (cursor < bookingStart) {
         slots.push({
           type: "free",
-          startTime: minuteToTime(cursor),
-          endTime: minuteToTime(bookingStart),
+          startTime: minute12ToTime(cursor),
+          endTime: minute12ToTime(bookingStart),
         });
       }
 
-      // Booking time
       const visibleBookingStart = Math.max(cursor, bookingStart);
 
       if (visibleBookingStart < bookingEnd) {
         slots.push({
           type: "booking",
-          startTime: minuteToTime(visibleBookingStart),
-          endTime: minuteToTime(bookingEnd),
+          startTime: minute12ToTime(visibleBookingStart),
+          endTime: minute12ToTime(bookingEnd),
           booking,
         });
       }
@@ -2015,12 +2012,11 @@ async function providerSlots(req, res) {
       cursor = Math.max(cursor, bookingEnd);
     }
 
-    // Remaining free time after last booking
     if (cursor < endM) {
       slots.push({
         type: "free",
-        startTime: minuteToTime(cursor),
-        endTime: minuteToTime(endM),
+        startTime: minute12ToTime(cursor),
+        endTime: minute12ToTime(endM),
       });
     }
 
