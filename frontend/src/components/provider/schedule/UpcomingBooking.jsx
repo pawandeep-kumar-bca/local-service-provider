@@ -8,22 +8,13 @@ import {
 import { Link } from "react-router-dom";
 
 import StatusBadge from "../../common/StatusBadge";
+import { useProviderTodayUpcomingBooking } from "../../../hooks/useProvider";
+import Avatar from "../../common/Avatar";
 const UpcomingBooking = () => {
-  // TODO:
-  // API:
-  // GET /provider/bookings/upcoming
 
-  const booking = {
-    customer: {
-      name: "Priya Sharma",
-      avatar:
-        "https://randomuser.me/api/portraits/men/11.jpg",
-    },
-    time: "10:00 AM",
-    service: "AC Repair",
-    location: "Malviya Nagar, Jaipur",
-    status: "accepted",
-  };
+
+  const { data } = useProviderTodayUpcomingBooking()
+  const bookings = data?.upcomingBookings || []
 
   return (
     <div
@@ -59,8 +50,11 @@ const UpcomingBooking = () => {
       </div>
 
       {/* Booking */}
-      <div
-        className="
+     {bookings?.length >0 ? <div>
+        {
+          bookings?.map((booking) => (
+            <div
+              className="
           flex flex-col
           justify-between
           gap-4
@@ -70,15 +64,12 @@ const UpcomingBooking = () => {
           rounded-2xl
           p-4
         "
-      >
-        {/* Customer */}
-        <div className="flex justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative shrink-0">
-              <img
-                src={booking.customer.avatar}
-                alt={booking.customer.name}
-                className="
+            >
+              {/* Customer */}
+              <div className="flex justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="relative shrink-0">
+                    <div className="
                   w-14 h-14
                   min-w-14
                   rounded-full
@@ -86,12 +77,13 @@ const UpcomingBooking = () => {
                   border-2 border-white
                   shadow-md
                   ring-2 ring-primary/10
-                "
-              />
+                ">
+                      <Avatar name={booking?.userSnapshot?.name} image={booking?.userSnapshot?.profileImage?.url} className="text-black bg-green-300 text-2xl" />
+                    </div>
 
-              {/* Online */}
-              <div
-                className="
+                    {/* Online */}
+                    <div
+                      className="
                   absolute
                   bottom-0
                   right-1
@@ -100,44 +92,54 @@ const UpcomingBooking = () => {
                   bg-green-500
                   border-2 border-white
                 "
-              />
-            </div>
+                    />
+                  </div>
 
-            <div>
-              <h1 className="text-base font-semibold text-text">
-                {booking.customer.name}
-              </h1>
+                  <div>
+                    <h1 className="text-base font-semibold text-text">
+                      {booking?.userSnapshot?.name}
+                    </h1>
 
-              <h2 className="text-sm font-semibold text-blue-500 mt-0.5">
-                {booking.time}
-              </h2>
-            </div>
-          </div>
+                    <h2 className="text-sm font-semibold text-blue-500 mt-0.5">
+                      {new Date(booking?.bookingSlot?.startTime).toLocaleTimeString('en-IN', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                      }).toUpperCase()} -  {new Date(booking?.bookingSlot?.endTime).toLocaleTimeString('en-IN', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                      }).toUpperCase()}
+                    </h2>
+                  </div>
+                </div>
 
-          <div>
-            <StatusBadge
-              badge={booking.status}
-            />
-          </div>
-        </div>
+                <div>
+                  <StatusBadge
+                    badge={booking?.bookingStatus}
+                  />
+                </div>
+              </div>
 
-        {/* Service + Actions */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex flex-col">
-            <h3 className="text-base font-semibold text-text">
-              {booking.service}
-            </h3>
+              {/* Service + Actions */}
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col">
+                  <h3 className="text-base font-semibold text-text">
+                    {booking?.serviceSnapshot?.categoryName}
+                  </h3>
 
-            <p className="text-sm font-medium text-muted">
-              {booking.location}
-            </p>
-          </div>
+                  <p className="text-sm font-medium text-muted">
+                    {booking?.serviceAddressSnapshot?.fullAddress},
+                    {booking?.village?.fullAddress},
 
-          {/* Actions */}
-          <div className="flex gap-2">
-            <button
-              type="button"
-              className="
+                  </p>
+                </div>
+
+                {/* Actions */}
+                {(booking?.bookingStatus === 'accepted' || booking?.bookingStatus === 'in_progress') && <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className="
                 flex items-center justify-center
                 w-10 h-10
                 md:w-11 md:h-11
@@ -151,13 +153,13 @@ const UpcomingBooking = () => {
                 transition-all
                 duration-300
               "
-            >
-              <IoMdCall size={20} />
-            </button>
+                  >
+                    <IoMdCall size={20} />
+                  </button>
 
-            <button
-              type="button"
-              className="
+                  <button
+                    type="button"
+                    className="
                 flex items-center justify-center
                 w-10 h-10
                 md:w-11 md:h-11
@@ -171,14 +173,17 @@ const UpcomingBooking = () => {
                 transition-all
                 duration-300
               "
-            >
-              <BiMessageRoundedDetail
-                size={20}
-              />
-            </button>
-          </div>
-        </div>
-      </div>
+                  >
+                    <BiMessageRoundedDetail
+                      size={20}
+                    />
+                  </button>
+                </div>}
+              </div>
+            </div>
+          ))
+        }
+      </div>:<div>No today Upcoming booking</div>}
     </div>
   );
 };
