@@ -3,7 +3,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { FaCalendarDays } from "react-icons/fa6";
 
 const ScheduleToolbar = ({ view, setView, selectedDate, setSelectedDate }) => {
-  const scheduleViews = ["Day", "Week", "Month"];
+  const scheduleViews = ["day", "week", "month"];
 
   const formatDate = (date) => {
     return date.toLocaleDateString("en-IN", {
@@ -17,15 +17,15 @@ const ScheduleToolbar = ({ view, setView, selectedDate, setSelectedDate }) => {
   const changeDate = (direction) => {
     const newDate = new Date(selectedDate);
 
-    if (view === "Day") {
+    if (view === "day") {
       newDate.setDate(newDate.getDate() + direction);
     }
 
-    if (view === "Week") {
+    if (view === "week") {
       newDate.setDate(newDate.getDate() + direction * 7);
     }
 
-    if (view === "Month") {
+    if (view === "month") {
       newDate.setMonth(newDate.getMonth() + direction);
     }
 
@@ -61,10 +61,11 @@ const ScheduleToolbar = ({ view, setView, selectedDate, setSelectedDate }) => {
                   duration-200
                   hover:border-green-500
                   hover:text-green-600
+                  peer-checked:hover:text-white
                   peer-checked:bg-green-600
                   peer-checked:text-white
                   peer-checked:border-green-600
-                  peer-checked:shadow-md
+                  peer-checked:shadow-md capitalize
                 "
               >
                 {item}
@@ -118,28 +119,8 @@ const ScheduleToolbar = ({ view, setView, selectedDate, setSelectedDate }) => {
           </button>
         </div>
 
-        {/* Calendar Sync */}
-        <button
-          type="button"
-          className="
-            flex items-center justify-center gap-2
-            border border-slate-200
-            rounded-xl
-            px-4 py-2.5
-            bg-slate-50
-            hover:bg-slate-100
-            transition-all
-            duration-200
-            font-semibold
-            text-sm
-            cursor-pointer
-            w-full sm:w-auto
-          "
-        >
-          <FaCalendarDays size={18} />
-
-          <span>Calendar Sync</span>
-        </button>
+       
+     
       </div>
 
       <div className="border-t border-slate-200 my-5" />

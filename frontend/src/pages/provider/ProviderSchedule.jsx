@@ -7,10 +7,12 @@ import BookingSchedule from "../../components/provider/schedule/BookingSchedule"
 import UpcomingBooking from "../../components/provider/schedule/UpcomingBooking";
 import AvailabilitySettings from "../../components/provider/schedule/AvailabilitySettings";
 
+
 const ProviderSchedule = () => {
-  const [view, setView] = useState("Day");
+  const [view, setView] = useState("day");
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  
   return (
     <div className="w-full">
       {/* Header */}
