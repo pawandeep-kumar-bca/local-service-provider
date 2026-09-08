@@ -90,7 +90,7 @@ export const getProviderScheduleBooking = async (params ={})=>{
   return response.data
 }
 
-export const getProviderUpcomingBooking =async ()=>{
+export const getProviderTodayUpcomingBooking =async ()=>{
   const response = await api.get('/provider//schedule/upcoming-bookings')
   return response.data
 }

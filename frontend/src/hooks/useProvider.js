@@ -9,6 +9,7 @@ import {
   getProviderScheduleBooking,
   getProviderScheduleSummary,
   getProviderTodayBookings,
+  getProviderTodayUpcomingBooking,
   getRecommendedProviders,
   getSelectProviderByCategory,
 } from "../services/providerService";
@@ -117,5 +118,12 @@ export const useProviderUpcomingSchedule = (params)=>{
   return useQuery({
     queryKey:['provider-upcoming-schedule',params],
     queryFn:()=>getProviderScheduleBooking(params)
+  })
+}
+
+export const useProviderTodayUpcomingBooking = ()=>{
+  return useQuery({
+    queryKey:['provider-today-upcoming-booking'],
+    queryFn:getProviderTodayUpcomingBooking
   })
 }
