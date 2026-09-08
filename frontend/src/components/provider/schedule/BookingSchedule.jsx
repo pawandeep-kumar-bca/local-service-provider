@@ -42,9 +42,12 @@ const {data} = useProviderUpcomingSchedule({
 
       {/* Divider */}
       <div className="md:border-r border-t border-gray-300 md:mx-3 my-4" />
-
+        
       {/* Slots */}
-      <TimeSlotList />
+     <div className="flex-1">
+      <h1 className="text-lg capitalize text-muted font-semibold mb-3">Today's slots</h1>
+       <TimeSlotList />
+     </div>
     </div>
   );
 };

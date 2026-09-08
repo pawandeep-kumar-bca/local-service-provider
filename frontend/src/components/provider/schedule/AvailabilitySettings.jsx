@@ -1,22 +1,34 @@
-
 import { useState } from "react";
 import SlotTime from "../../common/SlotTime";
 import { useProviderAvailability } from "../../../hooks/useProvider";
 
-
-
 const AvailabilitySettings = () => {
- 
-  const [time,setTime] = useState({
-    startTime:'',
-    endTime:''
-  })
-  
-  const {providerAvailabilityMutation} = useProviderAvailability()
+  const [time, setTime] = useState({
+    startTime: "",
+    endTime: "",
+  });
 
-  const submitTime =async ()=>{
-    await providerAvailabilityMutation.mutateAsync(time)
-  }
+  const { providerAvailabilityMutation } = useProviderAvailability();
+
+  const submitTime = async () => {
+    if (!time.startTime || !time.endTime) {
+      return;
+    }
+
+    try {
+      await providerAvailabilityMutation.mutateAsync({ time }, {
+        onSuccess: () => {
+          setTime({
+            startTime: "",
+            endTime: "",
+          })
+        }
+      });
+    } catch (error) {
+      console.error("Availability update error:", error);
+    }
+  };
+
   return (
     <div
       className="
@@ -27,29 +39,37 @@ const AvailabilitySettings = () => {
         shadow-[0_5px_20px_rgba(0,0,0,0.06)]
       "
     >
-      <h1 className="text-lg font-semibold mb-3 text-text">
+      <h1 className="text-lg font-semibold mb-4 text-text">
         Availability Settings
       </h1>
 
-      {/* Working Hours */}
-      
-      <SlotTime label="Working Hours" startTime={time.startTime} endTime={time.endTime} onStartTimeChange={(value)=>{
-        setTime((prev)=>({
-          ...prev,
-          startTime:value
-        }))
-      }} onEndTimeChange={(value)=>{
-        setTime((prev)=>({
-          ...prev,
-          endTime:value
-        }))
-      }} date={new Date()}/>
+      <SlotTime
+        label="Working Hours"
+        startTime={time.startTime}
+        endTime={time.endTime}
+        onStartTimeChange={(value) => {
+          setTime((prev) => ({
+            ...prev,
+            startTime: value,
+          }));
+        }}
+        onEndTimeChange={(value) => {
+          setTime((prev) => ({
+            ...prev,
+            endTime: value,
+          }));
+        }}
+        date={new Date()}
+      />
 
-  
-      {/* Save */}
       <button
         type="button"
-         onClick={submitTime}
+        onClick={submitTime}
+        disabled={
+          !time.startTime ||
+          !time.endTime ||
+          providerAvailabilityMutation.isPending
+        }
         className="
           mt-5
           w-full
@@ -60,9 +80,13 @@ const AvailabilitySettings = () => {
           font-semibold
           hover:bg-green-700
           transition
+          disabled:opacity-50
+          disabled:cursor-not-allowed
         "
       >
-        Save Availability
+        {providerAvailabilityMutation.isPending
+          ? "Saving..."
+          : "Save Availability"}
       </button>
     </div>
   );
