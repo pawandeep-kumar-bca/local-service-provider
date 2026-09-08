@@ -100,7 +100,7 @@ export const setProviderAvailability = async ({time})=>{
   return response.data
 }
 
-export const getProviderSlot = async ()=>{
+export const getProviderSlots = async ()=>{
   const response = await api.get('/providers/schedule/slots')
   return response.data
 }

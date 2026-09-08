@@ -8,6 +8,7 @@ import {
   getProviderDashboardOverview,
   getProviderScheduleBooking,
   getProviderScheduleSummary,
+  getProviderSlots,
   getProviderTodayBookings,
   getProviderTodayUpcomingBooking,
   getRecommendedProviders,
@@ -143,4 +144,11 @@ export const useProviderAvailability = ()=>{
     }
   })
   return {providerAvailabilityMutation}
+}
+
+export const useProviderSlots = ()=>{
+  return useQuery({
+    queryKey:['provider-slots'],
+    queryFn:getProviderSlots
+  })
 }
