@@ -52,7 +52,7 @@ export const getProviderReviewsSummary = async ()=>{
   const response = await api.get('/reviews/provider/review-summary')
   return response.data
 }
-export const getProviderReviewsForProvider = async (params = {})=>{
+export const getProviderReviewsForProvider = async (params ={})=>{
   const response = await api.get('/reviews/provider/reviews',{
     params
   })

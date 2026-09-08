@@ -5,9 +5,11 @@ import { HiMagnifyingGlass } from "react-icons/hi2";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import ReviewMiniChart from "../../utils/ReviewMiniChart";
-import { useGetProviderReviewSummary } from "../../hooks/useReview";
+import { useGetProviderReviewForProvider, useGetProviderReviewSummary } from "../../hooks/useReview";
+import useDebounce from "../../hooks/useDebounce";
+import Avatar from "../../components/common/Avatar";
 const ProviderReviews = () => {
-  const [reviews, setReviews] = useState("all reviews");
+
   const base =
     "whitespace-nowrap shrink-0 border transition-all duration-300 cursor-pointer px-5 py-2 rounded-xl font-semibold";
 
@@ -15,49 +17,7 @@ const ProviderReviews = () => {
 
   const notActive =
     "bg-white border-slate-300 text-text hover:border-green-400 hover:text-green-500";
-  const reviewsData = [
-    {
-      id: 1,
-      name: "Anita Sharma",
-      date: "12 May 2026",
-      service: "AC Repair",
-      rating: 4.8,
-      review:
-        "Excellent service. The technician was very professional and fixed the AC quickly. Highly recommended.",
-      profile:
-        "https://randomuser.me/api/portraits/women/11.jpg",
-      image:
-        "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop",
-    },
 
-    {
-      id: 2,
-      name: "Rahul Verma",
-      date: "10 May 2026",
-      service: "Plumbing",
-      rating: 4.7,
-      review:
-        "Very quick response and clean work. The leakage issue was solved properly.",
-      profile:
-        "https://randomuser.me/api/portraits/men/32.jpg",
-      image:
-        "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1200&auto=format&fit=crop",
-    },
-
-    {
-      id: 3,
-      name: "Priya Mehta",
-      date: "08 May 2026",
-      service: "Cleaning",
-      rating: 4.9,
-      review:
-        "Very satisfied with the deep cleaning service. Staff was polite and professional.",
-      profile:
-        "https://randomuser.me/api/portraits/women/45.jpg",
-      image:
-        "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1200&auto=format&fit=crop",
-    },
-  ];
 
   const { data } = useGetProviderReviewSummary();
 
@@ -71,6 +31,20 @@ const ProviderReviews = () => {
 
   const categoryAvg = data?.categoryAvg ?? [];
   const ratingTrendChart = data?.ratingTrendChart ?? [];
+
+
+  const [review, setReviews] = useState("all");
+
+
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 500);
+  const { data: reviewData } = useGetProviderReviewForProvider({
+    rating: review,
+    search: debouncedSearch
+  })
+
+  const reviews = reviewData?.reviews || []
+
   return (
     <div>
       <div>
@@ -260,58 +234,52 @@ const ProviderReviews = () => {
           {/* Filters */}
           <div className="flex gap-2 overflow-x-auto scrollbar-hide flex-2">
             <button
-              onClick={() => setReviews("all reviews")}
-              className={`${base} ${reviews === "all reviews" ? active : notActive
+              onClick={() => setReviews("all")}
+              className={`${base} ${review === "all" ? active : notActive
                 }`}
             >
               All Review
             </button>
 
             <button
-              onClick={() => setReviews("5 star")}
-              className={`${base} ${reviews === "5 star" ? active : notActive}`}
+              onClick={() => setReviews("5")}
+              className={`${base} ${review === "5" ? active : notActive}`}
             >
               5 Star
             </button>
 
             <button
-              onClick={() => setReviews("4 star")}
-              className={`${base} ${reviews === "4 star" ? active : notActive}`}
+              onClick={() => setReviews("4")}
+              className={`${base} ${review === "4" ? active : notActive}`}
             >
               4 Star
             </button>
 
             <button
-              onClick={() => setReviews("3 star")}
-              className={`${base} ${reviews === "3 star" ? active : notActive}`}
+              onClick={() => setReviews("3")}
+              className={`${base} ${review === "3" ? active : notActive}`}
             >
               3 Star
             </button>
 
             <button
-              onClick={() => setReviews("2 star")}
-              className={`${base} ${reviews === "2 star" ? active : notActive}`}
+              onClick={() => setReviews("2")}
+              className={`${base} ${review === "2" ? active : notActive}`}
             >
               2 Star
             </button>
 
             <button
-              onClick={() => setReviews("1 star")}
-              className={`${base} ${reviews === "1 star" ? active : notActive}`}
+              onClick={() => setReviews("1")}
+              className={`${base} ${review === "1" ? active : notActive}`}
             >
               1 Star
             </button>
 
-            <button
-              onClick={() => setReviews("with comments")}
-              className={`${base} ${reviews === "with comments" ? active : notActive
-                }`}
-            >
-              With Comments
-            </button>
+
           </div>
 
-          {/* Search + Calendar */}
+          {/* Search  */}
           <div className="flex gap-3 md:w-auto w-full flex-1">
             <div
               className="
@@ -326,44 +294,22 @@ const ProviderReviews = () => {
               <HiMagnifyingGlass size={20} className="text-muted" />
 
               <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 type="text"
                 placeholder="Search customer or service..."
                 className="w-full outline-none bg-transparent"
               />
             </div>
 
-            <label
-              className="
-    relative
-    w-12 h-12
-    rounded-xl
-    border border-slate-300
-    flex items-center justify-center
-    cursor-pointer
-    bg-white
-  "
-            >
-              <input
-                type="date"
-                className="
-      absolute
-      top-0 left-0
-      w-full h-full
-      opacity-0
-      cursor-pointer
-    "
-              />
-
-              <FaRegCalendarAlt size={18} className="text-muted" />
-            </label>
           </div>
         </div>
         <div className="border-t border-gray-200 mb-4"></div>
         <div className="p-2">
-          <div className=" flex flex-col gap-2">
-            {reviewsData.map((item) => (
+          {reviews.length > 0 ? <div className=" flex flex-col gap-2">
+            {reviews.map((rev) => (
               <div
-                key={item.id}
+                key={rev._id}
                 className="
         bg-white
         border border-slate-200
@@ -376,34 +322,33 @@ const ProviderReviews = () => {
 
                   {/* Left */}
                   <div className="flex items-start gap-3 lg:w-[260px] w-full">
-
-                    <img
-                      src={item.profile}
-                      alt={item.name}
-                      className="
-              w-16 h-16 min-w-16
+                    <div className="w-16 h-16 min-w-16
               rounded-full
-              object-cover
               border-4 border-white
               shadow-md
-              ring-2 ring-primary/10
-            "
-                    />
+              ring-2 ring-primary/10">
+                      <Avatar name={rev?.userId?.fullname} image={rev?.userId?.profileImage?.url} />
+                    </div>
+
 
                     <div>
                       <h1 className="text-lg font-semibold text-text">
-                        {item.name}
+                        {rev?.userId?.fullname}
                       </h1>
 
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         <p className="text-sm text-muted">
-                          {item.date}
+                          {new Date(rev?.createdAt).toLocaleDateString('en-IN', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: '2-digit'
+                          })}
                         </p>
 
                         <div className="w-1.5 h-1.5 rounded-full bg-muted"></div>
 
                         <p className="text-sm text-muted">
-                          {item.service}
+                          {rev?.serviceSnapshot?.categoryName}
                         </p>
                       </div>
                     </div>
@@ -416,70 +361,39 @@ const ProviderReviews = () => {
 
                       <div className="flex items-center gap-3 flex-wrap">
 
-                        <div className="flex text-yellow-500 gap-1">
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
+                        <div className="flex text-orange-500 gap-1">
+                          {
+                            [1, 2, 3, 4, 5].map((item) => (
+                              <FaStar key={item} className={`${item <= rev?.rating ? 'text-orange-500' : 'text-gray-300'}`} />
+                            ))
+                          }
+
                         </div>
 
                         <h1 className="text-lg font-bold text-text">
-                          {item.rating}
+                          {rev?.rating}
                         </h1>
                       </div>
 
                       <p className="text-sm text-muted leading-relaxed mt-2">
-                        {item.review}
+                        {rev?.comment}
                       </p>
                     </div>
 
-                    <img
-                      src={item.image}
-                      alt={item.service}
-                      className="
-              md:w-[140px]
-              w-full
-              h-[120px]
-              md:h-[80px]
-              rounded-xl
-              object-cover
-            "
-                    />
+                    {
+                      rev?.images && rev?.images?.map((img) => (
+                        <img
+                          src={img.fileId}
+                          alt={img.url}
+                          className=" md:w-[140px] w-full h-[120px]  md:h-[80px] rounded-xl object-cover" />
+                      ))
+                    }
                   </div>
 
-                  {/* Right */}
-                  <div
-                    className="
-            flex
-            
-            flex-row
-            items-center
-            justify-between
-            gap-3
-            lg:w-[160px]
-            w-full
-          "
-                  >
-                    <button
-                      className="
-              flex items-center gap-2
-              border border-blue-500
-              text-blue-500
-              hover:bg-blue-50
-              transition-all duration-300
-              rounded-xl
-              px-4 py-2
-              font-medium
-              cursor-pointer
-            "
-                    >
-                      <BiShare size={18} />
-                      Reply
-                    </button>
 
-                    <button
-                      className="
+
+                  <button
+                    className="
               w-10 h-10
               rounded-xl
               border border-slate-300
@@ -489,14 +403,14 @@ const ProviderReviews = () => {
               transition-all duration-300
               cursor-pointer
             "
-                    >
-                      <BsThreeDotsVertical size={18} />
-                    </button>
-                  </div>
+                  >
+                    <BsThreeDotsVertical size={18} />
+                  </button>
+
                 </div>
               </div>
             ))}
-          </div>
+          </div> : <div>Reviews Not Available</div>}
         </div>
       </div>
     </div>

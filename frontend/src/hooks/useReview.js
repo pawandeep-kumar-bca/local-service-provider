@@ -139,7 +139,7 @@ export const useGetProviderReviewSummary = ()=>{
     queryFn:getProviderReviewsSummary
   })
 }
-export const useGetProviderReviewForProvider = (params)=>{
+export const useGetProviderReviewForProvider = (params={})=>{
   return useQuery({
     queryKey:['provider-review-for-provider',params],
     queryFn:()=>getProviderReviewsForProvider(params)
