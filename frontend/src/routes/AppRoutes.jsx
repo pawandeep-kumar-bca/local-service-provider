@@ -12,7 +12,7 @@ import ProfileSettings from "../pages/user/ProfileSettings";
 
 // Provider
 import ProviderDashboard from "../pages/provider/ProviderDashboard";
-import EarningAnalyticPage from "../pages/provider/EarningAnalytics";
+import EarningAnalyticPage from "../pages/provider/EarningAnalytics/EarningAnalytics";
 import ServicesPage from "../pages/provider/ServicesPage";
 import ProviderProfileSettings from "../pages/provider/Settings";
 import AllBookings from "../pages/provider/AllBookings";
@@ -89,7 +89,7 @@ const AppRoutes = () => {
       <Route path="/" element={<HomeRedirect />} />
       <Route path="/login" element={<AuthLayout />} />
       <Route path="/register" element={<AuthLayout />} />
-      <Route path="/reset-password/:token" element={<ResetPasswordPage/>}/>
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       {/* 🔥 Common Layout for ALL */}
       <Route element={<MainLayout />}>
@@ -99,8 +99,8 @@ const AppRoutes = () => {
         <Route element={<PrivateRoute />}>
           {/* User */}
           <Route element={<RoleRoute allowedRoles={["user"]} />}>
-      
-          
+
+
             <Route path="/user/dashboard" element={<UserDashboard />}>
               <Route index element={<ProviderList />} />
             </Route>
