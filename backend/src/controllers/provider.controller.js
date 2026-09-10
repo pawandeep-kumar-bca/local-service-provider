@@ -2246,6 +2246,97 @@ async function scheduleBookings(req, res) {
     });
   }
 }
+
+//=====================================================
+// PROVIDER EARNING CONTROLLERS
+//=====================================================
+
+async function earningsSummary(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const startOfNextMonth = new Date();
+    startOfNextMonth.setMonth(startOfNextMonth.getMonth() + 1);
+    startOfNextMonth.setDate(1);
+    startOfNextMonth.setHours(0, 0, 0, 0);
+
+    const result = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId": providerId,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+
+          totalEarnings: {
+            $sum: {
+              $cond: [
+                { $eq: ["$bookingStatus", "completed"] },
+                "$pricing.providerPayout",
+                0,
+              ],
+            },
+          },
+
+          thisMonthEarnings: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    {
+                      $eq: ["$bookingStatus", "completed"],
+                    },
+                    {
+                      $gte: ["$completedAt", startOfMonth],
+                    },
+                    {
+                      $lt: ["$completedAt", startOfNextMonth],
+                    },
+                  ],
+                },
+                "$pricing.providerPayout",
+                0,
+              ],
+            },
+          },
+          pendingAmount: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$bookingStatus", "completed"] },
+                    { $eq: ["$paymentStatus", "pending"] },
+                  ],
+                },
+                "$pricing.providerPayout",
+                0,
+              ],
+            },
+          },
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Provider earning fetched successfully",
+      result,
+    });
+  } catch (err) {
+    console.error("Provider Earning Summary Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server Error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -2264,4 +2355,6 @@ module.exports = {
   setProviderAvailability,
   getProviderAvailability,
   scheduleBookings,
+
+  earningsSummary,
 };

@@ -44,9 +44,9 @@ router.get("/nearby", providerControllers.nearbySearchLocation);
 
 router.get("/recommended", providerControllers.recommendedProviders);
 
-//====================
+//==========================
 // PROVIDER DASHBOARD APIS
-//====================
+//==========================
 
 // GET /api/v1/providers/dashboard/overview
 router.get(
@@ -123,6 +123,16 @@ router.get(
   providerMiddleware,
   providerControllers.getProviderAvailability,
 );
+
+//================================
+// PROVIDER EARNING DASHBOARD APIS
+//================================
+
+
+// GET /provider/earnings/summary
+
+router.get('/earnings/summary',authMiddleware.tokenVerify,providerMiddleware,providerControllers.earningsSummary)
+
 router.put(
   "/upload-documents",
   authMiddleware.tokenVerify,
