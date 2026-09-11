@@ -187,6 +187,17 @@ router.get(
   providerMiddleware,
   providerControllers.withdrawalHistory,
 );
+
+// PATCH /api/provider/earnings/:bookingId/payment-received
+
+router.patch(
+  "/earnings/:bookingId/payment-received",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.markCashPaymentReceived,
+);
+
+
 router.put(
   "/upload-documents",
   authMiddleware.tokenVerify,

@@ -3362,6 +3362,104 @@ async function withdrawalHistory(req, res) {
     });
   }
 }
+
+async function markCashPaymentReceived(req, res) {
+  try {
+    const providerId = req.provider._id;
+    const { bookingId } = req.params;
+
+   
+    const booking = await bookingsModel.findOne({
+      bookingId,
+      "providerSnapshot.providerObjectId": providerId,
+    });
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    
+    if (booking.bookingStatus !== "completed") {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Payment can only be received after booking is completed",
+      });
+    }
+
+    
+
+    if (booking.paymentMethod !== "cod") {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This booking is not a cash payment",
+      });
+    }
+
+  
+
+    if (booking.paymentStatus === "success") {
+      return res.status(400).json({
+        success: false,
+        message: "Payment has already been received",
+      });
+    }
+
+    if (booking.paymentStatus === "refunded") {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Refunded booking payment cannot be received",
+      });
+    }
+
+  
+    booking.paymentStatus = "success";
+
+  
+
+    await booking.save();
+
+ 
+
+    return res.status(200).json({
+      success: true,
+
+      message:
+        "Cash payment marked as received successfully",
+
+      result: {
+        bookingId: booking.bookingId,
+
+        paymentMethod:
+          booking.paymentMethod,
+
+        paymentStatus:
+          booking.paymentStatus,
+
+        amount:
+          booking.pricing?.providerPayout || 0,
+
+        totalAmount:
+          booking.pricing?.totalAmount || 0,
+      },
+    });
+  } catch (err) {
+    console.error(
+      "Mark Cash Payment Received Error:",
+      err
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -3387,5 +3485,5 @@ module.exports = {
   paymentMethodStats,
   nextPayout,
   addBankAccount,
-  withdrawEarnings,withdrawalHistory
+  withdrawEarnings,withdrawalHistory,markCashPaymentReceived
 };
