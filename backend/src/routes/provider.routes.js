@@ -81,7 +81,6 @@ router.get(
   providerControllers.scheduleSummary,
 );
 
-
 router.get(
   "/schedule",
   authMiddleware.tokenVerify,
@@ -128,11 +127,21 @@ router.get(
 // PROVIDER EARNING DASHBOARD APIS
 //================================
 
-
 // GET /provider/earnings/summary
 
-router.get('/earnings/summary',authMiddleware.tokenVerify,providerMiddleware,providerControllers.earningsSummary)
-
+router.get(
+  "/earnings/summary",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.earningsSummary,
+);
+// GET /api/provider/earnings/overview
+router.get(
+  "/earnings/overview",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.earningsOverview,
+);
 router.put(
   "/upload-documents",
   authMiddleware.tokenVerify,

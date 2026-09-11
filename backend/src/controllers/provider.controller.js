@@ -2558,6 +2558,216 @@ async function earningsSummary(req, res) {
     });
   }
 }
+
+async function earningsOverview(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const { period = "month" } = req.query;
+
+    const allowedPeriods = ["week", "month", "year"];
+
+    if (!allowedPeriods.includes(period)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid period. Use week, month or year",
+      });
+    }
+
+    const now = new Date();
+
+    let currentStart;
+    let currentEnd;
+    let previousStart;
+    let previousEnd;
+    let groupFormat;
+
+   
+
+    if (period === "week") {
+      currentStart = new Date(now);
+
+      const day = currentStart.getDay();
+
+      // Monday as first day of week
+      const diff = day === 0 ? 6 : day - 1;
+
+      currentStart.setDate(
+        currentStart.getDate() - diff
+      );
+
+      currentStart.setHours(0, 0, 0, 0);
+
+      currentEnd = new Date(now);
+
+      previousStart = new Date(currentStart);
+      previousStart.setDate(
+        previousStart.getDate() - 7
+      );
+
+      previousEnd = new Date(currentStart);
+
+      groupFormat = "%Y-%m-%d";
+    }
+
+    
+
+    if (period === "month") {
+      currentStart = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+      );
+
+      currentStart.setHours(0, 0, 0, 0);
+
+      currentEnd = new Date(now);
+
+      previousStart = new Date(
+        now.getFullYear(),
+        now.getMonth() - 1,
+        1
+      );
+
+      previousStart.setHours(0, 0, 0, 0);
+
+      previousEnd = new Date(currentStart);
+
+      groupFormat = "%Y-%m-%d";
+    }
+
+
+    if (period === "year") {
+      currentStart = new Date(
+        now.getFullYear(),
+        0,
+        1
+      );
+
+      currentStart.setHours(0, 0, 0, 0);
+
+      currentEnd = new Date(now);
+
+      previousStart = new Date(
+        now.getFullYear() - 1,
+        0,
+        1
+      );
+
+      previousStart.setHours(0, 0, 0, 0);
+
+      previousEnd = new Date(
+        now.getFullYear(),
+        0,
+        1
+      );
+
+      groupFormat = "%Y-%m";
+    }
+
+   
+
+    const result = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId":
+            providerId,
+
+          bookingStatus: "completed",
+
+          completedAt: {
+            $gte: previousStart,
+            $lt: currentEnd,
+          },
+        },
+      },
+
+      {
+        $project: {
+          completedAt: 1,
+          providerPayout: {
+            $ifNull: [
+              "$pricing.providerPayout",
+              0,
+            ],
+          },
+        },
+      },
+
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: groupFormat,
+              date: "$completedAt",
+            },
+          },
+
+          amount: {
+            $sum: "$providerPayout",
+          },
+        },
+      },
+
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+
+    
+
+    const current = [];
+    const previous = [];
+
+    result.forEach((item) => {
+      const date = new Date(item._id);
+
+      if (
+        date >= currentStart &&
+        date < currentEnd
+      ) {
+        current.push({
+          date: item._id,
+          amount: item.amount,
+        });
+      } else if (
+        date >= previousStart &&
+        date < previousEnd
+      ) {
+        previous.push({
+          date: item._id,
+          amount: item.amount,
+        });
+      }
+    });
+
+  
+    return res.status(200).json({
+      success: true,
+      message:
+        "Provider earnings overview fetched successfully",
+
+      result: {
+        period,
+        current,
+        previous,
+      },
+    });
+  } catch (err) {
+    console.error(
+      "Provider Earnings Overview Error:",
+      err
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -2576,6 +2786,7 @@ module.exports = {
   setProviderAvailability,
   getProviderAvailability,
   scheduleBookings,
+  earningsOverview,
 
   earningsSummary,
 };
