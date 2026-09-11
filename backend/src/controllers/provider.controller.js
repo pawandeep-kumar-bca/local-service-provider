@@ -2829,6 +2829,110 @@ async function recentTransactions(req, res) {
     });
   }
 }
+async function paymentMethodStats(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const result = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId": providerId,
+
+          bookingStatus: "completed",
+
+          paymentStatus: "success",
+        },
+      },
+
+      {
+        $group: {
+          _id: "$paymentMethod",
+
+          amount: {
+            $sum: {
+              $ifNull: [
+                "$pricing.providerPayout",
+                0,
+              ],
+            },
+          },
+        },
+      },
+
+      {
+        $sort: {
+          amount: -1,
+        },
+      },
+    ]);
+
+    
+
+    const totalAmount = result.reduce(
+      (total, item) => total + item.amount,
+      0
+    );
+
+  
+
+    const paymentMethodLabels = {
+      upi: "UPI",
+      cod: "Cash",
+      card: "Card",
+      wallet: "Wallet",
+    };
+
+ 
+
+    const paymentMethods = result.map((item) => {
+      const percentage =
+        totalAmount > 0
+          ? Number(
+              (
+                (item.amount / totalAmount) *
+                100
+              ).toFixed(2)
+            )
+          : 0;
+
+      return {
+        label:
+          paymentMethodLabels[item._id] ||
+          item._id,
+
+        method: item._id,
+
+        percent: percentage,
+
+        amount: item.amount,
+      };
+    });
+
+  
+    return res.status(200).json({
+      success: true,
+
+      message:
+        "Payment method statistics fetched successfully",
+
+      result: {
+        totalAmount,
+
+        paymentMethods,
+      },
+    });
+  } catch (err) {
+    console.error(
+      "Payment Method Stats Error:",
+      err
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -2851,5 +2955,6 @@ module.exports = {
 
   earningsSummary,
   earningsOverview,
-  recentTransactions
+  recentTransactions,
+  paymentMethodStats
 };

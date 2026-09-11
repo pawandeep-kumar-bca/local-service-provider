@@ -150,6 +150,12 @@ router.get(
   providerMiddleware,
   providerControllers.recentTransactions,
 );
+router.get(
+  "/earnings/payment-methods",
+   authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.paymentMethodStats
+);
 router.put(
   "/upload-documents",
   authMiddleware.tokenVerify,
