@@ -142,6 +142,14 @@ router.get(
   providerMiddleware,
   providerControllers.earningsOverview,
 );
+
+// GET /api/provider/earnings/transactions
+router.get(
+  "/earnings/transactions",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.recentTransactions,
+);
 router.put(
   "/upload-documents",
   authMiddleware.tokenVerify,

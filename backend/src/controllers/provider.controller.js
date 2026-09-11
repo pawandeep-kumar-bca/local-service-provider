@@ -2582,8 +2582,6 @@ async function earningsOverview(req, res) {
     let previousEnd;
     let groupFormat;
 
-   
-
     if (period === "week") {
       currentStart = new Date(now);
 
@@ -2592,42 +2590,28 @@ async function earningsOverview(req, res) {
       // Monday as first day of week
       const diff = day === 0 ? 6 : day - 1;
 
-      currentStart.setDate(
-        currentStart.getDate() - diff
-      );
+      currentStart.setDate(currentStart.getDate() - diff);
 
       currentStart.setHours(0, 0, 0, 0);
 
       currentEnd = new Date(now);
 
       previousStart = new Date(currentStart);
-      previousStart.setDate(
-        previousStart.getDate() - 7
-      );
+      previousStart.setDate(previousStart.getDate() - 7);
 
       previousEnd = new Date(currentStart);
 
       groupFormat = "%Y-%m-%d";
     }
-
-    
 
     if (period === "month") {
-      currentStart = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        1
-      );
+      currentStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
       currentStart.setHours(0, 0, 0, 0);
 
       currentEnd = new Date(now);
 
-      previousStart = new Date(
-        now.getFullYear(),
-        now.getMonth() - 1,
-        1
-      );
+      previousStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
       previousStart.setHours(0, 0, 0, 0);
 
@@ -2636,42 +2620,26 @@ async function earningsOverview(req, res) {
       groupFormat = "%Y-%m-%d";
     }
 
-
     if (period === "year") {
-      currentStart = new Date(
-        now.getFullYear(),
-        0,
-        1
-      );
+      currentStart = new Date(now.getFullYear(), 0, 1);
 
       currentStart.setHours(0, 0, 0, 0);
 
       currentEnd = new Date(now);
 
-      previousStart = new Date(
-        now.getFullYear() - 1,
-        0,
-        1
-      );
+      previousStart = new Date(now.getFullYear() - 1, 0, 1);
 
       previousStart.setHours(0, 0, 0, 0);
 
-      previousEnd = new Date(
-        now.getFullYear(),
-        0,
-        1
-      );
+      previousEnd = new Date(now.getFullYear(), 0, 1);
 
       groupFormat = "%Y-%m";
     }
 
-   
-
     const result = await bookingsModel.aggregate([
       {
         $match: {
-          "providerSnapshot.providerObjectId":
-            providerId,
+          "providerSnapshot.providerObjectId": providerId,
 
           bookingStatus: "completed",
 
@@ -2686,10 +2654,7 @@ async function earningsOverview(req, res) {
         $project: {
           completedAt: 1,
           providerPayout: {
-            $ifNull: [
-              "$pricing.providerPayout",
-              0,
-            ],
+            $ifNull: ["$pricing.providerPayout", 0],
           },
         },
       },
@@ -2716,26 +2681,18 @@ async function earningsOverview(req, res) {
       },
     ]);
 
-    
-
     const current = [];
     const previous = [];
 
     result.forEach((item) => {
       const date = new Date(item._id);
 
-      if (
-        date >= currentStart &&
-        date < currentEnd
-      ) {
+      if (date >= currentStart && date < currentEnd) {
         current.push({
           date: item._id,
           amount: item.amount,
         });
-      } else if (
-        date >= previousStart &&
-        date < previousEnd
-      ) {
+      } else if (date >= previousStart && date < previousEnd) {
         previous.push({
           date: item._id,
           amount: item.amount,
@@ -2743,11 +2700,9 @@ async function earningsOverview(req, res) {
       }
     });
 
-  
     return res.status(200).json({
       success: true,
-      message:
-        "Provider earnings overview fetched successfully",
+      message: "Provider earnings overview fetched successfully",
 
       result: {
         period,
@@ -2756,10 +2711,7 @@ async function earningsOverview(req, res) {
       },
     });
   } catch (err) {
-    console.error(
-      "Provider Earnings Overview Error:",
-      err
-    );
+    console.error("Provider Earnings Overview Error:", err);
 
     return res.status(500).json({
       success: false,
@@ -2767,7 +2719,116 @@ async function earningsOverview(req, res) {
     });
   }
 }
+async function recentTransactions(req, res) {
+  try {
+    const providerId = req.provider._id;
 
+    let { page = 1, limit = 10 } = req.query;
+
+    page = Number(page);
+    limit = Number(limit);
+
+    if (!Number.isInteger(page) || page < 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid page number",
+      });
+    }
+
+    if (!Number.isInteger(limit) || limit < 1 || limit > 50) {
+      return res.status(400).json({
+        success: false,
+        message: "Limit must be between 1 and 50",
+      });
+    }
+
+    const skip = (page - 1) * limit;
+
+    const filter = {
+      "providerSnapshot.providerObjectId": providerId,
+    };
+
+    const [transactions, total] = await Promise.all([
+      bookingsModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .select({
+          bookingId: 1,
+          bookingDate: 1,
+          bookingStatus: 1,
+          paymentMethod: 1,
+          paymentStatus: 1,
+          pricing: 1,
+          serviceSnapshot: 1,
+          userSnapshot: 1,
+          completedAt: 1,
+          createdAt: 1,
+        })
+        .lean(),
+
+      bookingsModel.countDocuments(filter),
+    ]);
+
+    const formattedTransactions = transactions.map((booking) => ({
+      bookingId: booking.bookingId,
+
+      user: {
+        id: booking.userSnapshot?.userObjectId,
+        userId: booking.userSnapshot?.userId,
+        name: booking.userSnapshot?.name,
+        profileImage: booking.userSnapshot?.profileImage?.url || "",
+      },
+
+      service: {
+        name: booking.serviceSnapshot?.categoryName || "",
+        image: booking.serviceSnapshot?.serviceImage || "",
+      },
+
+      amount: booking.pricing?.providerPayout || 0,
+
+      paymentMethod: booking.paymentMethod,
+
+      paymentStatus: booking.paymentStatus,
+
+      bookingStatus: booking.bookingStatus,
+
+      bookingDate: booking.bookingDate,
+
+      completedAt: booking.completedAt,
+
+      createdAt: booking.createdAt,
+    }));
+
+    const totalPages = Math.ceil(total / limit);
+
+    return res.status(200).json({
+      success: true,
+      message: "Provider transactions fetched successfully",
+
+      result: {
+        transactions: formattedTransactions,
+
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1,
+        },
+      },
+    });
+  } catch (err) {
+    console.error("Provider Recent Transactions Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -2786,7 +2847,9 @@ module.exports = {
   setProviderAvailability,
   getProviderAvailability,
   scheduleBookings,
-  earningsOverview,
+  
 
   earningsSummary,
+  earningsOverview,
+  recentTransactions
 };
