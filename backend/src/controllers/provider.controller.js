@@ -2850,10 +2850,7 @@ async function paymentMethodStats(req, res) {
 
           amount: {
             $sum: {
-              $ifNull: [
-                "$pricing.providerPayout",
-                0,
-              ],
+              $ifNull: ["$pricing.providerPayout", 0],
             },
           },
         },
@@ -2866,14 +2863,7 @@ async function paymentMethodStats(req, res) {
       },
     ]);
 
-    
-
-    const totalAmount = result.reduce(
-      (total, item) => total + item.amount,
-      0
-    );
-
-  
+    const totalAmount = result.reduce((total, item) => total + item.amount, 0);
 
     const paymentMethodLabels = {
       upi: "UPI",
@@ -2882,23 +2872,14 @@ async function paymentMethodStats(req, res) {
       wallet: "Wallet",
     };
 
- 
-
     const paymentMethods = result.map((item) => {
       const percentage =
         totalAmount > 0
-          ? Number(
-              (
-                (item.amount / totalAmount) *
-                100
-              ).toFixed(2)
-            )
+          ? Number(((item.amount / totalAmount) * 100).toFixed(2))
           : 0;
 
       return {
-        label:
-          paymentMethodLabels[item._id] ||
-          item._id,
+        label: paymentMethodLabels[item._id] || item._id,
 
         method: item._id,
 
@@ -2908,12 +2889,10 @@ async function paymentMethodStats(req, res) {
       };
     });
 
-  
     return res.status(200).json({
       success: true,
 
-      message:
-        "Payment method statistics fetched successfully",
+      message: "Payment method statistics fetched successfully",
 
       result: {
         totalAmount,
@@ -2922,10 +2901,121 @@ async function paymentMethodStats(req, res) {
       },
     });
   } catch (err) {
-    console.error(
-      "Payment Method Stats Error:",
-      err
+    console.error("Payment Method Stats Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
+async function nextPayout(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const now = new Date();
+
+    let payoutDate = new Date(now.getFullYear(), now.getMonth(), 25);
+
+    if (now >= payoutDate) {
+      payoutDate = new Date(now.getFullYear(), now.getMonth() + 1, 25);
+    }
+
+    payoutDate.setHours(0, 0, 0, 0);
+
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    endOfMonth.setHours(0, 0, 0, 0);
+
+    const result = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId": providerId,
+
+          bookingStatus: "completed",
+
+          paymentStatus: "success",
+
+          completedAt: {
+            $gte: startOfMonth,
+            $lt: endOfMonth,
+          },
+        },
+      },
+
+      {
+        $group: {
+          _id: null,
+
+          amount: {
+            $sum: {
+              $ifNull: ["$pricing.providerPayout", 0],
+            },
+          },
+        },
+      },
+    ]);
+
+    const estimatedAmount = result[0]?.amount || 0;
+
+    const lastPayoutDate = new Date(
+      payoutDate.getFullYear(),
+      payoutDate.getMonth() - 1,
+      25,
     );
+
+    lastPayoutDate.setHours(0, 0, 0, 0);
+
+    const totalDuration = payoutDate.getTime() - lastPayoutDate.getTime();
+
+    const elapsedDuration = now.getTime() - lastPayoutDate.getTime();
+
+    let progress = (elapsedDuration / totalDuration) * 100;
+
+    progress = Math.min(Math.max(progress, 0), 100);
+
+    progress = Number(progress.toFixed(0));
+
+    const steps = [
+      {
+        key: "request",
+        label: "Request",
+        completed: true,
+      },
+      {
+        key: "processing",
+        label: "Processing",
+        completed: true,
+      },
+      {
+        key: "payout",
+        label: "Payout",
+        completed: false,
+      },
+    ];
+
+    return res.status(200).json({
+      success: true,
+
+      message: "Next payout details fetched successfully",
+
+      result: {
+        payoutDate,
+
+        estimatedAmount,
+
+        progress,
+
+        steps,
+      },
+    });
+  } catch (err) {
+    console.error("Next Payout Error:", err);
 
     return res.status(500).json({
       success: false,
@@ -2951,10 +3041,10 @@ module.exports = {
   setProviderAvailability,
   getProviderAvailability,
   scheduleBookings,
-  
 
   earningsSummary,
   earningsOverview,
   recentTransactions,
-  paymentMethodStats
+  paymentMethodStats,
+  nextPayout,
 };

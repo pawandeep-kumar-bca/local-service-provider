@@ -150,12 +150,22 @@ router.get(
   providerMiddleware,
   providerControllers.recentTransactions,
 );
+// GET /api/provider/earnings/payment-methods
 router.get(
   "/earnings/payment-methods",
    authMiddleware.tokenVerify,
   providerMiddleware,
   providerControllers.paymentMethodStats
 );
+
+// GET /api/provider/earnings/next-payout
+router.get(
+  "/earnings/next-payout",
+   authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.nextPayout
+);
+
 router.put(
   "/upload-documents",
   authMiddleware.tokenVerify,
