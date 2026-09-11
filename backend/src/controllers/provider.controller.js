@@ -3029,20 +3029,9 @@ async function addBankAccount(req, res) {
   try {
     const providerId = req.provider._id;
 
-    const {
-      accountHolderName,
-      accountNumber,
-      ifscCode,
-      bankName,
-    } = req.body;
+    const { accountHolderName, accountNumber, ifscCode, bankName } = req.body;
 
-   
-
-    if (
-      !accountHolderName ||
-      !accountNumber ||
-      !ifscCode
-    ) {
+    if (!accountHolderName || !accountNumber || !ifscCode) {
       return res.status(400).json({
         success: false,
         message:
@@ -3050,13 +3039,10 @@ async function addBankAccount(req, res) {
       });
     }
 
-    
-
-    const existingAccount =
-      await bankAccountModel.findOne({
-        providerId,
-        accountNumber,
-      });
+    const existingAccount = await bankAccountModel.findOne({
+      providerId,
+      accountNumber,
+    });
 
     if (existingAccount) {
       return res.status(409).json({
@@ -3065,39 +3051,26 @@ async function addBankAccount(req, res) {
       });
     }
 
-   
+    const primaryAccount = await bankAccountModel.findOne({
+      providerId,
+      isPrimary: true,
+    });
 
-    const primaryAccount =
-      await bankAccountModel.findOne({
-        providerId,
-        isPrimary: true,
-      });
+    const bankAccount = await bankAccountModel.create({
+      providerId,
 
-   
+      accountHolderName: accountHolderName.trim(),
 
-    const bankAccount =
-      await bankAccountModel.create({
-        providerId,
+      accountNumber: accountNumber.trim(),
 
-        accountHolderName:
-          accountHolderName.trim(),
+      ifscCode: ifscCode.trim().toUpperCase(),
 
-        accountNumber:
-          accountNumber.trim(),
+      bankName: bankName?.trim() || "",
 
-        ifscCode:
-          ifscCode.trim().toUpperCase(),
+      isVerified: false,
 
-        bankName:
-          bankName?.trim() || "",
-
-        isVerified: false,
-
-        isPrimary: primaryAccount
-          ? false
-          : true,
-      });
-
+      isPrimary: primaryAccount ? false : true,
+    });
 
     return res.status(201).json({
       success: true,
@@ -3106,30 +3079,21 @@ async function addBankAccount(req, res) {
       result: {
         _id: bankAccount._id,
 
-        accountHolderName:
-          bankAccount.accountHolderName,
+        accountHolderName: bankAccount.accountHolderName,
 
-        bankName:
-          bankAccount.bankName,
+        bankName: bankAccount.bankName,
 
-        accountNumber:
-          `XXXXXX${bankAccount.accountNumber.slice(-4)}`,
+        accountNumber: `XXXXXX${bankAccount.accountNumber.slice(-4)}`,
 
-        ifscCode:
-          bankAccount.ifscCode,
+        ifscCode: bankAccount.ifscCode,
 
-        isVerified:
-          bankAccount.isVerified,
+        isVerified: bankAccount.isVerified,
 
-        isPrimary:
-          bankAccount.isPrimary,
+        isPrimary: bankAccount.isPrimary,
       },
     });
   } catch (err) {
-    console.error(
-      "Add Bank Account Error:",
-      err
-    );
+    console.error("Add Bank Account Error:", err);
 
     return res.status(500).json({
       success: false,
@@ -3144,8 +3108,6 @@ async function withdrawEarnings(req, res) {
 
     const { amount } = req.body;
 
-   
-
     const withdrawalAmount = Number(amount);
 
     if (
@@ -3158,8 +3120,6 @@ async function withdrawEarnings(req, res) {
         message: "Please enter a valid withdrawal amount",
       });
     }
-
-   
 
     const bankAccount = await bankAccountModel.findOne({
       providerId,
@@ -3175,78 +3135,59 @@ async function withdrawEarnings(req, res) {
       });
     }
 
- 
-    const earningsResult =
-      await bookingsModel.aggregate([
-        {
-          $match: {
-            "providerSnapshot.providerObjectId":
-              providerId,
+    const earningsResult = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId": providerId,
 
-            bookingStatus: "completed",
+          bookingStatus: "completed",
 
-            paymentStatus: "success",
-          },
+          paymentStatus: "success",
         },
+      },
 
-        {
-          $group: {
-            _id: null,
+      {
+        $group: {
+          _id: null,
 
-            totalPaidEarnings: {
-              $sum: {
-                $ifNull: [
-                  "$pricing.providerPayout",
-                  0,
-                ],
-              },
+          totalPaidEarnings: {
+            $sum: {
+              $ifNull: ["$pricing.providerPayout", 0],
             },
           },
         },
-      ]);
+      },
+    ]);
 
-    const totalPaidEarnings =
-      earningsResult[0]?.totalPaidEarnings || 0;
+    const totalPaidEarnings = earningsResult[0]?.totalPaidEarnings || 0;
 
-  
+    const withdrawalResult = await withdrawalModel.aggregate([
+      {
+        $match: {
+          providerId,
 
-    const withdrawalResult =
-      await withdrawalModel.aggregate([
-        {
-          $match: {
-            providerId,
+          status: {
+            $in: ["pending", "processing", "completed"],
+          },
+        },
+      },
 
-            status: {
-              $in: [
-                "pending",
-                "processing",
-                "completed",
-              ],
+      {
+        $group: {
+          _id: null,
+
+          totalWithdrawn: {
+            $sum: {
+              $ifNull: ["$amount", 0],
             },
           },
         },
+      },
+    ]);
 
-        {
-          $group: {
-            _id: null,
+    const totalWithdrawn = withdrawalResult[0]?.totalWithdrawn || 0;
 
-            totalWithdrawn: {
-              $sum: {
-                $ifNull: ["$amount", 0],
-              },
-            },
-          },
-        },
-      ]);
-
-    const totalWithdrawn =
-      withdrawalResult[0]?.totalWithdrawn || 0;
-
-    
-    const availableBalance =
-      totalPaidEarnings - totalWithdrawn;
-
-   
+    const availableBalance = totalPaidEarnings - totalWithdrawn;
 
     if (withdrawalAmount > availableBalance) {
       return res.status(400).json({
@@ -3259,31 +3200,24 @@ async function withdrawEarnings(req, res) {
       });
     }
 
-   
-    const withdrawal =
-      await withdrawalModel.create({
-        providerId,
+    const withdrawal = await withdrawalModel.create({
+      providerId,
 
-        bankAccountId:
-          bankAccount._id,
+      bankAccountId: bankAccount._id,
 
-        amount: withdrawalAmount,
+      amount: withdrawalAmount,
 
-        status: "pending",
+      status: "pending",
 
-        requestedAt: new Date(),
-      });
+      requestedAt: new Date(),
+    });
 
-    const remainingBalance =
-      availableBalance - withdrawalAmount;
-
-   
+    const remainingBalance = availableBalance - withdrawalAmount;
 
     return res.status(201).json({
       success: true,
 
-      message:
-        "Withdrawal request submitted successfully",
+      message: "Withdrawal request submitted successfully",
 
       result: {
         withdrawalId: withdrawal._id,
@@ -3293,28 +3227,134 @@ async function withdrawEarnings(req, res) {
         status: withdrawal.status,
 
         bankAccount: {
-          bankName:
-            bankAccount.bankName,
+          bankName: bankAccount.bankName,
 
-          accountNumber:
-            `XXXXXX${bankAccount.accountNumber.slice(-4)}`,
+          accountNumber: `XXXXXX${bankAccount.accountNumber.slice(-4)}`,
 
-          ifscCode:
-            bankAccount.ifscCode,
+          ifscCode: bankAccount.ifscCode,
         },
 
-        availableBalance:
-          remainingBalance,
+        availableBalance: remainingBalance,
 
-        requestedAt:
-          withdrawal.requestedAt,
+        requestedAt: withdrawal.requestedAt,
       },
     });
   } catch (err) {
-    console.error(
-      "Provider Withdrawal Error:",
-      err
-    );
+    console.error("Provider Withdrawal Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+async function withdrawalHistory(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    let { page = 1, limit = 10, status } = req.query;
+
+    page = Number(page);
+    limit = Number(limit);
+
+    if (!Number.isInteger(page) || page < 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid page number",
+      });
+    }
+
+    if (!Number.isInteger(limit) || limit < 1 || limit > 50) {
+      return res.status(400).json({
+        success: false,
+        message: "Limit must be between 1 and 50",
+      });
+    }
+
+    const allowedStatuses = ["pending", "processing", "competed", "failed"];
+
+    if (status && !allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid withdrawal status",
+      });
+    }
+
+    const filter = {
+      providerId,
+    };
+
+    if (status) {
+      filter.status = status;
+    }
+
+    const skip = (page - 1) * limit;
+
+    const [withdrawals, total] = await Promise.all([
+      withdrawalModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate({
+          path: "bankAccountId",
+          select: "bankName accountHolderName accountNumber ifscCode",
+        })
+        .lean(),
+
+      withdrawalModel.countDocuments(filter),
+    ]);
+
+    const formattedWithdrawals = withdrawals.map((withdrawal) => ({
+      withdrawalId: withdrawal._id,
+
+      amount: withdrawal.amount,
+
+      status: withdrawal.status,
+
+      requestedAt: withdrawal.requestedAt,
+
+      processedAt: withdrawal.processedAt || null,
+
+      failureReason: withdrawal.failureReason || null,
+
+      bankAccount: withdrawal.bankAccountId
+        ? {
+            bankName: withdrawal.bankAccountId.bankName,
+
+            accountHolderName: withdrawal.bankAccountId.accountHolderName,
+
+            accountNumber: `XXXXXX${withdrawal.bankAccountId.accountNumber.slice(-4)}`,
+
+            ifscCode: withdrawal.bankAccountId.ifscCode,
+          }
+        : null,
+    }));
+
+    const totalPages = Math.ceil(total / limit);
+
+    return res.status(200).json({
+      success: true,
+
+      message: "Withdrawal history fetched successfully",
+
+      result: {
+        withdrawals: formattedWithdrawals,
+
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages,
+
+          hasNextPage: page < totalPages,
+
+          hasPreviousPage: page > 1,
+        },
+      },
+    });
+  } catch (err) {
+    console.error("Withdrawal History Error:", err);
 
     return res.status(500).json({
       success: false,
@@ -3345,5 +3385,7 @@ module.exports = {
   earningsOverview,
   recentTransactions,
   paymentMethodStats,
-  nextPayout,addBankAccount,withdrawEarnings
+  nextPayout,
+  addBankAccount,
+  withdrawEarnings,withdrawalHistory
 };

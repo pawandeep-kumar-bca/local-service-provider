@@ -153,32 +153,39 @@ router.get(
 // GET /api/provider/earnings/payment-methods
 router.get(
   "/earnings/payment-methods",
-   authMiddleware.tokenVerify,
+  authMiddleware.tokenVerify,
   providerMiddleware,
-  providerControllers.paymentMethodStats
+  providerControllers.paymentMethodStats,
 );
 
 // GET /api/provider/earnings/next-payout
 router.get(
   "/earnings/next-payout",
-   authMiddleware.tokenVerify,
+  authMiddleware.tokenVerify,
   providerMiddleware,
-  providerControllers.nextPayout
+  providerControllers.nextPayout,
 );
 // POST /api/provider/bank-account
 router.post(
   "/bank-account",
-   authMiddleware.tokenVerify,
+  authMiddleware.tokenVerify,
   providerMiddleware,
-  providerControllers.addBankAccount
+  providerControllers.addBankAccount,
 );
 
 // POST /api/provider/earnings/withdraw
 router.post(
   "/earnings/withdraw",
-   authMiddleware.tokenVerify,
+  authMiddleware.tokenVerify,
   providerMiddleware,
-  providerControllers.withdrawEarnings
+  providerControllers.withdrawEarnings,
+);
+
+router.get(
+  "/earnings/withdrawals",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.withdrawalHistory,
 );
 router.put(
   "/upload-documents",
