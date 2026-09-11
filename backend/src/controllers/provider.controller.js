@@ -2255,307 +2255,354 @@ async function scheduleBookings(req, res) {
 
 async function earningsSummary(req, res) {
   try {
-    const providerId = req.provider._id;
+    const providerId = new mongoose.Types.ObjectId(req.provider._id);
 
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
+    const now = new Date();
 
-    const startOfNextMonth = new Date(startOfMonth);
-    startOfNextMonth.setMonth(startOfNextMonth.getMonth() + 1);
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const startOfLastMonth = new Date(startOfMonth);
-    startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1);
+    const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
-    const bookingResult = await bookingsModel.aggregate([
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+    const earningsResult = await bookingsModel.aggregate([
       {
         $match: {
           "providerSnapshot.providerObjectId": providerId,
+          bookingStatus: "completed",
         },
       },
 
       {
-        $facet: {
-          totalEarnings: [
-            {
-              $match: {
-                bookingStatus: "completed",
-              },
-            },
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$pricing.providerPayout", 0],
-                  },
-                },
-              },
-            },
-          ],
+        $group: {
+          _id: null,
 
-          thisMonthEarnings: [
-            {
-              $match: {
-                bookingStatus: "completed",
-                completedAt: {
-                  $gte: startOfMonth,
-                  $lt: startOfNextMonth,
-                },
-              },
-            },
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$pricing.providerPayout", 0],
-                  },
-                },
-              },
-            },
-          ],
+          totalEarnings: {
+            $sum: "$pricing.providerPayout",
+          },
 
-          lastMonthEarnings: [
-            {
-              $match: {
-                bookingStatus: "completed",
-                completedAt: {
-                  $gte: startOfLastMonth,
-                  $lt: startOfMonth,
+          thisMonthEarnings: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gte: ["$completedAt", startOfMonth] },
+                    { $lt: ["$completedAt", startOfNextMonth] },
+                  ],
                 },
-              },
+                "$pricing.providerPayout",
+                0,
+              ],
             },
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$pricing.providerPayout", 0],
-                  },
-                },
-              },
-            },
-          ],
+          },
 
-          pendingAmount: [
-            {
-              $match: {
-                bookingStatus: "completed",
-                paymentStatus: "pending",
-              },
-            },
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$pricing.providerPayout", 0],
-                  },
+          lastMonthEarnings: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gte: ["$completedAt", startOfLastMonth] },
+                    { $lt: ["$completedAt", startOfMonth] },
+                  ],
                 },
-              },
+                "$pricing.providerPayout",
+                0,
+              ],
             },
-          ],
+          },
 
-          thisMonthPending: [
-            {
-              $match: {
-                bookingStatus: "completed",
-                paymentStatus: "pending",
-                completedAt: {
-                  $gte: startOfMonth,
-                  $lt: startOfNextMonth,
+          thisMonthPending: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$paymentStatus", "pending"] },
+                    { $gte: ["$completedAt", startOfMonth] },
+                    { $lt: ["$completedAt", startOfNextMonth] },
+                  ],
                 },
-              },
+                "$pricing.providerPayout",
+                0,
+              ],
             },
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$pricing.providerPayout", 0],
-                  },
-                },
-              },
-            },
-          ],
+          },
 
-          lastMonthPending: [
-            {
-              $match: {
-                bookingStatus: "completed",
-                paymentStatus: "pending",
-                completedAt: {
-                  $gte: startOfLastMonth,
-                  $lt: startOfMonth,
+          lastMonthPending: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$paymentStatus", "pending"] },
+                    { $gte: ["$completedAt", startOfLastMonth] },
+                    { $lt: ["$completedAt", startOfMonth] },
+                  ],
                 },
-              },
+                "$pricing.providerPayout",
+                0,
+              ],
             },
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$pricing.providerPayout", 0],
-                  },
-                },
-              },
-            },
-          ],
+          },
         },
       },
     ]);
 
-    const bookingData = bookingResult[0];
-
-    const totalEarnings = bookingData.totalEarnings[0]?.amount || 0;
-
-    const thisMonthEarnings = bookingData.thisMonthEarnings[0]?.amount || 0;
-
-    const lastMonthEarnings = bookingData.lastMonthEarnings[0]?.amount || 0;
-
-    const pendingAmount = bookingData.pendingAmount[0]?.amount || 0;
-
-    const thisMonthPending = bookingData.thisMonthPending[0]?.amount || 0;
-
-    const lastMonthPending = bookingData.lastMonthPending[0]?.amount || 0;
+    const earnings = earningsResult[0] || {
+      totalEarnings: 0,
+      thisMonthEarnings: 0,
+      lastMonthEarnings: 0,
+      thisMonthPending: 0,
+      lastMonthPending: 0,
+    };
 
     const withdrawalResult = await withdrawalModel.aggregate([
       {
         $match: {
-          providerId: providerId,
+          providerId,
           status: "COMPLETED",
         },
       },
 
       {
-        $facet: {
-          totalWithdrawn: [
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$amount", 0],
-                  },
-                },
-              },
-            },
-          ],
+        $group: {
+          _id: null,
 
-          thisMonthWithdrawn: [
-            {
-              $match: {
-                createdAt: {
-                  $gte: startOfMonth,
-                  $lt: startOfNextMonth,
-                },
-              },
-            },
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$amount", 0],
-                  },
-                },
-              },
-            },
-          ],
+          withdrawnAmount: {
+            $sum: "$amount",
+          },
 
-          lastMonthWithdrawn: [
-            {
-              $match: {
-                createdAt: {
-                  $gte: startOfLastMonth,
-                  $lt: startOfMonth,
+          thisMonthWithdrawn: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gte: ["$processedAt", startOfMonth] },
+                    { $lt: ["$processedAt", startOfNextMonth] },
+                  ],
                 },
-              },
+                "$amount",
+                0,
+              ],
             },
-            {
-              $group: {
-                _id: null,
-                amount: {
-                  $sum: {
-                    $ifNull: ["$amount", 0],
-                  },
+          },
+
+          lastMonthWithdrawn: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gte: ["$processedAt", startOfLastMonth] },
+                    { $lt: ["$processedAt", startOfMonth] },
+                  ],
                 },
-              },
+                "$amount",
+                0,
+              ],
             },
-          ],
+          },
         },
       },
     ]);
 
-    const withdrawalData = withdrawalResult[0];
-
-    const withdrawnAmount = withdrawalData.totalWithdrawn[0]?.amount || 0;
-
-    const thisMonthWithdrawn =
-      withdrawalData.thisMonthWithdrawn[0]?.amount || 0;
-
-    const lastMonthWithdrawn =
-      withdrawalData.lastMonthWithdrawn[0]?.amount || 0;
-
-    const calculateGrowth = (currentAmount, previousAmount) => {
-      if (previousAmount === 0) {
-        if (currentAmount === 0) {
-          return 0;
-        }
-
-        return 100;
-      }
-
-      return Number(
-        (((currentAmount - previousAmount) / previousAmount) * 100).toFixed(2),
-      );
+    const withdrawals = withdrawalResult[0] || {
+      withdrawnAmount: 0,
+      thisMonthWithdrawn: 0,
+      lastMonthWithdrawn: 0,
     };
 
+    const calculateGrowth = (current, previous) => {
+      if (previous === 0) {
+        return current > 0 ? 100 : 0;
+      }
+
+      return Number((((current - previous) / previous) * 100).toFixed(1));
+    };
+
+    const chartStartDate = new Date(now);
+
+    chartStartDate.setHours(0, 0, 0, 0);
+    chartStartDate.setDate(chartStartDate.getDate() - 5);
+
+    const chartEndDate = new Date(now);
+
+    chartEndDate.setHours(23, 59, 59, 999);
+
+    const earningsChartResult = await bookingsModel.aggregate([
+      {
+        $match: {
+          "providerSnapshot.providerObjectId": providerId,
+
+          bookingStatus: "completed",
+
+          completedAt: {
+            $gte: chartStartDate,
+            $lte: chartEndDate,
+          },
+        },
+      },
+
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$completedAt",
+            },
+          },
+
+          totalEarnings: {
+            $sum: "$pricing.providerPayout",
+          },
+
+          pendingAmount: {
+            $sum: {
+              $cond: [
+                {
+                  $eq: ["$paymentStatus", "pending"],
+                },
+                "$pricing.providerPayout",
+                0,
+              ],
+            },
+          },
+        },
+      },
+
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+
+    const withdrawalChartResult = await withdrawalModel.aggregate([
+      {
+        $match: {
+          providerId,
+
+          status: "COMPLETED",
+
+          processedAt: {
+            $gte: chartStartDate,
+            $lte: chartEndDate,
+          },
+        },
+      },
+
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$processedAt",
+            },
+          },
+
+          amount: {
+            $sum: "$amount",
+          },
+        },
+      },
+
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+
+    const totalEarningsChart = [];
+    const thisMonthEarningsChart = [];
+    const pendingAmountChart = [];
+    const withdrawnAmountChart = [];
+
+    for (let i = 0; i < 6; i++) {
+      const date = new Date(chartStartDate);
+
+      date.setDate(chartStartDate.getDate() + i);
+
+      const dateKey = date.toISOString().split("T")[0];
+
+      const earningDay = earningsChartResult.find(
+        (item) => item._id === dateKey,
+      );
+
+      const withdrawalDay = withdrawalChartResult.find(
+        (item) => item._id === dateKey,
+      );
+
+      const earningAmount = earningDay?.totalEarnings || 0;
+
+      const pendingAmount = earningDay?.pendingAmount || 0;
+
+      const withdrawnAmount = withdrawalDay?.amount || 0;
+
+      totalEarningsChart.push(earningAmount);
+
+      thisMonthEarningsChart.push(earningAmount);
+
+      pendingAmountChart.push(pendingAmount);
+
+      withdrawnAmountChart.push(withdrawnAmount);
+    }
+
+    const totalEarningsGrowth = calculateGrowth(
+      earnings.thisMonthEarnings,
+      earnings.lastMonthEarnings,
+    );
+
     const thisMonthGrowth = calculateGrowth(
-      thisMonthEarnings,
-      lastMonthEarnings,
+      earnings.thisMonthEarnings,
+      earnings.lastMonthEarnings,
     );
 
     const pendingAmountGrowth = calculateGrowth(
-      thisMonthPending,
-      lastMonthPending,
+      earnings.thisMonthPending,
+      earnings.lastMonthPending,
     );
 
     const withdrawnAmountGrowth = calculateGrowth(
-      thisMonthWithdrawn,
-      lastMonthWithdrawn,
-    );
-
-    const totalEarningsGrowth = calculateGrowth(
-      thisMonthEarnings,
-      lastMonthEarnings,
+      withdrawals.thisMonthWithdrawn,
+      withdrawals.lastMonthWithdrawn,
     );
 
     return res.status(200).json({
       success: true,
-      message: "Provider earnings fetched successfully",
 
-      result: {
-        totalEarnings,
+      message: "Earnings summary fetched successfully",
+
+      data: {
+        totalEarnings: earnings.totalEarnings,
+
         totalEarningsGrowth,
 
-        thisMonthEarnings,
+        thisMonthEarnings: earnings.thisMonthEarnings,
+
         thisMonthGrowth,
 
-        pendingAmount,
+        pendingAmount: earnings.thisMonthPending,
+
         pendingAmountGrowth,
 
-        withdrawnAmount,
+        withdrawnAmount: withdrawals.withdrawnAmount,
+
         withdrawnAmountGrowth,
+
+        totalEarningsChart,
+
+        thisMonthEarningsChart,
+
+        pendingAmountChart,
+
+        withdrawnAmountChart,
       },
     });
-  } catch (err) {
-    console.error("Provider Earning Summary Error:", err);
+  } catch (error) {
+    console.error("Earnings Summary Error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Failed to fetch earnings summary",
+      error: error.message,
     });
   }
 }
@@ -3368,7 +3415,6 @@ async function markCashPaymentReceived(req, res) {
     const providerId = req.provider._id;
     const { bookingId } = req.params;
 
-   
     const booking = await bookingsModel.findOne({
       bookingId,
       "providerSnapshot.providerObjectId": providerId,
@@ -3381,26 +3427,19 @@ async function markCashPaymentReceived(req, res) {
       });
     }
 
-    
     if (booking.bookingStatus !== "completed") {
       return res.status(400).json({
         success: false,
-        message:
-          "Payment can only be received after booking is completed",
+        message: "Payment can only be received after booking is completed",
       });
     }
-
-    
 
     if (booking.paymentMethod !== "cod") {
       return res.status(400).json({
         success: false,
-        message:
-          "This booking is not a cash payment",
+        message: "This booking is not a cash payment",
       });
     }
-
-  
 
     if (booking.paymentStatus === "success") {
       return res.status(400).json({
@@ -3412,47 +3451,33 @@ async function markCashPaymentReceived(req, res) {
     if (booking.paymentStatus === "refunded") {
       return res.status(400).json({
         success: false,
-        message:
-          "Refunded booking payment cannot be received",
+        message: "Refunded booking payment cannot be received",
       });
     }
 
-  
     booking.paymentStatus = "success";
 
-  
-
     await booking.save();
-
- 
 
     return res.status(200).json({
       success: true,
 
-      message:
-        "Cash payment marked as received successfully",
+      message: "Cash payment marked as received successfully",
 
       result: {
         bookingId: booking.bookingId,
 
-        paymentMethod:
-          booking.paymentMethod,
+        paymentMethod: booking.paymentMethod,
 
-        paymentStatus:
-          booking.paymentStatus,
+        paymentStatus: booking.paymentStatus,
 
-        amount:
-          booking.pricing?.providerPayout || 0,
+        amount: booking.pricing?.providerPayout || 0,
 
-        totalAmount:
-          booking.pricing?.totalAmount || 0,
+        totalAmount: booking.pricing?.totalAmount || 0,
       },
     });
   } catch (err) {
-    console.error(
-      "Mark Cash Payment Received Error:",
-      err
-    );
+    console.error("Mark Cash Payment Received Error:", err);
 
     return res.status(500).json({
       success: false,
@@ -3485,5 +3510,7 @@ module.exports = {
   paymentMethodStats,
   nextPayout,
   addBankAccount,
-  withdrawEarnings,withdrawalHistory,markCashPaymentReceived
+  withdrawEarnings,
+  withdrawalHistory,
+  markCashPaymentReceived,
 };
