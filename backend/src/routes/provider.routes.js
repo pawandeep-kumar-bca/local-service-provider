@@ -165,7 +165,13 @@ router.get(
   providerMiddleware,
   providerControllers.nextPayout
 );
-
+// POST /api/provider/bank-account
+router.get(
+  "/bank-account",
+   authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.addBankAccount
+);
 router.put(
   "/upload-documents",
   authMiddleware.tokenVerify,

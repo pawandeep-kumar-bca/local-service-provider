@@ -31,6 +31,7 @@ const {
 const { getFacetResult } = require("../utils/providerResponse.js");
 const bookingsModel = require("../models/booking.model.js");
 const withdrawalModel = require("../models/withdrawal.model.js");
+const bankAccountModel = require("../models/bankAccount.model.js");
 const { promises } = require("nodemailer/lib/xoauth2/index.js");
 async function providerProfileCreate(req, res) {
   try {
@@ -3023,6 +3024,119 @@ async function nextPayout(req, res) {
     });
   }
 }
+
+async function addBankAccount(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const {
+      accountHolderName,
+      accountNumber,
+      ifscCode,
+      bankName,
+    } = req.body;
+
+   
+
+    if (
+      !accountHolderName ||
+      !accountNumber ||
+      !ifscCode
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Account holder name, account number and IFSC code are required",
+      });
+    }
+
+    
+
+    const existingAccount =
+      await bankAccountModel.findOne({
+        providerId,
+        accountNumber,
+      });
+
+    if (existingAccount) {
+      return res.status(409).json({
+        success: false,
+        message: "This bank account is already added",
+      });
+    }
+
+   
+
+    const primaryAccount =
+      await bankAccountModel.findOne({
+        providerId,
+        isPrimary: true,
+      });
+
+   
+
+    const bankAccount =
+      await bankAccountModel.create({
+        providerId,
+
+        accountHolderName:
+          accountHolderName.trim(),
+
+        accountNumber:
+          accountNumber.trim(),
+
+        ifscCode:
+          ifscCode.trim().toUpperCase(),
+
+        bankName:
+          bankName?.trim() || "",
+
+        isVerified: false,
+
+        isPrimary: primaryAccount
+          ? false
+          : true,
+      });
+
+
+    return res.status(201).json({
+      success: true,
+      message: "Bank account added successfully",
+
+      result: {
+        _id: bankAccount._id,
+
+        accountHolderName:
+          bankAccount.accountHolderName,
+
+        bankName:
+          bankAccount.bankName,
+
+        accountNumber:
+          `XXXXXX${bankAccount.accountNumber.slice(-4)}`,
+
+        ifscCode:
+          bankAccount.ifscCode,
+
+        isVerified:
+          bankAccount.isVerified,
+
+        isPrimary:
+          bankAccount.isPrimary,
+      },
+    });
+  } catch (err) {
+    console.error(
+      "Add Bank Account Error:",
+      err
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -3046,5 +3160,5 @@ module.exports = {
   earningsOverview,
   recentTransactions,
   paymentMethodStats,
-  nextPayout,
+  nextPayout,addBankAccount
 };
