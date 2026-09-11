@@ -166,11 +166,19 @@ router.get(
   providerControllers.nextPayout
 );
 // POST /api/provider/bank-account
-router.get(
+router.post(
   "/bank-account",
    authMiddleware.tokenVerify,
   providerMiddleware,
   providerControllers.addBankAccount
+);
+
+// POST /api/provider/earnings/withdraw
+router.post(
+  "/earnings/withdraw",
+   authMiddleware.tokenVerify,
+  providerMiddleware,
+  providerControllers.withdrawEarnings
 );
 router.put(
   "/upload-documents",

@@ -3137,6 +3137,191 @@ async function addBankAccount(req, res) {
     });
   }
 }
+
+async function withdrawEarnings(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const { amount } = req.body;
+
+   
+
+    const withdrawalAmount = Number(amount);
+
+    if (
+      !withdrawalAmount ||
+      !Number.isFinite(withdrawalAmount) ||
+      withdrawalAmount <= 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please enter a valid withdrawal amount",
+      });
+    }
+
+   
+
+    const bankAccount = await bankAccountModel.findOne({
+      providerId,
+      isPrimary: true,
+      isVerified: true,
+    });
+
+    if (!bankAccount) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Please add and verify a primary bank account before withdrawal",
+      });
+    }
+
+ 
+    const earningsResult =
+      await bookingsModel.aggregate([
+        {
+          $match: {
+            "providerSnapshot.providerObjectId":
+              providerId,
+
+            bookingStatus: "completed",
+
+            paymentStatus: "success",
+          },
+        },
+
+        {
+          $group: {
+            _id: null,
+
+            totalPaidEarnings: {
+              $sum: {
+                $ifNull: [
+                  "$pricing.providerPayout",
+                  0,
+                ],
+              },
+            },
+          },
+        },
+      ]);
+
+    const totalPaidEarnings =
+      earningsResult[0]?.totalPaidEarnings || 0;
+
+  
+
+    const withdrawalResult =
+      await withdrawalModel.aggregate([
+        {
+          $match: {
+            providerId,
+
+            status: {
+              $in: [
+                "pending",
+                "processing",
+                "completed",
+              ],
+            },
+          },
+        },
+
+        {
+          $group: {
+            _id: null,
+
+            totalWithdrawn: {
+              $sum: {
+                $ifNull: ["$amount", 0],
+              },
+            },
+          },
+        },
+      ]);
+
+    const totalWithdrawn =
+      withdrawalResult[0]?.totalWithdrawn || 0;
+
+    
+    const availableBalance =
+      totalPaidEarnings - totalWithdrawn;
+
+   
+
+    if (withdrawalAmount > availableBalance) {
+      return res.status(400).json({
+        success: false,
+        message: "Insufficient available balance",
+
+        result: {
+          availableBalance,
+        },
+      });
+    }
+
+   
+    const withdrawal =
+      await withdrawalModel.create({
+        providerId,
+
+        bankAccountId:
+          bankAccount._id,
+
+        amount: withdrawalAmount,
+
+        status: "pending",
+
+        requestedAt: new Date(),
+      });
+
+    const remainingBalance =
+      availableBalance - withdrawalAmount;
+
+   
+
+    return res.status(201).json({
+      success: true,
+
+      message:
+        "Withdrawal request submitted successfully",
+
+      result: {
+        withdrawalId: withdrawal._id,
+
+        amount: withdrawal.amount,
+
+        status: withdrawal.status,
+
+        bankAccount: {
+          bankName:
+            bankAccount.bankName,
+
+          accountNumber:
+            `XXXXXX${bankAccount.accountNumber.slice(-4)}`,
+
+          ifscCode:
+            bankAccount.ifscCode,
+        },
+
+        availableBalance:
+          remainingBalance,
+
+        requestedAt:
+          withdrawal.requestedAt,
+      },
+    });
+  } catch (err) {
+    console.error(
+      "Provider Withdrawal Error:",
+      err
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   providerProfileCreate,
   getProvider,
@@ -3160,5 +3345,5 @@ module.exports = {
   earningsOverview,
   recentTransactions,
   paymentMethodStats,
-  nextPayout,addBankAccount
+  nextPayout,addBankAccount,withdrawEarnings
 };
