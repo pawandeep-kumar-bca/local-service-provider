@@ -1,3 +1,5 @@
+const {  mongoose } = require("mongoose");
+
 const withdrawalSchema = new mongoose.Schema(
   {
     providerId: {
@@ -43,3 +45,5 @@ const withdrawalSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+module.exports = mongoose.model('WithdrawalAmount',withdrawalSchema)

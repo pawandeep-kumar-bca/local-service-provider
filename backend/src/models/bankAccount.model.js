@@ -47,4 +47,4 @@ const bankAccountSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("BankAccount", bankAccountSchema);
+module.exports= mongoose.model("BankAccount", bankAccountSchema);
