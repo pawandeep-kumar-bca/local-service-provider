@@ -1,5 +1,5 @@
 import { IoMdArrowRoundUp } from "react-icons/io";
-import MiniChart from "../../../utils/MiniChart";
+import MiniChart from "../../../../utils/MiniChart";
 
 const EarningsStatCard = ({
   bgColor,
@@ -37,7 +37,7 @@ const EarningsStatCard = ({
             shrink-0
           `}
         >
-          {Icon}
+          <Icon size={24}/>
         </div>
 
         <h2 className="text-muted md:text-sm font-medium text-lg leading-5">

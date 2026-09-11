@@ -1,6 +1,6 @@
 import { FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import Button from "../../../components/common/Button";
+import Button from "../../../../components/common/Button";
 import TransactionItem from "./TransactionItem";
 import { transactions } from "../data/earningsData";
 

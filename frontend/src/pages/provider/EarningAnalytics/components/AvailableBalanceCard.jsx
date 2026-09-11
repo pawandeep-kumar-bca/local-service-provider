@@ -1,7 +1,7 @@
 import { IoWalletOutline } from "react-icons/io5";
 import { PiHandWithdrawLight } from "react-icons/pi";
 import { CiBank } from "react-icons/ci";
-import Button from "../../../components/common/Button";
+import Button from "../../../../components/common/Button";
 
 const AvailableBalanceCard = () => {
   return (

@@ -1,4 +1,4 @@
-import EarningsOverviewChart from "../../../utils/EarningsOverviewChart";
+import EarningsOverviewChart from "../../../../utils/EarningsOverviewChart";
 import AvailableBalanceCard from "./AvailableBalanceCard";
 
 const EarningsOverview = () => {

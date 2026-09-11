@@ -1,5 +1,5 @@
 import NextPayoutCard from "./NextPayoutCard";
-import PaymentMethodUsedChart from "../../../utils/PaymentMethodUsedChart";
+import PaymentMethodUsedChart from "../../../../utils/PaymentMethodUsedChart";
 
 const PayoutSection = () => {
   return (
