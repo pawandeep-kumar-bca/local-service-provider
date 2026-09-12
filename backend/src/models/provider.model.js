@@ -119,61 +119,67 @@ const providerSchema = new mongoose.Schema(
 
   
     categories: [
-      {
-        category: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Category",
-          required: true,
-        },
+  {
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
 
-        experience: {
-          type: Number,
-          required: true,
-          min: 0,
-        },
+    experience: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
 
-        pricing: {
-          priceType: {
-            type: String,
-            enum: ["fixed", "hourly"],
-            default: "hourly",
-          },
-
-          price: {
-            type: Number,
-            required: true,
-            min: 0,
-          },
-        },
-
-        description: {
-          type: String,
-          trim: true,
-        },
-
-        duration: {
-          type: String,
-          trim: true,
-        },
-
-        
-        certificate: {
-          url: String,
-          fileId: String,
-        },
-
-        isAvailable: {
-          type: Boolean,
-          default: true,
-        },
-
-        approvalStatus: {
-          type: String,
-          enum: ["pending", "approved", "rejected"],
-          default: "pending",
-        },
+    pricing: {
+      priceType: {
+        type: String,
+        enum: ["fixed", "hourly"],
+        default: "hourly",
       },
-    ],
+
+      price: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+    },
+
+    description: {
+      type: String,
+      trim: true,
+    },
+
+   
+    certificate: {
+      url: {
+        type: String,
+        required: true,
+      },
+      fileId: {
+        type: String,
+        required: true,
+      },
+    },
+
+    isAvailable: {
+      type: Boolean,
+      default: true,
+    },
+
+    approvalStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
+
+    rejectionReason: {
+      type: String,
+      trim: true,
+    },
+  },
+],
   },
   { timestamps: true },
 );

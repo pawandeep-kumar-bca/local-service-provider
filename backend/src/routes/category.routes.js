@@ -19,6 +19,11 @@ router.post(
 router.get("/", categoriesControllers.getCategory);
 router.get("/tabs", categoriesControllers.getCategoryTabs);
 router.get('/popular',categoriesControllers.getCategoryForPopular)
+// ==========================================
+// PROVIDER ADD CATEGORY APIS
+//===========================================
+
+// POST /api/provider/categories
 
 router.put(
   "/:id",
