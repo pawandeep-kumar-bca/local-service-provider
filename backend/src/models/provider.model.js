@@ -8,6 +8,7 @@ const providerSchema = new mongoose.Schema(
       index: true,
       required: true,
     },
+
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -19,16 +20,15 @@ const providerSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    experience: {
-      type: Number,
-      required: true,
-    },
+
+   
     documents: {
       aadharCard: {
         url: String,
         fileId: String,
       },
-      certificate: {
+
+      addressProof: {
         url: String,
         fileId: String,
       },
@@ -59,11 +59,12 @@ const providerSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    
-    workingHours:{
-      startTime:String,
-      endTime:String
+
+    workingHours: {
+      startTime: String,
+      endTime: String,
     },
+
     responseTime: {
       type: Number,
       default: 30,
@@ -88,7 +89,7 @@ const providerSchema = new mongoose.Schema(
 
       coordinates: {
         type: [Number],
-        required: true, // [longitude, latitude]
+        required: true,
       },
 
       state: {
@@ -116,6 +117,7 @@ const providerSchema = new mongoose.Schema(
       },
     },
 
+  
     categories: [
       {
         category: {
@@ -123,16 +125,52 @@ const providerSchema = new mongoose.Schema(
           ref: "Category",
           required: true,
         },
+
+        experience: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+
         pricing: {
           priceType: {
             type: String,
             enum: ["fixed", "hourly"],
             default: "hourly",
           },
+
           price: {
             type: Number,
             required: true,
+            min: 0,
           },
+        },
+
+        description: {
+          type: String,
+          trim: true,
+        },
+
+        duration: {
+          type: String,
+          trim: true,
+        },
+
+        
+        certificate: {
+          url: String,
+          fileId: String,
+        },
+
+        isAvailable: {
+          type: Boolean,
+          default: true,
+        },
+
+        approvalStatus: {
+          type: String,
+          enum: ["pending", "approved", "rejected"],
+          default: "pending",
         },
       },
     ],
