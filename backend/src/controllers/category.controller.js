@@ -1,4 +1,5 @@
-const { uploadImage } = require("../config/imagekit");
+const { mongoose } = require("mongoose");
+const { uploadImage, uploadFile } = require("../config/imagekit");
 const categoryModel = require("../models/category.model");
 const providerModel = require("../models/provider.model");
 
@@ -326,11 +327,123 @@ async function deleteCategory(req, res) {
     });
   }
 }
+
+// ==========================================
+// PROVIDER ADD CATEGORY CONTROLLERS
+//===========================================
+
+async function providerCategoryCreate(req, res) {
+  try {
+    const provider = req.provider
+ 
+    const userId = req.provider.userId;
+  
+    const {
+      categoryId,
+      experience,
+      priceType,
+      price,
+      description,
+    } = req.body;
+
+   
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid category ID",
+      });
+    }
+
+  
+    const category = await categoryModel.findOne({
+      _id: categoryId,
+      status: "active",
+    });
+
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found or inactive",
+      });
+    }
+
+    
+   
+
+   
+    const categoryExists = provider.categories.some(
+      (item) => item.category.toString() === categoryId.toString(),
+    );
+
+    if (categoryExists) {
+      return res.status(409).json({
+        success: false,
+        message: "Category already added",
+      });
+    }
+
+   
+    if (!req.files?.certificate?.[0]) {
+      return res.status(400).json({
+        success: false,
+        message: "Certificate is required",
+      });
+    }
+
+  
+    const certificateData = await uploadFile(
+      req.files.certificate[0],
+      `${userId}-${Date.now()}-certificate`,
+      "Providers/Documents/Certificates",
+    );
+
+   
+    const categoryData = {
+      category: categoryId,
+
+      experience: Number(experience),
+
+      pricing: {
+        priceType,
+        price: Number(price),
+      },
+
+      description: description?.trim(),
+
+      certificate: {
+        url: certificateData.url,
+        fileId: certificateData.fileId,
+      },
+
+      isAvailable: true,
+
+      approvalStatus: "pending",
+    };
+
+    
+    provider.categories.push(categoryData);
+
+    await provider.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Provider category added successfully",
+      data: categoryData,
+    });
+  } catch (error) {
+    console.error("Provider category create error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   createCategory,
   getCategory,
   getCategoryTabs,
   getCategoryForPopular,
   updateCategory,
-  deleteCategory,
+  deleteCategory,providerCategoryCreate
 };

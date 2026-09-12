@@ -1,4 +1,4 @@
-const { body} = require("express-validator");
+const { body } = require("express-validator");
 const respondWithValidationErrors = require("../middlewares/validation.middleware");
 
 const categoryValidator = [
@@ -17,7 +17,6 @@ const categoryValidator = [
   respondWithValidationErrors,
 ];
 
-
 const providerCategoryCreateValidator = [
   body("categoryId")
     .trim()
@@ -29,7 +28,7 @@ const providerCategoryCreateValidator = [
   body("experience")
     .notEmpty()
     .withMessage("Experience is required")
-    .isInt({ min: 0 })
+    .isFloat({ min: 0 })
     .withMessage("Experience must be a valid number"),
 
   body("priceType")
@@ -44,10 +43,8 @@ const providerCategoryCreateValidator = [
     .isFloat({ min: 0 })
     .withMessage("Price must be a valid number"),
 
-  body("description")
-    .optional()
-    .trim(),
+  body("description").optional().trim(),
 
   respondWithValidationErrors,
 ];
-module.exports = { categoryValidator,providerCategoryCreateValidator };
+module.exports = { categoryValidator, providerCategoryCreateValidator };

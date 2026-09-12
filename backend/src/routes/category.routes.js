@@ -1,13 +1,16 @@
 const express = require("express");
 const categoriesControllers = require("../controllers/category.controller");
-const providerMiddleware = require("../middlewares/auth.middleware");
+
 const roleBased = require("../middlewares/role.middleware");
 const validateObjectId = require("../middlewares/validateObjectId.middleware");
-const { categoryValidator } = require("../validators/categoryValidator");
-const { imageUpload } = require("../middlewares/upload.middleware");
+const {
+  categoryValidator,
+  providerCategoryCreateValidator,
+} = require("../validators/categoryValidator");
+const { imageUpload, documentUpload } = require("../middlewares/upload.middleware");
 const authMiddleware = require("../middlewares/auth.middleware");
 const router = express.Router();
-
+const providerMiddleware = require("../middlewares/provider.middleware");
 router.post(
   "/",
   authMiddleware.tokenVerify,
@@ -18,23 +21,30 @@ router.post(
 );
 router.get("/", categoriesControllers.getCategory);
 router.get("/tabs", categoriesControllers.getCategoryTabs);
-router.get('/popular',categoriesControllers.getCategoryForPopular)
+router.get("/popular", categoriesControllers.getCategoryForPopular);
 // ==========================================
 // PROVIDER ADD CATEGORY APIS
 //===========================================
 
-// POST /api/provider/categories
-
+// POST /api/categories/provider/create-category
+router.post(
+  "/provider/create-category",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  documentUpload.fields([{ name: "certificate", maxCount: 1 }]),
+  providerCategoryCreateValidator,
+  categoriesControllers.providerCategoryCreate,
+);
 router.put(
   "/:id",
-  providerMiddleware.tokenVerify,
+   authMiddleware.tokenVerify,
   validateObjectId("id"),
   roleBased("admin"),
   categoriesControllers.updateCategory,
 );
 router.delete(
   "/:id",
-  providerMiddleware.tokenVerify,
+    authMiddleware.tokenVerify,
   validateObjectId("id"),
   roleBased("admin"),
   categoriesControllers.deleteCategory,
