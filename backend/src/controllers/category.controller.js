@@ -439,6 +439,41 @@ async function providerCategoryCreate(req, res) {
     });
   }
 }
+
+async function getProviderCategories(req, res) {
+  try {
+    const providerId = req.provider._id;
+
+    const provider = await providerModel
+      .findById(providerId)
+      .populate({
+        path: "categories.category",
+        select:
+          "name slug description icon backgroundColor status discount average_rating total_reviews sortOrder",
+      })
+      .select("categories");
+
+    if (!provider) {
+      return res.status(404).json({
+        success: false,
+        message: "Provider not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Provider categories fetched successfully",
+      data: provider.categories,
+    });
+  } catch (error) {
+    console.error("Get provider categories error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   createCategory,
   getCategory,

@@ -35,6 +35,13 @@ router.post(
   providerCategoryCreateValidator,
   categoriesControllers.providerCategoryCreate,
 );
+
+router.get(
+  "/provider/categories",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  categoriesControllers.getProviderCategories,
+);
 router.put(
   "/:id",
    authMiddleware.tokenVerify,
