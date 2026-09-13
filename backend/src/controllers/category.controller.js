@@ -521,6 +521,49 @@ async function providerCategoryUpdate(req, res) {
     });
   }
 }
+
+async function providerCategoryAvailability(req, res) {
+  try {
+    const provider = req.provider;
+    const { categoryId } = req.params;
+    const { isAvailable } = req.body;
+
+  
+
+    const providerCategory = provider.categories.find(
+      (item) => item._id.toString() === categoryId,
+    );
+
+    if (!providerCategory) {
+      return res.status(404).json({
+        success: false,
+        message: "Provider category not found",
+      });
+    }
+
+    providerCategory.isAvailable = isAvailable === true || isAvailable === "true";
+
+    await provider.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `Category ${
+        providerCategory.isAvailable ? "enabled" : "disabled"
+      } successfully`,
+      data: {
+        categoryId: providerCategory._id,
+        isAvailable: providerCategory.isAvailable,
+      },
+    });
+  } catch (error) {
+    console.error("Provider category availability error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   createCategory,
   getCategory,
@@ -531,4 +574,5 @@ module.exports = {
   providerCategoryCreate,
   getProviderCategories,
   providerCategoryUpdate,
+  providerCategoryAvailability
 };

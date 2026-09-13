@@ -7,6 +7,7 @@ const {
   categoryValidator,
   providerCategoryCreateValidator,
   providerCategoryUpdateValidator,
+  providerCategoryAvailabilityValidator,
 } = require("../validators/categoryValidator");
 const { imageUpload, documentUpload } = require("../middlewares/upload.middleware");
 const authMiddleware = require("../middlewares/auth.middleware");
@@ -47,12 +48,21 @@ router.get(
 router.put(
   "/provider/categories/:categoryId",
   authMiddleware.tokenVerify,
+
   providerMiddleware,
+  validateObjectId("categoryId"),
   documentUpload.fields([{ name: "certificate", maxCount: 1 }]),
   providerCategoryUpdateValidator,
   categoriesControllers.providerCategoryUpdate,
 );
-
+router.patch(
+  "/provider/categories/:categoryId/availability",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+  validateObjectId("categoryId"),
+  providerCategoryAvailabilityValidator,
+  categoriesControllers.providerCategoryAvailability,
+);
 router.put(
   "/:id",
    authMiddleware.tokenVerify,

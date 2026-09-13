@@ -73,4 +73,14 @@ const providerCategoryUpdateValidator = [
 
   respondWithValidationErrors,
 ];
-module.exports = { categoryValidator, providerCategoryCreateValidator,providerCategoryUpdateValidator };
+const providerCategoryAvailabilityValidator = [
+  body("isAvailable")
+    .notEmpty()
+    .withMessage("Availability status is required")
+    .isBoolean()
+    .withMessage("Availability must be true or false"),
+
+  respondWithValidationErrors,
+];
+
+module.exports = { categoryValidator, providerCategoryCreateValidator,providerCategoryUpdateValidator,providerCategoryAvailabilityValidator };
