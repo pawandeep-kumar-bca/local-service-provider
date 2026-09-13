@@ -334,19 +334,12 @@ async function deleteCategory(req, res) {
 
 async function providerCategoryCreate(req, res) {
   try {
-    const provider = req.provider
- 
-    const userId = req.provider.userId;
-  
-    const {
-      categoryId,
-      experience,
-      priceType,
-      price,
-      description,
-    } = req.body;
+    const provider = req.provider;
 
-   
+    const userId = req.provider.userId;
+
+    const { categoryId, experience, priceType, price, description } = req.body;
+
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       return res.status(400).json({
         success: false,
@@ -354,7 +347,6 @@ async function providerCategoryCreate(req, res) {
       });
     }
 
-  
     const category = await categoryModel.findOne({
       _id: categoryId,
       status: "active",
@@ -367,10 +359,6 @@ async function providerCategoryCreate(req, res) {
       });
     }
 
-    
-   
-
-   
     const categoryExists = provider.categories.some(
       (item) => item.category.toString() === categoryId.toString(),
     );
@@ -382,7 +370,6 @@ async function providerCategoryCreate(req, res) {
       });
     }
 
-   
     if (!req.files?.certificate?.[0]) {
       return res.status(400).json({
         success: false,
@@ -390,14 +377,12 @@ async function providerCategoryCreate(req, res) {
       });
     }
 
-  
     const certificateData = await uploadFile(
       req.files.certificate[0],
       `${userId}-${Date.now()}-certificate`,
       "Providers/Documents/Certificates",
     );
 
-   
     const categoryData = {
       category: categoryId,
 
@@ -420,7 +405,6 @@ async function providerCategoryCreate(req, res) {
       approvalStatus: "pending",
     };
 
-    
     provider.categories.push(categoryData);
 
     await provider.save();
@@ -474,11 +458,77 @@ async function getProviderCategories(req, res) {
     });
   }
 }
+
+async function providerCategoryUpdate(req, res) {
+  try {
+    const provider = req.provider;
+    const userId = req.provider.userId;
+
+    const { categoryId } = req.params;
+    const { experience, priceType, price, description } = req.body;
+
+    const categoryIndex = provider.categories.findIndex(
+      (item) => item._id.toString() === categoryId,
+    );
+
+    if (categoryIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: "Provider category not found",
+      });
+    }
+
+    const providerCategory = provider.categories[categoryIndex];
+
+    providerCategory.experience = Number(experience);
+
+    providerCategory.pricing = {
+      priceType,
+      price: Number(price),
+    };
+
+    providerCategory.description = description?.trim();
+
+    if (req.files?.certificate?.[0]) {
+      const certificateData = await uploadFile(
+        req.files.certificate[0],
+        `${userId}-${Date.now()}-certificate`,
+        "Providers/Documents/Certificates",
+      );
+
+      providerCategory.certificate = {
+        url: certificateData.url,
+        fileId: certificateData.fileId,
+      };
+
+      providerCategory.approvalStatus = "pending";
+      providerCategory.rejectionReason = undefined;
+    }
+
+    await provider.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Provider category updated successfully",
+      data: providerCategory,
+    });
+  } catch (error) {
+    console.error("Provider category update error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   createCategory,
   getCategory,
   getCategoryTabs,
   getCategoryForPopular,
   updateCategory,
-  deleteCategory,providerCategoryCreate
+  deleteCategory,
+  providerCategoryCreate,
+  getProviderCategories,
+  providerCategoryUpdate,
 };

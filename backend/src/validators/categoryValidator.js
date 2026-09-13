@@ -47,4 +47,30 @@ const providerCategoryCreateValidator = [
 
   respondWithValidationErrors,
 ];
-module.exports = { categoryValidator, providerCategoryCreateValidator };
+
+const providerCategoryUpdateValidator = [
+  body("experience")
+    .notEmpty()
+    .withMessage("Experience is required")
+    .isFloat({ min: 0 })
+    .withMessage("Experience must be a valid number"),
+
+  body("priceType")
+    .notEmpty()
+    .withMessage("Price type is required")
+    .isIn(["fixed", "hourly"])
+    .withMessage("Price type must be fixed or hourly"),
+
+  body("price")
+    .notEmpty()
+    .withMessage("Price is required")
+    .isFloat({ min: 0 })
+    .withMessage("Price must be a valid number"),
+
+  body("description")
+    .optional()
+    .trim(),
+
+  respondWithValidationErrors,
+];
+module.exports = { categoryValidator, providerCategoryCreateValidator,providerCategoryUpdateValidator };
