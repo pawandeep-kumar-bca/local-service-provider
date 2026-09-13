@@ -9,7 +9,10 @@ const {
   providerCategoryUpdateValidator,
   providerCategoryAvailabilityValidator,
 } = require("../validators/categoryValidator");
-const { imageUpload, documentUpload } = require("../middlewares/upload.middleware");
+const {
+  imageUpload,
+  documentUpload,
+} = require("../middlewares/upload.middleware");
 const authMiddleware = require("../middlewares/auth.middleware");
 const router = express.Router();
 const providerMiddleware = require("../middlewares/provider.middleware");
@@ -44,7 +47,11 @@ router.get(
   providerMiddleware,
   categoriesControllers.getProviderCategories,
 );
-
+router.get(
+  "/provider/categories",
+  authMiddleware.tokenVerify,
+  categoriesControllers.getCategoriesForProvider,
+);
 router.put(
   "/provider/categories/:categoryId",
   authMiddleware.tokenVerify,
@@ -68,19 +75,19 @@ router.delete(
   "/provider/categories/:categoryId",
   authMiddleware.tokenVerify,
   providerMiddleware,
-   validateObjectId("categoryId"),
+  validateObjectId("categoryId"),
   categoriesControllers.providerCategoryDelete,
 );
 router.put(
   "/:id",
-   authMiddleware.tokenVerify,
+  authMiddleware.tokenVerify,
   validateObjectId("id"),
   roleBased("admin"),
   categoriesControllers.updateCategory,
 );
 router.delete(
   "/:id",
-    authMiddleware.tokenVerify,
+  authMiddleware.tokenVerify,
   validateObjectId("id"),
   roleBased("admin"),
   categoriesControllers.deleteCategory,

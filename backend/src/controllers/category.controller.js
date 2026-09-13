@@ -618,7 +618,29 @@ async function providerCategoryDelete(req, res) {
     });
   }
 }
+async function getCategoriesForProvider(req, res) {
+  try {
+    const categories = await categoryModel
+      .find({ status: "active" })
+      .select(
+        "name  icon backgroundColor   sortOrder",
+      )
+      .sort({ sortOrder: 1, name: 1 });
 
+    return res.status(200).json({
+      success: true,
+      message: "Categories fetched successfully",
+      data: categories,
+    });
+  } catch (error) {
+    console.error("Get categories error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
 module.exports = {
   createCategory,
   getCategory,
@@ -630,5 +652,5 @@ module.exports = {
   getProviderCategories,
   providerCategoryUpdate,
   providerCategoryAvailability,
-  providerCategoryDelete
+  providerCategoryDelete,getCategoriesForProvider
 };
