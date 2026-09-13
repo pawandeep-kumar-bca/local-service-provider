@@ -1,5 +1,5 @@
 const { mongoose } = require("mongoose");
-const { uploadImage, uploadFile } = require("../config/imagekit");
+const { uploadImage, uploadFile, deleteFile } = require("../config/imagekit");
 const categoryModel = require("../models/category.model");
 const providerModel = require("../models/provider.model");
 
@@ -564,6 +564,61 @@ async function providerCategoryAvailability(req, res) {
     });
   }
 }
+
+async function providerCategoryDelete(req, res) {
+  try {
+    const provider = req.provider;
+    const { categoryId } = req.params;
+
+    
+
+    const categoryIndex = provider.categories.findIndex(
+      (item) => item._id.toString() === categoryId,
+    );
+
+    if (categoryIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: "Provider category not found",
+      });
+    }
+
+    const providerCategory = provider.categories[categoryIndex];
+
+    const certificateFileId =
+      providerCategory.certificate?.fileId;
+
+   
+    provider.categories.splice(categoryIndex, 1);
+
+    await provider.save();
+
+    
+    if (certificateFileId) {
+      try {
+        await deleteFile(certificateFileId);
+      } catch (error) {
+        console.error(
+          "Certificate delete from ImageKit failed:",
+          error,
+        );
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Provider category deleted successfully",
+    });
+  } catch (error) {
+    console.error("Provider category delete error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
 module.exports = {
   createCategory,
   getCategory,
@@ -574,5 +629,6 @@ module.exports = {
   providerCategoryCreate,
   getProviderCategories,
   providerCategoryUpdate,
-  providerCategoryAvailability
+  providerCategoryAvailability,
+  providerCategoryDelete
 };

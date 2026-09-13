@@ -63,6 +63,14 @@ router.patch(
   providerCategoryAvailabilityValidator,
   categoriesControllers.providerCategoryAvailability,
 );
+
+router.delete(
+  "/provider/categories/:categoryId",
+  authMiddleware.tokenVerify,
+  providerMiddleware,
+   validateObjectId("categoryId"),
+  categoriesControllers.providerCategoryDelete,
+);
 router.put(
   "/:id",
    authMiddleware.tokenVerify,
