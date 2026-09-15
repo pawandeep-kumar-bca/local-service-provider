@@ -12,6 +12,7 @@ const EarningsStatCard = ({
   amount,
   growthColor,
 }) => {
+
   return (
     <div
       className="
@@ -37,7 +38,7 @@ const EarningsStatCard = ({
             shrink-0
           `}
         >
-          <Icon size={24}/>
+          {Icon && <Icon size={24} />}
         </div>
 
         <h2 className="text-muted md:text-sm font-medium text-lg leading-5">
