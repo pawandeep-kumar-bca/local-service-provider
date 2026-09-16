@@ -81,6 +81,7 @@ const ManageProvidersPage = () => {
               </div>
             </div>
           </div>
+          
           <div className="px-4">
             <h1 className="text-xl font-semibold py-3 text-muted">
               Documents for verification
