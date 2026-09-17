@@ -12,6 +12,8 @@ import {
 
 import { Line } from "react-chartjs-2";
 
+import { useProviderEarningOverview } from "../hooks/useProvider";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,103 +23,103 @@ ChartJS.register(
   Filler
 );
 
-const chartData = {
-  week: {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-
-    current: [4000, 6500, 8000, 12000, 10000, 14500, 13000],
-
-    previous: [2500, 4000, 5500, 9000, 8500, 10000, 10500],
-  },
-
-  month: {
-    labels: [
-      "1 May",
-      "4 May",
-      "7 May",
-      "10 May",
-      "13 May",
-      "16 May",
-      "19 May",
-    ],
-
-    current: [4000, 7800, 9500, 12000, 11800, 12450, 14500],
-
-    previous: [2500, 5000, 5500, 9000, 8500, 10000, 10500],
-  },
-
-  year: {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-
-    current: [
-      12000,
-      18000,
-      24000,
-      28000,
-      35000,
-      42000,
-      48000,
-      52000,
-      60000,
-      68000,
-      74000,
-      82000,
-    ],
-
-    previous: [
-      8000,
-      12000,
-      18000,
-      22000,
-      28000,
-      34000,
-      39000,
-      44000,
-      50000,
-      56000,
-      62000,
-      70000,
-    ],
-  },
-};
-
 const EarningsOverviewChart = () => {
-  const [activeTab, setActiveTab] = useState("month");
+  const [activeTab, setActiveTab] = useState("week");
 
-  const selected = chartData[activeTab];
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+  } = useProviderEarningOverview({ period: activeTab });
+
+  const result = response?.result;
+
+
+
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-xl border border-slate-100 md:p-6 p-4">
+        <div className="h-[320px] flex items-center justify-center text-slate-500">
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
+
+
+  if (isError) {
+    return (
+      <div className="bg-white rounded-xl border border-slate-100 md:p-6 p-4">
+        <div className="h-[320px] flex flex-col items-center justify-center">
+          <p className="text-red-500 font-medium">
+            Failed to load earnings overview
+          </p>
+
+          <p className="text-sm text-slate-500 mt-2">
+            {error?.response?.data?.message ||
+              error?.message ||
+              "Something went wrong"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+
+
+  const labels = result?.labels || [];
+
+  const currentAmounts = result?.current || [];
+
+  const previousAmounts = result?.previous || [];
+
+
 
   const data = {
-    labels: selected.labels,
+    labels: labels,
 
     datasets: [
-      {
-        label: "This Month",
 
-        data: selected.current,
+
+      {
+        label:
+          activeTab === "week"
+            ? "This Week"
+            : activeTab === "month"
+              ? "This Month"
+              : "This Year",
+
+        data: currentAmounts,
 
         borderColor: "#22c55e",
 
         backgroundColor: (context) => {
-          const ctx = context.chart.ctx;
+          const chart = context.chart;
 
-          const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+          const { ctx, chartArea } = chart;
 
-          gradient.addColorStop(0, "rgba(34,197,94,0.25)");
+          if (!chartArea) {
+            return "rgba(34, 197, 94, 0.15)";
+          }
 
-          gradient.addColorStop(1, "rgba(34,197,94,0)");
+          const gradient = ctx.createLinearGradient(
+            0,
+            chartArea.top,
+            0,
+            chartArea.bottom
+          );
+
+          gradient.addColorStop(
+            0,
+            "rgba(34, 197, 94, 0.25)"
+          );
+
+          gradient.addColorStop(
+            1,
+            "rgba(34, 197, 94, 0)"
+          );
 
           return gradient;
         },
@@ -125,6 +127,8 @@ const EarningsOverviewChart = () => {
         fill: true,
 
         tension: 0.4,
+
+        borderWidth: 2,
 
         pointRadius: 4,
 
@@ -137,28 +141,45 @@ const EarningsOverviewChart = () => {
         pointBorderWidth: 2,
       },
 
-      {
-        label: "Last Month",
 
-        data: selected.previous,
+      {
+        label:
+          activeTab === "week"
+            ? "Last Week"
+            : activeTab === "month"
+              ? "Last Month"
+              : "Last Year",
+
+        data: previousAmounts,
 
         borderColor: "#cbd5e1",
 
         borderDash: [6, 6],
 
+        borderWidth: 2,
+
         tension: 0.4,
 
         pointRadius: 0,
+
+        pointHoverRadius: 4,
 
         fill: false,
       },
     ],
   };
 
+
+
   const options = {
     responsive: true,
 
     maintainAspectRatio: false,
+
+    animation: {
+      duration: 1000,
+      easing: "easeInOutQuart",
+    },
 
     interaction: {
       intersect: false,
@@ -168,7 +189,6 @@ const EarningsOverviewChart = () => {
     plugins: {
       legend: {
         display: false,
-       
       },
 
       tooltip: {
@@ -196,8 +216,10 @@ const EarningsOverviewChart = () => {
         },
 
         callbacks: {
-          label: function (context) {
-            return `₹${context.raw.toLocaleString()}`;
+          label: (context) => {
+            const value = Number(context.raw || 0);
+
+            return `₹${value.toLocaleString("en-IN")}`;
           },
         },
       },
@@ -210,12 +232,20 @@ const EarningsOverviewChart = () => {
         ticks: {
           color: "#64748b",
 
-          callback: function (value) {
+          callback: (value) => {
             if (value === 0) {
               return "₹0";
             }
 
-            return `₹${value / 1000}K`;
+            if (value >= 100000) {
+              return `₹${(value / 100000).toFixed(1)}L`;
+            }
+
+            if (value >= 1000) {
+              return `₹${(value / 1000).toFixed(1)}K`;
+            }
+
+            return `₹${value}`;
           },
         },
 
@@ -231,6 +261,12 @@ const EarningsOverviewChart = () => {
       x: {
         ticks: {
           color: "#64748b",
+
+          maxRotation: 0,
+
+          minRotation: 0,
+
+          autoSkip: false,
         },
 
         grid: {
@@ -244,77 +280,89 @@ const EarningsOverviewChart = () => {
     },
   };
 
+
+
   return (
     <div
       className="
         bg-white
         rounded-xl
         border border-slate-100
-         md:p-6 p-1 
+        md:p-6
+        p-4
         md:shadow-[0_5px_20px_rgba(0,0,0,0.06)]
       "
     >
-      {/* Header */}
+
+
       <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
-        
         <h1 className="text-xl font-bold text-gray-800">
           Earnings Overview
         </h1>
 
-        {/* Filters */}
+
+
         <div className="flex items-center gap-2">
-          
+          {/* Week */}
+
           <button
+            type="button"
             onClick={() => setActiveTab("week")}
             className={`
               px-4 py-2
               rounded-xl
-              text-sm cursor-pointer
+              text-sm
+              cursor-pointer
               font-medium
-              transition-all duration-300
-
-              ${
-                activeTab === "week"
-                  ? "bg-green-100 text-green-600"
-                  : "bg-slate-100 text-slate-600"
+              transition-all
+              duration-300
+              ${activeTab === "week"
+                ? "bg-green-100 text-green-600"
+                : "bg-slate-100 text-slate-600"
               }
             `}
           >
             This Week
           </button>
 
+          {/* Month */}
+
           <button
+            type="button"
             onClick={() => setActiveTab("month")}
             className={`
               px-4 py-2
               rounded-xl
-              text-sm cursor-pointer
+              text-sm
+              cursor-pointer
               font-medium
-              transition-all duration-300
-
-              ${
-                activeTab === "month"
-                  ? "bg-green-100 text-green-600"
-                  : "bg-slate-100 text-slate-600"
+              transition-all
+              duration-300
+              ${activeTab === "month"
+                ? "bg-green-100 text-green-600"
+                : "bg-slate-100 text-slate-600"
               }
             `}
           >
             This Month
           </button>
 
+          {/* Year */}
+
           <button
+            type="button"
             onClick={() => setActiveTab("year")}
             className={`
               px-4 py-2
               rounded-xl
-              text-sm cursor-pointer
+              text-sm
+              cursor-pointer
               font-medium
-              transition-all duration-300
-
-              ${
-                activeTab === "year"
-                  ? "bg-green-100 text-green-600"
-                  : "bg-slate-100 text-slate-600"
+              transition-all
+              duration-300
+              ${activeTab === "year"
+                ? "bg-green-100 text-green-600"
+                : "bg-slate-100 text-slate-600"
               }
             `}
           >
@@ -323,9 +371,17 @@ const EarningsOverviewChart = () => {
         </div>
       </div>
 
-      {/* Chart */}
-      <div className="md:h-[320px] h-[200px]">
-        <Line data={data} options={options} />
+
+
+      <div
+
+        className="md:h-[320px] h-[220px]"
+      >
+        <Line
+          updateMode="default"
+          data={data}
+          options={options}
+        />
       </div>
     </div>
   );
