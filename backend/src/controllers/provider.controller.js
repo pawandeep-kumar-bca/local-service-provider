@@ -32,7 +32,6 @@ const { getFacetResult } = require("../utils/providerResponse.js");
 const bookingsModel = require("../models/booking.model.js");
 const withdrawalModel = require("../models/withdrawal.model.js");
 const bankAccountModel = require("../models/bankAccount.model.js");
-const { promises } = require("nodemailer/lib/xoauth2/index.js");
 async function providerProfileCreate(req, res) {
   try {
     const {
@@ -2607,13 +2606,14 @@ async function earningsSummary(req, res) {
   }
 }
 
-async function earningsOverview(req, res) {
+async function earningsOverview  (req, res) {
   try {
     const providerId = req.provider._id;
+    const { period = "week" } = req.query;
 
-    const { period = "month" } = req.query;
 
-    const allowedPeriods = ["week", "month", "year"];
+
+const allowedPeriods = ["week", "month", "year"];
 
     if (!allowedPeriods.includes(period)) {
       return res.status(400).json({
@@ -2622,66 +2622,123 @@ async function earningsOverview(req, res) {
       });
     }
 
+    const TIMEZONE = "Asia/Kolkata";
+
     const now = new Date();
+
+    // Get current date according to IST
+    const istNow = new Date(
+      now.toLocaleString("en-US", {
+        timeZone: TIMEZONE,
+      }),
+    );
+
+    const currentYear = istNow.getFullYear();
+    const currentMonth = istNow.getMonth();
+    const currentDay = istNow.getDate();
+
+    // Create IST midnight as actual UTC Date
+    const istMidnight = (year, month, day) => {
+      return new Date(Date.UTC(year, month, day, 0, 0, 0, 0) - 330 * 60 * 1000);
+    };
+
+    // Format YYYY-MM-DD
+    const formatDate = (year, month, day) => {
+      return `${year}-${String(month + 1).padStart(2, "0")}-${String(
+        day,
+      ).padStart(2, "0")}`;
+    };
+
+    // Add days to a YYYY-MM-DD date
+    const addDaysToDate = (dateString, days) => {
+      const [year, month, day] = dateString.split("-").map(Number);
+
+      const date = new Date(Date.UTC(year, month - 1, day));
+
+      date.setUTCDate(date.getUTCDate() + days);
+
+      return formatDate(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+      );
+    };
+
+    // Get Monday of given date
+    const getMonday = (year, month, day) => {
+      const date = new Date(Date.UTC(year, month, day));
+
+      const dayOfWeek = date.getUTCDay();
+
+      const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+      date.setUTCDate(date.getUTCDate() - diff);
+
+      return formatDate(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+      );
+    };
 
     let currentStart;
     let currentEnd;
     let previousStart;
     let previousEnd;
-    let groupFormat;
 
     if (period === "week") {
-      currentStart = new Date(now);
+      // Current week's Monday
+      const currentMonday = getMonday(currentYear, currentMonth, currentDay);
 
-      const day = currentStart.getDay();
+      currentStart = istMidnight(
+        Number(currentMonday.substring(0, 4)),
+        Number(currentMonday.substring(5, 7)) - 1,
+        Number(currentMonday.substring(8, 10)),
+      );
 
-      // Monday as first day of week
-      const diff = day === 0 ? 6 : day - 1;
+      // Next Monday
+      const nextMonday = addDaysToDate(currentMonday, 7);
 
-      currentStart.setDate(currentStart.getDate() - diff);
+      currentEnd = istMidnight(
+        Number(nextMonday.substring(0, 4)),
+        Number(nextMonday.substring(5, 7)) - 1,
+        Number(nextMonday.substring(8, 10)),
+      );
 
-      currentStart.setHours(0, 0, 0, 0);
+      // Previous Monday
+      const previousMonday = addDaysToDate(currentMonday, -7);
 
-      currentEnd = new Date(now);
+      previousStart = istMidnight(
+        Number(previousMonday.substring(0, 4)),
+        Number(previousMonday.substring(5, 7)) - 1,
+        Number(previousMonday.substring(8, 10)),
+      );
 
-      previousStart = new Date(currentStart);
-      previousStart.setDate(previousStart.getDate() - 7);
-
-      previousEnd = new Date(currentStart);
-
-      groupFormat = "%Y-%m-%d";
+      previousEnd = currentStart;
     }
 
     if (period === "month") {
-      currentStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      // Current month
+      currentStart = istMidnight(currentYear, currentMonth, 1);
 
-      currentStart.setHours(0, 0, 0, 0);
+      currentEnd = istMidnight(currentYear, currentMonth + 1, 1);
 
-      currentEnd = new Date(now);
+      // Previous month
+      previousStart = istMidnight(currentYear, currentMonth - 1, 1);
 
-      previousStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-
-      previousStart.setHours(0, 0, 0, 0);
-
-      previousEnd = new Date(currentStart);
-
-      groupFormat = "%Y-%m-%d";
+      previousEnd = currentStart;
     }
 
     if (period === "year") {
-      currentStart = new Date(now.getFullYear(), 0, 1);
+      // Current year
+      currentStart = istMidnight(currentYear, 0, 1);
 
-      currentStart.setHours(0, 0, 0, 0);
+      currentEnd = istMidnight(currentYear + 1, 0, 1);
 
-      currentEnd = new Date(now);
+      // Previous year
+      previousStart = istMidnight(currentYear - 1, 0, 1);
 
-      previousStart = new Date(now.getFullYear() - 1, 0, 1);
-
-      previousStart.setHours(0, 0, 0, 0);
-
-      previousEnd = new Date(now.getFullYear(), 0, 1);
-
-      groupFormat = "%Y-%m";
+      previousEnd = currentStart;
     }
 
     const result = await bookingsModel.aggregate([
@@ -2701,6 +2758,7 @@ async function earningsOverview(req, res) {
       {
         $project: {
           completedAt: 1,
+
           providerPayout: {
             $ifNull: ["$pricing.providerPayout", 0],
           },
@@ -2711,8 +2769,11 @@ async function earningsOverview(req, res) {
         $group: {
           _id: {
             $dateToString: {
-              format: groupFormat,
+              format: period === "year" ? "%Y-%m" : "%Y-%m-%d",
+
               date: "$completedAt",
+
+              timezone: TIMEZONE,
             },
           },
 
@@ -2729,35 +2790,210 @@ async function earningsOverview(req, res) {
       },
     ]);
 
-    const current = [];
-    const previous = [];
+    const earningsMap = new Map();
 
     result.forEach((item) => {
-      const date = new Date(item._id);
+      earningsMap.set(item._id, item.amount);
+    });
 
-      if (date >= currentStart && date < currentEnd) {
-        current.push({
-          date: item._id,
-          amount: item.amount,
-        });
-      } else if (date >= previousStart && date < previousEnd) {
-        previous.push({
-          date: item._id,
-          amount: item.amount,
-        });
+    if (period === "week") {
+      const labels = [];
+      const current = [];
+      const previous = [];
+
+      const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+      const currentMonday = getMonday(currentYear, currentMonth, currentDay);
+
+      const previousMonday = addDaysToDate(currentMonday, -7);
+
+      for (let i = 0; i < 7; i++) {
+        const currentDate = addDaysToDate(currentMonday, i);
+
+        const previousDate = addDaysToDate(previousMonday, i);
+
+        labels.push(dayNames[i]);
+
+        current.push(earningsMap.get(currentDate) || 0);
+
+        previous.push(earningsMap.get(previousDate) || 0);
       }
-    });
 
-    return res.status(200).json({
-      success: true,
-      message: "Provider earnings overview fetched successfully",
+      return res.status(200).json({
+        success: true,
+        message: "Provider earnings overview fetched successfully",
 
-      result: {
-        period,
-        current,
-        previous,
-      },
-    });
+        result: {
+          period,
+          labels,
+          current,
+          previous,
+        },
+      });
+    }
+
+    if (period === "month") {
+      const labels = [];
+      const current = [];
+      const previous = [];
+
+      // Current month first day
+      const firstDay = formatDate(currentYear, currentMonth, 1);
+
+      // Last day of current month
+      const lastDayNumber = new Date(
+        Date.UTC(currentYear, currentMonth + 1, 0),
+      ).getUTCDate();
+
+      const lastDay = formatDate(currentYear, currentMonth, lastDayNumber);
+
+      // Calendar week starts Monday
+      let weekStart = getMonday(currentYear, currentMonth, 1);
+
+      // We need weeks until the month ends
+      while (weekStart <= lastDay) {
+        const weekEnd = addDaysToDate(weekStart, 6);
+
+        let currentAmount = 0;
+        let previousAmount = 0;
+
+        for (let i = 0; i < 7; i++) {
+          const date = addDaysToDate(weekStart, i);
+
+          const [year, month] = date.split("-").map(Number);
+
+          if (year === currentYear && month === currentMonth + 1) {
+            currentAmount += earningsMap.get(date) || 0;
+          }
+        }
+
+        const weekIndex = labels.length;
+
+        const previousMonthStart = formatDate(
+          currentMonth === 0 ? currentYear - 1 : currentYear,
+          currentMonth === 0 ? 11 : currentMonth - 1,
+          1,
+        );
+
+        const previousMonthYear =
+          currentMonth === 0 ? currentYear - 1 : currentYear;
+
+        const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+
+        const previousMonthLastDayNumber = new Date(
+          Date.UTC(previousMonthYear, previousMonth + 1, 0),
+        ).getUTCDate();
+
+        const previousMonthLastDay = formatDate(
+          previousMonthYear,
+          previousMonth,
+          previousMonthLastDayNumber,
+        );
+
+        const previousFirstMonday = getMonday(
+          previousMonthYear,
+          previousMonth,
+          1,
+        );
+
+        const previousWeekStart = addDaysToDate(
+          previousFirstMonday,
+          weekIndex * 7,
+        );
+
+        for (let i = 0; i < 7; i++) {
+          const date = addDaysToDate(previousWeekStart, i);
+
+          const [year, month] = date.split("-").map(Number);
+
+          if (
+            year === previousMonthYear &&
+            month === previousMonth + 1 &&
+            date <= previousMonthLastDay
+          ) {
+            previousAmount += earningsMap.get(date) || 0;
+          }
+        }
+
+        const labelStart = weekStart < firstDay ? firstDay : weekStart;
+
+        const labelEnd = weekEnd > lastDay ? lastDay : weekEnd;
+
+        const startDay = Number(labelStart.substring(8, 10));
+
+        const endDay = Number(labelEnd.substring(8, 10));
+
+        labels.push(
+          startDay === endDay ? `${startDay}` : `${startDay}-${endDay}`,
+        );
+
+        current.push(currentAmount);
+        previous.push(previousAmount);
+
+        // Next week
+        weekStart = addDaysToDate(weekStart, 7);
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Provider earnings overview fetched successfully",
+
+        result: {
+          period,
+          labels,
+          current,
+          previous,
+        },
+      });
+    }
+
+    if (period === "year") {
+      const labels = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const current = [];
+      const previous = [];
+
+      for (let month = 0; month < 12; month++) {
+        const currentKey = `${currentYear}-${String(month + 1).padStart(
+          2,
+          "0",
+        )}`;
+
+        const previousKey = `${currentYear - 1}-${String(month + 1).padStart(
+          2,
+          "0",
+        )}`;
+
+        current.push(earningsMap.get(currentKey) || 0);
+
+        previous.push(earningsMap.get(previousKey) || 0);
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Provider earnings overview fetched successfully",
+
+        result: {
+          period,
+          labels,
+          current,
+          previous,
+        },
+      });
+    }
   } catch (err) {
     console.error("Provider Earnings Overview Error:", err);
 
@@ -2766,7 +3002,7 @@ async function earningsOverview(req, res) {
       message: "Internal server error",
     });
   }
-}
+};
 async function recentTransactions(req, res) {
   try {
     const providerId = req.provider._id;
