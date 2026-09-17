@@ -6,6 +6,7 @@ import {
   getProviderBookingAnalytics,
   getProviderById,
   getProviderDashboardOverview,
+  getProviderEarningSummary,
   getProviderScheduleBooking,
   getProviderScheduleSummary,
   getProviderSlots,
@@ -150,5 +151,12 @@ export const useProviderSlots = ()=>{
   return useQuery({
     queryKey:['provider-slots'],
     queryFn:getProviderSlots
+  })
+}
+
+export const useProviderEarningSummary= ()=>{
+  return useQuery({
+    queryKey:['provider-earning-summary'],
+    queryFn:getProviderEarningSummary
   })
 }
