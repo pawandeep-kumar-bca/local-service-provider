@@ -109,3 +109,9 @@ export const getProviderEarningSummary = async ()=>{
   const response = await api.get('/providers/earnings/summary')
   return response.data
 }
+
+export const getProviderEarningOverview = async (params = {})=>{
+  const response = await api.get('/providers/earnings/overview',{params})
+
+  return response.data
+}
