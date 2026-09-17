@@ -1,5 +1,6 @@
 import { IoMdArrowRoundUp } from "react-icons/io";
 import MiniChart from "../../../../utils/MiniChart";
+import { getGrowthData } from "../../../../utils/getGrowthData";
 
 const EarningsStatCard = ({
   bgColor,
@@ -10,9 +11,9 @@ const EarningsStatCard = ({
   Icon,
   text,
   amount,
-  growthColor,
+  growth,data
 }) => {
-
+const growthData = getGrowthData(growth)
   return (
     <div
       className="
@@ -48,20 +49,20 @@ const EarningsStatCard = ({
 
       <div className="mt-3">
         <h1 className="text-text text-3xl font-bold">
-          ₹{amount}
+          ₹ {amount}
         </h1>
 
         <div className="flex items-center gap-1 mt-2 flex-wrap">
           <span
             className={`
-              ${growthColor}
+              ${growthData?.color}
               flex items-center gap-1
               font-semibold
               text-sm
             `}
           >
-            <IoMdArrowRoundUp size={18} />
-            18.5%
+            {growthData?.icon}
+            {growthData?.value}
           </span>
 
           <p className="text-sm text-muted font-medium">
@@ -75,6 +76,7 @@ const EarningsStatCard = ({
           borderColor={borderColor}
           gradientStart={startBg}
           gradientEnd={endBg}
+          chartData={data}
         />
       </div>
     </div>

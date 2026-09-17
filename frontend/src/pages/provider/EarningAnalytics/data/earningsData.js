@@ -1,43 +1,8 @@
 import { GiSandsOfTime } from "react-icons/gi";
 import { PiHandWithdrawLight } from "react-icons/pi";
 import { IoMdTrendingUp } from "react-icons/io";
-export const cardsContent = [
-  {
-    bgColor: "bg-green-100",
-    textColor: "text-green-500",
-    borderColor: "#22c55e",
-    startBg: "rgba(34, 197, 94, 0.35)",
-    endBg: "rgba(34, 197, 94, 0.07)",
-    Icon: IoMdTrendingUp,
-    text: "This month earning",
-    amount: "20,300",
-    growthColor: "text-green-500",
-  },
 
-  {
-    bgColor: "bg-yellow-100",
-    textColor: "text-yellow-500",
-    borderColor: "#eab308",
-    startBg: "rgba(234,179,8,0.35)",
-    endBg: "rgba(234,179,8,0)",
-    Icon: GiSandsOfTime,
-    text: "Pending Amount",
-    amount: "20,300",
-    growthColor: "text-yellow-500",
-  },
 
-  {
-    bgColor: "bg-purple-100",
-    textColor: "text-purple-500",
-    borderColor: "#a855f7",
-    startBg: "rgba(168,85,247,0.35)",
-    endBg: "rgba(168,85,247,0)",
-    Icon: PiHandWithdrawLight,
-    text: "Withdrawn Amount",
-    amount: "22,400",
-    growthColor: "text-green-500",
-  },
-];
 
 export const transactions = [
   {

@@ -19,23 +19,34 @@ ChartJS.register(
   Tooltip
 );
 
-const MiniChart = ({borderColor = "#22c55e",
+const MiniChart = ({
+  borderColor = "#22c55e",
   gradientStart = "rgba(34,197,94,0.35)",
-  gradientEnd = "rgba(34,197,94,0)"}) => {
-    
+  gradientEnd = "rgba(34,197,94,0)",
+  chartData = [],
+}) => {
+  const values = Array.isArray(chartData)
+    ? chartData.slice(0, 6)
+    : [];
+
   const data = {
     labels: ["1", "2", "3", "4", "5", "6"],
 
     datasets: [
       {
-        data: [10, 25, 18, 35, 28, 45],
+        data: values,
 
-        borderColor:borderColor ,
+        borderColor: borderColor,
 
         backgroundColor: (context) => {
           const ctx = context.chart.ctx;
 
-          const gradient = ctx.createLinearGradient(0, 0, 0, 120);
+          const gradient = ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            120
+          );
 
           gradient.addColorStop(0, gradientStart);
           gradient.addColorStop(1, gradientEnd);
@@ -44,6 +55,21 @@ const MiniChart = ({borderColor = "#22c55e",
         },
 
         fill: true,
+
+        // Visible dots
+        pointRadius: 3,
+        pointHoverRadius: 4,
+
+        // Dot color
+        pointBackgroundColor: borderColor,
+
+        // White border around dots
+        pointBorderColor: "#ffffff",
+        pointBorderWidth: 1,
+
+        // Line
+        borderWidth: 2,
+        tension: 0.4,
       },
     ],
   };
@@ -86,14 +112,12 @@ const MiniChart = ({borderColor = "#22c55e",
         border: {
           display: false,
         },
+
+        beginAtZero: true,
       },
     },
 
     elements: {
-      point: {
-        radius: 0,
-      },
-
       line: {
         tension: 0.4,
         borderWidth: 2,
@@ -102,7 +126,7 @@ const MiniChart = ({borderColor = "#22c55e",
   };
 
   return (
-    <div className="w-28 h-25">
+    <div className="w-28 h-10">
       <Line data={data} options={options} />
     </div>
   );

@@ -1,7 +1,9 @@
 import { IoWallet } from "react-icons/io5";
-import { IoMdArrowRoundUp } from "react-icons/io";
+import { IoMdArrowRoundDown, IoMdArrowRoundUp } from "react-icons/io";
 
-const TotalEarningsCard = () => {
+const TotalEarningsCard = ({summary}) => {
+  
+  
   return (
     <div
       className="
@@ -21,21 +23,15 @@ const TotalEarningsCard = () => {
         </h2>
 
         <h1 className="text-white text-3xl md:text-4xl font-bold mt-3">
-          ₹24,500
+          ₹ {summary?.totalEarnings}
         </h1>
 
         <div className="flex items-center gap-1 mt-3 flex-wrap">
-          <span
-            className="
-              text-white
-              flex items-center gap-1
-              font-semibold
-              text-sm
-            "
-          >
-            <IoMdArrowRoundUp size={18} />
-            18.5%
-          </span>
+         
+          { summary?.totalEarningsGrowth > 0 ? <span className="text-green-500 text-sm font-bold flex items-center gap-1"><IoMdArrowRoundUp size={18} />
+            {summary?.totalEarningsGrowth}</span>:<span className="text-red-500 text-sm font-bold flex items-center gap-1"><IoMdArrowRoundDown size={18} />
+            {Math.abs(summary?.totalEarningsGrowth)}</span>}
+         
 
           <p className="text-sm text-white/70 font-medium">
             vs last month
