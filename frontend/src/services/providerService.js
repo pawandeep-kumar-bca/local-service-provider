@@ -104,3 +104,8 @@ export const getProviderSlots = async ()=>{
   const response = await api.get('/providers/schedule/slots')
   return response.data
 }
+
+export const getProviderEarningSummary = async ()=>{
+  const response = await api.get('/providers/earnings/summary')
+  return response.data
+}
