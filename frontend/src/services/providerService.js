@@ -115,3 +115,9 @@ export const getProviderEarningOverview = async (params = {})=>{
 
   return response.data
 }
+
+export const getProviderTransitions = async(params={})=>{
+  const response  = await api.get('/providers/earnings/transactions',{params})
+
+  return response.data
+}
