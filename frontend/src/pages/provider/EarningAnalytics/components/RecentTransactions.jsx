@@ -2,9 +2,14 @@ import { FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Button from "../../../../components/common/Button";
 import TransactionItem from "./TransactionItem";
-import { transactions } from "../data/earningsData";
+import { useProviderTransitions } from "../../../../hooks/useProvider";
 
 const RecentTransactions = () => {
+
+  const {data}= useProviderTransitions()
+  const transactions = data?.result?.transactions || []
+
+  
   return (
     <div
       className="
@@ -34,9 +39,9 @@ const RecentTransactions = () => {
       </div>
 
       <div className="space-y-0">
-        {transactions.map((item) => (
+        {transactions?.map((item) => (
           <TransactionItem
-            key={item.id}
+            key={item._id}
             transaction={item}
           />
         ))}

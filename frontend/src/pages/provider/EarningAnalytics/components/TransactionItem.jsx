@@ -1,15 +1,7 @@
 import { MdOutlinePayments } from "react-icons/md";
+import Avatar from "../../../../components/common/Avatar";
 
 const TransactionItem = ({ transaction }) => {
-  const {
-    image,
-    name,
-    service,
-    date,
-    amount,
-    payment,
-    status,
-  } = transaction;
 
   return (
     <div
@@ -32,23 +24,21 @@ const TransactionItem = ({ transaction }) => {
       >
         {/* User */}
         <div className="flex items-center gap-3">
-          <img
-            src={image}
-            alt={name}
-            className="
+          <div className="
               w-12 h-12
               rounded-full
               object-cover
-            "
-          />
+            ">
+            <Avatar name={transaction?.user?.name} image={transaction?.user?.profileImage} className="bg-gray-300 text-red-500" />
+          </div>
 
           <div>
             <h2 className="font-semibold text-text">
-              {name}
+              {transaction?.user?.name}
             </h2>
 
             <p className="text-sm text-muted mt-1">
-              {service}
+              {transaction?.service?.name}
             </p>
           </div>
         </div>
@@ -56,25 +46,29 @@ const TransactionItem = ({ transaction }) => {
         {/* Date */}
         <div className="flex justify-center">
           <p className="text-sm text-muted">
-            {date}
+            {new Date(transaction?.createdAt).toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: '2-digit'
+            })}
           </p>
         </div>
 
         {/* Amount */}
         <div className="flex justify-center">
           <h2 className="font-bold text-text text-lg">
-            {amount}
+            ₹ {transaction?.amount}
           </h2>
         </div>
 
         {/* Payment */}
         <div className="flex justify-center">
-          <PaymentBadge payment={payment} />
+          <PaymentBadge payment={transaction?.paymentStatus} />
         </div>
 
         {/* Status */}
         <div className="flex justify-end">
-          <StatusBadge status={status} />
+          <StatusBadge status={transaction?.bookingStatus} />
         </div>
       </div>
 
@@ -82,29 +76,28 @@ const TransactionItem = ({ transaction }) => {
       <div className="md:hidden">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <img
-              src={image}
-              alt={name}
-              className="
-                w-12 h-12
-                rounded-full
-                object-cover
-              "
-            />
+            <div className="
+              w-12 h-12
+              rounded-full
+              object-cover
+            ">
+              <Avatar name={transaction?.user?.name} image={transaction?.user?.profileImage} className="bg-gray-300 text-red-500" />
+            </div>
 
             <div>
               <h2 className="font-semibold text-text">
-                {name}
+                {transaction?.user?.name}
               </h2>
 
               <p className="text-sm text-muted mt-1">
-                {service}
+                {transaction?.service?.name}
+
               </p>
             </div>
           </div>
 
           <h2 className="font-bold text-text text-lg">
-            {amount}
+            ₹ {transaction?.amount}
           </h2>
         </div>
 
@@ -116,12 +109,16 @@ const TransactionItem = ({ transaction }) => {
           "
         >
           <p className="text-sm text-muted">
-            {date}
+            {new Date(transaction?.createdAt).toLocaleDateString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: '2-digit'
+            })}
           </p>
 
           <div className="flex items-center gap-2">
-            <PaymentBadge payment={payment} />
-            <StatusBadge status={status} />
+            <PaymentBadge payment={transaction?.paymentStatus} />
+            <StatusBadge status={transaction?.bookingStatus} />
           </div>
         </div>
       </div>
