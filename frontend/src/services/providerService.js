@@ -121,3 +121,8 @@ export const getProviderTransitions = async(params={})=>{
 
   return response.data
 }
+
+export const getProviderPaymentMethod = async ()=>{
+  const response = await api.get('/providers/earnings/payment-methods')
+  return response.data
+}
