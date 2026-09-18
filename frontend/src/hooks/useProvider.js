@@ -13,6 +13,7 @@ import {
   getProviderSlots,
   getProviderTodayBookings,
   getProviderTodayUpcomingBooking,
+  getProviderTransitions,
   getRecommendedProviders,
   getSelectProviderByCategory,
   setProviderAvailability,
@@ -166,5 +167,12 @@ export const useProviderEarningOverview = (params)=>{
   return useQuery({
     queryKey:['provider-earning-overview',params],
     queryFn:()=>getProviderEarningOverview(params)
+  })
+}
+
+export const useProviderTransitions = (params)=>{
+  return useQuery({
+    queryKey:['provider-transitions',params],
+    queryFn:()=>getProviderTransitions(params)
   })
 }
