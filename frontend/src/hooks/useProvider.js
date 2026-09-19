@@ -8,6 +8,7 @@ import {
   getProviderDashboardOverview,
   getProviderEarningOverview,
   getProviderEarningSummary,
+  getProviderNextPayout,
   getProviderPaymentMethod,
   getProviderScheduleBooking,
   getProviderScheduleSummary,
@@ -182,5 +183,12 @@ export const useProviderPaymentMethod = ()=>{
   return useQuery({
     queryKey:['provider-payment-method'],
     queryFn:getProviderPaymentMethod
+  })
+}
+
+export const useProviderNextPayout = () =>{
+  return useQuery({
+    queryKey:['provider-next-payout'],
+    queryFn:getProviderNextPayout
   })
 }
