@@ -131,3 +131,9 @@ export const getProviderNextPayout = async ()=>{
   const response = await api.get('/providers/earnings/next-payout')
   return response.data
 }
+
+export const addProviderBankAccountDetails = async (bankDetails)=>{
+  const response = await api.post('/providers/bank-account',bankDetails)
+
+  return response.data
+}
