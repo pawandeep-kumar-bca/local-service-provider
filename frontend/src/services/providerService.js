@@ -128,6 +128,6 @@ export const getProviderPaymentMethod = async ()=>{
 }
 
 export const getProviderNextPayout = async ()=>{
-  const response = await api.get('/earnings/next-payout')
+  const response = await api.get('/providers/earnings/next-payout')
   return response.data
 }

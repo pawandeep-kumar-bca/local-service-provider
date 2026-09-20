@@ -1,7 +1,51 @@
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdOutlineCalendarMonth } from "react-icons/md";
+import { useProviderNextPayout } from "../../../../hooks/useProvider";
+
 
 const NextPayoutCard = () => {
+  const {
+    data,
+    isLoading,
+    isError,
+  } = useProviderNextPayout();
+
+  const payout = data?.result;
+
+  const formatDate = (date) => {
+    if (!date) return "--";
+
+    return new Date(date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const formatAmount = (amount) => {
+    return Number(amount || 0).toLocaleString("en-IN");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-xl border border-slate-100 p-5 shadow-[0_5px_20px_rgba(0,0,0,0.06)]">
+        <p className="text-muted">
+          Loading next payout...
+        </p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="bg-white rounded-xl border border-slate-100 p-5 shadow-[0_5px_20px_rgba(0,0,0,0.06)]">
+        <p className="text-red-500">
+          Failed to load payout details.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div
       className="
@@ -14,8 +58,10 @@ const NextPayoutCard = () => {
     >
       {/* Top */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
+
         <div>
           <div className="flex items-center gap-2">
+
             <div
               className="
                 w-11 h-11
@@ -31,6 +77,7 @@ const NextPayoutCard = () => {
             <h1 className="text-2xl font-bold text-text">
               Next Payout
             </h1>
+
           </div>
 
           <p className="text-muted mt-3 text-base">
@@ -38,7 +85,7 @@ const NextPayoutCard = () => {
           </p>
 
           <h2 className="text-2xl font-bold text-text mt-2">
-            25 May 2025
+            {formatDate(payout?.payoutDate)}
           </h2>
         </div>
 
@@ -56,13 +103,15 @@ const NextPayoutCard = () => {
           </p>
 
           <h1 className="text-4xl font-bold text-text mt-3">
-            ₹2,000
+            ₹{formatAmount(payout?.estimatedAmount)}
           </h1>
         </div>
+
       </div>
 
       {/* Progress */}
       <div className="mt-4">
+
         <div
           className="
             w-full
@@ -74,11 +123,15 @@ const NextPayoutCard = () => {
         >
           <div
             className="
-              w-[72%]
               h-full
               bg-green-500
               rounded-full
+              transition-all
+              duration-500
             "
+            style={{
+              width: `${payout?.progress || 0}%`,
+            }}
           />
         </div>
 
@@ -90,26 +143,29 @@ const NextPayoutCard = () => {
             gap-4
           "
         >
-          <PayoutStep
-            completed
-            label="Request"
-          />
-
-          <PayoutStep
-            completed
-            label="Processing"
-          />
-
-          <PayoutStep label="Payout" />
+          {payout?.steps?.map((step, index) => (
+            <PayoutStep
+              key={step.key}
+              completed={step.completed}
+              label={step.label}
+              stepNumber={index + 1}
+            />
+          ))}
         </div>
+
       </div>
     </div>
   );
 };
 
-const PayoutStep = ({ completed, label }) => {
+const PayoutStep = ({
+  completed,
+  label,
+  stepNumber,
+}) => {
   return (
     <div className="flex items-center gap-2">
+
       {completed ? (
         <IoCheckmarkCircle
           size={24}
@@ -127,13 +183,14 @@ const PayoutStep = ({ completed, label }) => {
             font-bold
           "
         >
-          3
+          {stepNumber}
         </div>
       )}
 
       <p className="font-medium text-muted">
         {label}
       </p>
+
     </div>
   );
 };
