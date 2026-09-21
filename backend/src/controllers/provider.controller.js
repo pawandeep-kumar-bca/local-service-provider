@@ -3007,7 +3007,7 @@ async function recentTransactions(req, res) {
   try {
     const providerId = req.provider._id;
 
-    let { page = 1, limit = 10 } = req.query;
+    let { page = 1, limit = 5 } = req.query;
 
     page = Number(page);
     limit = Number(limit);
@@ -3039,6 +3039,7 @@ async function recentTransactions(req, res) {
         .skip(skip)
         .limit(limit)
         .select({
+          _id: 1,
           bookingId: 1,
           bookingDate: 1,
           bookingStatus: 1,
@@ -3056,6 +3057,7 @@ async function recentTransactions(req, res) {
     ]);
 
     const formattedTransactions = transactions.map((booking) => ({
+      _id: booking._id,
       bookingId: booking.bookingId,
 
       user: {
