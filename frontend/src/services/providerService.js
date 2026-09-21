@@ -138,7 +138,7 @@ export const addProviderBankAccountDetails = async (bankDetails)=>{
   return response.data
 }
 
-export const getWithdrawalsHistory= async ()=>{
+export const getProviderWithdrawalsHistory = async ()=>{
   const response = await api.get('/providers/earnings/withdraw')
   return response.data
 }

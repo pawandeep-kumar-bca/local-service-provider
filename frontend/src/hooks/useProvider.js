@@ -17,6 +17,7 @@ import {
   getProviderTodayBookings,
   getProviderTodayUpcomingBooking,
   getProviderTransitions,
+  getProviderWithdrawalsHistory,
   getRecommendedProviders,
   getSelectProviderByCategory,
   setProviderAvailability,
@@ -208,4 +209,11 @@ export const useProviderBankDetails = ()=>{
   })
 
   return {providerBankDetailsMutation}
+}
+
+export const useProviderGetWithdrawalsHistory = ()=>{
+  return useQuery({
+    queryKey:['provider-withdrawal-history'],
+    queryFn:getProviderWithdrawalsHistory
+  })
 }
