@@ -2,10 +2,13 @@ import { IoWalletOutline } from "react-icons/io5";
 import { PiHandWithdrawLight } from "react-icons/pi";
 import { CiBank } from "react-icons/ci";
 import Button from "../../../../components/common/Button";
+import { useState } from "react";
+import AddBankDetails from "./AddBankDetails";
 
 const AvailableBalanceCard = () => {
-
+  const [openBankPop,setOpenBankPop]= useState(false)
   return (
+    <>
     <div
       className=" bg-white rounded-xl border border-slate-100 p-5 shadow-[0_5px_20px_rgba(0,0,0,0.06)]
       "
@@ -43,6 +46,7 @@ const AvailableBalanceCard = () => {
           fullWidth
           color="white"
           className="text-green-500"
+          onClick={()=>setOpenBankPop(true)}
         >
           <CiBank size={24} />
           Add Bank Account
@@ -71,6 +75,12 @@ const AvailableBalanceCard = () => {
         </Button>
       </div>
     </div>
+
+    {
+      openBankPop && <AddBankDetails close={()=>setOpenBankPop(false)}/>
+    }
+</>
+  
   );
 };
 

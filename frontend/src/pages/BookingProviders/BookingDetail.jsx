@@ -19,7 +19,7 @@ const BookingDetail = () => {
   const { state } = useLocation();
   const { providerId } = useParams();
   const categoryId = state?.categoryId;
-  console.log(categoryId);
+  
 
   const categoryName = state?.categoryName;
 
@@ -42,7 +42,7 @@ const BookingDetail = () => {
   const { addressToReverseGeocodeMutation } = useAddressToReverseGeocode();
 
   const { createBookingMutation } = useBookingCreate();
-  console.log(formData.date);
+  
   const formSubmit = (e) => {
     e.preventDefault();
 

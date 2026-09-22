@@ -3,7 +3,9 @@ import EarningsOverview from "./components/EarningsOverview";
 import RecentTransactions from "./components/RecentTransactions";
 import PayoutSection from "./components/PayoutSection";
 
+
 const EarningAnalytics = () => {
+  
   return (
     <div>
       <EarningsSummary />
