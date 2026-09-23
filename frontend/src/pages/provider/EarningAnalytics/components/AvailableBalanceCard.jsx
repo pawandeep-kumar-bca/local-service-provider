@@ -4,9 +4,12 @@ import { CiBank } from "react-icons/ci";
 import Button from "../../../../components/common/Button";
 import { useState } from "react";
 import AddBankDetails from "./AddBankDetails";
+import WithdrawalAmountRequest from "./WithdrawalAmountRequest";
 
 const AvailableBalanceCard = () => {
   const [openBankPop,setOpenBankPop]= useState(false)
+  const [openWithdrawalPop,setOpenWithdrawalPop]= useState(false)
+  
   return (
     <>
     <div
@@ -37,7 +40,7 @@ const AvailableBalanceCard = () => {
       </div>
 
       <div className="flex flex-col gap-4 mt-5">
-        <Button fullWidth>
+        <Button fullWidth onClick={()=>setOpenWithdrawalPop(true)}>
           <PiHandWithdrawLight size={24} />
           Withdraw Now
         </Button>
@@ -78,6 +81,9 @@ const AvailableBalanceCard = () => {
 
     {
       openBankPop && <AddBankDetails close={()=>setOpenBankPop(false)}/>
+    }
+    {
+      openWithdrawalPop && <WithdrawalAmountRequest close={()=>setOpenWithdrawalPop(false)}/>
     }
 </>
   
