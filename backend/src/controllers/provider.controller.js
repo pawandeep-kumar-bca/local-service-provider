@@ -2606,14 +2606,12 @@ async function earningsSummary(req, res) {
   }
 }
 
-async function earningsOverview  (req, res) {
+async function earningsOverview(req, res) {
   try {
     const providerId = req.provider._id;
     const { period = "week" } = req.query;
 
-
-
-const allowedPeriods = ["week", "month", "year"];
+    const allowedPeriods = ["week", "month", "year"];
 
     if (!allowedPeriods.includes(period)) {
       return res.status(400).json({
@@ -3002,7 +3000,7 @@ const allowedPeriods = ["week", "month", "year"];
       message: "Internal server error",
     });
   }
-};
+}
 async function recentTransactions(req, res) {
   try {
     const providerId = req.provider._id;
@@ -3395,6 +3393,8 @@ async function withdrawEarnings(req, res) {
 
     const withdrawalAmount = Number(amount);
 
+    const MIN_WITHDRAWAL_AMOUNT = 500;
+
     if (
       !withdrawalAmount ||
       !Number.isFinite(withdrawalAmount) ||
@@ -3403,6 +3403,13 @@ async function withdrawEarnings(req, res) {
       return res.status(400).json({
         success: false,
         message: "Please enter a valid withdrawal amount",
+      });
+    }
+
+    if (withdrawalAmount < MIN_WITHDRAWAL_AMOUNT) {
+      return res.status(400).json({
+        success: false,
+        message: `Minimum withdrawal amount is ₹${MIN_WITHDRAWAL_AMOUNT}`,
       });
     }
 
