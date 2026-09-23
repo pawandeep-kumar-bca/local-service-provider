@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   addProviderBankAccountDetails,
   createProvider,
+  createWithdrawalAmount,
   getAllProviders,
   getNearbyProviders,
   getProviderBookingAnalytics,
@@ -207,8 +208,16 @@ export const useProviderBankDetails = ()=>{
       
     }
   })
-
-  return {providerBankDetailsMutation}
+   const providerWithdrawalMutation = useMutation({
+    mutationFn:createWithdrawalAmount,
+    onSuccess:(data)=>{
+      toast.success(data?.message)
+    },
+    onError:(err)=>{
+      toast.error(err?.response?.data?.message)
+    }
+   })
+  return {providerBankDetailsMutation,providerWithdrawalMutation}
 }
 
 
