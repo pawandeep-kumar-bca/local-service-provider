@@ -21,6 +21,7 @@ import {
   getProviderWithdrawalsHistory,
   getRecommendedProviders,
   getSelectProviderByCategory,
+  paymentReceived,
   setProviderAvailability,
 } from "../services/providerService";
 import { useNavigate } from "react-router-dom";
@@ -226,5 +227,14 @@ export const useProviderGetWithdrawalsHistory = ()=>{
   return useQuery({
     queryKey:['provider-withdrawal-history'],
     queryFn:getProviderWithdrawalsHistory
+  })
+}
+
+
+export const useProviderReceivedPayment = (bookingId)=>{
+  return useQuery({
+    queryKey:['received-payment',bookingId],
+    queryFn:()=>paymentReceived(bookingId),
+    enabled:!!bookingId
   })
 }
