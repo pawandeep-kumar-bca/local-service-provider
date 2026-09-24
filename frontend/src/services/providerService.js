@@ -148,3 +148,8 @@ export const createWithdrawalAmount = async(amount)=>{
   const response = await api.post("/providers/earnings/withdraw",amount)
   return response.data
 }
+
+export const paymentReceived = async (bookingId)=>{
+  const response = await api.patch(`/earnings/${bookingId}/payment-received`)
+  return response.data
+}
