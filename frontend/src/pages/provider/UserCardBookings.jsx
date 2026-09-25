@@ -179,10 +179,10 @@ const UserCardBookings = ({ booking }) => {
           {/* Actions */}
           {(booking.bookingStatus === "accepted" ||
             booking.bookingStatus === "in_progress") && (
-            <div className="flex gap-2">
-              {/* Call */}
-              <button
-                className="
+              <div className="flex gap-2">
+                {/* Call */}
+                <button
+                  className="
       flex items-center justify-center
       w-11 h-11 rounded-xl cursor-pointer
       bg-green-50 border border-green-300 text-green-600
@@ -190,13 +190,13 @@ const UserCardBookings = ({ booking }) => {
       hover:-translate-y-0.5
       transition-all duration-300
     "
-              >
-                <IoMdCall size={22} />
-              </button>
+                >
+                  <IoMdCall size={22} />
+                </button>
 
-              {/* Chat */}
-              <button
-                className="
+                {/* Chat */}
+                <button
+                  className="
       flex items-center justify-center
       w-11 h-11 rounded-xl cursor-pointer
       bg-blue-50 border border-blue-300 text-blue-600
@@ -204,11 +204,11 @@ const UserCardBookings = ({ booking }) => {
       hover:-translate-y-0.5
       transition-all duration-300
     "
-              >
-                <BiMessageRoundedDetail size={22} />
-              </button>
-            </div>
-          )}
+                >
+                  <BiMessageRoundedDetail size={22} />
+                </button>
+              </div>
+            )}
         </div>
 
         {/* Divider */}
