@@ -14,6 +14,7 @@ import ActionReasonModal from "../../components/common/models/ActionReasonModal"
 import { toast } from "react-toastify";
 import { MdClose } from "react-icons/md";
 import AnimatedStatusIcon from "../../components/common/models/AnimatedStatusIcon";
+import { useProviderReceivedPayment } from "../../hooks/useProvider";
 const UserCardBookings = ({ booking }) => {
   const [rejected, setRejected] = useState(null);
   const [cancel, setCancel] = useState(null);
@@ -28,6 +29,10 @@ const UserCardBookings = ({ booking }) => {
     bookingCancelMutation,
     bookingCompleteMutation,
   } = useBookingStatus();
+  const {
+    providerReceivedPaymentMutation,
+    isPending: isPaymentPending,
+  } = useProviderReceivedPayment();
   const handleAccept = async (bookingId) => {
     await bookingAcceptedMutation.mutateAsync(bookingId);
   };
@@ -110,6 +115,21 @@ const UserCardBookings = ({ booking }) => {
       },
     });
   };
+
+  const handlePaymentReceived = async (bookingId) => {
+    try {
+      
+      
+      await providerReceivedPaymentMutation.mutateAsync(bookingId)
+
+
+    } catch (error) {
+      console.error("Payment received error:", error);
+
+
+    }
+  };
+
   return (
     <>
       <div
@@ -330,7 +350,7 @@ const UserCardBookings = ({ booking }) => {
           </div>
         )}
         {/* Bottom Buttons */}
-        <div className="flex  gap-3 mt-6">
+        <div className="flex gap-3 mt-6">
           {booking.bookingStatus === "pending" ? (
             <>
               <Button
@@ -340,7 +360,11 @@ const UserCardBookings = ({ booking }) => {
               >
                 Reject
               </Button>
-              <Button fullWidth onClick={() => handleAccept(booking._id)}>
+
+              <Button
+                fullWidth
+                onClick={() => handleAccept(booking._id)}
+              >
                 Accept
               </Button>
             </>
@@ -353,6 +377,7 @@ const UserCardBookings = ({ booking }) => {
               >
                 Cancel Booking
               </Button>
+
               <Button
                 fullWidth
                 color="blue"
@@ -370,9 +395,21 @@ const UserCardBookings = ({ booking }) => {
               Mark Completed
             </Button>
           ) : booking.bookingStatus === "completed" ? (
-            <Button fullWidth color="gray" disabled>
-              Completed ✅
-            </Button>
+            booking.paymentMethod === "cod" &&
+              booking.paymentStatus === "pending" ? (
+              <Button
+                fullWidth
+                color="success"
+                disabled={isPaymentPending}
+                onClick={() => handlePaymentReceived(booking._id)}
+              >
+                💵 Mark as Payment Received
+              </Button>
+            ) : (
+              <Button fullWidth color="gray" disabled>
+                Payment Received ✅
+              </Button>
+            )
           ) : (
             // cancelled / rejected
             <div className="text-sm text-gray-500">
@@ -381,6 +418,7 @@ const UserCardBookings = ({ booking }) => {
                   <p>
                     <strong>Reason:</strong> {booking.cancelReason}
                   </p>
+
                   {booking.cancelNote && (
                     <p>
                       <strong>Note:</strong> {booking.cancelNote}
@@ -392,6 +430,7 @@ const UserCardBookings = ({ booking }) => {
                   <p>
                     <strong>Reason:</strong> {booking.rejectionReason}
                   </p>
+
                   {booking.rejectionNote && (
                     <p>
                       <strong>Note:</strong> {booking.rejectionNote}

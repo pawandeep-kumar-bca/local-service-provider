@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addProviderBankAccountDetails,
   createProvider,
@@ -88,12 +88,12 @@ export const useNearbyProviders = (filters = {}) => {
   });
 };
 
-export const useProviderDashboardOverview=()=>{
+export const useProviderDashboardOverview = () => {
   return useQuery({
-    queryKey:['provider-dashboard-overview'],
-    queryFn:getProviderDashboardOverview
-  })
-}
+    queryKey: ["provider-dashboard-overview"],
+    queryFn: getProviderDashboardOverview,
+  });
+};
 
 export const useProviderTodayBookings = () => {
   return useInfiniteQuery({
@@ -125,116 +125,125 @@ export const useProviderScheduleSummary = () => {
   });
 };
 
-export const useProviderUpcomingSchedule = (params)=>{
+export const useProviderUpcomingSchedule = (params) => {
   return useQuery({
-    queryKey:['provider-upcoming-schedule',params],
-    queryFn:()=>getProviderScheduleBooking(params)
-  })
-}
+    queryKey: ["provider-upcoming-schedule", params],
+    queryFn: () => getProviderScheduleBooking(params),
+  });
+};
 
-export const useProviderTodayUpcomingBooking = ()=>{
+export const useProviderTodayUpcomingBooking = () => {
   return useQuery({
-    queryKey:['provider-today-upcoming-booking'],
-    queryFn:getProviderTodayUpcomingBooking
-  })
-}
+    queryKey: ["provider-today-upcoming-booking"],
+    queryFn: getProviderTodayUpcomingBooking,
+  });
+};
 
-export const useProviderAvailability = ()=>{
+export const useProviderAvailability = () => {
   const providerAvailabilityMutation = useMutation({
-    mutationFn:setProviderAvailability,
-    onSuccess:(data)=>{
-      toast.success(data?.message)
-
+    mutationFn: setProviderAvailability,
+    onSuccess: (data) => {
+      toast.success(data?.message);
     },
-    onError:(err)=>{
-      toast.error(err?.response?.data?.message)
-      console.error('Provider availability error:',err);
-      
-    }
-  })
-  return {providerAvailabilityMutation}
-}
+    onError: (err) => {
+      toast.error(err?.response?.data?.message);
+      console.error("Provider availability error:", err);
+    },
+  });
+  return { providerAvailabilityMutation };
+};
 
-export const useProviderSlots = ()=>{
+export const useProviderSlots = () => {
   return useQuery({
-    queryKey:['provider-slots'],
-    queryFn:getProviderSlots
-  })
-}
+    queryKey: ["provider-slots"],
+    queryFn: getProviderSlots,
+  });
+};
 
-export const useProviderEarningSummary= ()=>{
+export const useProviderEarningSummary = () => {
   return useQuery({
-    queryKey:['provider-earning-summary'],
-    queryFn:getProviderEarningSummary
-  })
-}
+    queryKey: ["provider-earning-summary"],
+    queryFn: getProviderEarningSummary,
+  });
+};
 
-export const useProviderEarningOverview = (params)=>{
+export const useProviderEarningOverview = (params) => {
   return useQuery({
-    queryKey:['provider-earning-overview',params],
-    queryFn:()=>getProviderEarningOverview(params)
-  })
-}
+    queryKey: ["provider-earning-overview", params],
+    queryFn: () => getProviderEarningOverview(params),
+  });
+};
 
-export const useProviderTransitions = (params)=>{
+export const useProviderTransitions = (params) => {
   return useQuery({
-    queryKey:['provider-transitions',params],
-    queryFn:()=>getProviderTransitions(params)
-  })
-}
+    queryKey: ["provider-transitions", params],
+    queryFn: () => getProviderTransitions(params),
+  });
+};
 
-export const useProviderPaymentMethod = ()=>{
+export const useProviderPaymentMethod = () => {
   return useQuery({
-    queryKey:['provider-payment-method'],
-    queryFn:getProviderPaymentMethod
-  })
-}
+    queryKey: ["provider-payment-method"],
+    queryFn: getProviderPaymentMethod,
+  });
+};
 
-export const useProviderNextPayout = () =>{
+export const useProviderNextPayout = () => {
   return useQuery({
-    queryKey:['provider-next-payout'],
-    queryFn:getProviderNextPayout
-  })
-}
+    queryKey: ["provider-next-payout"],
+    queryFn: getProviderNextPayout,
+  });
+};
 
-export const useProviderBankDetails = ()=>{
+export const useProviderBankDetails = () => {
   const providerBankDetailsMutation = useMutation({
-    mutationFn:addProviderBankAccountDetails,
-    onSuccess:(data)=>{
-      toast.success(data?.message || 'Bank details add successfully')
+    mutationFn: addProviderBankAccountDetails,
+    onSuccess: (data) => {
+      toast.success(data?.message || "Bank details add successfully");
     },
-    onError:(err)=>{
-      toast.error(err?.response?.data?.message || 'Provider bank details error')
+    onError: (err) => {
+      toast.error(
+        err?.response?.data?.message || "Provider bank details error",
+      );
       console.error(err);
-      
-    }
-  })
-   const providerWithdrawalMutation = useMutation({
-    mutationFn:createWithdrawalAmount,
-    onSuccess:(data)=>{
-      toast.success(data?.message)
     },
-    onError:(err)=>{
-      toast.error(err?.response?.data?.message)
-    }
-   })
-  return {providerBankDetailsMutation,providerWithdrawalMutation}
-}
-
+  });
+  const providerWithdrawalMutation = useMutation({
+    mutationFn: createWithdrawalAmount,
+    onSuccess: (data) => {
+      toast.success(data?.message);
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message);
+    },
+  });
+  return { providerBankDetailsMutation, providerWithdrawalMutation };
+};
 
 // hold api
-export const useProviderGetWithdrawalsHistory = ()=>{
+export const useProviderGetWithdrawalsHistory = () => {
   return useQuery({
-    queryKey:['provider-withdrawal-history'],
-    queryFn:getProviderWithdrawalsHistory
-  })
-}
+    queryKey: ["provider-withdrawal-history"],
+    queryFn: getProviderWithdrawalsHistory,
+  });
+};
 
+export const useProviderReceivedPayment = () => {
+  const queryClient = useQueryClient()
+  const providerReceivedPaymentMutation =  useMutation({
+    mutationFn:(bookingId)=> paymentReceived(bookingId),
+    onSuccess:(data)=>{
+      toast.success(data?.message),
 
-export const useProviderReceivedPayment = (bookingId)=>{
-  return useQuery({
-    queryKey:['received-payment',bookingId],
-    queryFn:()=>paymentReceived(bookingId),
-    enabled:!!bookingId
-  })
-}
+        queryClient.invalidateQueries({
+        queryKey: ["provider-all-bookings"],
+      });
+    },
+    onError:(err)=>{
+      toast.error(err?.response?.data?.message)
+      console.error('Provider Payment received error:',err);
+      
+    }
+  });
+  return {providerReceivedPaymentMutation}
+};

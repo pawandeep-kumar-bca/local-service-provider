@@ -150,6 +150,7 @@ export const createWithdrawalAmount = async(amount)=>{
 }
 
 export const paymentReceived = async (bookingId)=>{
-  const response = await api.patch(`/earnings/${bookingId}/payment-received`)
+  
+  const response = await api.patch(`/providers/earnings/${bookingId}/payment-received`)
   return response.data
 }
