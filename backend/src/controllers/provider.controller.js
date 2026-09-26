@@ -47,7 +47,7 @@ async function providerProfileCreate(req, res) {
       lat,
       lng,
     } = req.body;
-    console.log(categoryId);
+  
 
     const userId = req.user.id;
 
@@ -982,7 +982,7 @@ async function providerDashboardOverview(req, res) {
       dashboardOverview: overview,
     });
   } catch (err) {
-    console.log("Provider Dashboard Overview Error:", err);
+    console.error("Provider Dashboard Overview Error:", err);
 
     return res.status(500).json({
       success: false,
@@ -3659,12 +3659,14 @@ async function markCashPaymentReceived(req, res) {
   try {
     const providerId = req.provider._id;
     const { bookingId } = req.params;
-
+   
+   
     const booking = await bookingsModel.findOne({
-      bookingId,
+      _id:bookingId,
       "providerSnapshot.providerObjectId": providerId,
     });
-
+     
+      
     if (!booking) {
       return res.status(404).json({
         success: false,

@@ -335,7 +335,7 @@ async function getAllProviderBooking(req, res) {
     const allBookings = await bookingsModel
       .find({ "providerSnapshot.providerObjectId": providerId })
       .select(
-        "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType rejectionReason rejectionNote cancelReason cancelNote",
+        "bookingId bookingDate durationHours bookingSlot bookingStatus notes pricing paymentMethod paymentStatus serviceSnapshot serviceAddressSnapshot userSnapshot expiresAt serviceType rejectionReason rejectionNote cancelReason cancelNote",
       )
       .sort({ createdAt: -1 });
 
@@ -514,7 +514,7 @@ async function providerAcceptBooking(req, res) {
     const bookingId = req.params.bookingId;
 
     const booking = await bookingsModel.findById(bookingId);
-    console.log(booking);
+  
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
