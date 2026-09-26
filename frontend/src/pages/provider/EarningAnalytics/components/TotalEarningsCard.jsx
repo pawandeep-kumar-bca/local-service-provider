@@ -26,7 +26,7 @@ const TotalEarningsCard = ({summary}) => {
           ₹ {summary?.totalEarnings}
         </h1>
 
-        <div className="flex items-center gap-1 mt-3 flex-wrap">
+        {/* <div className="flex items-center gap-1 mt-3 flex-wrap">
          
           { summary?.totalEarningsGrowth > 0 ? <span className="text-green-500 text-sm font-bold flex items-center gap-1"><IoMdArrowRoundUp size={18} />
             {summary?.totalEarningsGrowth}</span>:<span className="text-red-500 text-sm font-bold flex items-center gap-1"><IoMdArrowRoundDown size={18} />
@@ -36,7 +36,7 @@ const TotalEarningsCard = ({summary}) => {
           <p className="text-sm text-white/70 font-medium">
             vs last month
           </p>
-        </div>
+        </div> */}
       </div>
 
       <div className="absolute -right-4 -top-2">
