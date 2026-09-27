@@ -6,6 +6,7 @@ import {
 import {
   createCategory,
   getAllCategories,
+  getAllCategoriesForProvider,
   getAllCategoriesForTabs,
   getAllPopularCategories,
 } from "../services/categoryService";
@@ -68,3 +69,10 @@ export const useCategoriesTabs = () => {
     queryFn: getAllCategoriesForTabs,
   });
 };
+
+export const useGetCategoriesForProvider= ()=>{
+  return useQuery({
+    queryKey:['get-provider-categories'],
+    queryFn:getAllCategoriesForProvider
+  })
+}
