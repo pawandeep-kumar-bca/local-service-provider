@@ -25,3 +25,8 @@ export const getAllPopularCategories = async ({ page, limit }) => {
 
   return response.data;
 };
+
+export const getAllCategoriesForProvider = async ()=>{
+  const response = await api.get('categories/provider-categories')
+  return response.data
+}
