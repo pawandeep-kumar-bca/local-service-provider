@@ -76,3 +76,9 @@ export const useGetCategoriesForProvider= ()=>{
     queryFn:getAllCategoriesForProvider
   })
 }
+// export const useGetOwnCategoriesForProvider= ()=>{
+//   return useQuery({
+//     queryKey:['get-provider-categories'],
+//     queryFn:getAllOwnCategoriesForProvider
+//   })
+// }
