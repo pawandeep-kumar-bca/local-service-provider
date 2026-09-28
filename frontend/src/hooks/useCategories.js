@@ -8,6 +8,7 @@ import {
   getAllCategories,
   getAllCategoriesForProvider,
   getAllCategoriesForTabs,
+  getAllOwnCategoriesForProvider,
   getAllPopularCategories,
 } from "../services/categoryService";
 import { useNavigate } from "react-router-dom";
@@ -76,9 +77,9 @@ export const useGetCategoriesForProvider= ()=>{
     queryFn:getAllCategoriesForProvider
   })
 }
-// export const useGetOwnCategoriesForProvider= ()=>{
-//   return useQuery({
-//     queryKey:['get-provider-categories'],
-//     queryFn:getAllOwnCategoriesForProvider
-//   })
-// }
+export const useGetOwnCategoriesForProvider= ()=>{
+  return useQuery({
+    queryKey:['get-own-provider-categories'],
+    queryFn:getAllOwnCategoriesForProvider
+  })
+}
