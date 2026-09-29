@@ -34,3 +34,8 @@ export const getAllOwnCategoriesForProvider = async ()=>{
   const response = await api.get('/categories/provider/categories')
   return response.data
 }
+
+export const deleteProviderCategory = async (categoryId)=>{
+  const response = await api.delete(`/categories/provider/categories/${categoryId}`)
+  return response.data
+}
