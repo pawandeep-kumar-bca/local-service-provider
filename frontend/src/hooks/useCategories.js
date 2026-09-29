@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 import {
   createCategory,
+  deleteProviderCategory,
   getAllCategories,
   getAllCategoriesForProvider,
   getAllCategoriesForTabs,
@@ -81,5 +82,11 @@ export const useGetOwnCategoriesForProvider= ()=>{
   return useQuery({
     queryKey:['get-own-provider-categories'],
     queryFn:getAllOwnCategoriesForProvider
+  })
+}
+
+export const useProviderDeleteCategory = ()=>{
+  return useMutation({
+    mutationFn:(categoryId)=>deleteProviderCategory(categoryId)
   })
 }
