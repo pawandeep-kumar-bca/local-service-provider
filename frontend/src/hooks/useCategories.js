@@ -48,7 +48,6 @@ export const useCategories = (params = {}) => {
 export const useCategoriesPopular = () => {
   return useInfiniteQuery({
     queryKey: ["popular-categories"],
-
     queryFn: ({ pageParam = 1 }) =>
       getAllPopularCategories({
         page: pageParam,
