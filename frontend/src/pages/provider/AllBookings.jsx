@@ -14,7 +14,7 @@ const AllBookings = () => {
 
   const { data } = useAllProviderBookings();
   const bookings = data?.allBookings || [];
- 
+
 
   return (
     <div>
@@ -63,7 +63,7 @@ const AllBookings = () => {
         {/* Booking Card */}
 
         {bookings.map((booking) => {
-          return <UserCardBookings booking={booking} key={booking._id}/>;
+          return <UserCardBookings booking={booking} key={booking._id} />;
         })}
       </div>
 
