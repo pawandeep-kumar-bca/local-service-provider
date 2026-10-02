@@ -270,14 +270,12 @@ const AddNewService = () => {
                   <button
                     type="button"
                     onClick={() => setStatus((prev) => !prev)}
-                    className={`w-12 h-6 rounded-full relative transition-all duration-300 shrink-0 cursor-pointer ${
-                      status ? "bg-green-400" : "bg-gray-300"
-                    }`}
+                    className={`w-12 h-6 rounded-full relative transition-all duration-300 shrink-0 cursor-pointer ${status ? "bg-green-400" : "bg-gray-300"
+                      }`}
                   >
                     <div
-                      className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all duration-300 ${
-                        status ? "right-0.5" : "left-0.5"
-                      }`}
+                      className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all duration-300 ${status ? "right-0.5" : "left-0.5"
+                        }`}
                     />
                   </button>
                   <div>
@@ -301,7 +299,7 @@ const AddNewService = () => {
                         className="cursor-pointer"
                       >
                         <input
-                         defaultChecked={index === 0}
+                          defaultChecked={index === 0}
                           type="checkbox"
                           name="days"
                           id={day}
