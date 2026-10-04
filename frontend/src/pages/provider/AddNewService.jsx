@@ -1,350 +1,311 @@
 
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { IoIosArrowBack } from "react-icons/io";
-// import { MdOutlineCloudUpload } from "react-icons/md";
-// import Button from "../../components/common/Button";
-// import { useGetCategoriesForProvider } from "../../hooks/useCategories";
-// import api from "../../services/api";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
+import { MdOutlineCloudUpload } from "react-icons/md";
+import Button from "../../components/common/Button";
+import { useCategoryCreate, useGetCategoriesForProvider } from "../../hooks/useCategories";
 
-// const AddNewService = () => {
-//   const navigate = useNavigate();
 
-//   // Fetch categories from API
-//   const { data, isLoading } = useGetCategoriesForProvider();
-//   const categories = data?.data || [];
+const AddNewService = () => {
+  const navigate = useNavigate();
 
-//   // Form state
-//   const [formData, setFormData] = useState({
-//     categoryId: "",
-//     experience: "",
-//     priceType: "",
-//     price: "",
-//     description: "",
-//     certificate: null,
-//   });
+  // Fetch categories from API
+  const { data, isLoading } = useGetCategoriesForProvider();
+  const categories = data?.data || [];
 
-//   const [loading, setLoading] = useState(false);
+  // Form state
+  const [formData, setFormData] = useState({
+    categoryId: "",
+    experience: "",
+    priceType: "",
+    price: "",
+    description: "",
+    certificate: null,
+  });
 
-//   // Handle input changes
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
 
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-//   };
+  const { createCategoryForProviderMutation } = useCategoryCreate()
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-//   // Handle certificate upload
-//   const handleFileChange = (e) => {
-//     const file = e.target.files?.[0];
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-//     if (file) {
-//       setFormData((prev) => ({
-//         ...prev,
-//         certificate: file,
-//       }));
-//     }
-//   };
+  // Handle certificate upload
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
 
-//   // Submit form
-//   // const handleSubmit = async (e) => {
-//   //   e.preventDefault();
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        certificate: file,
+      }));
+    }
+  };
 
-//   //   if (!formData.categoryId) {
-//   //     return alert("Please select a service category");
-//   //   }
+  // Submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-//   //   if (!formData.certificate) {
-//   //     return alert("Please upload your certificate");
-//   //   }
+    if (!formData.categoryId) {
+      return alert("Please select a service category");
+    }
 
-//   //   try {
-//   //     setLoading(true);
+    if (!formData.certificate) {
+      return alert("Please upload your certificate");
+    }
 
-//   //     const payload = new FormData();
 
-//   //     payload.append("categoryId", formData.categoryId);
-//   //     payload.append("experience", formData.experience);
-//   //     payload.append("priceType", formData.priceType);
-//   //     payload.append("price", formData.price);
-//   //     payload.append("description", formData.description);
-//   //     payload.append("certificate", formData.certificate);
 
-//   //     // Replace this URL with your actual backend route
-    
 
-     
-  
-//   //   } finally {
-//   //     setLoading(false);
-//   //   }
-//   // };
+    const payload = new FormData();
 
-//   return (
-//     <div>
-//       <form
-//         onSubmit={handleSubmit}
-//         className="md:shadow-[0_0_20px_rgba(0,0,0,0.10)] md:p-4 rounded-xl"
-//       >
-//         {/* Header */}
-//         <div className="mb-4 flex justify-between">
-//           <div>
-//             <h1 className="text-xl md:text-2xl font-bold text-text">
-//               Select Service
-//             </h1>
+    payload.append("categoryId", formData.categoryId);
+    payload.append("experience", formData.experience);
+    payload.append("priceType", formData.priceType);
+    payload.append("price", formData.price);
+    payload.append("description", formData.description);
+    payload.append("certificate", formData.certificate);
 
-//             <p className="text-sm md:text-base text-muted mt-1">
-//               Choose a service from the list provided by admin.
-//             </p>
-//           </div>
 
-//           <div>
-//             <Button type="button" onClick={() => navigate(-1)}>
-//               <IoIosArrowBack />
-//               Back
-//             </Button>
-//           </div>
-//         </div>
+    await createCategoryForProviderMutation.mutateAsync(payload)
 
-//         {/* Category Selection */}
-//         {isLoading ? (
-//           <p className="text-center py-6">Loading categories...</p>
-//         ) : categories.length === 0 ? (
-//           <p className="text-center py-6 text-muted">
-//             No categories available.
-//           </p>
-//         ) : (
-//           <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-//             {categories.map((category) => (
-//               <label
-//                 key={category._id}
-//                 htmlFor={category._id}
-//                 className="relative cursor-pointer"
-//               >
-//                 <input
-//                   type="radio"
-//                   name="categoryId"
-//                   id={category._id}
-//                   value={category._id}
-//                   checked={formData.categoryId === category._id}
-//                   onChange={handleChange}
-//                   className="hidden peer"
-//                 />
 
-//                 <div
-//                   className="border rounded-xl border-gray-200
-//                   peer-checked:bg-green-50
-//                   peer-checked:border-green-400
-//                   hover:border-green-500 hover:bg-green-50
-//                   text-center transition-all
-//                   peer-checked:scale-[1.02]
-//                   duration-300 p-4 flex flex-col
-//                   justify-center items-center gap-2
-//                   peer-checked:ring-1 peer-checked:ring-green-200"
-//                 >
-//                   <div
-//                     className="md:w-16 md:h-16 h-14 w-14 rounded-full
-//                     flex justify-center items-center"
-//                     style={{
-//                       backgroundColor: category.backgroundColor,
-//                     }}
-//                   >
-//                     <img
-//                       src={category.icon?.url}
-//                       alt={category.name}
-//                       className="w-8 h-8 object-contain"
-//                     />
-//                   </div>
 
-//                   <h1 className="md:text-lg text-sm font-semibold text-text">
-//                     {category.name}
-//                   </h1>
-//                 </div>
-//               </label>
-//             ))}
-//           </div>
-//         )}
 
-//         {/* Pricing & Duration */}
-//         <div className="mt-6">
-//           <div className="mb-4">
-//             <h1 className="text-xl md:text-2xl font-bold text-text">
-//               Pricing & Duration
-//             </h1>
+  };
 
-//             <p className="text-sm md:text-base text-muted mt-1">
-//               Set your pricing and experience.
-//             </p>
-//           </div>
+  return (
+    <div>
+      <form
+        onSubmit={handleSubmit}
+        className="md:shadow-[0_0_20px_rgba(0,0,0,0.10)] md:p-4 rounded-xl"
+      >
+        {/* Header */}
+        <div className="mb-4 flex justify-between">
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold text-text">
+              Select Service
+            </h1>
 
-//           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-5 gap-4">
+            <p className="text-sm md:text-base text-muted mt-1">
+              Choose a service from the list provided by admin.
+            </p>
+          </div>
 
-//             {/* Price */}
-//             <div>
-//               <label
-//                 htmlFor="price"
-//                 className="block mb-2 font-medium text-sm"
-//               >
-//                 Price (₹) <span className="text-red-500">*</span>
-//               </label>
+          <div>
+            <Button type="button" onClick={() => navigate(-1)}>
+              <IoIosArrowBack />
+              Back
+            </Button>
+          </div>
+        </div>
 
-//               <input
-//                 type="number"
-//                 id="price"
-//                 name="price"
-//                 value={formData.price}
-//                 onChange={handleChange}
-//                 placeholder="Enter service price"
-//                 min="1"
-//                 required
-//                 className="w-full border border-gray-300 px-3 py-2
-//                 rounded-md focus:ring focus:ring-blue-200
-//                 focus:outline-none"
-//               />
-//             </div>
+        {/* Category Selection */}
+        {isLoading ? (
+          <p className="text-center py-6">Loading categories...</p>
+        ) : categories.length === 0 ? (
+          <p className="text-center py-6 text-muted">
+            No categories available.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {categories.map((category) => (
+              <label
+                key={category._id}
+                htmlFor={category._id}
+                className="relative cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="categoryId"
+                  id={category._id}
+                  value={category._id}
+                  checked={formData.categoryId === category._id}
+                  onChange={handleChange}
+                  className="hidden peer"
+                />
 
-//             {/* Price Type */}
-//             <div>
-//               <label
-//                 htmlFor="priceType"
-//                 className="block mb-2 font-medium text-sm"
-//               >
-//                 Price Type <span className="text-red-500">*</span>
-//               </label>
+                <div
+                  className="border rounded-xl border-gray-200
+                  peer-checked:bg-green-50
+                  peer-checked:border-green-400
+                  hover:border-green-500 hover:bg-green-50
+                  text-center transition-all
+                  peer-checked:scale-[1.02]
+                  duration-300 p-4 flex flex-col
+                  justify-center items-center gap-2
+                  peer-checked:ring-1 peer-checked:ring-green-200"
+                >
+                  <div
+                    className="md:w-16 md:h-16 h-14 w-14 rounded-full
+                    flex justify-center items-center"
+                    style={{
+                      backgroundColor: category.backgroundColor,
+                    }}
+                  >
+                    <img
+                      src={category.icon?.url}
+                      alt={category.name}
+                      className="w-8 h-8 object-contain"
+                    />
+                  </div>
 
-//               <select
-//                 name="priceType"
-//                 id="priceType"
-//                 value={formData.priceType}
-//                 onChange={handleChange}
-//                 required
-//                 className="w-full border border-gray-300 px-3 py-2
-//                 rounded-md focus:ring focus:ring-blue-200
-//                 focus:outline-none bg-white"
-//               >
-//                 <option value="" disabled>
-//                   Select Price Type
-//                 </option>
+                  <h1 className="md:text-lg text-sm font-semibold text-text">
+                    {category.name}
+                  </h1>
+                </div>
+              </label>
+            ))}
+          </div>
+        )}
 
-//                 <option value="Fixed Price">Fixed Price</option>
-//                 <option value="Hourly">Hourly</option>
-//               </select>
-//             </div>
+        {/* Pricing & Duration */}
+        <div className="mt-8">
+          <div className="mb-5">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">
+              Pricing & Experience
+            </h2>
 
-//             {/* Experience */}
-//             <div>
-//               <label
-//                 htmlFor="experience"
-//                 className="block mb-2 font-medium text-sm"
-//               >
-//                 Experience (Years){" "}
-//                 <span className="text-red-500">*</span>
-//               </label>
+            <p className="text-sm text-gray-500 mt-1.5 leading-relaxed">
+              Set your service price and share your professional experience.
+            </p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
 
-//               <input
-//                 type="number"
-//                 id="experience"
-//                 name="experience"
-//                 value={formData.experience}
-//                 onChange={handleChange}
-//                 placeholder="Enter your experience"
-//                 min="0"
-//                 required
-//                 className="w-full border border-gray-300 px-3 py-2
-//                 rounded-md focus:ring focus:ring-blue-200
-//                 focus:outline-none"
-//               />
-//             </div>
+          {/* Left Side: Experience & Description */}
+          <div className="flex flex-col gap-5">
 
-//           </div>
-//         </div>
+            {/* Experience */}
+            <div>
+              <label
+                htmlFor="experience"
+                className="block mb-2 font-medium text-sm"
+              >
+                Experience (Years){" "}
+                <span className="text-red-500">*</span>
+              </label>
 
-//         {/* Description */}
-//         <div className="mt-5">
-//           <label
-//             htmlFor="description"
-//             className="block mb-2 font-medium text-sm"
-//           >
-//             Service Description
-//           </label>
+              <input
+                type="number"
+                id="experience"
+                name="experience"
+                value={formData.experience}
+                onChange={handleChange}
+                placeholder="Enter your experience"
+                min="0"
+                required
+                className="w-full border border-gray-300 px-3 py-2.5
+        rounded-lg focus:ring-2 focus:ring-green-100
+        focus:border-green-500 focus:outline-none transition"
+              />
+            </div>
 
-//           <textarea
-//             name="description"
-//             id="description"
-//             value={formData.description}
-//             onChange={handleChange}
-//             rows="4"
-//             placeholder="Describe your service and expertise..."
-//             className="w-full border border-gray-300 px-3 py-2
-//             rounded-md focus:ring focus:ring-blue-200
-//             focus:outline-none resize-none"
-//           />
-//         </div>
+            {/* Description */}
+            <div className="flex-1">
+              <label
+                htmlFor="description"
+                className="block mb-2 font-medium text-sm"
+              >
+                Service Description
+              </label>
 
-//         {/* Certificate Upload */}
-//         <div className="mt-5">
-//           <label className="block mb-2 font-medium text-sm">
-//             Upload Certificate{" "}
-//             <span className="text-red-500">*</span>
-//           </label>
+              <textarea
+                name="description"
+                id="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows="4"
+                placeholder="Describe your service and expertise..."
+                className="w-full h-[calc(100%-28px)] min-h-[120px]
+        border border-gray-300 px-3 py-2.5 rounded-lg
+        focus:ring-2 focus:ring-green-100
+        focus:border-green-500 focus:outline-none
+        resize-none transition"
+              />
+            </div>
 
-//           <label
-//             htmlFor="certificate"
-//             className="flex flex-col items-center justify-center
-//             border-2 border-dashed border-gray-300 rounded-xl
-//             p-6 cursor-pointer hover:border-green-500
-//             hover:bg-green-50 transition"
-//           >
-//             <MdOutlineCloudUpload
-//               size={35}
-//               className="text-gray-500"
-//             />
+          </div>
 
-//             <p className="font-medium text-sm mt-2">
-//               {formData.certificate
-//                 ? formData.certificate.name
-//                 : "Click to upload certificate"}
-//             </p>
+          {/* Right Side: Certificate Upload */}
+          <div className="flex flex-col">
 
-//             <p className="text-xs text-muted mt-1">
-//               Upload your service-related certificate
-//             </p>
+            <label className="block mb-2 font-medium text-sm">
+              Upload Certificate{" "}
+              <span className="text-red-500">*</span>
+            </label>
 
-//             <input
-//               type="file"
-//               id="certificate"
-//               name="certificate"
-//               accept=".pdf,.jpg,.jpeg,.png"
-//               onChange={handleFileChange}
-//               className="hidden"
-//             />
-//           </label>
-//         </div>
+            <label
+              htmlFor="certificate"
+              className="flex flex-col items-center justify-center
+      flex-1 min-h-[220px] border-2 border-dashed
+      border-gray-300 rounded-xl p-6 cursor-pointer
+      hover:border-green-500 hover:bg-green-50
+      transition-all duration-200"
+            >
+              <MdOutlineCloudUpload
+                size={42}
+                className="text-green-600"
+              />
 
-//         {/* Action Buttons */}
-//         <div className="flex flex-col md:flex-row justify-end gap-3 my-5">
-//           <Button
-//             type="button"
-//             color="white"
-//             className="w-full md:w-fit md:px-10"
-//             onClick={() => navigate(-1)}
-//           >
-//             Cancel
-//           </Button>
+              <p className="font-medium text-sm mt-3 text-center break-all">
+                {formData.certificate
+                  ? formData.certificate.name
+                  : "Click to upload certificate"}
+              </p>
 
-//           <Button
-//             type="submit"
-//             disabled={loading || isLoading}
-//             className="w-full md:w-fit md:px-10"
-//           >
-//             {loading ? "Saving..." : "Save Service"}
-//           </Button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// };
+              <p className="text-xs text-muted mt-2 text-center">
+                Upload your service-related certificate
+              </p>
 
-// export default AddNewService;
+              <p className="text-xs text-gray-400 mt-1">
+                PDF, JPG, JPEG, PNG
+              </p>
+
+              <input
+                type="file"
+                id="certificate"
+                name="certificate"
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+
+          </div>
+
+        </div>
+
+
+
+        {/* Action Buttons */}
+        <div className="flex flex-col md:flex-row justify-end gap-3 my-5">
+          <Button
+            type="button"
+            color="white"
+            className="w-full md:w-fit md:px-10"
+            onClick={() => navigate(-1)}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            type="submit"
+            disabled={createCategoryForProviderMutation.isLoading}
+            className="w-full md:w-fit md:px-10"
+          >
+            {createCategoryForProviderMutation.isLoading ? "Saving..." : "Save Service"}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default AddNewService;
