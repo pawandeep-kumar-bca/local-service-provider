@@ -13,57 +13,64 @@ import { TbAirConditioning } from "react-icons/tb";
 import Button from "../../components/common/Button";
 import { IoIosArrowBack } from "react-icons/io";
 import Input from "../../components/common/Input";
+import { useGetCategoriesForProvider } from "../../hooks/useCategories";
+import { useNavigate } from "react-router-dom";
 const AddNewService = () => {
-  const services = [
-    {
-      name: "AC Repair",
-      icon: TbAirConditioning,
-      bgColor: "bg-blue-100",
-      textColor: "text-blue-600",
-    },
-    {
-      name: "Appliance Repair",
-      icon: MdMiscellaneousServices,
-      bgColor: "bg-indigo-100",
-      textColor: "text-indigo-600",
-    },
-    {
-      name: "Carpenter",
-      icon: MdOutlineCarpenter,
-      bgColor: "bg-amber-100",
-      textColor: "text-amber-600",
-    },
-    {
-      name: "Plumbing",
-      icon: MdOutlinePlumbing,
-      bgColor: "bg-cyan-100",
-      textColor: "text-cyan-600",
-    },
-    {
-      name: "Electrical",
-      icon: MdOutlineElectricalServices,
-      bgColor: "bg-yellow-100",
-      textColor: "text-yellow-600",
-    },
-    {
-      name: "Pest Control",
-      icon: MdPestControl,
-      bgColor: "bg-red-100",
-      textColor: "text-red-600",
-    },
-    {
-      name: "Painting",
-      icon: TbPaintFilled,
-      bgColor: "bg-pink-100",
-      textColor: "text-pink-600",
-    },
-    {
-      name: "Cleaning",
-      icon: MdCleaningServices,
-      bgColor: "bg-green-100",
-      textColor: "text-green-600",
-    },
-  ];
+  const {data}= useGetCategoriesForProvider()
+
+  const categories = data?.data || []
+
+  const navigate = useNavigate()
+  // const services = [
+  //   {
+  //     name: "AC Repair",
+  //     icon: TbAirConditioning,
+  //     bgColor: "bg-blue-100",
+  //     textColor: "text-blue-600",
+  //   },
+  //   {
+  //     name: "Appliance Repair",
+  //     icon: MdMiscellaneousServices,
+  //     bgColor: "bg-indigo-100",
+  //     textColor: "text-indigo-600",
+  //   },
+  //   {
+  //     name: "Carpenter",
+  //     icon: MdOutlineCarpenter,
+  //     bgColor: "bg-amber-100",
+  //     textColor: "text-amber-600",
+  //   },
+  //   {
+  //     name: "Plumbing",
+  //     icon: MdOutlinePlumbing,
+  //     bgColor: "bg-cyan-100",
+  //     textColor: "text-cyan-600",
+  //   },
+  //   {
+  //     name: "Electrical",
+  //     icon: MdOutlineElectricalServices,
+  //     bgColor: "bg-yellow-100",
+  //     textColor: "text-yellow-600",
+  //   },
+  //   {
+  //     name: "Pest Control",
+  //     icon: MdPestControl,
+  //     bgColor: "bg-red-100",
+  //     textColor: "text-red-600",
+  //   },
+  //   {
+  //     name: "Painting",
+  //     icon: TbPaintFilled,
+  //     bgColor: "bg-pink-100",
+  //     textColor: "text-pink-600",
+  //   },
+  //   {
+  //     name: "Cleaning",
+  //     icon: MdCleaningServices,
+  //     bgColor: "bg-green-100",
+  //     textColor: "text-green-600",
+  //   },
+  // ];
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const startTimes = [
     "06:00 AM",
@@ -115,26 +122,26 @@ const AddNewService = () => {
             </p>
           </div>
           <div>
-            <Button>
+            <Button type="button" onClick={()=>navigate(-1)}>
               <IoIosArrowBack />
               Back
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          {services.map((items, index) => {
-            const { name, icon: Icon, bgColor, textColor } = items;
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+          {categories.map((category) => {
+            
             return (
               <label
-                key={index}
-                htmlFor={name}
+                key={category._id}
+                htmlFor={category?.name}
                 className="relative cursor-pointer"
               >
                 <input
                   type="radio"
                   name="service"
-                  id={name}
-                  value={name}
+                  id={category?.name}
+                  value={category?.name}
                   className=" hidden peer "
                 />
 
@@ -142,12 +149,13 @@ const AddNewService = () => {
                   className="border rounded-xl border-gray-200 peer-checked:bg-green-50 peer-checked:border-green-400  hover:border-green-500 hover:bg-green-50 text-center transition-all peer-checked:scale-[1.02] duration-300 p-4 flex  flex-col justify-center items-center gap-2 peer-checked:ring-1 peer-checked:ring-green-200 "
                 >
                   <div
-                    className={`md:w-16 md:h-16 h-14 w-14 ${bgColor} ${textColor} rounded-full flex justify-center items-center`}
+                    className={`md:w-16 md:h-16 h-14 w-14 rounded-full flex justify-center items-center`}
+                    style={{backgroundColor:category?.backgroundColor}}
                   >
-                    <Icon size={28} />
+                   <img src={category?.icon?.url} alt={category?.name} className="w-8 h-8 object-center"/>
                   </div>
                   <h1 className="md:text-lg text-sm font-semibold text-text">
-                    {name}
+                    {category?.name}
                   </h1>
                 </div>
               </label>
