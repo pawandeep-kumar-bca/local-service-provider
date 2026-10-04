@@ -2,9 +2,11 @@ import {
   useInfiniteQuery,
   useMutation,
   useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
 import {
   createCategory,
+  createProviderCategory,
   deleteProviderCategory,
   getAllCategories,
   getAllCategoriesForProvider,
@@ -17,7 +19,7 @@ import { toast } from "react-toastify";
 
 export const useCategoryCreate = () => {
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient()
   const createCategoryMutation = useMutation({
     mutationFn: createCategory,
 
@@ -34,8 +36,27 @@ export const useCategoryCreate = () => {
       );
     },
   });
+   
+ const createCategoryForProviderMutation = useMutation({
+  mutationFn: createProviderCategory,
+  
+  onSuccess: (data) => {
+    toast.success(data?.message);
+    navigate("/provider/my-services");
+    queryClient.invalidateQueries({
+      queryKey:['get-own-provider-categories']
+    })
+  },
 
-  return { createCategoryMutation };
+  onError: (err) => {
+    toast.error(
+      err?.response?.data?.message || "Failed to create service"
+    );
+
+    console.error("Create Category for Provider Error:", err);
+  },
+});
+  return { createCategoryMutation,createCategoryForProviderMutation };
 };
 
 export const useCategories = (params = {}) => {
@@ -77,6 +98,7 @@ export const useGetCategoriesForProvider= ()=>{
     queryFn:getAllCategoriesForProvider
   })
 }
+
 export const useGetOwnCategoriesForProvider= ()=>{
   return useQuery({
     queryKey:['get-own-provider-categories'],
