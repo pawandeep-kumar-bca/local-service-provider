@@ -30,6 +30,10 @@ export const getAllCategoriesForProvider = async ()=>{
   const response = await api.get('/categories/provider-categories')
   return response.data
 }
+export const createProviderCategory = async (payload) =>{
+  const response = await api.post('categories/provider/create-category',payload)
+  return response.data
+}
 export const getAllOwnCategoriesForProvider = async ()=>{
   const response = await api.get('/categories/provider/categories')
   return response.data

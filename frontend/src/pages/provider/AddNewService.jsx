@@ -1,397 +1,350 @@
-import React, { useState } from "react";
-import { MdOutlineCarpenter, MdTipsAndUpdates } from "react-icons/md";
-import { MdOutlinePlumbing } from "react-icons/md";
-import { MdOutlineElectricalServices } from "react-icons/md";
-import { MdPestControl } from "react-icons/md";
-import { GoDash } from "react-icons/go";
-import { MdOutlineCurrencyRupee } from "react-icons/md";
-import { MdCleaningServices } from "react-icons/md";
-import { MdMiscellaneousServices } from "react-icons/md";
 
-import { TbPaintFilled } from "react-icons/tb";
-import { TbAirConditioning } from "react-icons/tb";
-import Button from "../../components/common/Button";
-import { IoIosArrowBack } from "react-icons/io";
-import Input from "../../components/common/Input";
-import { useGetCategoriesForProvider } from "../../hooks/useCategories";
-import { useNavigate } from "react-router-dom";
-const AddNewService = () => {
-  const {data}= useGetCategoriesForProvider()
+// import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { IoIosArrowBack } from "react-icons/io";
+// import { MdOutlineCloudUpload } from "react-icons/md";
+// import Button from "../../components/common/Button";
+// import { useGetCategoriesForProvider } from "../../hooks/useCategories";
+// import api from "../../services/api";
 
-  const categories = data?.data || []
+// const AddNewService = () => {
+//   const navigate = useNavigate();
 
-  const navigate = useNavigate()
-  // const services = [
-  //   {
-  //     name: "AC Repair",
-  //     icon: TbAirConditioning,
-  //     bgColor: "bg-blue-100",
-  //     textColor: "text-blue-600",
-  //   },
-  //   {
-  //     name: "Appliance Repair",
-  //     icon: MdMiscellaneousServices,
-  //     bgColor: "bg-indigo-100",
-  //     textColor: "text-indigo-600",
-  //   },
-  //   {
-  //     name: "Carpenter",
-  //     icon: MdOutlineCarpenter,
-  //     bgColor: "bg-amber-100",
-  //     textColor: "text-amber-600",
-  //   },
-  //   {
-  //     name: "Plumbing",
-  //     icon: MdOutlinePlumbing,
-  //     bgColor: "bg-cyan-100",
-  //     textColor: "text-cyan-600",
-  //   },
-  //   {
-  //     name: "Electrical",
-  //     icon: MdOutlineElectricalServices,
-  //     bgColor: "bg-yellow-100",
-  //     textColor: "text-yellow-600",
-  //   },
-  //   {
-  //     name: "Pest Control",
-  //     icon: MdPestControl,
-  //     bgColor: "bg-red-100",
-  //     textColor: "text-red-600",
-  //   },
-  //   {
-  //     name: "Painting",
-  //     icon: TbPaintFilled,
-  //     bgColor: "bg-pink-100",
-  //     textColor: "text-pink-600",
-  //   },
-  //   {
-  //     name: "Cleaning",
-  //     icon: MdCleaningServices,
-  //     bgColor: "bg-green-100",
-  //     textColor: "text-green-600",
-  //   },
-  // ];
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const startTimes = [
-    "06:00 AM",
-    "07:00 AM",
-    "08:00 AM",
-    "09:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "12:00 PM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-    "05:00 PM",
-    "06:00 PM",
-    "07:00 PM",
-    "08:00 PM",
-    "09:00 PM",
-  ];
-  const endTimes = [
-    "07:00 AM",
-    "08:00 AM",
-    "09:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "12:00 PM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-    "05:00 PM",
-    "06:00 PM",
-    "07:00 PM",
-    "08:00 PM",
-    "09:00 PM",
-    "10:00 PM",
-  ];
-  const [status, setStatus] = useState(false);
-  return (
-    <div>
-      <div className="md:shadow-[0_0_20px_rgba(0,0,0,0.10)] md:p-4 rounded-xl">
-        <div className="mb-4 flex justify-between">
-          <div>
-            <h1 className="text-xl md:text-2xl  font-bold text-text">
-              Select Service
-            </h1>
-            <p className="text-sm md:text-base text-muted mt-1 w-[95%] md:w-[100%]">
-              Choose a service from the list provided by admin.
-            </p>
-          </div>
-          <div>
-            <Button type="button" onClick={()=>navigate(-1)}>
-              <IoIosArrowBack />
-              Back
-            </Button>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-          {categories.map((category) => {
-            
-            return (
-              <label
-                key={category._id}
-                htmlFor={category?.name}
-                className="relative cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name="service"
-                  id={category?.name}
-                  value={category?.name}
-                  className=" hidden peer "
-                />
+//   // Fetch categories from API
+//   const { data, isLoading } = useGetCategoriesForProvider();
+//   const categories = data?.data || [];
 
-                <div
-                  className="border rounded-xl border-gray-200 peer-checked:bg-green-50 peer-checked:border-green-400  hover:border-green-500 hover:bg-green-50 text-center transition-all peer-checked:scale-[1.02] duration-300 p-4 flex  flex-col justify-center items-center gap-2 peer-checked:ring-1 peer-checked:ring-green-200 "
-                >
-                  <div
-                    className={`md:w-16 md:h-16 h-14 w-14 rounded-full flex justify-center items-center`}
-                    style={{backgroundColor:category?.backgroundColor}}
-                  >
-                   <img src={category?.icon?.url} alt={category?.name} className="w-8 h-8 object-center"/>
-                  </div>
-                  <h1 className="md:text-lg text-sm font-semibold text-text">
-                    {category?.name}
-                  </h1>
-                </div>
-              </label>
-            );
-          })}
-        </div>
-        <div className="mt-4">
-          {/* Heading */}
-          <div className="mb-4">
-            <h1 className="text-xl md:text-2xl font-bold text-text">
-              Pricing & Duration
-            </h1>
+//   // Form state
+//   const [formData, setFormData] = useState({
+//     categoryId: "",
+//     experience: "",
+//     priceType: "",
+//     price: "",
+//     description: "",
+//     certificate: null,
+//   });
 
-            <p className="text-sm md:text-base text-muted mt-1">
-              Set your pricing and estimated duration.
-            </p>
-          </div>
+//   const [loading, setLoading] = useState(false);
 
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-5">
-            {/* Price */}
-            <Input
-              label="Price (₹)"
-              type="number"
-              id="price"
-              placeholder="Enter service price"
-              required
-            />
+//   // Handle input changes
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
 
-            {/* Price Type */}
-            <div>
-              <label
-                htmlFor="priceType"
-                className="block mb-2 font-medium text-lg md:text-sm"
-              >
-                Price Type <span className="text-red-500">*</span>
-              </label>
+//     setFormData((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }));
+//   };
 
-              <select
-                name="priceType"
-                id="priceType"
-                defaultValue=""
-                className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
-              >
-                <option disabled value="">
-                  Select Price Type
-                </option>
+//   // Handle certificate upload
+//   const handleFileChange = (e) => {
+//     const file = e.target.files?.[0];
 
-                <option value="Fixed Price">Fixed Price</option>
-                <option value="Starting From">Starting From</option>
-                <option value="Hourly">Hourly</option>
-              </select>
-            </div>
-          </div>
+//     if (file) {
+//       setFormData((prev) => ({
+//         ...prev,
+//         certificate: file,
+//       }));
+//     }
+//   };
 
-          {/* Duration + Tip */}
-          <div className="flex flex-col lg:flex-row gap-5 mt-3 md:mt-0">
-            {/* Duration */}
-            <div className="w-full lg:w-1/2">
-              <label
-                htmlFor="duration"
-                className="block mb-2 font-medium text-lg md:text-sm"
-              >
-                Duration <span className="text-red-500">*</span>
-              </label>
+//   // Submit form
+//   // const handleSubmit = async (e) => {
+//   //   e.preventDefault();
 
-              <select
-                name="duration"
-                id="duration"
-                defaultValue=""
-                className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
-              >
-                <option disabled value="">
-                  Select Duration
-                </option>
+//   //   if (!formData.categoryId) {
+//   //     return alert("Please select a service category");
+//   //   }
 
-                <option>30 Min</option>
-                <option>1 Hour</option>
-                <option>1-2 Hours</option>
-                <option>2-3 Hours</option>
-                <option>Half Day</option>
-                <option>Full Day</option>
-              </select>
-            </div>
+//   //   if (!formData.certificate) {
+//   //     return alert("Please upload your certificate");
+//   //   }
 
-            {/* Tip Box */}
-            <div className="w-full lg:w-1/2 flex items-start gap-3 p-4 rounded-2xl bg-green-50 border border-green-100">
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                <MdTipsAndUpdates className="text-xl text-green-600" />
-              </div>
+//   //   try {
+//   //     setLoading(true);
 
-              <div>
-                <h2 className="font-semibold text-green-600">Tip</h2>
+//   //     const payload = new FormData();
 
-                <p className="text-xs text-green-400 font-semibold mt-1">
-                  Set accurate pricing and duration to help customers make
-                  faster booking decisions.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-4 md:mt-0">
-          <div className="mb-4">
-            <h1 className="text-xl md:text-2xl font-bold text-text">
-              Availability & Status
-            </h1>
+//   //     payload.append("categoryId", formData.categoryId);
+//   //     payload.append("experience", formData.experience);
+//   //     payload.append("priceType", formData.priceType);
+//   //     payload.append("price", formData.price);
+//   //     payload.append("description", formData.description);
+//   //     payload.append("certificate", formData.certificate);
 
-            <p className="text-sm md:text-base text-muted mt-1">
-              Set your availability and service status.
-            </p>
-          </div>
+//   //     // Replace this URL with your actual backend route
+    
 
-          <div>
-            <div className="flex flex-col md:flex-row">
-              <div className="flex-1">
-                <label className="block mb-2 font-medium text-lg md:text-sm">
-                  Service Status
-                </label>
-                <div className="flex gap-2 items-center">
-                  <button
-                    type="button"
-                    onClick={() => setStatus((prev) => !prev)}
-                    className={`w-12 h-6 rounded-full relative transition-all duration-300 shrink-0 cursor-pointer ${status ? "bg-green-400" : "bg-gray-300"
-                      }`}
-                  >
-                    <div
-                      className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all duration-300 ${status ? "right-0.5" : "left-0.5"
-                        }`}
-                    />
-                  </button>
-                  <div>
-                    <h4 className="tex-lg font-bold">Active</h4>
-                    <p className="text-sm text-muted font-semibold">
-                      Your Service will be visible to customers.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex-1 mt-3 md:mt-0">
-                <label className="block mb-2 font-medium text-lg md:text-sm">
-                  Working Days
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {days.map((day, index) => {
-                    return (
-                      <label
-                        htmlFor={day}
-                        key={index}
-                        className="cursor-pointer"
-                      >
-                        <input
-                          defaultChecked={index === 0}
-                          type="checkbox"
-                          name="days"
-                          id={day}
-                          value={day}
-                          className="peer hidden"
-                        />
+     
+  
+//   //   } finally {
+//   //     setLoading(false);
+//   //   }
+//   // };
 
-                        <div
-                          className="w-16 h-9 flex items-center justify-center rounded-lg bg-gray-100 text-gray-700 font-semibold peer-checked:bg-green-100 peer-checked:text-green-600 peer-checked:border peer-checked:border-green-300 hover:bg-green-50 transition-all duration-300"
-                        >
-                          {day}
-                        </div>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+//   return (
+//     <div>
+//       <form
+//         onSubmit={handleSubmit}
+//         className="md:shadow-[0_0_20px_rgba(0,0,0,0.10)] md:p-4 rounded-xl"
+//       >
+//         {/* Header */}
+//         <div className="mb-4 flex justify-between">
+//           <div>
+//             <h1 className="text-xl md:text-2xl font-bold text-text">
+//               Select Service
+//             </h1>
 
-            <div className="mt-4 flex gap-4  flex-col md:flex-row">
-              <div className="flex-1 ">
-                <label
-                  htmlFor="time"
-                  className="block mb-2 font-medium text-lg md:text-sm"
-                >
-                  Available Time
-                </label>
+//             <p className="text-sm md:text-base text-muted mt-1">
+//               Choose a service from the list provided by admin.
+//             </p>
+//           </div>
 
-                <div className="flex items-center gap-1">
-                  <select
-                    name="time"
-                    id="start-time"
-                    defaultValue=""
-                    className="w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500  text-muted focus:outline-none bg-white"
-                  >
-                    <option disabled value="">
-                      Start Time
-                    </option>
-                    {startTimes.map((time, idx) => (
-                      <option key={idx} value={time}>
-                        {time}
-                      </option>
-                    ))}
-                  </select>
-                  <GoDash />
+//           <div>
+//             <Button type="button" onClick={() => navigate(-1)}>
+//               <IoIosArrowBack />
+//               Back
+//             </Button>
+//           </div>
+//         </div>
 
-                  <select
-                    name="time"
-                    id="end-time"
-                    defaultValue=""
-                    className=" w-full text-lg border border-gray-300 px-3 py-2 rounded-md focus:ring focus:ring-blue-500 text-muted focus:outline-none bg-white"
-                  >
-                    <option disabled value="">
-                      End Time
-                    </option>
-                    {endTimes.map((time, idx) => (
-                      <option key={idx} value={time}>
-                        {time}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="flex-1">
-                <Input
-                  label="Service Area"
-                  id="service area"
-                  name="service area"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+//         {/* Category Selection */}
+//         {isLoading ? (
+//           <p className="text-center py-6">Loading categories...</p>
+//         ) : categories.length === 0 ? (
+//           <p className="text-center py-6 text-muted">
+//             No categories available.
+//           </p>
+//         ) : (
+//           <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+//             {categories.map((category) => (
+//               <label
+//                 key={category._id}
+//                 htmlFor={category._id}
+//                 className="relative cursor-pointer"
+//               >
+//                 <input
+//                   type="radio"
+//                   name="categoryId"
+//                   id={category._id}
+//                   value={category._id}
+//                   checked={formData.categoryId === category._id}
+//                   onChange={handleChange}
+//                   className="hidden peer"
+//                 />
 
-        <div className="flex flex-col md:flex-row justify-end gap-3 my-5">
-          <Button className="w-full md:w-fit md:px-10">Save Service</Button>
+//                 <div
+//                   className="border rounded-xl border-gray-200
+//                   peer-checked:bg-green-50
+//                   peer-checked:border-green-400
+//                   hover:border-green-500 hover:bg-green-50
+//                   text-center transition-all
+//                   peer-checked:scale-[1.02]
+//                   duration-300 p-4 flex flex-col
+//                   justify-center items-center gap-2
+//                   peer-checked:ring-1 peer-checked:ring-green-200"
+//                 >
+//                   <div
+//                     className="md:w-16 md:h-16 h-14 w-14 rounded-full
+//                     flex justify-center items-center"
+//                     style={{
+//                       backgroundColor: category.backgroundColor,
+//                     }}
+//                   >
+//                     <img
+//                       src={category.icon?.url}
+//                       alt={category.name}
+//                       className="w-8 h-8 object-contain"
+//                     />
+//                   </div>
 
-          <Button color="white" className="w-full md:w-fit md:px-10">
-            Cancel
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};
+//                   <h1 className="md:text-lg text-sm font-semibold text-text">
+//                     {category.name}
+//                   </h1>
+//                 </div>
+//               </label>
+//             ))}
+//           </div>
+//         )}
 
-export default AddNewService;
+//         {/* Pricing & Duration */}
+//         <div className="mt-6">
+//           <div className="mb-4">
+//             <h1 className="text-xl md:text-2xl font-bold text-text">
+//               Pricing & Duration
+//             </h1>
+
+//             <p className="text-sm md:text-base text-muted mt-1">
+//               Set your pricing and experience.
+//             </p>
+//           </div>
+
+//           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-5 gap-4">
+
+//             {/* Price */}
+//             <div>
+//               <label
+//                 htmlFor="price"
+//                 className="block mb-2 font-medium text-sm"
+//               >
+//                 Price (₹) <span className="text-red-500">*</span>
+//               </label>
+
+//               <input
+//                 type="number"
+//                 id="price"
+//                 name="price"
+//                 value={formData.price}
+//                 onChange={handleChange}
+//                 placeholder="Enter service price"
+//                 min="1"
+//                 required
+//                 className="w-full border border-gray-300 px-3 py-2
+//                 rounded-md focus:ring focus:ring-blue-200
+//                 focus:outline-none"
+//               />
+//             </div>
+
+//             {/* Price Type */}
+//             <div>
+//               <label
+//                 htmlFor="priceType"
+//                 className="block mb-2 font-medium text-sm"
+//               >
+//                 Price Type <span className="text-red-500">*</span>
+//               </label>
+
+//               <select
+//                 name="priceType"
+//                 id="priceType"
+//                 value={formData.priceType}
+//                 onChange={handleChange}
+//                 required
+//                 className="w-full border border-gray-300 px-3 py-2
+//                 rounded-md focus:ring focus:ring-blue-200
+//                 focus:outline-none bg-white"
+//               >
+//                 <option value="" disabled>
+//                   Select Price Type
+//                 </option>
+
+//                 <option value="Fixed Price">Fixed Price</option>
+//                 <option value="Hourly">Hourly</option>
+//               </select>
+//             </div>
+
+//             {/* Experience */}
+//             <div>
+//               <label
+//                 htmlFor="experience"
+//                 className="block mb-2 font-medium text-sm"
+//               >
+//                 Experience (Years){" "}
+//                 <span className="text-red-500">*</span>
+//               </label>
+
+//               <input
+//                 type="number"
+//                 id="experience"
+//                 name="experience"
+//                 value={formData.experience}
+//                 onChange={handleChange}
+//                 placeholder="Enter your experience"
+//                 min="0"
+//                 required
+//                 className="w-full border border-gray-300 px-3 py-2
+//                 rounded-md focus:ring focus:ring-blue-200
+//                 focus:outline-none"
+//               />
+//             </div>
+
+//           </div>
+//         </div>
+
+//         {/* Description */}
+//         <div className="mt-5">
+//           <label
+//             htmlFor="description"
+//             className="block mb-2 font-medium text-sm"
+//           >
+//             Service Description
+//           </label>
+
+//           <textarea
+//             name="description"
+//             id="description"
+//             value={formData.description}
+//             onChange={handleChange}
+//             rows="4"
+//             placeholder="Describe your service and expertise..."
+//             className="w-full border border-gray-300 px-3 py-2
+//             rounded-md focus:ring focus:ring-blue-200
+//             focus:outline-none resize-none"
+//           />
+//         </div>
+
+//         {/* Certificate Upload */}
+//         <div className="mt-5">
+//           <label className="block mb-2 font-medium text-sm">
+//             Upload Certificate{" "}
+//             <span className="text-red-500">*</span>
+//           </label>
+
+//           <label
+//             htmlFor="certificate"
+//             className="flex flex-col items-center justify-center
+//             border-2 border-dashed border-gray-300 rounded-xl
+//             p-6 cursor-pointer hover:border-green-500
+//             hover:bg-green-50 transition"
+//           >
+//             <MdOutlineCloudUpload
+//               size={35}
+//               className="text-gray-500"
+//             />
+
+//             <p className="font-medium text-sm mt-2">
+//               {formData.certificate
+//                 ? formData.certificate.name
+//                 : "Click to upload certificate"}
+//             </p>
+
+//             <p className="text-xs text-muted mt-1">
+//               Upload your service-related certificate
+//             </p>
+
+//             <input
+//               type="file"
+//               id="certificate"
+//               name="certificate"
+//               accept=".pdf,.jpg,.jpeg,.png"
+//               onChange={handleFileChange}
+//               className="hidden"
+//             />
+//           </label>
+//         </div>
+
+//         {/* Action Buttons */}
+//         <div className="flex flex-col md:flex-row justify-end gap-3 my-5">
+//           <Button
+//             type="button"
+//             color="white"
+//             className="w-full md:w-fit md:px-10"
+//             onClick={() => navigate(-1)}
+//           >
+//             Cancel
+//           </Button>
+
+//           <Button
+//             type="submit"
+//             disabled={loading || isLoading}
+//             className="w-full md:w-fit md:px-10"
+//           >
+//             {loading ? "Saving..." : "Save Service"}
+//           </Button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default AddNewService;
