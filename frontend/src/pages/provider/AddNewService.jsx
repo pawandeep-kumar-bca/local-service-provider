@@ -177,6 +177,68 @@ const AddNewService = () => {
             </p>
           </div>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          {/* Price */}
+          <div>
+            <label
+              htmlFor="price"
+              className="block mb-2 text-sm font-medium text-text"
+            >
+              Price (₹) <span className="text-red-500">*</span>
+            </label>
+
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              placeholder="Enter service price"
+              min="1"
+              required
+              className="w-full px-4 py-3 rounded-lg
+                border border-gray-300 bg-white text-sm
+                outline-none transition
+                focus:border-green-500 focus:ring-2 focus:ring-green-100"
+            />
+          </div>
+
+          {/* Price Type */}
+          <div>
+            <label
+              htmlFor="priceType"
+              className="block mb-2 text-sm font-medium text-text"
+            >
+              Price Type <span className="text-red-500">*</span>
+            </label>
+
+            <select
+              name="priceType"
+              id="priceType"
+              value={formData.priceType}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-3 rounded-lg
+                border border-gray-300 bg-white text-sm
+                outline-none transition
+                focus:border-green-500 focus:ring-2 focus:ring-green-100"
+            >
+              <option value="" disabled>
+                Select Price Type
+              </option>
+
+              <option value="fixed">
+                Fixed Price
+              </option>
+
+              <option value="hourly">
+                Hourly
+              </option>
+            </select>
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
 
           {/* Left Side: Experience & Description */}
