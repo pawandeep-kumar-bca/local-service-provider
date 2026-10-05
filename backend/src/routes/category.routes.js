@@ -48,7 +48,7 @@ router.get(
   categoriesControllers.getProviderCategories,
 );
 router.get(
-  "/provider/categories",
+  "/provider-categories",
   authMiddleware.tokenVerify,
   categoriesControllers.getCategoriesForProvider,
 );

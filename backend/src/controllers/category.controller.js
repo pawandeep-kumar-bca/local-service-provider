@@ -432,8 +432,7 @@ async function getProviderCategories(req, res) {
       .findById(providerId)
       .populate({
         path: "categories.category",
-        select:
-          "name slug description icon backgroundColor status discount average_rating total_reviews sortOrder",
+        select: "name icon backgroundColor status",
       })
       .select("categories");
 
@@ -443,11 +442,22 @@ async function getProviderCategories(req, res) {
         message: "Provider not found",
       });
     }
+    console.log(provider)
+    const categories = provider.categories.map((item) => ({
+      _id: item._id,
+      category: item.category,
+      experience: item.experience,
+      pricing: item.pricing,
+      description: item.description,
+      isAvailable: item.isAvailable,
+      approvalStatus: item.approvalStatus,
+      rejectionReason: item.rejectionReason,
+    }));
 
     return res.status(200).json({
       success: true,
       message: "Provider categories fetched successfully",
-      data: provider.categories,
+      data: categories,
     });
   } catch (error) {
     console.error("Get provider categories error:", error);
@@ -528,8 +538,6 @@ async function providerCategoryAvailability(req, res) {
     const { categoryId } = req.params;
     const { isAvailable } = req.body;
 
-  
-
     const providerCategory = provider.categories.find(
       (item) => item._id.toString() === categoryId,
     );
@@ -541,7 +549,8 @@ async function providerCategoryAvailability(req, res) {
       });
     }
 
-    providerCategory.isAvailable = isAvailable === true || isAvailable === "true";
+    providerCategory.isAvailable =
+      isAvailable === true || isAvailable === "true";
 
     await provider.save();
 
@@ -570,8 +579,6 @@ async function providerCategoryDelete(req, res) {
     const provider = req.provider;
     const { categoryId } = req.params;
 
-    
-
     const categoryIndex = provider.categories.findIndex(
       (item) => item._id.toString() === categoryId,
     );
@@ -585,23 +592,17 @@ async function providerCategoryDelete(req, res) {
 
     const providerCategory = provider.categories[categoryIndex];
 
-    const certificateFileId =
-      providerCategory.certificate?.fileId;
+    const certificateFileId = providerCategory.certificate?.fileId;
 
-   
     provider.categories.splice(categoryIndex, 1);
 
     await provider.save();
 
-    
     if (certificateFileId) {
       try {
         await deleteFile(certificateFileId);
       } catch (error) {
-        console.error(
-          "Certificate delete from ImageKit failed:",
-          error,
-        );
+        console.error("Certificate delete from ImageKit failed:", error);
       }
     }
 
@@ -622,9 +623,7 @@ async function getCategoriesForProvider(req, res) {
   try {
     const categories = await categoryModel
       .find({ status: "active" })
-      .select(
-        "name  icon backgroundColor   sortOrder",
-      )
+      .select("name  icon backgroundColor   sortOrder")
       .sort({ sortOrder: 1, name: 1 });
 
     return res.status(200).json({
@@ -652,5 +651,6 @@ module.exports = {
   getProviderCategories,
   providerCategoryUpdate,
   providerCategoryAvailability,
-  providerCategoryDelete,getCategoriesForProvider
+  providerCategoryDelete,
+  getCategoriesForProvider,
 };
