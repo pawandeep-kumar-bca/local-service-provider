@@ -43,8 +43,8 @@ const ServicesList = ({ service }) => {
     }
   };
 
-  
- 
+
+
 
   const isRejected = service?.approvalStatus === "rejected";
   // const isApproved = service?.approvalStatus === "approved";
