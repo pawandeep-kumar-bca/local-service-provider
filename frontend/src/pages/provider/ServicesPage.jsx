@@ -13,6 +13,7 @@ const ServicesPage = () => {
 
   const services = data?.data || [];
 
+
   if (isPending) {
     return <div className="p-5 text-center">Loading services...</div>;
   }

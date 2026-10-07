@@ -11,13 +11,18 @@ import {
 
 import StatusBudge from "../common/StatusBadge";
 import ToggleSwitch from "../common/ToggleSwitch";
+import { useProviderDeleteCategory } from "../../hooks/useCategories";
+import { toast } from "react-toastify";
+
 
 const ServicesList = ({ service }) => {
+
+  
   const [status, setStatus] = useState(
     service?.isAvailable ?? false
   );
 
-
+  const useProviderDeleteCategoryMutation = useProviderDeleteCategory();
 
   // Toggle availability (API integration later)
   const handleToggle = () => {
@@ -44,7 +49,19 @@ const ServicesList = ({ service }) => {
   };
 
 
+  const deleteCategoryHandler = async (categoryId) => {
+    try {
+      const data = await useProviderDeleteCategoryMutation.mutateAsync(categoryId);
 
+      toast.success(data?.message || "Service deleted successfully");
+    } catch (err) {
+      console.error("Provider category delete:", err);
+
+      toast.error(
+        err?.response?.data?.message || "Failed to delete service"
+      );
+    }
+  };
 
   const isRejected = service?.approvalStatus === "rejected";
   // const isApproved = service?.approvalStatus === "approved";
@@ -207,15 +224,18 @@ const ServicesList = ({ service }) => {
             </p>
           </button>
 
-          {/* Delete Button */}
           <button
             type="button"
-            className="w-14 h-14 rounded-xl bg-red-50 flex flex-col items-center justify-center text-red-500 hover:bg-red-100 transition cursor-pointer"
+            onClick={() => deleteCategoryHandler(service?._id)}
+            disabled={useProviderDeleteCategoryMutation.isPending}
+            className="w-14 h-14 rounded-xl bg-red-50 flex flex-col items-center justify-center text-red-500 hover:bg-red-100 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <MdOutlineDelete size={24} />
 
             <p className="text-[10px] font-medium">
-              Delete
+              {useProviderDeleteCategoryMutation.isPending
+                ? "Deleting..."
+                : "Delete"}
             </p>
           </button>
 
