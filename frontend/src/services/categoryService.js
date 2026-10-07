@@ -43,3 +43,8 @@ export const deleteProviderCategory = async (categoryId)=>{
   const response = await api.delete(`/categories/provider/categories/${categoryId}`)
   return response.data
 }
+
+export const providerCategoryAvailability = async (data)=>{
+  const response = await api.patch(`/categories/provider/categories/${data.categoryId}/availability`,data.isAvailable)
+  return response.data
+}
