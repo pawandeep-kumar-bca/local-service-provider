@@ -13,6 +13,7 @@ import {
   getAllCategoriesForTabs,
   getAllOwnCategoriesForProvider,
   getAllPopularCategories,
+  providerCategoryAvailability,
 } from "../services/categoryService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -109,5 +110,10 @@ export const useGetOwnCategoriesForProvider= ()=>{
 export const useProviderDeleteCategory = ()=>{
   return useMutation({
     mutationFn:(categoryId)=>deleteProviderCategory(categoryId)
+  })
+}
+export const useProviderCategoryAvailability = ()=>{
+  return useMutation({
+    mutationFn:(data)=>providerCategoryAvailability(data)
   })
 }
