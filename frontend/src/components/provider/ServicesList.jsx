@@ -11,24 +11,46 @@ import {
 
 import StatusBudge from "../common/StatusBadge";
 import ToggleSwitch from "../common/ToggleSwitch";
-import { useProviderDeleteCategory } from "../../hooks/useCategories";
+import { useProviderCategoryAvailability, useProviderDeleteCategory } from "../../hooks/useCategories";
 import { toast } from "react-toastify";
 
 
 const ServicesList = ({ service }) => {
 
-  
+
   const [status, setStatus] = useState(
     service?.isAvailable ?? false
   );
 
   const useProviderDeleteCategoryMutation = useProviderDeleteCategory();
+  const useProviderCategoryAvailabilityMutation = useProviderCategoryAvailability()
 
-  // Toggle availability (API integration later)
-  const handleToggle = () => {
-    if (service?.approvalStatus !== "approved") return;
+  const handleToggle = async (categoryId) => {
+    try {
+      if (service?.approvalStatus !== "approved") return;
 
-    setStatus((prev) => !prev);
+      const newStatus = !status;
+
+      const data =
+        await useProviderCategoryAvailabilityMutation.mutateAsync({
+          categoryId,
+           newStatus,
+        });
+
+      toast.success(
+        data?.message ||
+        `Category ${newStatus ? "enabled" : "disabled"} successfully`
+      );
+
+      setStatus(newStatus);
+    } catch (err) {
+      console.error("Provider category Availability:", err);
+
+      toast.error(
+        err?.response?.data?.message ||
+        "Failed to update service availability"
+      );
+    }
   };
 
   // Format approval status
@@ -109,7 +131,7 @@ const ServicesList = ({ service }) => {
 
           <ToggleSwitch
             enabled={status}
-            onChange={handleToggle}
+            onChange={() => handleToggle(service?._id)}
           />
 
           <StatusBudge

@@ -45,6 +45,6 @@ export const deleteProviderCategory = async (categoryId)=>{
 }
 
 export const providerCategoryAvailability = async (data)=>{
-  const response = await api.patch(`/categories/provider/categories/${data.categoryId}/availability`,data.isAvailable)
+  const response = await api.patch(`/categories/provider/categories/${data.categoryId}/availability`,{isAvailable:data.newStatus})
   return response.data
 }
