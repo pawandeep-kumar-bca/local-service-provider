@@ -34,7 +34,7 @@ const ServicesList = ({ service }) => {
       const data =
         await useProviderCategoryAvailabilityMutation.mutateAsync({
           categoryId,
-           newStatus,
+          newStatus,
         });
 
       toast.success(
@@ -234,17 +234,8 @@ const ServicesList = ({ service }) => {
         {/* Actions */}
         <div className="flex items-center gap-2">
 
-          {/* Edit Button */}
-          <button
-            type="button"
-            className="w-14 h-14 rounded-xl bg-gray-100 flex flex-col items-center justify-center text-muted hover:text-blue-500 hover:bg-blue-100 transition cursor-pointer"
-          >
-            <MdOutlineModeEdit size={24} />
 
-            <p className="text-[10px] font-medium">
-              Edit
-            </p>
-          </button>
+
 
           <button
             type="button"
