@@ -384,6 +384,8 @@ async function providerCategoryCreate(req, res) {
     );
 
     const categoryData = {
+      _id: new mongoose.Types.ObjectId(),
+
       category: categoryId,
 
       experience: Number(experience),
@@ -404,7 +406,6 @@ async function providerCategoryCreate(req, res) {
 
       approvalStatus: "pending",
     };
-
     provider.categories.push(categoryData);
 
     await provider.save();
@@ -442,7 +443,7 @@ async function getProviderCategories(req, res) {
         message: "Provider not found",
       });
     }
-    console.log(provider)
+
     const categories = provider.categories.map((item) => ({
       _id: item._id,
       category: item.category,
@@ -469,75 +470,12 @@ async function getProviderCategories(req, res) {
   }
 }
 
-async function providerCategoryUpdate(req, res) {
-  try {
-    const provider = req.provider;
-    const userId = req.provider.userId;
-
-    const { categoryId } = req.params;
-    const { experience, priceType, price, description } = req.body;
-
-    const categoryIndex = provider.categories.findIndex(
-      (item) => item._id.toString() === categoryId,
-    );
-
-    if (categoryIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        message: "Provider category not found",
-      });
-    }
-
-    const providerCategory = provider.categories[categoryIndex];
-
-    providerCategory.experience = Number(experience);
-
-    providerCategory.pricing = {
-      priceType,
-      price: Number(price),
-    };
-
-    providerCategory.description = description?.trim();
-
-    if (req.files?.certificate?.[0]) {
-      const certificateData = await uploadFile(
-        req.files.certificate[0],
-        `${userId}-${Date.now()}-certificate`,
-        "Providers/Documents/Certificates",
-      );
-
-      providerCategory.certificate = {
-        url: certificateData.url,
-        fileId: certificateData.fileId,
-      };
-
-      providerCategory.approvalStatus = "pending";
-      providerCategory.rejectionReason = undefined;
-    }
-
-    await provider.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Provider category updated successfully",
-      data: providerCategory,
-    });
-  } catch (error) {
-    console.error("Provider category update error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-}
 
 async function providerCategoryAvailability(req, res) {
   try {
     const provider = req.provider;
     const { categoryId } = req.params;
-    const { isAvailable } = req.body;
-
+    const { isAvailable } = req.body; 
     const providerCategory = provider.categories.find(
       (item) => item._id.toString() === categoryId,
     );
@@ -579,6 +517,7 @@ async function providerCategoryDelete(req, res) {
     const provider = req.provider;
     const { categoryId } = req.params;
 
+  
     const categoryIndex = provider.categories.findIndex(
       (item) => item._id.toString() === categoryId,
     );
@@ -649,7 +588,6 @@ module.exports = {
   deleteCategory,
   providerCategoryCreate,
   getProviderCategories,
-  providerCategoryUpdate,
   providerCategoryAvailability,
   providerCategoryDelete,
   getCategoriesForProvider,
