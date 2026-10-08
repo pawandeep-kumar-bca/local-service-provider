@@ -162,7 +162,7 @@ const providerSchema = new mongoose.Schema(
 
         isAvailable: {
           type: Boolean,
-          default: true,
+          default: false,
         },
 
         approvalStatus: {

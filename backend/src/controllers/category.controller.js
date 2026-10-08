@@ -382,7 +382,7 @@ async function providerCategoryCreate(req, res) {
       `${userId}-${Date.now()}-certificate`,
       "Providers/Documents/Certificates",
     );
-
+   
     const categoryData = {
       _id: new mongoose.Types.ObjectId(),
 
@@ -399,10 +399,10 @@ async function providerCategoryCreate(req, res) {
 
       certificate: {
         url: certificateData.url,
-        fileId: certificateData.fileId,
+        fileId: certificateData.fieldId,
       },
 
-      isAvailable: true,
+      isAvailable: false,
 
       approvalStatus: "pending",
     };

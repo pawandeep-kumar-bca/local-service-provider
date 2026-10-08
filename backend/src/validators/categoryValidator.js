@@ -56,7 +56,7 @@ const providerCategoryAvailabilityValidator = [
     .withMessage("Availability must be true or false"),
 
   respondWithValidationErrors,
-];
+]; 
 
 module.exports = {
   categoryValidator,
