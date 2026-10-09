@@ -47,7 +47,6 @@ async function providerProfileCreate(req, res) {
       lat,
       lng,
     } = req.body;
-  
 
     const userId = req.user.id;
 
@@ -106,17 +105,21 @@ async function providerProfileCreate(req, res) {
     const provider = await providerModel.create({
       userId,
       providerId,
-      pricing: { price },
-
-      experience,
 
       categories: [
         {
           category: new mongoose.Types.ObjectId(categoryId),
+          experience,
           pricing: {
             priceType: priceType,
             price: price,
           },
+          certificate: {
+            url: certificateData.url,
+            fileId: certificateData.fieldId,
+          },
+          isAvailable: false,
+          approvalStatus: "pending",
         },
       ],
 
@@ -133,10 +136,6 @@ async function providerProfileCreate(req, res) {
         aadharCard: {
           url: aadharCardData.url,
           fileId: aadharCardData.fieldId,
-        },
-        certificate: {
-          url: certificateData.url,
-          fileId: certificateData.fieldId,
         },
       },
     });
@@ -3659,14 +3658,12 @@ async function markCashPaymentReceived(req, res) {
   try {
     const providerId = req.provider._id;
     const { bookingId } = req.params;
-   
-   
+
     const booking = await bookingsModel.findOne({
-      _id:bookingId,
+      _id: bookingId,
       "providerSnapshot.providerObjectId": providerId,
     });
-     
-      
+
     if (!booking) {
       return res.status(404).json({
         success: false,
