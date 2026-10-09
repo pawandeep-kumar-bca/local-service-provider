@@ -139,7 +139,7 @@ const BasicInfo = () => {
                 htmlFor="category"
                 className="block mb-2 font-medium text-lg md:text-sm"
               >
-                Service Category <span className="text-red-500">*</span>
+                Select Price Type <span className="text-red-500">*</span>
               </label>
 
               <select
