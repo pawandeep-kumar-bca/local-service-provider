@@ -7,12 +7,12 @@ const BookingSchedule = ({
   view,
   selectedDate,
 }) => {
-const {data} = useProviderUpcomingSchedule({
-    view,date:selectedDate
+  const { data } = useProviderUpcomingSchedule({
+    view, date: selectedDate
   })
 
   const bookings = data?.bookings || []
- 
+
 
   return (
     <div className="flex md:flex-row flex-col">
@@ -42,12 +42,12 @@ const {data} = useProviderUpcomingSchedule({
 
       {/* Divider */}
       <div className="md:border-r border-t border-gray-300 md:mx-3 my-4" />
-        
+
       {/* Slots */}
-     <div className="flex-1">
-      <h1 className="text-lg capitalize text-muted font-semibold mb-3">Today's slots</h1>
-       <TimeSlotList />
-     </div>
+      <div className="flex-1">
+        <h1 className="text-lg capitalize text-muted font-semibold mb-3">Today's slots</h1>
+        <TimeSlotList />
+      </div>
     </div>
   );
 };
