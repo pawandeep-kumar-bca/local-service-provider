@@ -4,7 +4,7 @@ import StatusBadge from "../../common/StatusBadge";
 import Avatar from "../../common/Avatar";
 
 const BookingItem = ({ booking }) => {
-  
+
 
   const borderColor =
     booking?.bookingStatus === "accepted"
@@ -30,15 +30,15 @@ const BookingItem = ({ booking }) => {
     >
       {/* Customer */}
       <div className="flex items-center gap-3 min-w-0">
-       
-         <div className="
+
+        <div className="
             w-14 h-14
             rounded-full
             object-cover
             shrink-0
           ">
-          <Avatar name={booking?.userSnapshot?.name} image={booking?.userSnapshot?.profileImage?.url} className="text-black bg-gray-400 text-2xl"/>
-         </div>
+          <Avatar name={booking?.userSnapshot?.name} image={booking?.userSnapshot?.profileImage?.url} className="text-black bg-gray-400 text-2xl" />
+        </div>
         <div className="min-w-0">
 
           <h2 className="font-semibold text-text">{booking?.serviceSnapshot?.categoryName}</h2>
@@ -56,14 +56,14 @@ const BookingItem = ({ booking }) => {
       {/* Time + Status */}
       <div className="flex flex-col items-center justify-center shrink-0">
         <h1 className="text-sm md:text-lg font-semibold text-muted mb-1">
-          {new Date(booking?.bookingSlot?.startTime).toLocaleTimeString("en-IN",{
-            hour:'2-digit',
-            minute:'2-digit',
-            hour12:true
-          }).toUpperCase()} -  {new Date(booking?.bookingSlot?.endTime).toLocaleTimeString("en-IN",{
-            hour:'2-digit',
-            minute:'2-digit',
-            hour12:true
+          {new Date(booking?.bookingSlot?.startTime).toLocaleTimeString("en-IN", {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+          }).toUpperCase()} -  {new Date(booking?.bookingSlot?.endTime).toLocaleTimeString("en-IN", {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
           }).toUpperCase()}
         </h1>
 
