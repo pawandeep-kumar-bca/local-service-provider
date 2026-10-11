@@ -11,6 +11,7 @@ import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import StatusBudge from "../../components/common/StatusBadge";
 import { useCreateProviders } from "../../hooks/useProvider";
 import Button from "../../components/common/Button";
+import Loader from "../../components/common/Loader";
 const Review = () => {
   const navigate = useNavigate();
   const { formData, prevMoveForm, phoneNumber } = useOutletContext();
@@ -195,7 +196,7 @@ const Review = () => {
           className="w-full md:w-[30%]"
         >
           {createProviderMutation.isLoading
-            ? "Submitting..."
+            ? <><Loader size="small"/> "Submitting..." </>
             : "Submit Application"}
           <MdChevronRight size={25} />
         </Button>
