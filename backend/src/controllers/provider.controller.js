@@ -145,8 +145,8 @@ async function providerProfileCreate(req, res) {
     }
 
     if (req.files.profileImage) {
-      if (user.profileImage?.fieldId) {
-        await deleteFile(user.profileImage.fieldId);
+      if (user.profileImage?.fileId) {
+        await deleteFile(user.profileImage.fileId);
       }
 
       const profileImageData = await uploadFile(
@@ -157,7 +157,7 @@ async function providerProfileCreate(req, res) {
 
       user.profileImage = {
         url: profileImageData.url,
-        fieldId: profileImageData.fieldId,
+        fileId: profileImageData.fieldId,
       };
     }
 

@@ -80,7 +80,7 @@ function addProviderProjectStage(pipeline, { includeDistance = false } = {}) {
 
     rating: 1,
     totalReview: 1,
-    experience: 1,
+  
 
     verifiedByAdmin: 1,
     completedJobs: 1,
@@ -100,9 +100,8 @@ function addProviderProjectStage(pipeline, { includeDistance = false } = {}) {
 
     category: {
       id: "$selectedCategory.category",
-
       name: "$category.name",
-
+      experience: "$selectedCategory.experience",
       pricing: {
         priceType: "$selectedCategory.pricing.priceType",
         price: "$selectedCategory.pricing.price",
