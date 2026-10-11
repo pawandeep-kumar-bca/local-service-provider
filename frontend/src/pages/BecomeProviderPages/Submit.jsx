@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import {
   MdCheckCircle,
   MdOutlineAccessTime,
@@ -16,18 +16,19 @@ import Button from "../../components/common/Button";
 
 const Submit = () => {
   const navigate = useNavigate();
+  const { applicationSubmitted } = useOutletContext();
+
+  if (!applicationSubmitted) {
+    return null;
+  }
 
   return (
     <div className="mx-auto w-full max-w-5xl py-6 md:py-10">
-      {/* Main Success Card */}
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-        {/* Success Header */}
         <div className="relative overflow-hidden border-b border-green-100 bg-gradient-to-br from-green-50 via-white to-blue-50 px-5 py-10 text-center sm:px-10 md:py-14">
-          {/* Decorative background */}
           <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-green-100/50 blur-2xl" />
           <div className="pointer-events-none absolute -bottom-14 -left-10 h-40 w-40 rounded-full bg-blue-100/50 blur-2xl" />
 
-          {/* Success Illustration */}
           <div className="relative mx-auto mb-6 flex h-28 w-28 items-center justify-center rounded-full border border-green-100 bg-white shadow-sm sm:h-32 sm:w-32">
             <HiDocumentCheck
               size={76}
@@ -43,7 +44,6 @@ const Submit = () => {
             </div>
           </div>
 
-          {/* Heading */}
           <div className="relative">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-green-200 bg-green-100/70 px-3 py-1 text-xs font-semibold text-green-700">
               <MdCheckCircle size={15} />
@@ -55,15 +55,13 @@ const Submit = () => {
             </h1>
 
             <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-600 sm:text-base">
-              Your provider application has been submitted successfully.
-              Our team will review your information and uploaded documents.
+              Your provider application has been submitted successfully. Our
+              team will review your information and uploaded documents.
             </p>
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="grid grid-cols-1 gap-6 p-5 sm:p-7 md:grid-cols-2 md:gap-8 md:p-8">
-          {/* Application Status */}
           <section className="rounded-xl border border-gray-200 p-5">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
@@ -100,13 +98,12 @@ const Submit = () => {
               />
 
               <p className="text-sm leading-6 text-gray-600">
-                Please wait while our team verifies your details and
-                documents. You will be notified when the status changes.
+                Please wait while our team verifies your details and documents.
+                You will be notified when the status changes.
               </p>
             </div>
           </section>
 
-          {/* What Happens Next */}
           <section className="rounded-xl border border-gray-200 p-5">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
@@ -172,7 +169,6 @@ const Submit = () => {
           </section>
         </div>
 
-        {/* Footer Actions */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 bg-gray-50/70 px-5 py-5 sm:flex-row sm:px-8">
           <div className="text-center sm:text-left">
             <h3 className="text-sm font-semibold text-gray-800">
@@ -196,10 +192,9 @@ const Submit = () => {
         </div>
       </div>
 
-      {/* Review Time Note */}
       <p className="mt-5 text-center text-xs leading-5 text-gray-500">
-        Application review usually takes 24–48 hours. Actual review time
-        may vary.
+        Application review usually takes 24–48 hours. Actual review time may
+        vary.
       </p>
     </div>
   );

@@ -1,7 +1,6 @@
 
 import React from "react";
-import { AiFillIdcard } from "react-icons/ai";
-import { FaUserCircle } from "react-icons/fa";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import {
   MdChevronLeft,
   MdChevronRight,
@@ -12,42 +11,38 @@ import {
   MdOutlineEdit,
   MdOutlineCheckCircle,
 } from "react-icons/md";
+import { AiFillIdcard } from "react-icons/ai";
+import { FaUserCircle } from "react-icons/fa";
 import { PiCertificateFill } from "react-icons/pi";
-import { Link, useNavigate, useOutletContext } from "react-router-dom";
 
 import StatusBadge from "../../components/common/StatusBadge";
-import { useCreateProviders } from "../../hooks/useProvider";
 import Button from "../../components/common/Button";
 import Loader from "../../components/common/Loader";
+import { useCreateProviders } from "../../hooks/useProvider";
 
 const BASIC_INFO_PATH = "/user/become-provider/basic-info";
 const DOCUMENTS_PATH = "/user/become-provider/upload-documents";
 
-const DetailItem = ({ label, value, className = "" }) => (
-  <div className={`min-w-0 ${className}`}>
-    <p className="mb-1 text-xs font-medium text-slate-500">
-      {label}
-    </p>
+const DetailItem = ({ label, value }) => (
+  <div className="min-w-0">
+    <p className="mb-1 text-xs font-medium text-slate-500">{label}</p>
     <p className="break-words text-sm font-semibold text-slate-800">
       {value !== "" && value != null ? value : "Not provided"}
     </p>
   </div>
 );
 
-const SectionHeader = ({ Icon, title, subtitle, editTo }) => (
+const SectionHeader = ({ icon, title, subtitle, editTo }) => (
   <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
     <div className="flex min-w-0 items-center gap-3">
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-       {Icon}
+        {icon}
       </div>
+
       <div>
-        <h2 className="text-sm font-semibold text-slate-900">
-          {title}
-        </h2>
+        <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
         {subtitle && (
-          <p className="mt-0.5 text-xs text-slate-500">
-            {subtitle}
-          </p>
+          <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>
         )}
       </div>
     </div>
@@ -67,20 +62,24 @@ const SectionHeader = ({ Icon, title, subtitle, editTo }) => (
 const Review = () => {
   const navigate = useNavigate();
 
-  const { formData, prevMoveForm, phoneNumber } =
-    useOutletContext();
+  const {
+    formData,
+    prevMoveForm,
+    phoneNumber,
+    profileImage,
+    setApplicationSubmitted,
+  } = useOutletContext();
 
   const { createProviderMutation } = useCreateProviders();
-
   const isSubmitting = createProviderMutation.isPending;
 
   const documents = [
     {
       label: "Profile Image",
-      file: formData.profileImage,
+      file: formData.profileImage || profileImage,
       icon: FaUserCircle,
       color: "bg-blue-50 text-blue-600",
-      required: false,
+      required: true,
     },
     {
       label: "Aadhaar Card",
@@ -109,40 +108,59 @@ const Review = () => {
         ? "Fixed Price"
         : "Not specified";
 
-  const submitProvider = () => {
-    if (isSubmitting) return;
+  const validateApplication = () => {
+    if (
+      formData.experience === "" ||
+      formData.experience == null ||
+      Number(formData.experience) < 0
+    ) {
+      alert("Please enter valid experience.");
+      navigate(BASIC_INFO_PATH);
+      return false;
+    }
 
     if (
+      formData.price === "" ||
+      formData.price == null ||
+      Number(formData.price) <= 0
+    ) {
+      alert("Please enter a valid price.");
+      navigate(BASIC_INFO_PATH);
+      return false;
+    }
+
+    if (
+      !formData.priceType ||
       !formData.category?._id ||
       !formData.state?._id ||
       !formData.district?._id ||
       !formData.city?._id ||
       !formData.locality?.trim() ||
-      formData.lat == null ||
       formData.lat === "" ||
-      formData.lng == null ||
-      formData.lng === ""
+      formData.lat == null ||
+      formData.lng === "" ||
+      formData.lng == null
     ) {
       alert("Please complete your basic information.");
       navigate(BASIC_INFO_PATH);
-      return;
+      return false;
     }
 
-    if (
-      !formData.aadharCard ||
-      !formData.certificate
-    ) {
+    if (!documents.every((document) => document.file)) {
       alert("Please upload all required documents.");
       navigate(DOCUMENTS_PATH);
-      return;
+      return false;
     }
+
+    return true;
+  };
+
+  const submitProvider = () => {
+    if (isSubmitting || !validateApplication()) return;
 
     const form = new FormData();
 
-    form.append(
-      "phoneNumber",
-      formData.phoneNumber || phoneNumber
-    );
+    form.append("phoneNumber", formData.phoneNumber || phoneNumber);
     form.append("experience", formData.experience);
     form.append("price", formData.price);
     form.append("priceType", formData.priceType);
@@ -150,7 +168,7 @@ const Review = () => {
     form.append("state", formData.state._id);
     form.append("district", formData.district._id);
     form.append("city", formData.city._id);
-    form.append("locality", formData.locality);
+    form.append("locality", formData.locality.trim());
     form.append("lat", formData.lat);
     form.append("lng", formData.lng);
 
@@ -168,7 +186,15 @@ const Review = () => {
 
     createProviderMutation.mutate(form, {
       onSuccess: () => {
+        setApplicationSubmitted(true);
         navigate("/user/become-provider/submit");
+      },
+      onError: (error) => {
+        console.error("Provider application error:", error);
+        alert(
+          error?.response?.data?.message ||
+            "Unable to submit your application. Please try again."
+        );
       },
     });
   };
@@ -178,7 +204,6 @@ const Review = () => {
 
   return (
     <div className="mx-auto w-full max-w-6xl pb-8">
-      {/* Page Header */}
       <div className="mb-6">
         <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">
           <MdOutlineCheckCircle size={15} />
@@ -190,19 +215,16 @@ const Review = () => {
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          Check your information carefully before submitting your
-          provider application.
+          Check your information carefully before submitting your provider
+          application.
         </p>
       </div>
 
-      {/* Main Desktop Layout */}
       <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-12">
-        {/* Left Content */}
         <div className="space-y-5 lg:col-span-8">
-          {/* Personal Information */}
           <section className={cardClass}>
             <SectionHeader
-              Icon={<MdOutlinePhone size={20}/>}
+              icon={<MdOutlinePhone size={20} />}
               title="Personal Information"
               subtitle="Contact and professional experience"
               editTo={BASIC_INFO_PATH}
@@ -225,10 +247,9 @@ const Review = () => {
             </div>
           </section>
 
-          {/* Service Information */}
           <section className={cardClass}>
             <SectionHeader
-              Icon={<MdOutlineWorkOutline size={20}/>}
+              icon={<MdOutlineWorkOutline size={20} />}
               title="Service Information"
               subtitle="Category and service pricing"
               editTo={BASIC_INFO_PATH}
@@ -243,74 +264,42 @@ const Review = () => {
               <DetailItem
                 label="Service Price"
                 value={
-                  formData.price !== "" &&
-                  formData.price != null ? (
-                    <span className="inline-flex items-center">
-                      <MdOutlineCurrencyRupee size={17} />
-                      {formData.price}
-                    </span>
-                  ) : null
+                  <span className="inline-flex items-center">
+                    <MdOutlineCurrencyRupee size={17} />
+                    {formData.price}
+                  </span>
                 }
               />
 
-              <DetailItem
-                label="Pricing Type"
-                value={priceLabel}
-              />
+              <DetailItem label="Pricing Type" value={priceLabel} />
             </div>
           </section>
 
-          {/* Location */}
           <section className={cardClass}>
             <SectionHeader
-              Icon={<MdOutlineLocationOn size={20}/>}
+              icon={<MdOutlineLocationOn size={20} />}
               title="Service Location"
               subtitle="Where customers can find your services"
               editTo={BASIC_INFO_PATH}
             />
 
             <div className="grid grid-cols-2 gap-x-6 gap-y-5 p-5 sm:grid-cols-3">
-              <DetailItem
-                label="State"
-                value={formData.state?.name}
-              />
-
-              <DetailItem
-                label="District"
-                value={formData.district?.name}
-              />
-
-              <DetailItem
-                label="City"
-                value={formData.city?.name}
-              />
-
-              <DetailItem
-                label="Locality / Area"
-                value={formData.locality}
-              />
-
-              <DetailItem
-                label="Latitude"
-                value={formData.lat}
-              />
-
-              <DetailItem
-                label="Longitude"
-                value={formData.lng}
-              />
+              <DetailItem label="State" value={formData.state?.name} />
+              <DetailItem label="District" value={formData.district?.name} />
+              <DetailItem label="City" value={formData.city?.name} />
+              <DetailItem label="Locality / Area" value={formData.locality} />
+              <DetailItem label="Latitude" value={formData.lat} />
+              <DetailItem label="Longitude" value={formData.lng} />
             </div>
           </section>
         </div>
 
-        {/* Right Sidebar */}
         <aside className="space-y-5 lg:col-span-4">
-          {/* Document Card */}
           <section className={cardClass}>
             <SectionHeader
-              Icon={<AiFillIdcard size={20}/>}
+              icon={<AiFillIdcard size={20} />}
               title="Uploaded Documents"
-              subtitle={`${uploadedCount} of ${documents.length} documents selected`}
+              subtitle={`${uploadedCount} of ${documents.length} selected`}
               editTo={DOCUMENTS_PATH}
             />
 
@@ -338,6 +327,7 @@ const Review = () => {
                             <span className="ml-1 text-red-500">*</span>
                           )}
                         </p>
+
                         <p className="mt-0.5 truncate text-xs text-slate-500">
                           {uploaded
                             ? document.file?.name || "File selected"
@@ -346,18 +336,13 @@ const Review = () => {
                       </div>
                     </div>
 
-                    <div className="shrink-0">
-                      <StatusBadge
-                        badge={uploaded ? "uploaded" : "pending"}
-                      />
-                    </div>
+                    <StatusBadge badge={uploaded ? "uploaded" : "pending"} />
                   </div>
                 );
               })}
             </div>
           </section>
 
-          {/* Summary Card */}
           <section className={cardClass}>
             <div className="border-b border-slate-100 px-5 py-4">
               <h2 className="text-sm font-semibold text-slate-900">
@@ -370,27 +355,21 @@ const Review = () => {
 
             <div className="space-y-4 p-5">
               <div className="flex items-center justify-between gap-3 text-sm">
-                <span className="text-slate-500">
-                  Service Category
-                </span>
+                <span className="text-slate-500">Service Category</span>
                 <span className="text-right font-semibold text-slate-800">
                   {formData.category?.name || "—"}
                 </span>
               </div>
 
               <div className="flex items-center justify-between gap-3 text-sm">
-                <span className="text-slate-500">
-                  Location
-                </span>
+                <span className="text-slate-500">Location</span>
                 <span className="text-right font-semibold text-slate-800">
                   {formData.city?.name || "—"}
                 </span>
               </div>
 
               <div className="flex items-center justify-between gap-3 text-sm">
-                <span className="text-slate-500">
-                  Documents
-                </span>
+                <span className="text-slate-500">Documents</span>
                 <span className="font-semibold text-slate-800">
                   {uploadedCount}/{documents.length}
                 </span>
@@ -403,8 +382,8 @@ const Review = () => {
                     className="mt-0.5 shrink-0 text-indigo-600"
                   />
                   <p className="text-xs leading-5 text-indigo-800">
-                    Your application will be sent for review.
-                    Please verify all details before submitting.
+                    Your application will be sent for review. Please verify all
+                    details before submitting.
                   </p>
                 </div>
               </div>
@@ -413,7 +392,6 @@ const Review = () => {
         </aside>
       </div>
 
-      {/* Bottom Actions */}
       <div className="mt-6 flex flex-col-reverse items-center justify-between gap-3 border-t border-slate-200 pt-5 sm:flex-row">
         <Button
           type="button"

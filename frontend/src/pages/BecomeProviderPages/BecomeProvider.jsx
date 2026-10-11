@@ -1,15 +1,94 @@
-import React, { useState } from "react";
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { IoCheckmark } from "react-icons/io5";
 import { useMe } from "../../hooks/useAuth";
-import Button from "../../components/common/Button";
+
+const stepsArray = [
+  "basic-info",
+  "upload-documents",
+  "review",
+  "submit",
+];
+
+const stepLabels = [
+  { step: "basic-info", label: "Basic Info" },
+  { step: "upload-documents", label: "Documents" },
+  { step: "review", label: "Review" },
+  { step: "submit", label: "Submit" },
+];
+
+const getBasicInfoError = (formData) => {
+  const requiredFields = [
+    ["Experience", formData.experience],
+    ["Price", formData.price],
+    ["Price type", formData.priceType],
+    ["Service category", formData.category?._id],
+    ["State", formData.state?._id],
+    ["District", formData.district?._id],
+    ["City", formData.city?._id],
+    ["Locality", formData.locality],
+    ["Latitude", formData.lat],
+    ["Longitude", formData.lng],
+  ];
+
+  const missing = requiredFields.find(([, value]) => {
+    return (
+      value === null ||
+      value === undefined ||
+      String(value).trim() === ""
+    );
+  });
+
+  if (missing) {
+    return `Please complete ${missing[0]}.`;
+  }
+
+  if (
+    !Number.isFinite(Number(formData.experience)) ||
+    Number(formData.experience) < 0
+  ) {
+    return "Please enter valid experience.";
+  }
+
+  if (
+    !Number.isFinite(Number(formData.price)) ||
+    Number(formData.price) <= 0
+  ) {
+    return "Please enter a valid service price.";
+  }
+
+  if (
+    !Number.isFinite(Number(formData.lat)) ||
+    !Number.isFinite(Number(formData.lng))
+  ) {
+    return "Please capture valid coordinates.";
+  }
+
+  return "";
+};
+
+const getDocumentsError = (formData, profileImage) => {
+  if (!(formData.profileImage || profileImage)) {
+    return "Please upload your profile image.";
+  }
+
+  if (!formData.aadharCard) {
+    return "Please upload your Aadhaar card.";
+  }
+
+  if (!formData.certificate) {
+    return "Please upload your certificate.";
+  }
+
+  return "";
+};
 
 const BecomeProvider = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { data } = useMe();
+
   const [formData, setFormData] = useState({
     phoneNumber: "",
     experience: "",
@@ -20,146 +99,193 @@ const BecomeProvider = () => {
     district: null,
     city: null,
     locality: "",
-
     lat: "",
     lng: "",
-
     aadharCard: null,
     certificate: null,
     profileImage: null,
   });
-  // steps
-  const stepsArray = ["basic-info", "upload-documents", "review", "submit"];
-  const { data } = useMe();
-  const phoneNumber = formData.phoneNumber || data?.user?.phoneNumber || "";
 
-  const profileImage = formData.profileImage || data?.user?.profileImage;
+  const [applicationSubmitted, setApplicationSubmitted] = useState(false);
 
-  // step labels
-  const stepLabels = [
-    {
-      step: "basic-info",
-      label: "Basic Info",
-    },
-    {
-      step: "upload-documents",
-      label: "Documents",
-    },
-    {
-      step: "review",
-      label: "Review",
-    },
-    {
-      step: "submit",
-      label: "Submit",
-    },
-  ];
+  const currentStep = location.pathname.split("/").filter(Boolean).pop();
+  const currentIndex = stepsArray.indexOf(currentStep);
 
-  // current route step
-  const currentStep = location.pathname.split("/").pop();
+  const phoneNumber =
+    formData.phoneNumber || data?.user?.phoneNumber || "";
 
-  // current step index
-  const currentIndex = stepsArray.findIndex((step) => step === currentStep);
+  const profileImage =
+    formData.profileImage || data?.user?.profileImage || null;
 
-  // hide buttons on submit page
   const hideButtons = currentStep === "submit";
 
-  // next step
+  const validateStep = (stepIndex, showAlert = true) => {
+    let error = "";
+
+    if (stepIndex === 0) {
+      error = getBasicInfoError(formData);
+    } else if (stepIndex === 1) {
+      error = getDocumentsError(formData, profileImage);
+    }
+
+    if (error && showAlert) {
+      alert(error);
+    }
+
+    return !error;
+  };
+
   const nextMoveForm = () => {
-    const nextStep = stepsArray[currentIndex + 1];
-
-    if (nextStep) {
-      navigate(`/user/become-provider/${nextStep}`);
+    if (currentIndex < 0 || currentIndex >= stepsArray.length - 1) {
+      return;
     }
+
+    if (!validateStep(currentIndex)) {
+      return;
+    }
+
+    navigate(`/user/become-provider/${stepsArray[currentIndex + 1]}`);
   };
 
-  // previous step
   const prevMoveForm = () => {
-    const prevStep = stepsArray[currentIndex - 1];
+    const previousStep = stepsArray[currentIndex - 1];
 
-    if (prevStep) {
-      navigate(`/user/become-provider/${prevStep}`);
+    if (previousStep) {
+      navigate(`/user/become-provider/${previousStep}`);
     }
   };
+
+  const handleStepClick = (targetIndex) => {
+    // Current ya previous steps par ja sakte hain.
+    if (targetIndex <= currentIndex) {
+      navigate(`/user/become-provider/${stepsArray[targetIndex]}`);
+      return;
+    }
+
+    // Future steps ko click karke skip nahi kar sakte.
+    alert("Please complete the current step using the Next button.");
+  };
+
+
+useEffect(() => {
+  if (currentIndex < 0) return;
+
+  // Basic Info validation
+  if (currentIndex >= 1) {
+    const basicInfoError = getBasicInfoError(formData);
+
+    if (basicInfoError) {
+      alert(basicInfoError);
+
+      navigate("/user/become-provider/basic-info", {
+        replace: true,
+      });
+
+      return;
+    }
+  }
+
+  // Documents validation
+  if (currentIndex >= 2) {
+    const documentsError = getDocumentsError(formData, profileImage);
+
+    if (documentsError) {
+      alert(documentsError);
+
+      navigate("/user/become-provider/upload-documents", {
+        replace: true,
+      });
+
+      return;
+    }
+  }
+
+  // Submit page protection
+  if (currentIndex === 3 && !applicationSubmitted) {
+    navigate("/user/become-provider/review", {
+      replace: true,
+    });
+  }
+}, [
+  currentIndex,
+  formData,
+  profileImage,
+  applicationSubmitted,
+  navigate,
+]);
 
   return (
-    <div>
-      {/* heading */}
-      <div>
-        <h1 className="text-xl font-semibold mb-2">Become a Provider</h1>
+    <div className="w-full">
+      <div className="mb-6">
+        <h1 className="mb-2 text-xl font-semibold text-gray-900">
+          Become a Provider
+        </h1>
 
-        <p className="text-lg font-extralight">
+        <p className="text-sm text-gray-500 sm:text-base">
           Fill your professional details to create your provider profile.
         </p>
       </div>
 
-      {/* stepper */}
-      <div className="flex w-full mb-4 mt-5 items-start md:w-[55%] mx-auto">
-        {stepLabels.map((item, idx) => {
-          const isCompleted = idx < currentIndex || currentStep === "submit";
-
-          const isActive = idx === currentIndex && currentStep !== "submit";
+      <div className="mx-auto mb-8 mt-6 flex w-full items-start md:w-[70%]">
+        {stepLabels.map((item, index) => {
+          const isCompleted = index < currentIndex;
+          const isActive = index === currentIndex;
+          const isClickable = index <= currentIndex;
 
           return (
             <React.Fragment key={item.step}>
-              <NavLink to={item.step}>
-                <div className="flex flex-col items-center">
-                  {/* circle */}
-                  <h3
-                    className={`
-                    w-8 h-8 rounded-full border
-                    flex items-center justify-center
-                    transition-all duration-300
-
+              <button
+                type="button"
+                disabled={!isClickable}
+                onClick={() => handleStepClick(index)}
+                className="flex shrink-0 flex-col items-center disabled:cursor-not-allowed"
+              >
+                <span
+                  className={`
+                    flex h-9 w-9 items-center justify-center rounded-full
+                    border transition-all duration-300 sm:h-10 sm:w-10
                     ${
                       isCompleted
-                        ? "bg-green-500 text-white border-green-500"
+                        ? "border-green-500 bg-green-500 text-white"
                         : isActive
-                          ? "bg-primary text-white border-primary"
-                          : "border-muted text-muted"
+                          ? "border-primary bg-primary text-white"
+                          : "border-gray-300 bg-white text-gray-500"
                     }
-                    `}
-                  >
-                    {isCompleted ? <IoCheckmark size={20} /> : idx + 1}
-                  </h3>
+                  `}
+                >
+                  {isCompleted ? <IoCheckmark size={20} /> : index + 1}
+                </span>
 
-                  {/* label */}
-                  <p
-                    className={`
-                    text-xs mt-1 whitespace-nowrap
-
+                <span
+                  className={`
+                    mt-2 text-[10px] sm:text-xs
                     ${
                       isCompleted
-                        ? "text-green-500"
+                        ? "text-green-600"
                         : isActive
                           ? "text-primary"
-                          : "text-muted"
+                          : "text-gray-500"
                     }
-                    `}
-                  >
-                    {item.label}
-                  </p>
-                </div>
-              </NavLink>
+                  `}
+                >
+                  {item.label}
+                </span>
+              </button>
 
-              {/* line */}
-              {idx !== stepLabels.length - 1 && (
+              {index !== stepLabels.length - 1 && (
                 <div
                   className={`
-                  flex-1 h-[1px] mt-4
-                  transition-all duration-300
-
-                  ${idx < currentIndex ? "bg-green-500" : "bg-muted"}
+                    mx-2 mt-[18px] h-px flex-1 sm:mx-3 sm:mt-5
+                    ${isCompleted ? "bg-green-500" : "bg-gray-300"}
                   `}
-                ></div>
+                />
               )}
             </React.Fragment>
           );
         })}
       </div>
 
-      {/* page content */}
-      <div className="p-1 md:w-[80%] mx-auto">
+      <div className="mx-auto w-full p-1 md:w-[90%]">
         <Outlet
           context={{
             formData,
@@ -169,6 +295,8 @@ const BecomeProvider = () => {
             nextMoveForm,
             prevMoveForm,
             hideButtons,
+            applicationSubmitted,
+            setApplicationSubmitted,
           }}
         />
       </div>

@@ -1,33 +1,39 @@
 
 import React from "react";
-import Input from "../../components/common/Input";
-import { FaLocationArrow } from "react-icons/fa6";
-import Button from "../../components/common/Button";
-import { useCategories } from "../../hooks/useCategories";
 import { useOutletContext } from "react-router-dom";
+import { FaLocationArrow } from "react-icons/fa6";
 import { MdChevronRight, MdMyLocation } from "react-icons/md";
+
+import Input from "../../components/common/Input";
+import Button from "../../components/common/Button";
+import Loader from "../../components/common/Loader";
 import State from "../../components/common/State";
 import District from "../../components/common/District";
 import City from "../../components/common/City";
+
+import { useCategories } from "../../hooks/useCategories";
 import { useAddressToReverseGeocode } from "../../hooks/useAuth";
-import Loader from "../../components/common/Loader";
 
 const BasicInfo = () => {
   const { data, isLoading } = useCategories();
 
-  const { formData, setFormData, phoneNumber, nextMoveForm } =
-    useOutletContext();
+  const {
+    formData,
+    setFormData,
+    phoneNumber,
+    nextMoveForm,
+  } = useOutletContext();
 
   const { addressToReverseGeocodeMutation } =
     useAddressToReverseGeocode();
 
   const categories = data?.categories ?? [];
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    setFormData((prev) => ({
-      ...prev,
+    setFormData((previous) => ({
+      ...previous,
       [name]: value,
     }));
   };
@@ -50,16 +56,21 @@ const BasicInfo = () => {
               longitude,
             });
 
-          const location = response.location;
+          const location = response?.location;
 
-          setFormData((prev) => ({
-            ...prev,
-            lat: location.latitude,
-            lng: location.longitude,
-            state: location.state,
-            district: location.district,
-            city: location.city,
-            locality: location.locality,
+          if (!location) {
+            alert("Location details could not be fetched.");
+            return;
+          }
+
+          setFormData((previous) => ({
+            ...previous,
+            lat: location.latitude ?? latitude,
+            lng: location.longitude ?? longitude,
+            state: location.state ?? previous.state,
+            district: location.district ?? previous.district,
+            city: location.city ?? previous.city,
+            locality: location.locality ?? previous.locality,
           }));
         } catch (error) {
           console.error("Location fetch error:", error);
@@ -85,85 +96,107 @@ const BasicInfo = () => {
     );
   };
 
-  const submitForm = (e) => {
-    e.preventDefault();
+  const submitForm = (event) => {
+    event.preventDefault();
 
-    if (!formData.category) {
-      return alert("Please select a service category.");
-    }
-
-    if (!formData.state) {
-      return alert("Please select a state.");
-    }
-
-    if (!formData.district) {
-      return alert("Please select a district.");
-    }
-
-    if (!formData.city) {
-      return alert("Please select a city.");
+    if (formData.experience === "" || formData.experience == null) {
+      return alert("Please enter your experience.");
     }
 
     if (
-      formData.lat === "" ||
-      formData.lat == null ||
-      formData.lng === "" ||
-      formData.lng == null
+      !Number.isFinite(Number(formData.experience)) ||
+      Number(formData.experience) < 0
     ) {
-      return alert("Please capture your current coordinates.");
+      return alert("Please enter valid experience.");
+    }
+
+    if (
+      formData.price === "" ||
+      formData.price == null ||
+      !Number.isFinite(Number(formData.price)) ||
+      Number(formData.price) <= 0
+    ) {
+      return alert("Please enter a valid service price.");
+    }
+
+    if (!formData.priceType) {
+      return alert("Please select a price type.");
+    }
+
+    if (!formData.category?._id) {
+      return alert("Please select a service category.");
+    }
+
+    if (!formData.state?._id) {
+      return alert("Please select a state.");
+    }
+
+    if (!formData.district?._id) {
+      return alert("Please select a district.");
+    }
+
+    if (!formData.city?._id) {
+      return alert("Please select a city.");
     }
 
     if (!formData.locality?.trim()) {
       return alert("Please enter your locality.");
     }
 
+    if (
+      formData.lat === "" ||
+      formData.lat == null ||
+      formData.lng === "" ||
+      formData.lng == null ||
+      !Number.isFinite(Number(formData.lat)) ||
+      !Number.isFinite(Number(formData.lng))
+    ) {
+      return alert("Please capture valid coordinates.");
+    }
+
     nextMoveForm();
   };
-
-  const sectionHeading =
-    "text-base md:text-lg font-semibold text-gray-800";
-
-  const sectionDescription = "text-sm text-gray-500 mt-1";
 
   const sectionClass =
     "rounded-2xl border border-gray-200 bg-white p-4 sm:p-5 md:p-6";
 
-  const labelClass =
-    "block mb-2 font-medium text-sm text-gray-700";
+  const headingClass = "text-base font-semibold text-gray-800 md:text-lg";
+
+  const descriptionClass = "mt-1 text-sm text-gray-500";
+
+  const labelClass = "mb-2 block text-sm font-medium text-gray-700";
 
   const selectClass =
-    "w-full text-sm border border-gray-300 text-slate-700 px-4 py-3 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white";
+    "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
   return (
-    <div className="w-full">
+    <div className="w-full pb-8">
       <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
+        <h1 className="text-xl font-semibold text-gray-900 md:text-2xl">
           Basic Information
         </h1>
 
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="mt-1 text-sm text-gray-500">
           Add your service details and the location where you provide services.
         </p>
       </div>
 
       <form onSubmit={submitForm} className="space-y-6">
-        {/* Basic Information */}
         <section className={sectionClass}>
           <div className="mb-5">
-            <h2 className={sectionHeading}>Personal Information</h2>
-            <p className={sectionDescription}>
+            <h2 className={headingClass}>Personal Information</h2>
+            <p className={descriptionClass}>
               Enter your contact number and professional experience.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <Input
               label="Phone Number"
               id="phoneNumber"
               placeholder="Enter phone number"
               type="tel"
               maxLength={10}
-              pattern="[0-9]{10}"
               value={phoneNumber}
               readOnly
               required
@@ -172,6 +205,7 @@ const BasicInfo = () => {
             <Input
               label="Experience (Years)"
               id="experience"
+              name="experience"
               placeholder="e.g. 3"
               type="number"
               min={0}
@@ -183,28 +217,28 @@ const BasicInfo = () => {
           </div>
         </section>
 
-        {/* Service Details */}
         <section className={sectionClass}>
           <div className="mb-5">
-            <h2 className={sectionHeading}>Service Details</h2>
-            <p className={sectionDescription}>
+            <h2 className={headingClass}>Service Details</h2>
+            <p className={descriptionClass}>
               Select your service category and set your pricing.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <Input
-              label="Price"
+              label="Price (₹)"
               id="price"
+              name="price"
               placeholder="e.g. 500"
               type="number"
-              min={0}
+              min={1}
               value={formData.price}
               onChange={handleChange}
               required
             />
 
-            <div className="w-full">
+            <div>
               <label htmlFor="priceType" className={labelClass}>
                 Price Type <span className="text-red-500">*</span>
               </label>
@@ -225,7 +259,7 @@ const BasicInfo = () => {
               </select>
             </div>
 
-            <div className="w-full md:col-span-2">
+            <div className="md:col-span-2">
               <label htmlFor="category" className={labelClass}>
                 Service Category <span className="text-red-500">*</span>
               </label>
@@ -235,50 +269,41 @@ const BasicInfo = () => {
                 id="category"
                 required
                 value={formData.category?._id || ""}
-                onChange={(e) => {
+                onChange={(event) => {
                   const selectedCategory = categories.find(
-                    (item) => item._id === e.target.value
+                    (category) => category._id === event.target.value
                   );
 
-                  setFormData((prev) => ({
-                    ...prev,
-                    category: selectedCategory || "",
+                  setFormData((previous) => ({
+                    ...previous,
+                    category: selectedCategory || null,
                   }));
                 }}
                 className={selectClass}
               >
                 <option value="" disabled>
-                  Select service category
+                  {isLoading ? "Loading categories..." : "Select category"}
                 </option>
 
-                {isLoading ? (
-                  <option value="" disabled>
-                    Loading categories...
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.name}
                   </option>
-                ) : (
-                  categories.map((category) => (
-                    <option key={category._id} value={category._id}>
-                      {category.name.charAt(0).toUpperCase() +
-                        category.name.slice(1)}
-                    </option>
-                  ))
-                )}
+                ))}
               </select>
             </div>
           </div>
         </section>
 
-        {/* Location Information */}
         <section className={sectionClass}>
           <div className="mb-5">
-            <h2 className={sectionHeading}>Location Information</h2>
-            <p className={sectionDescription}>
+            <h2 className={headingClass}>Location Information</h2>
+            <p className={descriptionClass}>
               Set your service location to help customers find you nearby.
             </p>
           </div>
 
-          {/* Get Coordinates - At the top of location section */}
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-blue-100 bg-blue-50 p-4">
+          <div className="mb-6 flex flex-col gap-4 rounded-xl border border-blue-100 bg-blue-50 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
                 <MdMyLocation size={23} />
@@ -289,17 +314,16 @@ const BasicInfo = () => {
                   Use Your Current Location
                 </h3>
 
-                <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                  Capture your coordinates and automatically fill in the
-                  available address details.
+                <p className="mt-1 text-xs text-gray-600 sm:text-sm">
+                  Capture your coordinates and fill available address details.
                 </p>
 
-                {formData.lat != null &&
-                  formData.lat !== "" &&
-                  formData.lng != null &&
-                  formData.lng !== "" && (
-                    <p className="text-xs text-green-700 font-medium mt-2">
-                      ✓ Coordinates captured successfully
+                {formData.lat !== "" &&
+                  formData.lat != null &&
+                  formData.lng !== "" &&
+                  formData.lng != null && (
+                    <p className="mt-2 text-xs font-medium text-green-700">
+                      ✓ Coordinates captured
                     </p>
                   )}
               </div>
@@ -310,7 +334,7 @@ const BasicInfo = () => {
               type="button"
               onClick={getCurrentLocation}
               disabled={addressToReverseGeocodeMutation.isPending}
-              className="w-full sm:w-auto shrink-0"
+              className="w-full shrink-0 sm:w-auto"
             >
               {addressToReverseGeocodeMutation.isPending ? (
                 <>
@@ -326,23 +350,18 @@ const BasicInfo = () => {
             </Button>
           </div>
 
-          {/* State and District */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+          <div className="mb-5 grid grid-cols-1 gap-5 md:grid-cols-2">
             <State formData={formData} setFormData={setFormData} />
-
-            <District
-              formData={formData}
-              setFormData={setFormData}
-            />
+            <District formData={formData} setFormData={setFormData} />
           </div>
 
-          {/* City and Locality */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+          <div className="mb-5 grid grid-cols-1 gap-5 md:grid-cols-2">
             <City formData={formData} setFormData={setFormData} />
 
             <Input
               label="Locality"
               id="locality"
+              name="locality"
               placeholder="Enter locality, area or village"
               value={formData.locality || ""}
               onChange={handleChange}
@@ -350,44 +369,41 @@ const BasicInfo = () => {
             />
           </div>
 
-          {/* Coordinates */}
           <div className="border-t border-gray-100 pt-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4">
+            <h3 className="mb-4 text-sm font-semibold text-gray-700">
               GPS Coordinates
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <Input
                 label="Latitude"
                 id="lat"
-                placeholder="e.g. 24.24423"
                 type="number"
                 readOnly
                 required
                 value={formData.lat ?? ""}
+                placeholder="Get coordinates above"
               />
 
               <Input
                 label="Longitude"
                 id="lng"
-                placeholder="e.g. 86.24423"
                 type="number"
                 readOnly
                 required
                 value={formData.lng ?? ""}
+                placeholder="Get coordinates above"
               />
             </div>
 
-            <p className="text-xs text-gray-500 mt-3">
-              Use the button above to capture your location. You can review
-              the coordinates here.
+            <p className="mt-3 text-xs text-gray-500">
+              Use the button above to capture your location.
             </p>
           </div>
         </section>
 
-        {/* Form Actions */}
         <div className="flex justify-end pt-2">
-          <Button className="w-full sm:w-auto sm:min-w-40">
+          <Button type="submit" className="w-full sm:w-auto sm:min-w-40">
             <span>Next</span>
             <MdChevronRight size={22} />
           </Button>
