@@ -21,7 +21,12 @@ const ProviderCard = ({ provider }) => {
 
   const jobsCompleted = provider.completedJobs || 0;
 
-  const providerExperience = `${provider.experience} Years`;
+  const experience = provider?.category?.experience;
+
+  const providerExperience =
+    experience != null
+      ? `${experience} ${experience === 1 ? "Year" : "Years"}`
+      : "Experience not specified";
 
   const response = provider.responseTime || "N/A";
 
@@ -45,11 +50,10 @@ const ProviderCard = ({ provider }) => {
             </div>
             <div className="absolute bottom-1 right-0 w-4 h-4 rounded-full bg-white flex items-center justify-center">
               <div
-                className={`w-3 h-3 rounded-full shadow-sm ${
-                  provider?.availability
-                    ? "bg-green-500"
-                    : "bg-white border-2 border-green-500"
-                }`}
+                className={`w-3 h-3 rounded-full shadow-sm ${provider?.availability
+                  ? "bg-green-500"
+                  : "bg-white border-2 border-green-500"
+                  }`}
               />
             </div>
           </div>
@@ -127,7 +131,7 @@ const ProviderCard = ({ provider }) => {
               <FaLocationDot className=" text-black" size={20} />
               <div>
                 {provider?.distance && (
-                  <h3 className="font-bold text-text text-sm">{(provider?.distance/1000).toFixed(2)}KM away</h3>
+                  <h3 className="font-bold text-text text-sm">{(provider?.distance / 1000).toFixed(2)}KM away</h3>
                 )}
                 <p className=" text-sm text-muted">
                   {provider?.city},{provider?.district}
@@ -136,8 +140,8 @@ const ProviderCard = ({ provider }) => {
             </div>
             <div>
               <h3 className="flex items-center text-lg md:text-xl font-bold">
-                <MdOutlineCurrencyRupee size={18}/>
-                {price} 
+                <MdOutlineCurrencyRupee size={18} />
+                {price}
                 {provider?.category?.pricing?.priceType === "hourly"
                   ? <span className="text-lg">/ hr</span>
                   : <span className="text-lg">/ fixed</span>}
