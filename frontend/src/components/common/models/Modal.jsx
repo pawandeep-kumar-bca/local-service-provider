@@ -13,12 +13,12 @@ const Modal = ({
   rightBtnText,
   leftBtnColor,
 }) => {
-  useEffect(()=>{
-    document.body.style.overflow='hidden'
-    return ()=>{
-      document.body.style.overflow=''
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = ''
     }
-  },[])
+  }, [])
   if (!isOpen) return null;
 
   // Modal Sizes
@@ -30,7 +30,7 @@ const Modal = ({
     xl: "max-w-4xl",
   };
 
-  
+
   return (
     <div
       className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
@@ -42,7 +42,8 @@ const Modal = ({
         className={`
           w-full
           h-full
-          md:${modalSizes[size]}
+          md:h-fit
+          ${modalSizes[size] || modalSizes.md}
           bg-white
           rounded-2xl
           shadow-[0_10px_40px_rgba(0,0,0,0.2)]
@@ -75,7 +76,7 @@ const Modal = ({
         {/* Footer */}
 
         {showFooter && (
-          <div className="flex justify-end gap-3 px-5 py-4 bg-white">
+          <div className="flex justify-between gap-3 px-5 py-4 bg-white mt-4">
             <Button onClick={onClose} color={leftBtnColor}>
               Cancel
             </Button>
