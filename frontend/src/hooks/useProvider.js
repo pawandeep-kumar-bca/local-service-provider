@@ -84,20 +84,20 @@ export const useRecommendedProviders = (filters = {}) => {
   });
 };
 
-// export const useNearbyProviders = (filters = {}) => {
-//   const hasLocation =
-//     filters?.lat !== "" &&
-//     filters?.lng !== "" &&
-//     filters?.lat != null &&
-//     filters?.lng != null &&
-//     filters?.radius != null;
+export const useNearbyProviders = (filters = {}) => {
+  const hasLocation =
+    filters?.lat !== "" &&
+    filters?.lng !== "" &&
+    filters?.lat != null &&
+    filters?.lng != null &&
+    filters?.radius != null;
 
-//   return useQuery({
-//     queryKey: ["nearby-providers", filters],
-//     queryFn: () => getNearbyProviders(filters),
-//     enabled: hasLocation,
-//   });
-// };
+  return useQuery({
+    queryKey: ["nearby-providers", filters],
+    queryFn: () => getNearbyProviders(filters),
+    enabled: hasLocation,
+  });
+};
 export const useProviderDashboardOverview = () => {
   return useQuery({
     queryKey: ["provider-dashboard-overview"],
