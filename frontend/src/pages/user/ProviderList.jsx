@@ -10,18 +10,22 @@ const ProviderList = () => {
   const navigate = useNavigate();
   const { filters, setFilters, nearbyFilters } = useOutletContext();
 const hasLocation =
-  Boolean(nearbyFilters?.lat) &&
-  Boolean(nearbyFilters?.lng) &&
-  Boolean(nearbyFilters?.radius);
+  nearbyFilters?.lat !== "" &&
+  nearbyFilters?.lng !== "" &&
+  nearbyFilters?.lat != null &&
+  nearbyFilters?.lng != null &&
+  nearbyFilters?.radius != null;
 
   const recommendedQuery = useRecommendedProviders(filters);
 
   const nearbyQuery = useNearbyProviders(nearbyFilters);
 
-  const data = hasLocation ? nearbyQuery.data : recommendedQuery.data;
-  const isLoading = hasLocation
-    ? nearbyQuery.isLoading
-    : recommendedQuery.isLoading;
+
+  const activeQuery = hasLocation ? nearbyQuery : recommendedQuery;
+
+const providers = activeQuery.data?.providers || [];
+
+const isLoading = activeQuery.isLoading;
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">Loading...</div>
@@ -50,7 +54,10 @@ const hasLocation =
         showCategory={true}
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-        {data?.providers?.map((provider) => (
+        {providers?.map((provider) => (
+          
+         
+          
           <ProviderCard key={provider._id} provider={provider} />
         ))}
       </div>

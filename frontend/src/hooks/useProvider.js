@@ -1,4 +1,9 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   addProviderBankAccountDetails,
   createProvider,
@@ -76,18 +81,23 @@ export const useRecommendedProviders = (filters = {}) => {
   return useQuery({
     queryKey: ["recommended-providers", filters],
     queryFn: () => getRecommendedProviders(filters),
-    enabled: !!filters.lat && !!filters.lng && !!filters.radius,
   });
 };
 
-export const useNearbyProviders = (filters = {}) => {
-  return useQuery({
-    queryKey: ["nearby-providers", filters],
-    queryFn: () => getNearbyProviders(filters),
-    enabled: !!filters.lat && !!filters.lng && !!filters.radius,
-  });
-};
+// export const useNearbyProviders = (filters = {}) => {
+//   const hasLocation =
+//     filters?.lat !== "" &&
+//     filters?.lng !== "" &&
+//     filters?.lat != null &&
+//     filters?.lng != null &&
+//     filters?.radius != null;
 
+//   return useQuery({
+//     queryKey: ["nearby-providers", filters],
+//     queryFn: () => getNearbyProviders(filters),
+//     enabled: hasLocation,
+//   });
+// };
 export const useProviderDashboardOverview = () => {
   return useQuery({
     queryKey: ["provider-dashboard-overview"],
@@ -229,21 +239,19 @@ export const useProviderGetWithdrawalsHistory = () => {
 };
 
 export const useProviderReceivedPayment = () => {
-  const queryClient = useQueryClient()
-  const providerReceivedPaymentMutation =  useMutation({
-    mutationFn:(bookingId)=> paymentReceived(bookingId),
-    onSuccess:(data)=>{
-      toast.success(data?.message),
-
+  const queryClient = useQueryClient();
+  const providerReceivedPaymentMutation = useMutation({
+    mutationFn: (bookingId) => paymentReceived(bookingId),
+    onSuccess: (data) => {
+      (toast.success(data?.message),
         queryClient.invalidateQueries({
-        queryKey: ["provider-all-bookings"],
-      });
+          queryKey: ["provider-all-bookings"],
+        }));
     },
-    onError:(err)=>{
-      toast.error(err?.response?.data?.message)
-      console.error('Provider Payment received error:',err);
-      
-    } 
+    onError: (err) => {
+      toast.error(err?.response?.data?.message);
+      console.error("Provider Payment received error:", err);
+    },
   });
-  return {providerReceivedPaymentMutation}
+  return { providerReceivedPaymentMutation };
 };
