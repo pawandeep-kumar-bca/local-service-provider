@@ -37,8 +37,7 @@ router.put(
   providerValidator.providerUpdateValidator,
   providerControllers.updateProvider,
 );
-// GET /api/v1/providers
-router.get("/", providerControllers.getProviders);
+
 
 router.get("/nearby", providerControllers.nearbySearchLocation);
 

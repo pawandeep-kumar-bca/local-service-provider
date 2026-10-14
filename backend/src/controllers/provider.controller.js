@@ -253,115 +253,6 @@ async function updateProvider(req, res) {
   }
 }
 
-async function getProviders(req, res) {
-  try {
-    const {
-      category,
-      search,
-      city,
-      availability,
-      minRating,
-      minExperience,
-      sort = "latest",
-    } = req.query;
-    const limit = parseInt(req.query.limit) || 9;
-    const page = parseInt(req.query.page) || 1;
-    const skip = (page - 1) * limit;
-
-    const filter = { verifiedByAdmin: true, status: "approved" };
-    // Category Filter (Multiple Categories)
-    if (category && category !== "all") {
-      filter.categories = {
-        $in: [category],
-      };
-    }
-
-    // search by provider name
-    // if (search) {
-    //   filter.providerName = {
-    //     $regex: search,
-    //     $options: "i",
-    //   };
-    // }
-    // search by city
-    // if (city) {
-    //   filter.city = {
-    //     $regex: search,
-    //     $options: "i",
-    //   };
-    // }
-    // Availability Filter
-    if (availability) {
-      filter.availability = availability;
-    }
-    // search by experience
-    if (minExperience) {
-      filter.experience = {
-        $gte: Number(minExperience),
-      };
-    }
-
-    // search by rating
-    if (minRating) {
-      filter.rating = {
-        $gte: Number(minRating),
-      };
-    }
-    // sorting
-    let sortOption = {};
-
-    switch (sort) {
-      case "rating":
-        sortOption = {
-          rating: -1,
-        };
-        break;
-      case "price-low":
-        sortOption = { price: 1 };
-        break;
-
-      case "price-high":
-        sortOption = { price: -1 };
-        break;
-
-      default:
-        sortOption = { createdAt: -1 };
-    }
-    const providers = await providerModel
-      .find(filter)
-      .populate("userId", "fullname profileImage")
-      .populate("categories.category", "name")
-      .populate("location.state", "name")
-      .populate("location.district", "name")
-      .populate("location.city", "name")
-      .select(
-        "userId categories experience verifiedByAdmin rating totalReview completedJobs availability responseTime trusted topRated location",
-      )
-      .sort(sortOption)
-      .skip(skip)
-      .limit(limit);
-
-    const totalProviders = await providerModel.countDocuments(filter);
-    if (providers.length === 0) {
-      return res
-        .status(200)
-        .json({ message: "Providers not found", providers, totalProviders });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Provider fetch successfully",
-      providers,
-      totalProviders,
-      currentPage: page,
-      totalPages: Math.ceil(totalProviders / limit),
-    });
-  } catch (err) {
-    console.error("Get providers error:", err);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-}
-
 async function getOneProviderDetails(req, res) {
   try {
     const providerId = req.params.id;
@@ -1613,16 +1504,6 @@ async function bookingAnalytics(req, res) {
 //=====================================================
 // HELPER FUNCTIONS
 //=====================================================
-
-function minuteToTime(totalMinutes) {
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-    2,
-    "0",
-  )}`;
-}
 
 function timeToMinutes(time) {
   const [hours, minutes] = time.split(":").map(Number);
@@ -3733,7 +3614,7 @@ module.exports = {
   providerProfileCreate,
   getProvider,
   updateProvider,
-  getProviders,
+
   getOneProviderDetails,
   uploadProviderDocuments,
   nearbySearchLocation,
