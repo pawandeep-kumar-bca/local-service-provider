@@ -8,7 +8,7 @@ import {
   addProviderBankAccountDetails,
   createProvider,
   createWithdrawalAmount,
-  getAllProviders,
+
   getNearbyProviders,
   getProviderBookingAnalytics,
   getProviderById,
@@ -32,12 +32,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-export const useProviders = (params = {}) => {
-  return useQuery({
-    queryKey: ["providers", params],
-    queryFn: () => getAllProviders(params),
-  });
-};
 
 export const useProvider = (providerId) => {
   return useQuery({
