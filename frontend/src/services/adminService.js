@@ -23,3 +23,7 @@ export const providerApprovedByAdmin = async (providerId) => {
   const response = await api.put(`/admin/providers/${providerId}/approved`);
   return response.data;
 };
+export const providerRejectedByAdmin = async (providerId) => {
+  const response = await api.put(`/admin/providers/${providerId}/rejected`);
+  return response.data;
+};
