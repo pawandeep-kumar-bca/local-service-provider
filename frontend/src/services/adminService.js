@@ -1,20 +1,25 @@
-import api from './api'
+import api from "./api";
 
-export const getAllUserList =async (params) =>{
-  const response = await api.get('/admin/users',{params})
-  return response.data
-}
-
-export const getAllProvidersList =async (params) =>{
-  const response = await api.get('/admin/providers',{params})
-  return response.data
-}
-
-export const getAllCategoriesByAdmin = async (params) => {
-  const response = await api.get("/admin/categories",{params});
+export const getAllUserList = async (params) => {
+  const response = await api.get("/admin/users", { params });
   return response.data;
 };
-export const getAllBookingsByAdmin= async ()=>{
-  const response = await api.get('/admin/bookings')
-  return response.data
-}
+
+export const getAllProvidersList = async (params) => {
+  const response = await api.get("/admin/providers", { params });
+  return response.data;
+};
+
+export const getAllCategoriesByAdmin = async (params) => {
+  const response = await api.get("/admin/categories", { params });
+  return response.data;
+};
+export const getAllBookingsByAdmin = async () => {
+  const response = await api.get("/admin/bookings");
+  return response.data;
+};
+
+export const providerApprovedByAdmin = async (providerId) => {
+  const response = await api.put(`/admin/providers/${providerId}/approved`);
+  return response.data;
+};
