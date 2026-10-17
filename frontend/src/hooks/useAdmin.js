@@ -6,6 +6,7 @@ import {
   getAllProvidersList,
   getAllUserList,
   providerApprovedByAdmin,
+  providerRejectedByAdmin,
 } from "../services/adminService";
 
 export const useUsers = (params = {}) => {
@@ -45,6 +46,20 @@ export const useApproveProvider = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["admin-providers"],
+      });
+    },
+  });
+};
+
+export const useRejectProvider = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: providerRejectedByAdmin,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["adminProviders"],
       });
     },
   });
