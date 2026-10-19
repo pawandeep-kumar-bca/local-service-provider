@@ -15,8 +15,8 @@ export const getAllBookingsOfUser = async (status) => {
   return response.data;
 };
 
-export const getAllBookingsOfProvider = async () => {
-  const response = await api.get("/bookings/provider");
+export const getAllBookingsOfProvider = async ({params}) => {
+  const response = await api.get("/bookings/provider",{params});
   return response.data;
 };
 
