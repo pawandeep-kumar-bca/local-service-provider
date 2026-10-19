@@ -15,14 +15,14 @@ export const getAllBookingsOfUser = async (status) => {
   return response.data;
 };
 
-export const getAllBookingsOfProvider = async ({params}) => {
-  const response = await api.get("/bookings/provider",{params});
+export const getAllBookingsOfProvider = async ({ status }) => {
+  const params = status ? { status } : {};
+  const response = await api.get("/bookings/provider", { params });
   return response.data;
 };
 
 export const getOneBookingDetails = async (bookingId) => {
   const response = await api.get(`/bookings/${bookingId}`);
-
   return response.data;
 };
 
